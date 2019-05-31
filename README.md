@@ -17,6 +17,58 @@
     ├── ultron-utils            工具类
 ```    
 
+## 使用步骤
+
+### 第一步，下载本项目
+
+    git clone https://github.com/brucewuu520/spring-ultron.git
+    
+### 第二部，编译安装本项目
+
+    mvn install --项目会编译安装到本地maven创库
+    
+### 在自己的工程按需添加依赖库
+
+1、核心库
+
+    <dependency>
+       <groupId>org.springultron</groupId>
+       <artifactId>ultron-core</artifactId>
+       <version>1.0.0</version>
+    </dependency>  
+
+2、http客户端库
+    
+    <dependency>
+       <groupId>org.springultron</groupId>
+       <artifactId>ultron-httpclient</artifactId>
+       <version>1.0.0</version>
+    </dependency> 
+    
+3、mybatis plus
+
+    <dependency>
+       <groupId>org.springultron</groupId>
+       <artifactId>ultron-mybatis</artifactId>
+       <version>1.0.0</version>
+    </dependency> 
+    
+4、Redis
+
+    <dependency>
+       <groupId>org.springultron</groupId>
+       <artifactId>ultron-redis</artifactId>
+       <version>1.0.0</version>
+    </dependency>
+    
+5、常用工具类
+
+    <dependency>
+       <groupId>org.springultron</groupId>
+       <artifactId>ultron-utils</artifactId>
+       <version>1.0.0</version>
+    </dependency>         
+            
 ## 许可证
 
 [Apache License 2.0](https://github.com/brucewuu520/spring-ultron/blob/master/LICENSE)
