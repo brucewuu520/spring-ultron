@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.springultron</groupId>
+    <artifactId>spring-ultron</artifactId>
+    <description>Spring Boot multi module common library</description>
+    <version>1.0.0</version>
+    <packaging>pom</packaging>
+
+    <properties>
+        <spring-ultron.version>1.0.0</spring-ultron.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+        <spring-boot.version>2.1.5.RELEASE</spring-boot.version>
+        <mybatis-plus.version>3.1.0</mybatis-plus.version>
+        <jackson.version>2.9.8</jackson.version>
+        <lombok.version>1.18.8</lombok.version>
+        <common-pool.version>2.6.0</common-pool.version>
+    </properties>
+
+    <modules>
+        <module>ultron-core</module>
+        <module>ultron-httpclient</module>
+        <module>ultron-mybatis</module>
+        <module>ultron-redis</module>
+        <module>ultron-utils</module>
+    </modules>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>bruce.wuu</name>
+            <email>402432291@qq.com</email>
+            <url>https://github.com/brucewuu520</url>
+        </developer>
+    </developers>
+
+    <scm>
+        <url>https://github.com/brucewuu520/spring-ultron</url>
+        <connection>https://github.com/brucewuu520/spring-ultron.git</connection>
+        <developerConnection>https://github.com/brucewuu520</developerConnection>
+    </scm>
+
+    <profiles>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>2.2.1</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>2.9.1</version>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                    <showWarnings>true</showWarnings>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
