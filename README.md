@@ -23,11 +23,11 @@
 
     git clone https://github.com/brucewuu520/spring-ultron.git
     
-### 第二部，编译安装本项目
+### 第二步，编译安装本项目
 
     mvn install --项目会编译安装到本地maven创库
     
-### 在自己的工程按需添加依赖库
+### 第三步，在自己的工程按需添加依赖库
 
 1、核心库
 
