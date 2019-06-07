@@ -55,6 +55,28 @@ public class RedisClient {
     }
 
     /**
+     * 自增操作
+     *
+     * @param key   缓存key
+     * @param delta 增量
+     * @return
+     */
+    public Long increment(String key, long delta) {
+        return stringRedisTemplate.opsForValue().increment(key, delta);
+    }
+
+    /**
+     * 自增操作
+     *
+     * @param key   缓存key
+     * @param delta 减量
+     * @return
+     */
+    public Long decrement(String key, long delta) {
+        return stringRedisTemplate.opsForValue().increment(key, delta);
+    }
+
+    /**
      * 设置缓存key过期时间，单位秒
      *
      * @param key     缓存key

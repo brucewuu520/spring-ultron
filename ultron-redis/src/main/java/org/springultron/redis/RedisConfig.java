@@ -36,6 +36,7 @@ public class RedisConfig extends CachingConfigurerSupport {
      * @return 自定义策略生成的key
      */
     @Bean
+    @ConditionalOnMissingBean(name = {"keyGenerator"})
     public KeyGenerator keyGenerator() {
         return (target, method, params) -> {
             StringBuilder sb = new StringBuilder();
@@ -53,7 +54,9 @@ public class RedisConfig extends CachingConfigurerSupport {
      *
      * @return 使用Jackson
      */
-    private Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer() {
+    @Bean
+    @ConditionalOnMissingBean(name = {"jackson2JsonRedisSerializer"})
+    public Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer() {
         // 使用Jackson2JsonRedisSerializer来序列化和反序列化redis的value值
         Jackson2JsonRedisSerializer<Object> serializer = new Jackson2JsonRedisSerializer<>(Object.class);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -74,7 +77,7 @@ public class RedisConfig extends CachingConfigurerSupport {
      */
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Bean
-    @ConditionalOnMissingBean(RedisTemplate.class)
+    @ConditionalOnMissingBean({RedisTemplate.class})
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
         // 使用StringRedisSerializer来序列化和反序列化redis的key值
         StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
