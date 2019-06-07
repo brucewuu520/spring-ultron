@@ -25,7 +25,7 @@
     
 ### 第二步，编译安装本项目
 
-    mvn install --项目会编译安装到本地maven创库
+    mvn clean install --项目会编译安装到本地maven创库
     
 ### 第三步，在自己的工程按需添加依赖库
 
