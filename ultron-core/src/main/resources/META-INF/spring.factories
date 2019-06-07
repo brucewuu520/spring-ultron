@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  org.springultron.core.config.JacksonConfig,\
+  org.springultron.core.exception.GlobalExceptionHandler

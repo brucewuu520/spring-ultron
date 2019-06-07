@@ -1,7 +1,6 @@
 package org.springultron.core.api;
 
-import lombok.Getter;
-import lombok.Setter;
+import org.springultron.core.exception.ApiException;
 
 import java.io.Serializable;
 
@@ -12,8 +11,6 @@ import java.io.Serializable;
  * @Date: 2019-05-22 15:16
  * @Description:
  */
-@Getter
-@Setter
 public class ApiResult<T> implements Serializable {
     private static final long serialVersionUID = -2832435143001472900L;
 
@@ -29,6 +26,30 @@ public class ApiResult<T> implements Serializable {
     private ApiResult(int code, String message, T data) {
         this.code = code;
         this.message = message;
+        this.data = data;
+    }
+
+    public int getCode() {
+        return code;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public T getData() {
+        return data;
+    }
+
+    public void setData(T data) {
         this.data = data;
     }
 
@@ -122,4 +143,13 @@ public class ApiResult<T> implements Serializable {
         return failed(ResultCode.FORBIDDEN);
     }
 
+    /**
+     * REST API 异常返回
+     *
+     * @param e 异常
+     * @return 返回值
+     */
+    public static ApiResult apiException(ApiException e) {
+        return new ApiResult(e.getCode(), e.getMessage());
+    }
 }
