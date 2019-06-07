@@ -63,26 +63,24 @@ public class WebClientUtil {
     }
 
     public static <T> Mono<T> postJSON(String baseUrl, Object request, Class<T> returnType) {
-        Mono<Object> reqMono = Mono.just(request);
         return HTTP_CLIENT
                 .post()
                 .uri(baseUrl)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .body(reqMono, Object.class)
+                .syncBody(request)
                 .retrieve()
                 .bodyToMono(returnType);
     }
 
     public static <T> Mono<T> postJSON(String baseUrl, Object request, Class<T> returnType, String headerName, String... headers) {
-        Mono<Object> reqMono = Mono.just(request);
         return HTTP_CLIENT
                 .post()
                 .uri(baseUrl)
                 .header(headerName, headers)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .body(reqMono, Object.class)
+                .syncBody(request)
                 .retrieve()
                 .bodyToMono(returnType);
     }
@@ -91,6 +89,7 @@ public class WebClientUtil {
         return HTTP_CLIENT
                 .post()
                 .uri(baseUrl)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .syncBody(formData)
                 .retrieve()
                 .bodyToMono(returnType);
