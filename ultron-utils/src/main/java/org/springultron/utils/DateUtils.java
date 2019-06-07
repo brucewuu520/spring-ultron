@@ -3,24 +3,27 @@ package org.springultron.utils;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public final class DateUtils {
+/**
+ * 时间日期转换工具
+ */
+public class DateUtils {
 
-    private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    private static final String PATTERN_DATE_TIME = "yyyy-MM-dd HH:mm:ss";
 
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern(DATE_FORMAT);
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern(PATTERN_DATE_TIME);
 
     /**
      * 日期转字符串
      *
-     * @param date
+     * @param date 日期时间
      * @return yyyy-MM-dd HH:mm:ss
      */
     public static String formatDateTime(LocalDateTime date) {
-        return date.format(FORMATTER);
+        return date.format(DATE_TIME_FORMATTER);
     }
 
-    public static String formatDateTime(LocalDateTime date, String format) {
-        return date.format(DateTimeFormatter.ofPattern(format));
+    public static String formatDateTime(LocalDateTime date, String pattern) {
+        return date.format(DateTimeFormatter.ofPattern(pattern));
     }
 
     /**
@@ -30,7 +33,7 @@ public final class DateUtils {
      * @return
      */
     public static LocalDateTime parseDateTime(String dateTime) {
-        return LocalDateTime.parse(dateTime, FORMATTER);
+        return LocalDateTime.parse(dateTime, DATE_TIME_FORMATTER);
     }
 
     /**
@@ -39,7 +42,7 @@ public final class DateUtils {
      * @return yyyy-MM-dd HH:mm:ss
      */
     public static String getNowDateTime() {
-        return LocalDateTime.now().format(FORMATTER);
+        return LocalDateTime.now().format(DATE_TIME_FORMATTER);
     }
 
 }

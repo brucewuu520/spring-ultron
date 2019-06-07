@@ -18,6 +18,7 @@
             <artifactId>spring-boot</artifactId>
             <version>${spring-boot.version}</version>
             <scope>compile</scope>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 
