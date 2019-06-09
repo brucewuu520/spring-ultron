@@ -18,10 +18,6 @@ public class CollectionUtils extends org.springframework.util.CollectionUtils {
     private CollectionUtils() {
     }
 
-    public static boolean isNotEmpty(@Nullable Collection<?> collection) {
-        return !isEmpty(collection);
-    }
-
     public static <E> ArrayList<E> newArrayList() {
         return new ArrayList<>();
     }
@@ -39,4 +35,7 @@ public class CollectionUtils extends org.springframework.util.CollectionUtils {
         return new LinkedList<>();
     }
 
+    public static boolean isNotEmpty(@Nullable Collection<?> collection) {
+        return !isEmpty(collection);
+    }
 }
