@@ -29,6 +29,8 @@
         <module>ultron-mybatis</module>
         <module>ultron-redis</module>
         <module>ultron-utils</module>
+        <module>ultron-log</module>
+        <module>ultron-actuator</module>
     </modules>
 
     <licenses>
