@@ -21,7 +21,7 @@ import java.time.format.DateTimeFormatter;
  */
 @Configuration
 @ConditionalOnClass({ObjectMapper.class})
-@AutoConfigureBefore(JacksonAutoConfiguration.class)
+@AutoConfigureBefore({JacksonAutoConfiguration.class})
 public class JacksonConfig {
 
     @Value("${spring.jackson.date-format:yyyy-MM-dd HH:mm:ss}")
