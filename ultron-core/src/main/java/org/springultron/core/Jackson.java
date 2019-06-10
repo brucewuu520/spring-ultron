@@ -212,6 +212,7 @@ public class Jackson {
      * @param <T>       T 泛型标记
      * @return 对象
      */
+    @Nullable
     public static <T> T toPojo(Map fromValue, Class<T> valueType) {
         return getInstance().convertValue(fromValue, valueType);
     }
@@ -281,10 +282,10 @@ public class Jackson {
     }
 
     private static ObjectMapper getInstance() {
-        return JacksonHolder.INSTANCE;
+        return SingletonHolder.INSTANCE;
     }
 
-    private static class JacksonHolder {
+    private static class SingletonHolder {
         private static final ObjectMapper INSTANCE = new JacksonObjectMapper();
     }
 

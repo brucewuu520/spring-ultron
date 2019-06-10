@@ -104,14 +104,19 @@ public class RedisClient {
      *
      * @param keys 缓存key数组
      */
-    public void delete(String... keys) {
-        if (null != keys && keys.length > 0) {
-            if (keys.length == 1) {
-                redisTemplate.delete(keys[0]);
-            } else {
-                redisTemplate.delete(Arrays.asList(keys));
-            }
+    public boolean delete(String... keys) {
+        final int length = null == keys ? 0 : keys.length;
+        if (length == 0)
+            return true;
+        Boolean result = null;
+        if (length == 1) {
+            result = redisTemplate.delete(keys[0]);
+        } else {
+            Long l = redisTemplate.delete(Arrays.asList(keys));
+            if (null != l && l > 0)
+                result = true;
         }
+        return null == result ? false : result;
     }
 
     /**
@@ -119,10 +124,11 @@ public class RedisClient {
      *
      * @param pattern 匹配的前缀
      */
-    public void deleteByPattern(String pattern) {
+    public boolean deleteByPattern(String pattern) {
         Set<String> keys = redisTemplate.keys(pattern);
-        if (!CollectionUtils.isEmpty(keys)) {
-            redisTemplate.delete(keys);
-        }
+        if (CollectionUtils.isEmpty(keys))
+            return true;
+        Long l = redisTemplate.delete(keys);
+        return null != l && l > 0;
     }
 }

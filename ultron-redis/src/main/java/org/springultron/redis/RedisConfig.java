@@ -16,7 +16,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 /**
@@ -30,8 +29,9 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 public class RedisConfig extends CachingConfigurerSupport {
 
     /**
-     * 自定义的缓存key的生成策略
-     * 若想使用这个key  只需要讲注解上keyGenerator的值设置为keyGenerator即可</br>
+     * 自定义的缓存key的生成策略(消息队列 暂时用不到 自行忽略)
+     * 此方法将会根据类名+方法名+所有参数的值生成唯一的一个key,即使@Cacheable中的value属性一样，key也会不一样。
+     * 若想使用这个key只需要将注解上keyGenerator的值设置为keyGenerator即可
      *
      * @return 自定义策略生成的key
      */
@@ -50,26 +50,6 @@ public class RedisConfig extends CachingConfigurerSupport {
     }
 
     /**
-     * json序列化
-     *
-     * @return 使用Jackson
-     */
-    @Bean
-    @ConditionalOnMissingBean(name = {"jackson2JsonRedisSerializer"})
-    public Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer() {
-        // 使用Jackson2JsonRedisSerializer来序列化和反序列化redis的value值
-        Jackson2JsonRedisSerializer<Object> serializer = new Jackson2JsonRedisSerializer<>(Object.class);
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
-        objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
-        objectMapper.registerModule(new JavaTimeModule());
-        objectMapper.findAndRegisterModules();
-        objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-        serializer.setObjectMapper(objectMapper);
-        return serializer;
-    }
-
-    /**
      * 配置自定义redisTemplate
      *
      * @param redisConnectionFactory 连接池配置
@@ -81,8 +61,15 @@ public class RedisConfig extends CachingConfigurerSupport {
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
         // 使用StringRedisSerializer来序列化和反序列化redis的key值
         StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
-        // value 序列化方式采用 jackson
-        RedisSerializer jackson2JsonRedisSerializer = jackson2JsonRedisSerializer();
+        // 使用Jackson2JsonRedisSerializer来序列化和反序列化redis的value值
+        Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<>(Object.class);
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+        objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.findAndRegisterModules();
+        objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        jackson2JsonRedisSerializer.setObjectMapper(objectMapper);
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory);
         template.setKeySerializer(stringRedisSerializer);
