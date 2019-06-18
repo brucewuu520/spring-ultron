@@ -1,4 +1,4 @@
-package org.springultron.utils;
+package org.springultron.core.utils;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;

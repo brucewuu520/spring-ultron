@@ -1,4 +1,4 @@
-package org.springultron.utils;
+package org.springultron.core.utils;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -8,9 +8,9 @@ import java.time.format.DateTimeFormatter;
  */
 public class DateUtils {
 
-    private static final String PATTERN_DATE_TIME = "yyyy-MM-dd HH:mm:ss";
+    public static final String PATTERN_DATE_TIME = "yyyy-MM-dd HH:mm:ss";
 
-    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern(PATTERN_DATE_TIME);
+    public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern(PATTERN_DATE_TIME);
 
     /**
      * 日期转字符串

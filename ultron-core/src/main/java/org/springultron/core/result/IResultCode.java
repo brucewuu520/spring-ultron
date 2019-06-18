@@ -1,4 +1,4 @@
-package org.springultron.core.api;
+package org.springultron.core.result;
 
 /**
  * 封装API的错误码
@@ -7,7 +7,7 @@ package org.springultron.core.api;
  * @Date: 2019-05-22 16:24
  * @Description:
  */
-public interface IErrorCode {
+public interface IResultCode {
     int getCode();
 
     String getMessage();

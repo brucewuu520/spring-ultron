@@ -1,4 +1,4 @@
-package org.springultron.utils;
+package org.springultron.core.utils;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;

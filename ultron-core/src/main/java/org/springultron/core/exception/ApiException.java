@@ -1,6 +1,6 @@
 package org.springultron.core.exception;
 
-import org.springultron.core.api.ResultCode;
+import org.springultron.core.result.ResultCode;
 
 /**
  * 自定义REST异常

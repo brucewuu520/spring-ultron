@@ -1,4 +1,4 @@
-package org.springultron.core;
+package org.springultron.core.utils;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -7,10 +7,8 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
-import org.springframework.util.StringUtils;
+import org.springultron.core.config.UltronJavaTimeModule;
+import org.springultron.core.exception.Exceptions;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,14 +32,12 @@ public class Jackson {
      * @param <T>   T 泛型标记
      * @return jsonString json字符串
      */
-    @Nullable
     public static <T> String toJson(T value) {
         try {
             return getInstance().writeValueAsString(value);
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            throw Exceptions.unchecked(e);
         }
-        return null;
     }
 
     /**
@@ -50,14 +46,12 @@ public class Jackson {
      * @param object javaBean
      * @return jsonString json字符串
      */
-    @Nullable
     public static byte[] toBytes(Object object) {
         try {
             return getInstance().writeValueAsBytes(object);
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            throw Exceptions.unchecked(e);
         }
-        return null;
     }
 
     /**
@@ -68,14 +62,12 @@ public class Jackson {
      * @param <T>       T 泛型标记
      * @return Bean
      */
-    @Nullable
     public static <T> T parse(String json, Class<T> valueType) {
         try {
             return getInstance().readValue(json, valueType);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw Exceptions.unchecked(e);
         }
-        return null;
     }
 
     /**
@@ -86,14 +78,12 @@ public class Jackson {
      * @param <T>           T 泛型标记
      * @return Bean
      */
-    @Nullable
-    public static <T> T parse(String json, TypeReference<T> typeReference) {
+    public static <T> T parse(String json, TypeReference<?> typeReference) {
         try {
             return getInstance().readValue(json, typeReference);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw Exceptions.unchecked(e);
         }
-        return null;
     }
 
     /**
@@ -104,14 +94,12 @@ public class Jackson {
      * @param <T>       T 泛型标记
      * @return Bean
      */
-    @Nullable
     public static <T> T parse(byte[] bytes, Class<T> valueType) {
         try {
             return getInstance().readValue(bytes, valueType);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw Exceptions.unchecked(e);
         }
-        return null;
     }
 
     /**
@@ -122,14 +110,12 @@ public class Jackson {
      * @param <T>           T 泛型标记
      * @return Bean
      */
-    @Nullable
-    public static <T> T parse(byte[] bytes, TypeReference<T> typeReference) {
+    public static <T> T parse(byte[] bytes, TypeReference<?> typeReference) {
         try {
             return getInstance().readValue(bytes, typeReference);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw Exceptions.unchecked(e);
         }
-        return null;
     }
 
     /**
@@ -140,14 +126,12 @@ public class Jackson {
      * @param <T>       T 泛型标记
      * @return Bean
      */
-    @Nullable
     public static <T> T parse(InputStream in, Class<T> valueType) {
         try {
             return getInstance().readValue(in, valueType);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw Exceptions.unchecked(e);
         }
-        return null;
     }
 
     /**
@@ -158,14 +142,12 @@ public class Jackson {
      * @param <T>           T 泛型标记
      * @return Bean
      */
-    @Nullable
-    public static <T> T parse(InputStream in, TypeReference<T> typeReference) {
+    public static <T> T parse(InputStream in, TypeReference<?> typeReference) {
         try {
             return getInstance().readValue(in, typeReference);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw Exceptions.unchecked(e);
         }
-        return null;
     }
 
     /**
@@ -176,16 +158,12 @@ public class Jackson {
      * @param <T>           T 泛型标记
      * @return List
      */
-    @Nullable
     public static <T> List<T> parseArray(String json, TypeReference<? extends List<T>> typeReference) {
-        if (StringUtils.startsWithIgnoreCase(json, "[")) {
-            try {
-               return getInstance().readValue(json, typeReference);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        try {
+            return getInstance().readValue(json, typeReference);
+        } catch (IOException e) {
+            throw Exceptions.unchecked(e);
         }
-        return null;
     }
 
     /**
@@ -194,14 +172,12 @@ public class Jackson {
      * @param json 字符串
      * @return Map 集合
      */
-    @Nullable
     public static HashMap toMap(String json) {
         try {
             return getInstance().readValue(json, HashMap.class);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw Exceptions.unchecked(e);
         }
-        return null;
     }
 
     /**
@@ -212,7 +188,6 @@ public class Jackson {
      * @param <T>       T 泛型标记
      * @return 对象
      */
-    @Nullable
     public static <T> T toPojo(Map fromValue, Class<T> valueType) {
         return getInstance().convertValue(fromValue, valueType);
     }
@@ -223,14 +198,12 @@ public class Jackson {
      * @param json json
      * @return {JsonNode}
      */
-    @NonNull
     public static JsonNode readTree(String json) {
         try {
             return getInstance().readTree(json);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw Exceptions.unchecked(e);
         }
-        return null;
     }
 
     /**
@@ -239,14 +212,12 @@ public class Jackson {
      * @param in InputStream
      * @return {JsonNode}
      */
-    @NonNull
     public static JsonNode readTree(InputStream in) {
         try {
             return getInstance().readTree(in);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw Exceptions.unchecked(e);
         }
-        return null;
     }
 
     /**
@@ -255,14 +226,12 @@ public class Jackson {
      * @param bytes json字节数组
      * @return {JsonNode}
      */
-    @NonNull
     public static JsonNode readTree(byte[] bytes) {
         try {
             return getInstance().readTree(bytes);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw Exceptions.unchecked(e);
         }
-        return null;
     }
 
     /**
@@ -271,14 +240,12 @@ public class Jackson {
      * @param jsonParser JsonParser
      * @return {JsonNode}
      */
-    @NonNull
     public static JsonNode readTree(JsonParser jsonParser) {
         try {
             return getInstance().readTree(jsonParser);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw Exceptions.unchecked(e);
         }
-        return null;
     }
 
     private static ObjectMapper getInstance() {
@@ -301,18 +268,18 @@ public class Jackson {
             // 设置为中国上海时区
             super.setTimeZone(TimeZone.getTimeZone(ZoneId.systemDefault()));
             // 序列化时，日期的统一格式
-            super.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA));
+            super.setDateFormat(new SimpleDateFormat(DateUtils.PATTERN_DATE_TIME, Locale.CHINA));
             // 允许序列化空的POJO类
             super.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
-            // 在遇到未知属性的时候不抛出异常
+            // 忽略JSON字符串中不识别的属性
             super.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-            // 序列化处理
+            // 允许JSON字符串包含非引号控制字符（值小于32的ASCII字符，包含制表符和换行符）
             super.configure(JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true);
-            super.configure(JsonParser.Feature.ALLOW_BACKSLASH_ESCAPING_ANY_CHARACTER, true);
             // 允许单引号（非标准）
             super.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
+            super.configure(JsonParser.Feature.ALLOW_BACKSLASH_ESCAPING_ANY_CHARACTER, true);
             // 日期格式化
-            super.registerModule(new JavaTimeModule());
+            super.registerModule(new UltronJavaTimeModule());
             super.findAndRegisterModules();
         }
 

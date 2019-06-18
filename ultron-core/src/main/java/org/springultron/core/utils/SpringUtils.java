@@ -1,4 +1,4 @@
-package org.springultron.utils;
+package org.springultron.core.utils;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;

@@ -1,4 +1,4 @@
-package org.springultron.utils;
+package org.springultron.core.utils;
 
 import org.springframework.lang.Nullable;
 
@@ -15,38 +15,33 @@ import java.util.regex.Pattern;
 public class RegexUtils {
 
     /**
-     * 用户名
-     */
-    private static final String USER_NAME = "^[a-zA-Z\\u4E00-\\u9FA5][a-zA-Z0-9_\\u4E00-\\u9FA5]{1,11}$";
-
-    /**
-     * 手机号
-     */
-    private static final String PHONE = "^1[23456789]\\d{9}$";
-
-    /**
-     * 邮箱
-     */
-    private static final String EMAIL = "^\\w+([-+.]*\\w+)*@([\\da-z](-[\\da-z])?)+(\\.{1,2}[a-z]+)+$";
-
-    /**
      * 验证手机号码
      *
      * @param phone 手机号码
      * @return {boolean}
      */
     public static boolean matchPhone(String phone) {
-        return match(phone, PHONE);
+        return match(phone, "^1[23456789]\\d{9}$");
     }
 
     /**
-     * 验证用户名
+     * 验证用户名(字母开头，允许5-16字符，允许字母数字下划线)
      *
      * @param userName 用户名
      * @return {boolean}
      */
     public static boolean matchUserName(String userName) {
-        return match(userName, USER_NAME);
+        return match(userName, "^[a-zA-Z][a-zA-Z0-9_]{4,15}$");
+    }
+
+    /**
+     * 验证昵称
+     *
+     * @param nickName 用户名
+     * @return {boolean}
+     */
+    public static boolean matchNickName(String nickName) {
+        return match(nickName, "^[a-zA-Z\\u4E00-\\u9FA5][a-zA-Z0-9_\\u4E00-\\u9FA5]{1,11}$");
     }
 
     /**
@@ -56,7 +51,7 @@ public class RegexUtils {
      * @return {boolean}
      */
     public static boolean matchEmail(String email) {
-        return match(email, EMAIL);
+        return match(email, "^\\w+([-+.]*\\w+)*@([\\da-z](-[\\da-z])?)+(\\.{1,2}[a-z]+)+$");
     }
 
     /**
@@ -66,7 +61,7 @@ public class RegexUtils {
      * @return {boolean}
      */
     public static boolean matchPhoneOrEmail(String text) {
-        return match(text, EMAIL + "|" + PHONE);
+        return match(text, "(^1[23456789]\\d{9}$)|(^\\w+([-+.]*\\w+)*@([\\da-z](-[\\da-z])?)+(\\.{1,2}[a-z]+)+$)");
     }
 
     /**

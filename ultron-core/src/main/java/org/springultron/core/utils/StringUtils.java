@@ -1,10 +1,11 @@
-package org.springultron.utils;
+package org.springultron.core.utils;
 
 import org.springframework.util.Assert;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.Collection;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -429,6 +430,29 @@ public class StringUtils extends org.springframework.util.StringUtils {
                 .append(overlay)
                 .append(str.substring(end))
                 .toString();
+    }
+
+    /**
+     * Convert a {@code Collection} into a delimited {@code String} (e.g., CSV).
+     * <p>Useful for {@code toString()} implementations.
+     *
+     * @param coll the {@code Collection} to convert
+     * @return the delimited {@code String}
+     */
+    public static String join(Collection<?> coll) {
+        return StringUtils.collectionToCommaDelimitedString(coll);
+    }
+
+    /**
+     * Convert a {@code Collection} into a delimited {@code String} (e.g. CSV).
+     * <p>Useful for {@code toString()} implementations.
+     *
+     * @param coll      the {@code Collection} to convert
+     * @param delimiter the delimiter to use (typically a ",")
+     * @return the delimited {@code String}
+     */
+    public static String join(Collection<?> coll, String delimiter) {
+        return StringUtils.collectionToDelimitedString(coll, delimiter);
     }
 
     public static byte[] getBytes(final String string) {

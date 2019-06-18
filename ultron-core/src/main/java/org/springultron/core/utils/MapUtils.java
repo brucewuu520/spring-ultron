@@ -1,4 +1,4 @@
-package org.springultron.utils;
+package org.springultron.core.utils;
 
 import org.springframework.lang.Nullable;
 
@@ -34,7 +34,9 @@ public class MapUtils {
 
     private static int capacity(final int expectedSize) {
         if (expectedSize < 3) {
-            Preconditions.checkNonnegative(expectedSize, "expectedSize");
+            if (expectedSize < 0) {
+                throw new IllegalArgumentException("expectedSize cannot be negative but was: " + expectedSize);
+            }
             return expectedSize + 1;
         } else {
             return expectedSize < 1073741824 ? (int)((float)expectedSize / 0.75F + 1.0F) : 2147483647;

@@ -1,4 +1,4 @@
-package org.springultron.utils;
+package org.springultron.core.utils;
 
 import java.io.*;
 import java.nio.charset.Charset;

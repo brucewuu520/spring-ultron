@@ -1,13 +1,14 @@
-package org.springultron.utils;
+package org.springultron.core.utils;
 
 import org.springframework.lang.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.Objects;
 
 /**
- * List数组工具
+ * 集合工具
  *
  * @Auther: brucewuu
  * @Date: 2019-06-07 12:52
@@ -27,7 +28,7 @@ public class CollectionUtils extends org.springframework.util.CollectionUtils {
     }
 
     public static <E> ArrayList<E> newArrayList(Collection<? extends E> collection) {
-        Preconditions.checkNotNull(collection);
+        Objects.requireNonNull(collection, "collection can not be null");
         return new ArrayList<>(collection);
     }
 

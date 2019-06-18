@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springultron.utils;
+package org.springultron.core.utils;
 
 /**
  * 生成的随机数类型

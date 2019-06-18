@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.springultron.utils;
+package org.springultron.core.utils;
 
 
 import java.io.Serializable;

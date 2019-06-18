@@ -1,4 +1,4 @@
-package org.springultron.core.dto;
+package org.springultron.core.convert;
 
 import java.util.function.Function;
 
@@ -11,4 +11,9 @@ public abstract class Converter<A, B> implements Function<A, B> {
     protected abstract B doForward(A a);
 
     protected abstract A doBackward(B b);
+
+    @Override
+    public B apply(A a) {
+        return doForward(a);
+    }
 }
