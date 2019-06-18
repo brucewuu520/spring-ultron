@@ -10,11 +10,11 @@
 ## 项目结构
 ```shell
 *├── spring-ultron              项目父级目录
-    ├── ultron-core             API返回对象约束
-    ├── ultron-httpclient       基于webflux的httpclinet
-    ├── ultron-mybatis          mybatis-plus基础配置
-    ├── ultron-redis            Redis配置和相关工具
-    ├── ultron-utils            工具类
+    ├── ultron-core             核心库(请求统一返回体、常用错误代码、自定义业务异常、Jackson序列化java8日期配置、常用工具类)
+    ├── ultron-mybatis          mybatis plus自动化配置、分页工具
+    ├── ultron-redis            Redis自动化配置、操作客户端
+    ├── ultron-boot             String boot脚手架，servlet/reactive全局异常捕获、基于aop的注解API日志打印(支持配置文件配置日志开关，日志内容等)、WebClient http客户端封装
+    ├── ultron-cloud            Spring cloud脚手架
 ```    
 
 ## 使用步骤
@@ -29,23 +29,15 @@
     
 ### 第三步，在自己的工程按需添加依赖库
 
-1、核心库
+1、核心库(请求统一返回体、常用错误代码、自定义业务异常、Jackson序列化java8日期配置、常用工具类)
 
     <dependency>
        <groupId>org.springultron</groupId>
        <artifactId>ultron-core</artifactId>
        <version>1.0.0</version>
     </dependency>  
-
-2、http客户端库
     
-    <dependency>
-       <groupId>org.springultron</groupId>
-       <artifactId>ultron-httpclient</artifactId>
-       <version>1.0.0</version>
-    </dependency> 
-    
-3、mybatis plus
+2、mybatis plus自动化配置、分页工具
 
     <dependency>
        <groupId>org.springultron</groupId>
@@ -53,7 +45,7 @@
        <version>1.0.0</version>
     </dependency> 
     
-4、Redis
+3、Redis自动化配置、操作客户端
 
     <dependency>
        <groupId>org.springultron</groupId>
@@ -61,13 +53,21 @@
        <version>1.0.0</version>
     </dependency>
     
-5、常用工具类
+4、String boot脚手架，servlet/reactive全局异常捕获、基于aop的注解API日志打印(支持配置文件配置日志开关，日志内容等)、WebClient http客户端封装
 
     <dependency>
        <groupId>org.springultron</groupId>
-       <artifactId>ultron-utils</artifactId>
+       <artifactId>ultron-boot</artifactId>
        <version>1.0.0</version>
-    </dependency>         
+    </dependency>   
+    
+5、Spring cloud脚手架
+
+    <dependency>
+       <groupId>org.springultron</groupId>
+       <artifactId>ultron-cloud</artifactId>
+       <version>1.0.0</version>
+    </dependency>           
             
 ## 许可证
 
