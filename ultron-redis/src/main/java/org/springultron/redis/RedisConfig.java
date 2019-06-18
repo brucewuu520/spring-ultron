@@ -8,20 +8,28 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.cache.RedisCacheConfiguration;
+import org.springframework.data.redis.cache.RedisCacheManager;
+import org.springframework.data.redis.cache.RedisCacheWriter;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
+import java.time.Duration;
+
 /**
- * @author brucewuu
- * @date 2017/8/20 9:33
- * @description redis配置  配置序列化方式以及缓存管理器 @EnableCaching 可开启方法注解缓存
+ * Redis配置
+ *
+ * @Auther: brucewuu
+ * @Date: 2019-05-31 14:26
+ * @Description: redis配置 配置序列化方式以及缓存管理器 @EnableCaching 可开启方法注解缓存
  */
 @EnableCaching
 @Configuration
@@ -52,12 +60,12 @@ public class RedisConfig extends CachingConfigurerSupport {
     /**
      * 配置自定义redisTemplate
      *
-     * @param redisConnectionFactory 连接池配置
+     * @param redisConnectionFactory redis连接工厂
      * @return RedisTemplate
      */
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Bean
-    @ConditionalOnMissingBean({RedisTemplate.class})
+    @ConditionalOnMissingBean(name = {"redisTemplate"})
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
         // 使用StringRedisSerializer来序列化和反序列化redis的key值
         StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
@@ -80,38 +88,22 @@ public class RedisConfig extends CachingConfigurerSupport {
         return template;
     }
 
-//    /**
-//     * 配置缓存管理器
-//     *
-//     * @param connectionFactory
-//     * @return
-//     */
-//    @Bean
-//    public CacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {
-//        // 生成一个默认配置，通过config对象即可对缓存进行自定义配置
-//        RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig();
-//        // 设置缓存的默认过期时间，也是使用Duration设置
-//        config = config.entryTtl(Duration.ofMinutes(1))
-//                // 设置 key为string序列化
-//                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
-//                // 设置value为json序列化
-//                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(jackson2JsonRedisSerializer()))
-//                // 不缓存空值
-//                .disableCachingNullValues();
-//
-//        // 设置一个初始化的缓存空间set集合
-//        Set<String> cacheNames = new HashSet<>();
-//        cacheNames.add("timeGroup");
-//        cacheNames.add("user");
-//        // 对每个缓存空间应用不同的配置
-//        Map<String, RedisCacheConfiguration> configMap = new HashMap<>();
-//        configMap.put("timeGroup", config);
-//        configMap.put("user", config.entryTtl(Duration.ofSeconds(120)));
-//        // 使用自定义的缓存配置初始化一个cacheManager
-//        return RedisCacheManager.builder(redisConnectionFactory)
-//                // 一定要先调用该方法设置初始化的缓存名，再初始化相关的配置
-//                .initialCacheNames(cacheNames)
-//                .withInitialCacheConfigurations(configMap)
-//                .build();
-//    }
+    /**
+     * 配置缓存管理器
+     *
+     * @param redisConnectionFactory redis连接工厂
+     * @return CacheManager
+     */
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
+    @Bean
+    public CacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {
+        // 生成一个默认配置，通过config对象即可对缓存进行自定义配置
+        RedisCacheConfiguration cacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
+                .entryTtl(Duration.ofHours(3)) // 设置缓存的默认过期时间，使用Duration设置
+                .disableCachingNullValues(); // 不缓存空值
+        // 使用自定义的缓存配置初始化cacheManager
+        return RedisCacheManager.builder(RedisCacheWriter.nonLockingRedisCacheWriter(redisConnectionFactory))
+                .cacheDefaults(cacheConfiguration)
+                .build();
+    }
 }
