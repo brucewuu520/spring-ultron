@@ -1,0 +1,6 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  org.springultron.boot.servlet.GlobalExceptionHandler,\
+  org.springultron.boot.servlet.RestExceptionHandler,\
+  org.springultron.boot.servlet.log.RequestLogAspect,\
+  org.springultron.boot.reactive.GlobalExceptionHandler,\
+  org.springultron.boot.reactive.RestExceptionHandler

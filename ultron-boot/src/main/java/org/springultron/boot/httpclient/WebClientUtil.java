@@ -1,16 +1,25 @@
-package org.springultron.http;
+package org.springultron.boot.httpclient;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springultron.core.utils.StringUtils;
 import reactor.core.publisher.Mono;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class WebClientUtil {
 
-    private static volatile WebClient HTTP_CLIENT = WebClient.create();
+    private static final Logger log = LoggerFactory.getLogger(WebClientUtil.class);
+
+    private static volatile WebClient HTTP_CLIENT = WebClient.builder().filter(logFunction()).build();
 
     public static <T> Mono<T> get(String targetUrl, Class<T> returnType) {
         return HTTP_CLIENT
@@ -93,5 +102,35 @@ public class WebClientUtil {
                 .syncBody(formData)
                 .retrieve()
                 .bodyToMono(returnType);
+    }
+
+    private static ExchangeFilterFunction logFunction() {
+        return (request, next) -> {
+            // 记录日志
+            String requestURI = request.url().toString();
+            // 构建成一条长 日志，避免并发下日志错乱
+            StringBuilder beforeReqLog = new StringBuilder(300);
+            // 日志参数
+            List<Object> beforeReqArgs = new ArrayList<>();
+            beforeReqLog.append("\n\n================ WebClient Request Start  ================\n");
+            // 打印路由
+            beforeReqLog.append("===> {}: {}\n");
+            // 参数
+            String requestMethod = request.method().name();
+            beforeReqArgs.add(requestMethod);
+            beforeReqArgs.add(requestURI);
+            HttpHeaders newHeaders = request.headers();
+            newHeaders.forEach((headerName, headerValue) -> {
+                beforeReqLog.append("===Headers===  {}: {}\n");
+                beforeReqArgs.add(headerName);
+                beforeReqArgs.add(StringUtils.join(headerValue));
+            });
+
+            beforeReqLog.append("================  WebClient Request End  =================\n");
+
+            log.info(beforeReqLog.toString(), beforeReqArgs.toArray());
+
+            return next.exchange(request);
+        };
     }
 }
