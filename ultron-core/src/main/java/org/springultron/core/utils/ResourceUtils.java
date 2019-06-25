@@ -49,7 +49,6 @@ public class ResourceUtils extends org.springframework.util.ResourceUtils {
             return new UrlResource(resourceLocation);
         }
         if (resourceLocation.startsWith(ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX)) {
-            assert SpringUtils.getContext() != null;
             return SpringUtils.getContext().getResource(resourceLocation);
         }
         return new FileSystemResource(resourceLocation);

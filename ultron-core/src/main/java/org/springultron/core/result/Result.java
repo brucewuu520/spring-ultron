@@ -57,8 +57,8 @@ public class Result<T> implements Serializable {
     /**
      * 返回成功
      */
-    public static Result success() {
-        return new Result(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage());
+    public static <T> Result<T> success() {
+        return new Result<>(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage());
     }
 
     /**
@@ -66,8 +66,8 @@ public class Result<T> implements Serializable {
      *
      * @param message 提示信息
      */
-    public static Result success(String message) {
-        return new Result(ResultCode.SUCCESS.getCode(), message);
+    public static <T> Result<T> success(String message) {
+        return new Result<>(ResultCode.SUCCESS.getCode(), message);
     }
 
     /**
@@ -76,7 +76,7 @@ public class Result<T> implements Serializable {
      * @param data 获取的数据
      */
     public static <T> Result<T> success(T data) {
-        return new Result<T>(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), data);
+        return new Result<>(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), data);
     }
 
     /**
@@ -86,13 +86,13 @@ public class Result<T> implements Serializable {
      * @param message 提示信息
      */
     public static <T> Result<T> success(T data, String message) {
-        return new Result<T>(ResultCode.SUCCESS.getCode(), message, data);
+        return new Result<>(ResultCode.SUCCESS.getCode(), message, data);
     }
 
     /**
      * 失败返回信息
      */
-    public static Result failed() {
+    public static <T> Result<T> failed() {
         return failed(ResultCode.FAILED);
     }
 
@@ -101,8 +101,8 @@ public class Result<T> implements Serializable {
      *
      * @param errorCode 错误码
      */
-    public static Result failed(IResultCode errorCode) {
-        return new Result(errorCode.getCode(), errorCode.getMessage());
+    public static <T> Result<T> failed(IResultCode errorCode) {
+        return new Result<>(errorCode.getCode(), errorCode.getMessage());
     }
 
     /**
@@ -110,8 +110,8 @@ public class Result<T> implements Serializable {
      *
      * @param message 提示信息
      */
-    public static Result failed(String message) {
-        return new Result(ResultCode.FAILED.getCode(), message);
+    public static <T> Result<T> failed(String message) {
+        return new Result<>(ResultCode.FAILED.getCode(), message);
     }
 
     /**
@@ -120,28 +120,28 @@ public class Result<T> implements Serializable {
      * @param code    状态码
      * @param message 消息描述
      */
-    public static Result failed(int code, String message) {
-        return new Result(code, message);
+    public static <T> Result<T> failed(int code, String message) {
+        return new Result<>(code, message);
     }
 
     /**
      * 请求验签失败
      */
-    public static Result signFailed() {
+    public static <T> Result<T> signFailed() {
         return failed(ResultCode.SIGN_FAILED);
     }
 
     /**
      * 未登录或token已经过期返回信息
      */
-    public static Result unauthorized() {
+    public static <T> Result<T> unauthorized() {
         return failed(ResultCode.UNAUTHORIZED);
     }
 
     /**
      * 未授权返回信息
      */
-    public static Result forbidden() {
+    public static <T> Result<T> forbidden() {
         return failed(ResultCode.FORBIDDEN);
     }
 
@@ -170,8 +170,8 @@ public class Result<T> implements Serializable {
      * @param e 异常
      * @return 返回值
      */
-    public static Result apiException(ApiException e) {
-        return new Result(e.getCode(), e.getMessage());
+    public static <T> Result<T> apiException(ApiException e) {
+        return new Result<>(e.getCode(), e.getMessage());
     }
 
     /**

@@ -1,22 +1,20 @@
 package org.springultron.core.utils;
 
-import org.springframework.lang.Nullable;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Objects;
 
 /**
- * 集合工具
+ * List工具
  *
  * @Auther: brucewuu
  * @Date: 2019-06-07 12:52
  * @Description:
  */
-public class CollectionUtils extends org.springframework.util.CollectionUtils {
+public class Lists extends org.springframework.util.CollectionUtils {
 
-    private CollectionUtils() {
+    private Lists() {
     }
 
     public static <E> ArrayList<E> newArrayList() {
@@ -36,7 +34,7 @@ public class CollectionUtils extends org.springframework.util.CollectionUtils {
         return new LinkedList<>();
     }
 
-    public static boolean isNotEmpty(@Nullable Collection<?> collection) {
+    public static boolean isNotEmpty(Collection<?> collection) {
         return !isEmpty(collection);
     }
 }

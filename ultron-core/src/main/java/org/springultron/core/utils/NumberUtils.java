@@ -1,7 +1,5 @@
 package org.springultron.core.utils;
 
-import org.springframework.lang.Nullable;
-
 /**
  * 数字类型工具
  *
@@ -23,7 +21,7 @@ public class NumberUtils {
      * @param str 字符串
      * @return 结果 默认值：0
      */
-    public static int toInt(@Nullable final String str) {
+    public static int toInt(final String str) {
         return toInt(str, 0);
     }
 
@@ -40,7 +38,7 @@ public class NumberUtils {
      * @param defaultValue 默认值
      * @return 结果
      */
-    public static int toInt(@Nullable final String str, final int defaultValue) {
+    public static int toInt(final String str, final int defaultValue) {
         if (null == str || "".equals(str)) {
             return defaultValue;
         }
@@ -57,7 +55,7 @@ public class NumberUtils {
      * @param str 字符串
      * @return 结果 默认值 0L
      */
-    public static long toLong(@Nullable final String str) {
+    public static long toLong(final String str) {
         return toLong(str, 0L);
     }
 
@@ -68,7 +66,7 @@ public class NumberUtils {
      * @param defaultValue 默认值
      * @return 结果
      */
-    public static long toLong(@Nullable final String str, final long defaultValue) {
+    public static long toLong(final String str, final long defaultValue) {
         if (null == str || "".equals(str)) {
             return defaultValue;
         }
@@ -85,7 +83,7 @@ public class NumberUtils {
      * @param str          字符串
      * @return 结果 默认值 0.0f
      */
-    public static float toFloat(@Nullable final String str) {
+    public static float toFloat(final String str) {
         return toFloat(str, 0.0f);
     }
 
@@ -96,7 +94,7 @@ public class NumberUtils {
      * @param defaultValue 默认值
      * @return 结果
      */
-    public static float toFloat(@Nullable final String str, final float defaultValue) {
+    public static float toFloat(final String str, final float defaultValue) {
         if (null == str || "".equals(str)) {
             return defaultValue;
         }
@@ -113,7 +111,7 @@ public class NumberUtils {
      * @param str 字符串
      * @return 结果 默认值 0.0d
      */
-    public static double toDouble(@Nullable final String str) {
+    public static double toDouble(final String str) {
         return toDouble(str, 0.0d);
     }
 
@@ -124,7 +122,7 @@ public class NumberUtils {
      * @param defaultValue 默认值
      * @return 结果
      */
-    public static double toDouble(@Nullable final String str, final double defaultValue) {
+    public static double toDouble(final String str, final double defaultValue) {
         if (null == str || "".equals(str)) {
             return defaultValue;
         }

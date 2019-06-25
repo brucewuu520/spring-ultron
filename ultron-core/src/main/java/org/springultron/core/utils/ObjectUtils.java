@@ -1,7 +1,5 @@
 package org.springultron.core.utils;
 
-import org.springframework.lang.Nullable;
-
 import java.util.Objects;
 
 /**
@@ -18,7 +16,7 @@ public class ObjectUtils extends org.springframework.util.ObjectUtils {
      * @param obj object
      * @return boolean
      */
-    public static boolean isNotEmpty(@Nullable Object obj) {
+    public static boolean isNotEmpty(Object obj) {
         return !ObjectUtils.isEmpty(obj);
     }
 

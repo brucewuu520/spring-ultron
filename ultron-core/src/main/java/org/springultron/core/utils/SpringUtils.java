@@ -4,7 +4,6 @@ import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationEvent;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 /**
@@ -26,32 +25,28 @@ public class SpringUtils implements ApplicationContextAware {
         }
     }
 
-    @Nullable
     public static <T> T getBean(Class<T> clazz) {
         if (null == clazz || null == context)
             return null;
         return context.getBean(clazz);
     }
 
-    @Nullable
     public static <T> T getBean(String beanId) {
         if (StringUtils.isEmpty(beanId) || null == context)
             return null;
-        // noinspection unchecked
+        //noinspection unchecked
         return (T) context.getBean(beanId);
     }
 
-    @Nullable
     public static <T> T getBean(String beanName, Class<T> clazz) {
         if (StringUtils.isEmpty(beanName) || null == clazz || null == context)
             return null;
         return context.getBean(beanName, clazz);
     }
 
-    @Nullable
     public static ApplicationContext getContext() {
         if (null == context) {
-            return null;
+            throw new RuntimeException("ApplicationContext can not be null");
         }
         return context;
     }

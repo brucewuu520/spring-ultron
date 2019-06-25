@@ -1,7 +1,5 @@
 package org.springultron.core.utils;
 
-import org.springframework.lang.Nullable;
-
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.HashMap;
@@ -14,7 +12,7 @@ import java.util.Map;
  * @Date: 2019-06-07 12:54
  * @Description:
  */
-public class MapUtils {
+public class Maps {
 
     public static <K, V> HashMap<K, V> newHashMap() {
         return new HashMap<>();
@@ -43,11 +41,11 @@ public class MapUtils {
         }
     }
 
-    public static boolean isEmpty(@Nullable Map<?, ?> map) {
+    public static boolean isEmpty(Map<?, ?> map) {
         return map == null || map.isEmpty();
     }
 
-    public static boolean isNotEmpty(@Nullable Map<?, ?> map) {
+    public static boolean isNotEmpty(Map<?, ?> map) {
         return !isEmpty(map);
     }
 
@@ -60,7 +58,6 @@ public class MapUtils {
      * @param key the key to look up
      * @return the value in the Map as a String, <code>null</code> if null map input
      */
-    @Nullable
     public static String getString(final Map map, final Object key) {
         if (map != null) {
             Object answer = map.get(key);
@@ -80,7 +77,6 @@ public class MapUtils {
      * @param key the key to look up
      * @return the value in the Map as a Short, <code>null</code> if null map input
      */
-    @Nullable
     public static Short getShort(final Map map, final Object key) {
         Number answer = getNumber(map, key);
         if (answer == null) {
@@ -100,7 +96,6 @@ public class MapUtils {
      * @param key the key to look up
      * @return the value in the Map as a Integer, <code>null</code> if null map input
      */
-    @Nullable
     public static Integer getInteger(final Map map, final Object key) {
         Number answer = getNumber(map, key);
         if (answer == null) {
@@ -120,7 +115,6 @@ public class MapUtils {
      * @param key the key to look up
      * @return the value in the Map as a Long, <code>null</code> if null map input
      */
-    @Nullable
     public static Long getLong(final Map map, final Object key) {
         Number answer = getNumber(map, key);
         if (answer == null) {
@@ -140,7 +134,6 @@ public class MapUtils {
      * @param key the key to look up
      * @return the value in the Map as a Float, <code>null</code> if null map input
      */
-    @Nullable
     public static Float getFloat(final Map map, final Object key) {
         Number answer = getNumber(map, key);
         if (answer == null) {
@@ -160,7 +153,6 @@ public class MapUtils {
      * @param key the key to look up
      * @return the value in the Map as a Double, <code>null</code> if null map input
      */
-    @Nullable
     public static Double getDouble(final Map map, final Object key) {
         Number answer = getNumber(map, key);
         if (answer == null) {
@@ -181,7 +173,6 @@ public class MapUtils {
      * @param key the key to look up
      * @return the value in the Map as a Map, <code>null</code> if null map input
      */
-    @Nullable
     public static Map getMap(final Map map, final Object key) {
         if (map != null) {
             Object answer = map.get(key);
@@ -206,7 +197,6 @@ public class MapUtils {
      * @param key the key to look up
      * @return the value in the Map as a Boolean, <code>null</code> if null map input
      */
-    @Nullable
     public static Boolean getBoolean(final Map map, final Object key) {
         if (map != null) {
             Object answer = map.get(key);
@@ -237,7 +227,6 @@ public class MapUtils {
      * @param key the key to look up
      * @return the value in the Map as a Number, <code>null</code> if null map input
      */
-    @Nullable
     public static Number getNumber(final Map map, final Object key) {
         if (map != null) {
             Object answer = map.get(key);
