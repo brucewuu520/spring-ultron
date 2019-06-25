@@ -13,7 +13,7 @@
     ├── ultron-core             核心库(请求统一返回体、常用错误代码、自定义业务异常、Jackson序列化java8日期配置、常用工具类)
     ├── ultron-mybatis          mybatis plus自动化配置、分页工具
     ├── ultron-redis            Redis自动化配置、操作客户端
-    ├── ultron-boot             String boot脚手架，servlet/reactive全局异常捕获、基于aop的注解API日志打印(支持配置文件配置日志开关，日志内容等)、WebClient http客户端封装
+    ├── ultron-boot             Spring boot脚手架，servlet/reactive全局异常捕获、基于aop的注解API日志打印(支持配置文件配置日志开关，日志内容等)、WebClient http客户端封装
     ├── ultron-cloud            Spring cloud脚手架
 ```    
 
@@ -53,7 +53,7 @@
        <version>1.0.0</version>
     </dependency>
     
-4、String boot脚手架，servlet/reactive全局异常捕获、基于aop的注解API日志打印(支持配置文件配置日志开关，日志内容等)、WebClient http客户端封装
+4、Spring boot脚手架，servlet/reactive全局异常捕获、基于aop的注解API日志打印(支持配置文件配置日志开关，日志内容等)、WebClient http客户端封装
 
     <dependency>
        <groupId>org.springultron</groupId>
