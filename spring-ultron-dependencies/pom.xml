@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>spring-ultron-dependencies</artifactId>
+    <description>Spring Ultron Dependencies</description>
+    <packaging>pom</packaging>
+
+    <parent>
+        <artifactId>spring-ultron</artifactId>
+        <groupId>org.springultron</groupId>
+        <version>1.0.0</version>
+    </parent>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springultron</groupId>
+                <artifactId>ultron-boot</artifactId>
+                <version>${spring-ultron.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springultron</groupId>
+                <artifactId>ultron-cloud</artifactId>
+                <version>${spring-ultron.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springultron</groupId>
+                <artifactId>ultron-core</artifactId>
+                <version>${spring-ultron.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springultron</groupId>
+                <artifactId>ultron-http</artifactId>
+                <version>${spring-ultron.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springultron</groupId>
+                <artifactId>ultron-mybatis</artifactId>
+                <version>${spring-ultron.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springultron</groupId>
+                <artifactId>ultron-redis</artifactId>
+                <version>${spring-ultron.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springultron</groupId>
+                <artifactId>ultron-swagger</artifactId>
+                <version>${spring-ultron.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+</project>

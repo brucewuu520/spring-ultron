@@ -4,30 +4,63 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.springultron</groupId>
     <artifactId>spring-ultron</artifactId>
-    <description>Spring Boot multi module common library</description>
+    <description>Spring Boot/Cloud multi module common library</description>
     <version>1.0.0</version>
     <packaging>pom</packaging>
 
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>bruce.wuu</name>
+            <email>402432291@qq.com</email>
+            <url>https://github.com/brucewuu520</url>
+        </developer>
+    </developers>
+
+    <scm>
+        <url>https://github.com/brucewuu520/spring-ultron</url>
+        <connection>scm:git:git://github.com/brucewuu520/spring-ultron.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/brucewuu520/spring-ultron.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
     <properties>
+        <spring-ultron.version>1.0.0</spring-ultron.version>
+        <spring-boot.version>2.1.6.RELEASE</spring-boot.version>
+        <spring-cloud.version>Greenwich.SR2</spring-cloud.version>
+        <alibaba-cloud.version>0.9.0</alibaba-cloud.version>
+        <okhttp.version>4.0.0</okhttp.version>
+        <mybatis-plus.version>3.1.2</mybatis-plus.version>
+        <common-pool.version>2.6.0</common-pool.version>
+        <swagger.version>2.9.2</swagger.version>
+        <swagger-ui.version>1.9.4</swagger-ui.version>
+        <fastjson-version>1.2.58</fastjson-version>
+
+        <findbugs.version>3.0.2</findbugs.version>
+
+        <!-- Maven Plugin Versions -->
         <java.version>1.8</java.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
         <maven-javadoc-plugin.version>2.10.4</maven-javadoc-plugin.version>
-        <spring-ultron.version>1.0.0</spring-ultron.version>
-        <spring-boot.version>2.1.6.RELEASE</spring-boot.version>
-        <spring-cloud.version>Greenwich.SR1</spring-cloud.version>
-        <mybatis-plus.version>3.1.1</mybatis-plus.version>
-        <jackson.version>2.9.8</jackson.version>
-        <common-pool.version>2.6.0</common-pool.version>
     </properties>
 
     <modules>
-        <module>ultron-core</module>
-        <module>ultron-mybatis</module>
-        <module>ultron-redis</module>
+        <module>spring-ultron-dependencies</module>
         <module>ultron-boot</module>
         <module>ultron-cloud</module>
+        <module>ultron-core</module>
+        <module>ultron-http</module>
+        <module>ultron-mybatis</module>
+        <module>ultron-redis</module>
+        <module>ultron-swagger</module>
     </modules>
 
     <dependencyManagement>
@@ -46,29 +79,25 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>0.9.0.RELEASE</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
-    <licenses>
-        <license>
-            <name>The Apache Software License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-        </license>
-    </licenses>
-
-    <developers>
-        <developer>
-            <name>bruce.wuu</name>
-            <email>402432291@qq.com</email>
-            <url>https://github.com/brucewuu520</url>
-        </developer>
-    </developers>
-
-    <scm>
-        <url>https://github.com/brucewuu520/spring-ultron</url>
-        <connection>https://github.com/brucewuu520/spring-ultron.git</connection>
-        <developerConnection>https://github.com/brucewuu520</developerConnection>
-    </scm>
+    <dependencies>
+        <!-- https://mvnrepository.com/artifact/com.google.code.findbugs/jsr305 -->
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+            <version>${findbugs.version}</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>
@@ -79,10 +108,9 @@
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
-                    <compilerVersion>${java.version}</compilerVersion>
-                    <encoding>${project.build.sourceEncoding}</encoding>
+                    <encoding>UTF-8</encoding>
+                    <parameters>true</parameters>
                     <showWarnings>true</showWarnings>
-                    <skip>true</skip>
                 </configuration>
             </plugin>
             <plugin>
@@ -101,10 +129,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.10.4</version>
+                <version>${maven-javadoc-plugin.version}</version>
                 <configuration>
-                    <encoding>UTF-8</encoding>
                     <charset>UTF-8</charset>
+                    <encoding>UTF-8</encoding>
                     <docencoding>UTF-8</docencoding>
                     <aggregate>true</aggregate>
                 </configuration>
@@ -114,9 +142,6 @@
                         <goals>
                             <goal>jar</goal>
                         </goals>
-                        <configuration>
-                            <additionalparam>-Xdoclint:none</additionalparam>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -124,6 +149,17 @@
     </build>
 
     <profiles>
+        <profile>
+            <id>jdk8</id>
+            <activation>
+                <!--当jdk环境版本为1.8时，此profile被激活-->
+                <jdk>1.8</jdk>
+            </activation>
+            <properties>
+                <!-- Turn off JDK 8's lint checks: -->
+                <additionalparam>-Xdoclint:none</additionalparam>
+            </properties>
+        </profile>
         <profile>
             <id>release</id>
             <build>
@@ -144,10 +180,10 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>2.10.4</version>
+                        <version>${maven-javadoc-plugin.version}</version>
                         <configuration>
-                            <encoding>UTF-8</encoding>
                             <charset>UTF-8</charset>
+                            <encoding>UTF-8</encoding>
                             <docencoding>UTF-8</docencoding>
                             <aggregate>true</aggregate>
                         </configuration>
@@ -157,9 +193,6 @@
                                 <goals>
                                     <goal>jar</goal>
                                 </goals>
-                                <configuration>
-                                    <additionalparam>-Xdoclint:none</additionalparam>
-                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
