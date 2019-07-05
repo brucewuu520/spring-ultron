@@ -26,6 +26,11 @@ public class ClassUtils extends org.springframework.util.ClassUtils {
      * @return MethodParameter
      */
     public static MethodParameter getMethodParameter(Constructor<?> constructor, int parameterIndex) {
+        try {
+            Class<?> clazz = ClassUtils.forName("org.reactivestreams.Publisher", null);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         MethodParameter methodParameter = new SynthesizingMethodParameter(constructor, parameterIndex);
         methodParameter.initParameterNameDiscovery(PARAMETER_NAME_DISCOVERER);
         return methodParameter;

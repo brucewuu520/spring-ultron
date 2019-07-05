@@ -1,5 +1,6 @@
 package org.springultron.core.exception;
 
+import org.springultron.core.result.IResultCode;
 import org.springultron.core.result.ResultCode;
 
 /**
@@ -10,6 +11,7 @@ import org.springultron.core.result.ResultCode;
  * @Description:
  */
 public class ApiException extends RuntimeException {
+    private static final long serialVersionUID = 250919198459751841L;
 
     /**
      * 异常码
@@ -40,6 +42,11 @@ public class ApiException extends RuntimeException {
     public ApiException(Throwable cause, int code) {
         super(cause);
         this.code = code;
+    }
+
+    public ApiException(IResultCode resultCode) {
+        super(resultCode.getMessage());
+        this.code = resultCode.getCode();
     }
 
     public int getCode() {

@@ -1,4 +1,4 @@
-package org.springultron.core.config;
+package org.springultron.core.jackson;
 
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.PackageVersion;

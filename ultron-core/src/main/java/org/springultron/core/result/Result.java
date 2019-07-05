@@ -1,5 +1,7 @@
 package org.springultron.core.result;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.springultron.core.exception.ApiException;
 
 import java.io.Serializable;
@@ -12,11 +14,15 @@ import java.util.Optional;
  * @Date: 2019-05-22 15:16
  * @Description:
  */
+@ApiModel(description = "返回信息")
 public class Result<T> implements Serializable {
     private static final long serialVersionUID = -2832435143001472900L;
 
+    @ApiModelProperty(value = "状态码", required = true)
     private int code;
+    @ApiModelProperty(value = "消息", required = true)
     private String message;
+    @ApiModelProperty(value = "返回数据")
     private T data;
 
     private Result(int code, String message) {

@@ -1,10 +1,6 @@
 package org.springultron.core.utils;
 
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
-import org.springframework.core.io.support.ResourcePatternResolver;
+import org.springframework.core.io.*;
 import org.springframework.util.Assert;
 
 import java.io.IOException;
@@ -28,9 +24,8 @@ public class ResourceUtils extends org.springframework.util.ResourceUtils {
      * 1. classpath:
      * 2. file:
      * 3. ftp:
-     * 4. webflux: and https:
-     * //     * 5. classpath*:
-     * 6. C:/dir1/ and /Users/lcm
+     * 4. http: and https:
+     * 5. C:/dir1/ and /Users/lcm
      * </p>
      *
      * @param resourceLocation 资源路径
@@ -48,8 +43,8 @@ public class ResourceUtils extends org.springframework.util.ResourceUtils {
         if (resourceLocation.matches(HTTP_REGEX)) {
             return new UrlResource(resourceLocation);
         }
-        if (resourceLocation.startsWith(ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX)) {
-            return SpringUtils.getContext().getResource(resourceLocation);
+        if (resourceLocation.startsWith(FILE_URL_PREFIX)) {
+            return new FileUrlResource(resourceLocation);
         }
         return new FileSystemResource(resourceLocation);
     }
