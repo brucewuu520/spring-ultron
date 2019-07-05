@@ -5,24 +5,21 @@ import org.springultron.boot.enums.LogLevel;
 
 /**
  * 请求日志配置
+ *
  * @Auther: brucewuu
  * @Date: 2019-06-17 17:31
  * @Description:
  */
-@ConfigurationProperties(LogLevel.REQ_LOG_PROPS_PREFIX)
-public class UltronRequestLogProperties {
-
-    private LogLevel level = LogLevel.BASIC;
-
+@ConfigurationProperties(LogLevel.ULTRON_LOG_PROPS_PREFIX)
+public class UltronLogProperties {
+    /**
+     * 是否开启日志
+     */
     private boolean enable = true;
-
-    public LogLevel getLevel() {
-        return level;
-    }
-
-    public void setLevel(LogLevel level) {
-        this.level = level;
-    }
+    /**
+     * 日志等级
+     */
+    private LogLevel level = LogLevel.BASIC;
 
     public boolean isEnable() {
         return enable;
@@ -30,5 +27,13 @@ public class UltronRequestLogProperties {
 
     public void setEnable(boolean enable) {
         this.enable = enable;
+    }
+
+    public LogLevel getLevel() {
+        return level;
+    }
+
+    public void setLevel(LogLevel level) {
+        this.level = level;
     }
 }

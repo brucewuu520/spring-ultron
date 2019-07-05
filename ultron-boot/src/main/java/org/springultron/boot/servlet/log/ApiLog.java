@@ -19,5 +19,5 @@ public @interface ApiLog {
      *
      * @return 日志描述信息
      */
-    String description() default "request description";
+    String description() default "request api";
 }

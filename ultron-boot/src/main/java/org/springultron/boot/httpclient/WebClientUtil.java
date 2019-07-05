@@ -1,19 +1,12 @@
 package org.springultron.boot.httpclient;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
-import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springultron.core.utils.StringUtils;
 import reactor.core.publisher.Mono;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -21,15 +14,18 @@ import java.util.Map;
  */
 public class WebClientUtil {
 
-    private static final Logger log = LoggerFactory.getLogger(WebClientUtil.class);
-
     private static volatile WebClient HTTP_CLIENT;
 
-    static {
-        HTTP_CLIENT = WebClient.builder().filter(logFunction()).build();
-    }
+    private WebClientUtil() {}
 
-    public static WebClient getHttpClient() {
+    public static WebClient getWebClient() {
+        if (null == HTTP_CLIENT) {
+            synchronized (WebClientUtil.class) {
+                if (null == HTTP_CLIENT) {
+                    HTTP_CLIENT = WebClient.builder().build();
+                }
+            }
+        }
         return HTTP_CLIENT;
     }
 
@@ -42,7 +38,7 @@ public class WebClientUtil {
      * @return 返回值Mono对象
      */
     public static <T> Mono<T> get(String targetUrl, Class<T> returnType) {
-        return HTTP_CLIENT
+        return getWebClient()
                 .get()
                 .uri(targetUrl)
                 .retrieve()
@@ -51,6 +47,46 @@ public class WebClientUtil {
 
     /**
      * 发起GET请求
+     * <p>
+     * UriComponentsBuilder
+     * .fromUriString("https://example.com/hotels/query")
+     * .queryParam("id", "123")
+     * .queryParam("name", "J.W")
+     * .build()
+     * .toUri()
+     * </p>
+     *
+     * <p>
+     * UriComponentsBuilder
+     * .fromUriString("https://example.com/hotels/{hotel}?q={q}")
+     * .build("Westin", "123");
+     * </p>
+     *
+     * <p>
+     * UriComponentsBuilder
+     * .fromUriString("https://example.com/hotels/{hotel}")
+     * .queryParam("q", "{q}")
+     * .build("Westin", "123");
+     * </p>
+     *
+     * <p>
+     * UriComponentsBuilder
+     * .fromUriString("https://example.com/hotels/{hotel}")
+     * .queryParam("q", "{q}")
+     * .encode()
+     * .build()
+     * .expand("Westin", "123")
+     * .toUri();
+     * </P>
+     *
+     * <p>
+     * UriComponentsBuilder
+     * .fromUriString("https://example.com/hotels/{hotel}")
+     * .queryParam("q", "{q}")
+     * .encode()
+     * .buildAndExpand("Westin", "123")
+     * .toUri();
+     * </p>
      *
      * @param uri        请求URI
      * @param returnType 返回值类型
@@ -58,7 +94,7 @@ public class WebClientUtil {
      * @return 返回值Mono对象
      */
     public static <T> Mono<T> get(URI uri, Class<T> returnType) {
-        return HTTP_CLIENT
+        return getWebClient()
                 .get()
                 .uri(uri)
                 .retrieve()
@@ -68,16 +104,16 @@ public class WebClientUtil {
     /**
      * 发起GET请求
      *
-     * @param baseUrl    请求地址
-     * @param params     请求参数
-     * @param returnType 返回值类型
-     * @param <T>        返回值泛型
+     * @param baseUrl      请求地址 "xx/persons/{id}/{name}"
+     * @param uriVariables 请求pathVariable变量参数 id, name
+     * @param returnType   返回值类型
+     * @param <T>          返回值泛型
      * @return 返回值Mono对象
      */
-    public static <T> Mono<T> get(String baseUrl, Map<String, ?> params, Class<T> returnType) {
-        return HTTP_CLIENT
+    public static <T> Mono<T> get(String baseUrl, Object[] uriVariables, Class<T> returnType) {
+        return getWebClient()
                 .get()
-                .uri(baseUrl, params)
+                .uri(baseUrl, uriVariables)
                 .retrieve()
                 .bodyToMono(returnType);
     }
@@ -85,14 +121,14 @@ public class WebClientUtil {
     /**
      * 发起GET请求
      *
-     * @param baseUrl      请求地址
-     * @param uriVariables 请求pathVariable变量参数
+     * @param baseUrl      请求地址 "xx/persons/{id}/{name}"
+     * @param uriVariables uriVariables url路径参数(id=1,name=tom)
      * @param returnType   返回值类型
      * @param <T>          返回值泛型
      * @return 返回值Mono对象
      */
-    public static <T> Mono<T> get(String baseUrl, Object[] uriVariables, Class<T> returnType) {
-        return HTTP_CLIENT
+    public static <T> Mono<T> get(String baseUrl, Map<String, ?> uriVariables, Class<T> returnType) {
+        return getWebClient()
                 .get()
                 .uri(baseUrl, uriVariables)
                 .retrieve()
@@ -110,7 +146,7 @@ public class WebClientUtil {
      * @return 返回值Mono对象
      */
     public static <T> Mono<T> get(String targetUrl, Class<T> returnType, String headerName, String... headers) {
-        return HTTP_CLIENT
+        return getWebClient()
                 .get()
                 .uri(targetUrl)
                 .header(headerName, headers)
@@ -121,18 +157,36 @@ public class WebClientUtil {
     /**
      * 发起GET请求
      *
-     * @param baseUrl    请求地址
-     * @param params     请求参数
+     * @param targetUrl  请求URL
+     * @param headerMap  Headers
      * @param returnType 返回值类型
-     * @param headerName Header Name
-     * @param headers    Header Value
      * @param <T>        返回值泛型
      * @return 返回值Mono对象
      */
-    public static <T> Mono<T> get(String baseUrl, Map<String, ?> params, Class<T> returnType, String headerName, String... headers) {
-        return HTTP_CLIENT
+    public static <T> Mono<T> get(final String targetUrl, final MultiValueMap<String, String> headerMap, final Class<T> returnType) {
+        return getWebClient()
                 .get()
-                .uri(baseUrl, params)
+                .uri(targetUrl)
+                .headers(headers -> headers.addAll(headerMap))
+                .retrieve()
+                .bodyToMono(returnType);
+    }
+
+    /**
+     * 发起GET请求
+     *
+     * @param baseUrl      请求地址 "../persons/{id}/{name}"
+     * @param uriVariables url路径参数(id=1,name=tom)
+     * @param returnType   返回值类型
+     * @param headerName   Header Name
+     * @param headers      Header Value
+     * @param <T>          返回值泛型
+     * @return 返回值Mono对象
+     */
+    public static <T> Mono<T> get(String baseUrl, Map<String, ?> uriVariables, Class<T> returnType, String headerName, String... headers) {
+        return getWebClient()
+                .get()
+                .uri(baseUrl, uriVariables)
                 .header(headerName, headers)
                 .retrieve()
                 .bodyToMono(returnType);
@@ -141,19 +195,18 @@ public class WebClientUtil {
     /**
      * 发起POST请求（contentType: application/json;charset=UTF-8）
      *
-     * @param baseUrl    请求地址
-     * @param request    请求body
+     * @param targetUrl  请求地址
+     * @param reqBody    请求body
      * @param returnType 返回值类型
      * @param <T>        返回值泛型
      * @return 返回值Mono对象
      */
-    public static <T> Mono<T> postJSON(String baseUrl, Object request, Class<T> returnType) {
-        return HTTP_CLIENT
+    public static <T> Mono<T> postJSON(String targetUrl, Object reqBody, Class<T> returnType) {
+        return getWebClient()
                 .post()
-                .uri(baseUrl)
-                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .uri(targetUrl)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .syncBody(request)
+                .syncBody(reqBody)
                 .retrieve()
                 .bodyToMono(returnType);
     }
@@ -162,21 +215,41 @@ public class WebClientUtil {
      * 发起POST请求（contentType: application/json;charset=UTF-8）
      *
      * @param baseUrl    请求地址
-     * @param request    请求body
+     * @param reqBody    请求body
      * @param returnType 返回值类型
      * @param headerName Header Name
      * @param headers    Header Value
      * @param <T>        返回值泛型
      * @return 返回值Mono对象
      */
-    public static <T> Mono<T> postJSON(String baseUrl, Object request, Class<T> returnType, String headerName, String... headers) {
-        return HTTP_CLIENT
+    public static <T> Mono<T> postJSON(String baseUrl, Object reqBody, Class<T> returnType, String headerName, String... headers) {
+        return getWebClient()
                 .post()
                 .uri(baseUrl)
                 .header(headerName, headers)
-                .accept(MediaType.APPLICATION_JSON_UTF8)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .syncBody(request)
+                .syncBody(reqBody)
+                .retrieve()
+                .bodyToMono(returnType);
+    }
+
+    /**
+     * 发起POST请求（contentType: application/json;charset=UTF-8）
+     *
+     * @param baseUrl    请求地址
+     * @param headerMap  headers
+     * @param reqBody    请求body
+     * @param returnType 返回值类型
+     * @param <T>        返回值泛型
+     * @return 返回值Mono对象
+     */
+    public static <T> Mono<T> postJSON(final String baseUrl, final MultiValueMap<String, String> headerMap, final Object reqBody, final Class<T> returnType) {
+        return getWebClient()
+                .post()
+                .uri(baseUrl)
+                .headers(headers -> headers.addAll(headerMap))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .syncBody(reqBody)
                 .retrieve()
                 .bodyToMono(returnType);
     }
@@ -191,9 +264,29 @@ public class WebClientUtil {
      * @return 返回值Mono对象
      */
     public static <T> Mono<T> postForm(String baseUrl, BodyInserters.FormInserter<String> formInserter, Class<T> returnType) {
-        return HTTP_CLIENT
+        return getWebClient()
                 .post()
                 .uri(baseUrl)
+                .body(formInserter)
+                .retrieve()
+                .bodyToMono(returnType);
+    }
+
+    /**
+     * 发起POST 表单请求（contentType: application/x-www-form-urlencoded）
+     *
+     * @param baseUrl      请求地址
+     * @param headerMap    headers
+     * @param formInserter 表单参数
+     * @param returnType   返回值类型
+     * @param <T>          返回值泛型
+     * @return 返回值Mono对象
+     */
+    public static <T> Mono<T> postForm(final String baseUrl, final MultiValueMap<String, String> headerMap, final BodyInserters.FormInserter<String> formInserter, final Class<T> returnType) {
+        return getWebClient()
+                .post()
+                .uri(baseUrl)
+                .headers(headers -> headers.addAll(headerMap))
                 .body(formInserter)
                 .retrieve()
                 .bodyToMono(returnType);
@@ -209,41 +302,11 @@ public class WebClientUtil {
      * @return 返回值Mono对象
      */
     public static <T> Mono<T> postForm(String baseUrl, MultiValueMap<String, String> formData, Class<T> returnType) {
-        return HTTP_CLIENT
+        return getWebClient()
                 .post()
                 .uri(baseUrl)
                 .syncBody(formData)
                 .retrieve()
                 .bodyToMono(returnType);
-    }
-
-    private static ExchangeFilterFunction logFunction() {
-        return (request, next) -> {
-            // 记录日志
-            String requestURI = request.url().toString();
-            // 构建成一条长 日志，避免并发下日志错乱
-            StringBuilder beforeReqLog = new StringBuilder(300);
-            // 日志参数
-            final List<Object> beforeReqArgs = new ArrayList<>();
-            beforeReqLog.append("\n\n================ WebClient Request Start  ================\n");
-            // 打印路由
-            beforeReqLog.append("===> {}: {}\n");
-            // 参数
-            String requestMethod = request.method().name();
-            beforeReqArgs.add(requestMethod);
-            beforeReqArgs.add(requestURI);
-            HttpHeaders newHeaders = request.headers();
-            newHeaders.forEach((headerName, headerValue) -> {
-                beforeReqLog.append("===Headers===  {}: {}\n");
-                beforeReqArgs.add(headerName);
-                beforeReqArgs.add(StringUtils.join(headerValue));
-            });
-
-            beforeReqLog.append("================  WebClient Request End  =================\n");
-
-            log.info(beforeReqLog.toString(), beforeReqArgs.toArray());
-
-            return next.exchange(request);
-        };
     }
 }
