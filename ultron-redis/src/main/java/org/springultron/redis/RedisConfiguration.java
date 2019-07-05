@@ -34,7 +34,7 @@ import java.time.Duration;
 @EnableCaching
 @Configuration
 @AutoConfigureBefore({RedisAutoConfiguration.class})
-public class RedisConfig extends CachingConfigurerSupport {
+public class RedisConfiguration extends CachingConfigurerSupport {
 
     /**
      * 自定义的缓存key的生成策略(消息队列 暂时用不到 自行忽略)

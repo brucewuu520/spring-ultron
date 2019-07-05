@@ -173,7 +173,7 @@ public class RedisClient {
      */
     public Long increment(String key, long delta) {
         if (delta < 0) {
-            throw new RuntimeException("递增因子必须大于0");
+            throw new IllegalArgumentException("递增因子必须大于0");
         }
         return redisTemplate.opsForValue().increment(key, delta);
     }
@@ -187,7 +187,7 @@ public class RedisClient {
      */
     public Long decrement(String key, long delta) {
         if (delta < 0) {
-            throw new RuntimeException("递减因子必须大于0");
+            throw new IllegalArgumentException("递减因子必须大于0");
         }
         return redisTemplate.opsForValue().decrement(key, delta);
     }
@@ -200,7 +200,7 @@ public class RedisClient {
      * @return 存在:true 不存在:false
      */
     public boolean hasKey(String key, String item) {
-        return Optional.ofNullable(redisTemplate.opsForHash().hasKey(key, item)).orElse(Boolean.FALSE);
+        return redisTemplate.opsForHash().hasKey(key, item);
     }
 
     /**
@@ -266,7 +266,7 @@ public class RedisClient {
      * @param item 项 可以使多个 不能为null
      */
     public boolean hdel(String key, Object... item) {
-        return Optional.ofNullable(redisTemplate.opsForHash().delete(key, item)).map(l -> l > 0).orElse(Boolean.FALSE);
+        return Optional.of(redisTemplate.opsForHash().delete(key, item)).map(l -> l > 0).orElse(Boolean.FALSE);
     }
 
     /**
@@ -377,6 +377,16 @@ public class RedisClient {
     }
 
     /**
+     * 根据key 获取过期时间
+     *
+     * @param key 缓存 key
+     * @return 时间(毫秒) 返回0代表为永久有效, 返回-2代表key不存在或已过期
+     */
+    public long getExpire(String key) {
+        return Optional.ofNullable(redisTemplate.getExpire(key)).orElse(-2L);
+    }
+
+    /**
      * 设置缓存过期时间，单位秒
      * 如果已过期或key不存在返回false
      *
@@ -404,13 +414,13 @@ public class RedisClient {
     }
 
     /**
-     * 根据key 获取过期时间
+     * 设置缓存永久有效
      *
      * @param key 缓存 key
-     * @return 时间(毫秒) 返回0代表为永久有效, 返回-2代表key不存在或已过期
+     * @return 是否设置成功
      */
-    public long getExpire(String key) {
-        return Optional.ofNullable(redisTemplate.getExpire(key)).orElse(-2L);
+    public boolean persist(String key) {
+        return Optional.ofNullable(redisTemplate.persist(key)).orElse(Boolean.FALSE);
     }
 
     /**
@@ -453,5 +463,23 @@ public class RedisClient {
         if (CollectionUtils.isEmpty(keys))
             return true;
         return Optional.ofNullable(redisTemplate.delete(keys)).map(l -> l > 0).orElse(Boolean.FALSE);
+    }
+
+    public RedisTemplate<String, Object> getRedisTemplate() {
+        return redisTemplate;
+    }
+
+    /**
+     * 生成 缓存key，以英文冒号隔开
+     *
+     * @param objs 参数
+     * @return key string
+     */
+    public static String getKey(Object... objs) {
+        StringBuilder builder = new StringBuilder();
+        for (Object obj : objs) {
+            builder.append(obj).append(":");
+        }
+        return builder.substring(0, builder.length() - 1);
     }
 }
