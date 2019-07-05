@@ -1,9 +1,10 @@
 package org.springultron.dao;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
@@ -13,7 +14,7 @@ import java.time.LocalDateTime;
  * @Date: 2019-05-28 10:55
  * @Description:
  */
-public abstract class BaseEntity implements Serializable {
+public abstract class BaseEntity {
     /**
      * 数据库ID主键
      */
@@ -26,6 +27,7 @@ public abstract class BaseEntity implements Serializable {
     /**
      * 数据修改时间
      */
+    @TableField(fill = FieldFill.UPDATE)
     private LocalDateTime updateAt;
 
     public Long getId() {

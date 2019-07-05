@@ -1,1 +1,3 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=org.springultron.dao.MybatisPlusConfig
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  org.springultron.dao.MybatisPlusConfiguration,\
+  org.springultron.dao.UltronMetaObjectHandler

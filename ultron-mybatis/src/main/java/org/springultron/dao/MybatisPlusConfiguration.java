@@ -9,10 +9,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-@EnableTransactionManagement
 @Configuration
-@MapperScan("com.**.**.mapper.**")
-public class MybatisPlusConfig {
+@EnableTransactionManagement
+@MapperScan("com.*.*.mapper*")
+public class MybatisPlusConfiguration {
 
     /**
      * 分页插件
@@ -32,4 +32,5 @@ public class MybatisPlusConfig {
     public PerformanceInterceptor performanceInterceptor() {
         return new PerformanceInterceptor();
     }
+
 }
