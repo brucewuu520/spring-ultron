@@ -368,7 +368,7 @@ public class Jackson {
      * @param valueClass value 类型
      * @return MapType
      */
-    public static MapType getMapType(Class<?> keyClass, Class<?> valueClass) {
+    private static MapType getMapType(Class<?> keyClass, Class<?> valueClass) {
         return getInstance().getTypeFactory().constructMapType(Map.class, keyClass, valueClass);
     }
 
@@ -378,8 +378,8 @@ public class Jackson {
      * @param elementClass 集合值类型
      * @return CollectionLikeType
      */
-    public static CollectionLikeType getListType(Class<?> elementClass) {
-        return getInstance().getTypeFactory().constructCollectionLikeType(List.class, elementClass);
+    private static CollectionLikeType getListType(Class<?> elementClass) {
+        return getInstance().getTypeFactory().constructCollectionLikeType(ArrayList.class, elementClass);
     }
 
     private static ObjectMapper getInstance() {

@@ -15,7 +15,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * @Date: 2019-05-28 11:10
  * @Description:
  */
-public class StringUtils extends org.springframework.util.StringUtils {
+public class Strings extends org.springframework.util.StringUtils {
     /**
      * 空格
      */
@@ -24,6 +24,7 @@ public class StringUtils extends org.springframework.util.StringUtils {
      * 空字符串
      */
     public static final String EMPTY = "";
+    public static final String SLASH = "/";
     /**
      * 换行符
      */
@@ -42,7 +43,7 @@ public class StringUtils extends org.springframework.util.StringUtils {
     }
 
     public static boolean isNotEmpty(String str) {
-        return !StringUtils.isEmpty(str);
+        return !Strings.isEmpty(str);
     }
 
     /**
@@ -64,7 +65,7 @@ public class StringUtils extends org.springframework.util.StringUtils {
      * @see Character#isWhitespace
      */
     public static boolean isBlank(final CharSequence cs) {
-        return !StringUtils.hasText(cs);
+        return !Strings.hasText(cs);
     }
 
     /**
@@ -83,7 +84,7 @@ public class StringUtils extends org.springframework.util.StringUtils {
      * @see Character#isWhitespace
      */
     public static boolean isNotBlank(final CharSequence cs) {
-        return StringUtils.hasText(cs);
+        return Strings.hasText(cs);
     }
 
     /**
@@ -113,11 +114,11 @@ public class StringUtils extends org.springframework.util.StringUtils {
      * references are considered to be equal. The comparison is <strong>case sensitive</strong>.</p>
      *
      * <pre>
-     * StringUtils.equals(null, null)   = true
-     * StringUtils.equals(null, "abc")  = false
-     * StringUtils.equals("abc", null)  = false
-     * StringUtils.equals("abc", "abc") = true
-     * StringUtils.equals("abc", "ABC") = false
+     * Strings.equals(null, null)   = true
+     * Strings.equals(null, "abc")  = false
+     * Strings.equals("abc", null)  = false
+     * Strings.equals("abc", "abc") = true
+     * Strings.equals("abc", "ABC") = false
      * </pre>
      *
      * @param cs1 the first CharSequence, may be {@code null}
@@ -158,11 +159,11 @@ public class StringUtils extends org.springframework.util.StringUtils {
      * references are considered equal. The comparison is <strong>case insensitive</strong>.</p>
      *
      * <pre>
-     * StringUtils.equalsIgnoreCase(null, null)   = true
-     * StringUtils.equalsIgnoreCase(null, "abc")  = false
-     * StringUtils.equalsIgnoreCase("abc", null)  = false
-     * StringUtils.equalsIgnoreCase("abc", "abc") = true
-     * StringUtils.equalsIgnoreCase("abc", "ABC") = true
+     * Strings.equalsIgnoreCase(null, null)   = true
+     * Strings.equalsIgnoreCase(null, "abc")  = false
+     * Strings.equalsIgnoreCase("abc", null)  = false
+     * Strings.equalsIgnoreCase("abc", "abc") = true
+     * Strings.equalsIgnoreCase("abc", "ABC") = true
      * </pre>
      *
      * @param cs1 the first CharSequence, may be {@code null}
@@ -245,9 +246,9 @@ public class StringUtils extends org.springframework.util.StringUtils {
      * or if the String is {@code null}, an empty String ("").</p>
      *
      * <pre>
-     * StringUtils.defaultString(null)  = ""
-     * StringUtils.defaultString("")    = ""
-     * StringUtils.defaultString("bat") = "bat"
+     * Strings.defaultString(null)  = ""
+     * Strings.defaultString("")    = ""
+     * Strings.defaultString("bat") = "bat"
      * </pre>
      *
      * @param str the String to check, may be null
@@ -265,9 +266,9 @@ public class StringUtils extends org.springframework.util.StringUtils {
      * {@code null}, the value of {@code defaultStr}.</p>
      *
      * <pre>
-     * StringUtils.defaultString(null, "NULL")  = "NULL"
-     * StringUtils.defaultString("", "NULL")    = ""
-     * StringUtils.defaultString("bat", "NULL") = "bat"
+     * Strings.defaultString(null, "NULL")  = "NULL"
+     * Strings.defaultString("", "NULL")    = ""
+     * Strings.defaultString("bat", "NULL") = "bat"
      * </pre>
      *
      * @param str        the String to check, may be null
@@ -286,10 +287,10 @@ public class StringUtils extends org.springframework.util.StringUtils {
      * {@link Character#isWhitespace(char)}.</p>
      *
      * <pre>
-     * StringUtils.deleteWhitespace(null)         = null
-     * StringUtils.deleteWhitespace("")           = ""
-     * StringUtils.deleteWhitespace("abc")        = "abc"
-     * StringUtils.deleteWhitespace("   ab  c  ") = "abc"
+     * Strings.deleteWhitespace(null)         = null
+     * Strings.deleteWhitespace("")           = ""
+     * Strings.deleteWhitespace("abc")        = "abc"
+     * Strings.deleteWhitespace("   ab  c  ") = "abc"
      * </pre>
      *
      * @param str the String to delete whitespace from, may be null
@@ -322,11 +323,11 @@ public class StringUtils extends org.springframework.util.StringUtils {
      * Trim removes start and end characters &lt;= 32.
      *
      * <pre>
-     * StringUtils.trim(null)          = null
-     * StringUtils.trim("")            = ""
-     * StringUtils.trim("     ")       = ""
-     * StringUtils.trim("abc")         = "abc"
-     * StringUtils.trim("    abc    ") = "abc"
+     * Strings.trim(null)          = null
+     * Strings.trim("")            = ""
+     * Strings.trim("     ")       = ""
+     * Strings.trim("abc")         = "abc"
+     * Strings.trim("    abc    ") = "abc"
      * </pre>
      *
      * @param str the String to be trimmed, may be null
@@ -353,7 +354,7 @@ public class StringUtils extends org.springframework.util.StringUtils {
      * @return 随机数
      */
     public static String random(int count) {
-        return StringUtils.random(count, RandomType.ALL);
+        return random(count, RandomType.ALL);
     }
 
     /**
@@ -365,7 +366,7 @@ public class StringUtils extends org.springframework.util.StringUtils {
      */
     public static String random(int count, RandomType randomType) {
         if (count == 0) {
-            return StringUtils.EMPTY;
+            return Strings.EMPTY;
         }
         Assert.isTrue(count > 0, "Requested random string length " + count + " is less than 0.");
         final ThreadLocalRandom random = ThreadLocalRandom.current();
@@ -391,17 +392,17 @@ public class StringUtils extends org.springframework.util.StringUtils {
      * The start index is always the smaller of the two indices.</p>
      * <p/>
      * <pre>
-     * StringUtils.overlay(null, *, *, *)            = null
-     * StringUtils.overlay("", "abc", 0, 0)          = "abc"
-     * StringUtils.overlay("abcdef", null, 2, 4)     = "abef"
-     * StringUtils.overlay("abcdef", "", 2, 4)       = "abef"
-     * StringUtils.overlay("abcdef", "", 4, 2)       = "abef"
-     * StringUtils.overlay("abcdef", "zzzz", 2, 4)   = "abzzzzef"
-     * StringUtils.overlay("abcdef", "zzzz", 4, 2)   = "abzzzzef"
-     * StringUtils.overlay("abcdef", "zzzz", -1, 4)  = "zzzzef"
-     * StringUtils.overlay("abcdef", "zzzz", 2, 8)   = "abzzzz"
-     * StringUtils.overlay("abcdef", "zzzz", -2, -3) = "zzzzabcdef"
-     * StringUtils.overlay("abcdef", "zzzz", 8, 10)  = "abcdefzzzz"
+     * Strings.overlay(null, *, *, *)            = null
+     * Strings.overlay("", "abc", 0, 0)          = "abc"
+     * Strings.overlay("abcdef", null, 2, 4)     = "abef"
+     * Strings.overlay("abcdef", "", 2, 4)       = "abef"
+     * Strings.overlay("abcdef", "", 4, 2)       = "abef"
+     * Strings.overlay("abcdef", "zzzz", 2, 4)   = "abzzzzef"
+     * Strings.overlay("abcdef", "zzzz", 4, 2)   = "abzzzzef"
+     * Strings.overlay("abcdef", "zzzz", -1, 4)  = "zzzzef"
+     * Strings.overlay("abcdef", "zzzz", 2, 8)   = "abzzzz"
+     * Strings.overlay("abcdef", "zzzz", -2, -3) = "zzzzabcdef"
+     * Strings.overlay("abcdef", "zzzz", 8, 10)  = "abcdefzzzz"
      * </pre>
      *
      * @param str     the String to do overlaying in, may be null
@@ -451,7 +452,7 @@ public class StringUtils extends org.springframework.util.StringUtils {
      * @return the delimited {@code String}
      */
     public static String join(Collection<?> coll) {
-        return StringUtils.collectionToCommaDelimitedString(coll);
+        return Strings.collectionToCommaDelimitedString(coll);
     }
 
     /**
@@ -463,7 +464,7 @@ public class StringUtils extends org.springframework.util.StringUtils {
      * @return the delimited {@code String}
      */
     public static String join(Collection<?> coll, String delimiter) {
-        return StringUtils.collectionToDelimitedString(coll, delimiter);
+        return Strings.collectionToDelimitedString(coll, delimiter);
     }
 
     public static byte[] getBytes(final String string) {
@@ -502,14 +503,14 @@ public class StringUtils extends org.springframework.util.StringUtils {
      * <p>A {@code null} input String returns {@code null}.</p>
      *
      * <pre>
-     * StringUtils.split(null)       = null
-     * StringUtils.split("")         = []
-     * StringUtils.split("abc def")  = ["abc", "def"]
-     * StringUtils.split("abc  def") = ["abc", "def"]
-     * StringUtils.split(" abc ")    = ["abc"]
+     * Strings.split(null)       = null
+     * Strings.split("")         = []
+     * Strings.split("abc def")  = ["abc", "def"]
+     * Strings.split("abc  def") = ["abc", "def"]
+     * Strings.split(" abc ")    = ["abc"]
      * </pre>
      *
-     * @param str  the String to parse, may be null
+     * @param str the String to parse, may be null
      * @return an array of parsed Strings, {@code null} if null String input
      */
     public static String[] split(final String str) {
@@ -527,16 +528,16 @@ public class StringUtils extends org.springframework.util.StringUtils {
      * <p>A {@code null} input String returns {@code null}.</p>
      *
      * <pre>
-     * StringUtils.split(null, *)         = null
-     * StringUtils.split("", *)           = []
-     * StringUtils.split("a.b.c", '.')    = ["a", "b", "c"]
-     * StringUtils.split("a..b.c", '.')   = ["a", "b", "c"]
-     * StringUtils.split("a:b:c", '.')    = ["a:b:c"]
-     * StringUtils.split("a b c", ' ')    = ["a", "b", "c"]
+     * Strings.split(null, *)         = null
+     * Strings.split("", *)           = []
+     * Strings.split("a.b.c", '.')    = ["a", "b", "c"]
+     * Strings.split("a..b.c", '.')   = ["a", "b", "c"]
+     * Strings.split("a:b:c", '.')    = ["a:b:c"]
+     * Strings.split("a b c", ' ')    = ["a", "b", "c"]
      * </pre>
      *
-     * @param str  the String to parse, may be null
-     * @param separatorChar  the character used as the delimiter
+     * @param str           the String to parse, may be null
+     * @param separatorChar the character used as the delimiter
      * @return an array of parsed Strings, {@code null} if null String input
      * @since 2.0
      */
@@ -556,17 +557,17 @@ public class StringUtils extends org.springframework.util.StringUtils {
      * A {@code null} separatorChars splits on whitespace.</p>
      *
      * <pre>
-     * StringUtils.split(null, *)         = null
-     * StringUtils.split("", *)           = []
-     * StringUtils.split("abc def", null) = ["abc", "def"]
-     * StringUtils.split("abc def", " ")  = ["abc", "def"]
-     * StringUtils.split("abc  def", " ") = ["abc", "def"]
-     * StringUtils.split("ab:cd:ef", ":") = ["ab", "cd", "ef"]
+     * Strings.split(null, *)         = null
+     * Strings.split("", *)           = []
+     * Strings.split("abc def", null) = ["abc", "def"]
+     * Strings.split("abc def", " ")  = ["abc", "def"]
+     * Strings.split("abc  def", " ") = ["abc", "def"]
+     * Strings.split("ab:cd:ef", ":") = ["ab", "cd", "ef"]
      * </pre>
      *
-     * @param str  the String to parse, may be null
-     * @param separatorChars  the characters used as the delimiters,
-     *  {@code null} splits on whitespace
+     * @param str            the String to parse, may be null
+     * @param separatorChars the characters used as the delimiters,
+     *                       {@code null} splits on whitespace
      * @return an array of parsed Strings, {@code null} if null String input
      */
     public static String[] split(final String str, final String separatorChars) {
@@ -588,19 +589,19 @@ public class StringUtils extends org.springframework.util.StringUtils {
      * returned strings (including separator characters).</p>
      *
      * <pre>
-     * StringUtils.split(null, *, *)            = null
-     * StringUtils.split("", *, *)              = []
-     * StringUtils.split("ab cd ef", null, 0)   = ["ab", "cd", "ef"]
-     * StringUtils.split("ab   cd ef", null, 0) = ["ab", "cd", "ef"]
-     * StringUtils.split("ab:cd:ef", ":", 0)    = ["ab", "cd", "ef"]
-     * StringUtils.split("ab:cd:ef", ":", 2)    = ["ab", "cd:ef"]
+     * Strings.split(null, *, *)            = null
+     * Strings.split("", *, *)              = []
+     * Strings.split("ab cd ef", null, 0)   = ["ab", "cd", "ef"]
+     * Strings.split("ab   cd ef", null, 0) = ["ab", "cd", "ef"]
+     * Strings.split("ab:cd:ef", ":", 0)    = ["ab", "cd", "ef"]
+     * Strings.split("ab:cd:ef", ":", 2)    = ["ab", "cd:ef"]
      * </pre>
      *
-     * @param str  the String to parse, may be null
-     * @param separatorChars  the characters used as the delimiters,
-     *  {@code null} splits on whitespace
-     * @param max  the maximum number of elements to include in the
-     *  array. A zero or negative value implies no limit
+     * @param str            the String to parse, may be null
+     * @param separatorChars the characters used as the delimiters,
+     *                       {@code null} splits on whitespace
+     * @param max            the maximum number of elements to include in the
+     *                       array. A zero or negative value implies no limit
      * @return an array of parsed Strings, {@code null} if null String input
      */
     public static String[] split(final String str, final String separatorChars, final int max) {
@@ -620,14 +621,14 @@ public class StringUtils extends org.springframework.util.StringUtils {
      * <p>A {@code null} input String returns {@code null}.</p>
      *
      * <pre>
-     * StringUtils.splitPreserveAllTokens(null)       = null
-     * StringUtils.splitPreserveAllTokens("")         = []
-     * StringUtils.splitPreserveAllTokens("abc def")  = ["abc", "def"]
-     * StringUtils.splitPreserveAllTokens("abc  def") = ["abc", "", "def"]
-     * StringUtils.splitPreserveAllTokens(" abc ")    = ["", "abc", ""]
+     * Strings.splitPreserveAllTokens(null)       = null
+     * Strings.splitPreserveAllTokens("")         = []
+     * Strings.splitPreserveAllTokens("abc def")  = ["abc", "def"]
+     * Strings.splitPreserveAllTokens("abc  def") = ["abc", "", "def"]
+     * Strings.splitPreserveAllTokens(" abc ")    = ["", "abc", ""]
      * </pre>
      *
-     * @param str  the String to parse, may be {@code null}
+     * @param str the String to parse, may be {@code null}
      * @return an array of parsed Strings, {@code null} if null String input
      * @since 2.1
      */
@@ -647,23 +648,23 @@ public class StringUtils extends org.springframework.util.StringUtils {
      * <p>A {@code null} input String returns {@code null}.</p>
      *
      * <pre>
-     * StringUtils.splitPreserveAllTokens(null, *)         = null
-     * StringUtils.splitPreserveAllTokens("", *)           = []
-     * StringUtils.splitPreserveAllTokens("a.b.c", '.')    = ["a", "b", "c"]
-     * StringUtils.splitPreserveAllTokens("a..b.c", '.')   = ["a", "", "b", "c"]
-     * StringUtils.splitPreserveAllTokens("a:b:c", '.')    = ["a:b:c"]
-     * StringUtils.splitPreserveAllTokens("a\tb\nc", null) = ["a", "b", "c"]
-     * StringUtils.splitPreserveAllTokens("a b c", ' ')    = ["a", "b", "c"]
-     * StringUtils.splitPreserveAllTokens("a b c ", ' ')   = ["a", "b", "c", ""]
-     * StringUtils.splitPreserveAllTokens("a b c  ", ' ')   = ["a", "b", "c", "", ""]
-     * StringUtils.splitPreserveAllTokens(" a b c", ' ')   = ["", a", "b", "c"]
-     * StringUtils.splitPreserveAllTokens("  a b c", ' ')  = ["", "", a", "b", "c"]
-     * StringUtils.splitPreserveAllTokens(" a b c ", ' ')  = ["", a", "b", "c", ""]
+     * Strings.splitPreserveAllTokens(null, *)         = null
+     * Strings.splitPreserveAllTokens("", *)           = []
+     * Strings.splitPreserveAllTokens("a.b.c", '.')    = ["a", "b", "c"]
+     * Strings.splitPreserveAllTokens("a..b.c", '.')   = ["a", "", "b", "c"]
+     * Strings.splitPreserveAllTokens("a:b:c", '.')    = ["a:b:c"]
+     * Strings.splitPreserveAllTokens("a\tb\nc", null) = ["a", "b", "c"]
+     * Strings.splitPreserveAllTokens("a b c", ' ')    = ["a", "b", "c"]
+     * Strings.splitPreserveAllTokens("a b c ", ' ')   = ["a", "b", "c", ""]
+     * Strings.splitPreserveAllTokens("a b c  ", ' ')   = ["a", "b", "c", "", ""]
+     * Strings.splitPreserveAllTokens(" a b c", ' ')   = ["", a", "b", "c"]
+     * Strings.splitPreserveAllTokens("  a b c", ' ')  = ["", "", a", "b", "c"]
+     * Strings.splitPreserveAllTokens(" a b c ", ' ')  = ["", a", "b", "c", ""]
      * </pre>
      *
-     * @param str  the String to parse, may be {@code null}
-     * @param separatorChar  the character used as the delimiter,
-     *  {@code null} splits on whitespace
+     * @param str           the String to parse, may be {@code null}
+     * @param separatorChar the character used as the delimiter,
+     *                      {@code null} splits on whitespace
      * @return an array of parsed Strings, {@code null} if null String input
      * @since 2.1
      */
@@ -684,23 +685,23 @@ public class StringUtils extends org.springframework.util.StringUtils {
      * A {@code null} separatorChars splits on whitespace.</p>
      *
      * <pre>
-     * StringUtils.splitPreserveAllTokens(null, *)           = null
-     * StringUtils.splitPreserveAllTokens("", *)             = []
-     * StringUtils.splitPreserveAllTokens("abc def", null)   = ["abc", "def"]
-     * StringUtils.splitPreserveAllTokens("abc def", " ")    = ["abc", "def"]
-     * StringUtils.splitPreserveAllTokens("abc  def", " ")   = ["abc", "", def"]
-     * StringUtils.splitPreserveAllTokens("ab:cd:ef", ":")   = ["ab", "cd", "ef"]
-     * StringUtils.splitPreserveAllTokens("ab:cd:ef:", ":")  = ["ab", "cd", "ef", ""]
-     * StringUtils.splitPreserveAllTokens("ab:cd:ef::", ":") = ["ab", "cd", "ef", "", ""]
-     * StringUtils.splitPreserveAllTokens("ab::cd:ef", ":")  = ["ab", "", cd", "ef"]
-     * StringUtils.splitPreserveAllTokens(":cd:ef", ":")     = ["", cd", "ef"]
-     * StringUtils.splitPreserveAllTokens("::cd:ef", ":")    = ["", "", cd", "ef"]
-     * StringUtils.splitPreserveAllTokens(":cd:ef:", ":")    = ["", cd", "ef", ""]
+     * Strings.splitPreserveAllTokens(null, *)           = null
+     * Strings.splitPreserveAllTokens("", *)             = []
+     * Strings.splitPreserveAllTokens("abc def", null)   = ["abc", "def"]
+     * Strings.splitPreserveAllTokens("abc def", " ")    = ["abc", "def"]
+     * Strings.splitPreserveAllTokens("abc  def", " ")   = ["abc", "", def"]
+     * Strings.splitPreserveAllTokens("ab:cd:ef", ":")   = ["ab", "cd", "ef"]
+     * Strings.splitPreserveAllTokens("ab:cd:ef:", ":")  = ["ab", "cd", "ef", ""]
+     * Strings.splitPreserveAllTokens("ab:cd:ef::", ":") = ["ab", "cd", "ef", "", ""]
+     * Strings.splitPreserveAllTokens("ab::cd:ef", ":")  = ["ab", "", cd", "ef"]
+     * Strings.splitPreserveAllTokens(":cd:ef", ":")     = ["", cd", "ef"]
+     * Strings.splitPreserveAllTokens("::cd:ef", ":")    = ["", "", cd", "ef"]
+     * Strings.splitPreserveAllTokens(":cd:ef:", ":")    = ["", cd", "ef", ""]
      * </pre>
      *
-     * @param str  the String to parse, may be {@code null}
-     * @param separatorChars  the characters used as the delimiters,
-     *  {@code null} splits on whitespace
+     * @param str            the String to parse, may be {@code null}
+     * @param separatorChars the characters used as the delimiters,
+     *                       {@code null} splits on whitespace
      * @return an array of parsed Strings, {@code null} if null String input
      * @since 2.1
      */
@@ -725,22 +726,22 @@ public class StringUtils extends org.springframework.util.StringUtils {
      * returned strings (including separator characters).</p>
      *
      * <pre>
-     * StringUtils.splitPreserveAllTokens(null, *, *)            = null
-     * StringUtils.splitPreserveAllTokens("", *, *)              = []
-     * StringUtils.splitPreserveAllTokens("ab de fg", null, 0)   = ["ab", "de", "fg"]
-     * StringUtils.splitPreserveAllTokens("ab   de fg", null, 0) = ["ab", "", "", "de", "fg"]
-     * StringUtils.splitPreserveAllTokens("ab:cd:ef", ":", 0)    = ["ab", "cd", "ef"]
-     * StringUtils.splitPreserveAllTokens("ab:cd:ef", ":", 2)    = ["ab", "cd:ef"]
-     * StringUtils.splitPreserveAllTokens("ab   de fg", null, 2) = ["ab", "  de fg"]
-     * StringUtils.splitPreserveAllTokens("ab   de fg", null, 3) = ["ab", "", " de fg"]
-     * StringUtils.splitPreserveAllTokens("ab   de fg", null, 4) = ["ab", "", "", "de fg"]
+     * Strings.splitPreserveAllTokens(null, *, *)            = null
+     * Strings.splitPreserveAllTokens("", *, *)              = []
+     * Strings.splitPreserveAllTokens("ab de fg", null, 0)   = ["ab", "de", "fg"]
+     * Strings.splitPreserveAllTokens("ab   de fg", null, 0) = ["ab", "", "", "de", "fg"]
+     * Strings.splitPreserveAllTokens("ab:cd:ef", ":", 0)    = ["ab", "cd", "ef"]
+     * Strings.splitPreserveAllTokens("ab:cd:ef", ":", 2)    = ["ab", "cd:ef"]
+     * Strings.splitPreserveAllTokens("ab   de fg", null, 2) = ["ab", "  de fg"]
+     * Strings.splitPreserveAllTokens("ab   de fg", null, 3) = ["ab", "", " de fg"]
+     * Strings.splitPreserveAllTokens("ab   de fg", null, 4) = ["ab", "", "", "de fg"]
      * </pre>
      *
-     * @param str  the String to parse, may be {@code null}
-     * @param separatorChars  the characters used as the delimiters,
-     *  {@code null} splits on whitespace
-     * @param max  the maximum number of elements to include in the
-     *  array. A zero or negative value implies no limit
+     * @param str            the String to parse, may be {@code null}
+     * @param separatorChars the characters used as the delimiters,
+     *                       {@code null} splits on whitespace
+     * @param max            the maximum number of elements to include in the
+     *                       array. A zero or negative value implies no limit
      * @return an array of parsed Strings, {@code null} if null String input
      * @since 2.1
      */
@@ -753,11 +754,11 @@ public class StringUtils extends org.springframework.util.StringUtils {
      * {@code splitPreserveAllTokens} methods that do not return a
      * maximum array length.
      *
-     * @param str  the String to parse, may be {@code null}
-     * @param separatorChar the separate character
+     * @param str               the String to parse, may be {@code null}
+     * @param separatorChar     the separate character
      * @param preserveAllTokens if {@code true}, adjacent separators are
-     * treated as empty token separators; if {@code false}, adjacent
-     * separators are treated as one separator.
+     *                          treated as empty token separators; if {@code false}, adjacent
+     *                          separators are treated as one separator.
      * @return an array of parsed Strings, {@code null} if null String input
      */
     @SuppressWarnings({"ToArrayCallWithZeroLengthArrayArgument", "Duplicates"})
@@ -799,13 +800,13 @@ public class StringUtils extends org.springframework.util.StringUtils {
      * {@code splitPreserveAllTokens} methods that return a maximum array
      * length.
      *
-     * @param str  the String to parse, may be {@code null}
-     * @param separatorChars the separate character
-     * @param max  the maximum number of elements to include in the
-     *  array. A zero or negative value implies no limit.
+     * @param str               the String to parse, may be {@code null}
+     * @param separatorChars    the separate character
+     * @param max               the maximum number of elements to include in the
+     *                          array. A zero or negative value implies no limit.
      * @param preserveAllTokens if {@code true}, adjacent separators are
-     * treated as empty token separators; if {@code false}, adjacent
-     * separators are treated as one separator.
+     *                          treated as empty token separators; if {@code false}, adjacent
+     *                          separators are treated as one separator.
      * @return an array of parsed Strings, {@code null} if null String input
      */
     @SuppressWarnings({"ToArrayCallWithZeroLengthArrayArgument", "Duplicates"})

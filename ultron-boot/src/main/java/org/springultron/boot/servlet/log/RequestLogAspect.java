@@ -18,7 +18,7 @@ import org.springultron.boot.servlet.WebUtils;
 import org.springultron.core.result.Result;
 import org.springultron.core.utils.ClassUtils;
 import org.springultron.core.utils.Jackson;
-import org.springultron.core.utils.StringUtils;
+import org.springultron.core.utils.Strings;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -147,7 +147,7 @@ public class RequestLogAspect {
             return;
         }
         // 接口结束后换行，方便分割查看
-        log.info("=========================================== End ===========================================" + StringUtils.LINE_SEPARATOR);
+        log.info("=========================================== End ===========================================" + Strings.LINE_SEPARATOR);
     }
 
     /**

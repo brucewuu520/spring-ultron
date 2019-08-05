@@ -86,14 +86,14 @@ public class ObjectUtils extends org.springframework.util.ObjectUtils {
      * ObjectUtils.toString(Boolean.TRUE) = "true"
      * </pre>
      *
-     * @see StringUtils#defaultString(String)
+     * @see Strings#defaultString(String)
      * @see String#valueOf(Object)
      * @param obj  the Object to {@code toString}, may be null
      * @return the passed in Object's toString, or {@code ""} if {@code null} input
      * @since 2.0
      */
     public static String toString(final Object obj) {
-        return Objects.toString(obj, StringUtils.EMPTY);
+        return Objects.toString(obj, Strings.EMPTY);
     }
 
     /**
@@ -108,7 +108,7 @@ public class ObjectUtils extends org.springframework.util.ObjectUtils {
      * ObjectUtils.toString(Boolean.TRUE, "null") = "true"
      * </pre>
      *
-     * @see StringUtils#defaultString(String,String)
+     * @see Strings#defaultString(String,String)
      * @see String#valueOf(Object)
      * @param obj  the Object to {@code toString}, may be null
      * @param nullDefault  the String to return if {@code null} input, may be null
@@ -117,5 +117,4 @@ public class ObjectUtils extends org.springframework.util.ObjectUtils {
     public static String toString(final Object obj, final String nullDefault) {
         return Objects.toString(obj, nullDefault);
     }
-
 }

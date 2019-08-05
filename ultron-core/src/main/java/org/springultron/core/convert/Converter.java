@@ -33,7 +33,7 @@ public abstract class Converter<A, B> implements Function<A, B> {
     }
 
     public Iterable<B> convertAll(final Iterable<? extends A> fromIterable) {
-        Objects.requireNonNull(fromIterable, "fromIterable");
+        Objects.requireNonNull(fromIterable, "fromIterable can not be null");
         return new Iterable<B>() {
             public Iterator<B> iterator() {
                 return new Iterator<B>() {

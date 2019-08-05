@@ -60,7 +60,7 @@ public class ResourceUtils extends org.springframework.util.ResourceUtils {
             return IOUtils.toString(getResource(resourceLocation).getInputStream());
         } catch (IOException e) {
             e.printStackTrace();
-            return StringUtils.EMPTY;
+            return Strings.EMPTY;
         }
     }
 }
