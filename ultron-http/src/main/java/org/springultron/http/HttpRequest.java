@@ -4,9 +4,13 @@ import okhttp3.*;
 import okhttp3.logging.HttpLoggingInterceptor;
 import org.springultron.core.utils.Jackson;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.X509TrustManager;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
+import java.net.ProxySelector;
 import java.net.URL;
 import java.time.Duration;
 import java.util.Objects;
@@ -21,20 +25,27 @@ import java.util.Objects;
 public class HttpRequest {
     private static final MediaType MEDIA_TYPE_JSON = MediaType.parse("application/json;charset=utf-8");
 
-    private static OkHttpClient httpClient = new OkHttpClient();
+    private static volatile OkHttpClient httpClient = new OkHttpClient();
 
     private final Request.Builder requestBuilder;
     private final HttpUrl.Builder urlBuilder;
     private final String method;
     private RequestBody requestBody;
     private Boolean followRedirects;
+    private Boolean followSslRedirects;
     private CookieJar cookieJar;
     private Authenticator authenticator;
     private Interceptor interceptor;
     private Proxy proxy;
+    private ProxySelector proxySelector;
+    private Authenticator proxyAuthenticator;
+    private HostnameVerifier hostnameVerifier;
+    private SSLSocketFactory sslSocketFactory;
+    private X509TrustManager trustManager;
     private Duration connectTimeout;
     private Duration readTimeout;
     private Duration writeTimeout;
+    private static volatile HttpLoggingInterceptor globalLoggingInterceptor = null;
     private HttpLoggingInterceptor.Level level;
 
     private HttpRequest(final Request.Builder requestBuilder, final HttpUrl.Builder urlBuilder, final String method) {
@@ -175,6 +186,11 @@ public class HttpRequest {
         return this;
     }
 
+    public HttpRequest followSslRedirects(final boolean followSslRedirects) {
+        this.followSslRedirects = followSslRedirects;
+        return this;
+    }
+
     public HttpRequest cookieManager(final CookieJar cookieJar) {
         this.cookieJar = cookieJar;
         return this;
@@ -192,6 +208,27 @@ public class HttpRequest {
 
     public HttpRequest proxy(final InetSocketAddress address) {
         this.proxy = new Proxy(Proxy.Type.HTTP, address);
+        return this;
+    }
+
+    public HttpRequest proxySelector(final ProxySelector proxySelector) {
+        this.proxySelector = proxySelector;
+        return this;
+    }
+
+    public HttpRequest proxyAuthenticator(final Authenticator proxyAuthenticator) {
+        this.proxyAuthenticator = proxyAuthenticator;
+        return this;
+    }
+
+    public HttpRequest hostnameVerifier(HostnameVerifier hostnameVerifier) {
+        this.hostnameVerifier = hostnameVerifier;
+        return this;
+    }
+
+    public HttpRequest sslSocketFactory(SSLSocketFactory sslSocketFactory, X509TrustManager trustManager) {
+        this.sslSocketFactory = sslSocketFactory;
+        this.trustManager = trustManager;
         return this;
     }
 
@@ -234,6 +271,9 @@ public class HttpRequest {
         if (null != followRedirects) {
             builder.followRedirects(followRedirects);
         }
+        if (null != followSslRedirects) {
+            builder.followSslRedirects(followSslRedirects);
+        }
         if (null != cookieJar) {
             builder.cookieJar(cookieJar);
         }
@@ -246,10 +286,24 @@ public class HttpRequest {
         if (null != proxy) {
             builder.proxy(proxy);
         }
+        if (null != proxySelector) {
+            builder.proxySelector(proxySelector);
+        }
+        if (null != proxyAuthenticator) {
+            builder.proxyAuthenticator(proxyAuthenticator);
+        }
+        if (null != hostnameVerifier) {
+            builder.hostnameVerifier(hostnameVerifier);
+        }
+        if (null != sslSocketFactory && null != trustManager) {
+            builder.sslSocketFactory(sslSocketFactory, trustManager);
+        }
         if (null != level && !HttpLoggingInterceptor.Level.NONE.equals(level)) {
             HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(Slf4jLogger.LOGGER);
             loggingInterceptor.level(level);
             builder.addInterceptor(loggingInterceptor);
+        } else if (null != globalLoggingInterceptor) {
+            builder.addInterceptor(globalLoggingInterceptor);
         }
         requestBuilder.url(urlBuilder.build()).method(method, requestBody);
         return builder.build().newCall(requestBuilder.build());
@@ -279,5 +333,11 @@ public class HttpRequest {
 
     public static void setHttpClient(OkHttpClient httpClient) {
         HttpRequest.httpClient = httpClient;
+    }
+
+    public static void setGlobalLog(HttpLoggingInterceptor.Level level) {
+        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(Slf4jLogger.LOGGER);
+        loggingInterceptor.level(level);
+        HttpRequest.globalLoggingInterceptor = loggingInterceptor;
     }
 }

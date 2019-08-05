@@ -5,8 +5,6 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import org.springframework.lang.Nullable;
 
-import java.io.File;
-
 /**
  * Multipart 表单构造器
  *
@@ -32,11 +30,11 @@ public class MultipartFormBuilder {
         return this;
     }
 
-    public MultipartFormBuilder add(final String name, @Nullable final String filename, final File file) {
-        final RequestBody fileBody = RequestBody.create(file, null);
-        this.formBuilder.addFormDataPart(name, filename, fileBody);
-        return this;
-    }
+//    public MultipartFormBuilder add(final String name, @Nullable final String filename, final File file) {
+//        final RequestBody fileBody = RequestBody.create(file, null);
+//        this.formBuilder.addFormDataPart(name, filename, fileBody);
+//        return this;
+//    }
 
     public MultipartFormBuilder add(final String name, @Nullable final String filename, final RequestBody fileBody) {
         this.formBuilder.addFormDataPart(name, filename, fileBody);

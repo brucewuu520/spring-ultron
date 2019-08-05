@@ -33,6 +33,10 @@ public class HttpResponse {
         return this.response.isSuccessful();
     }
 
+    public boolean isRedirect() {
+        return response.isRedirect();
+    }
+
     public byte[] asByte() {
         try {
             return Optional.ofNullable(response.body()).map(body -> {
@@ -111,6 +115,10 @@ public class HttpResponse {
 
     public int code() {
         return response.code();
+    }
+
+    public String message() {
+        return response.message();
     }
 
     public Response response() {

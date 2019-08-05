@@ -15,7 +15,7 @@ import org.springframework.lang.NonNull;
 public class Slf4jLogger implements HttpLoggingInterceptor.Logger {
     private static final Logger log = LoggerFactory.getLogger("HttpRequest");
 
-    static HttpLoggingInterceptor.Logger LOGGER = new Slf4jLogger();
+    static final HttpLoggingInterceptor.Logger LOGGER = new Slf4jLogger();
 
     @Override
     public void log(@NonNull String message) {
