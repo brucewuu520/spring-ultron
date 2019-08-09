@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Map工具类
+ * Map Utils
  *
  * @Auther: brucewuu
  * @Date: 2019-06-07 12:54
@@ -19,9 +19,9 @@ public class Maps {
     }
 
     /**
-     * 舒适化预期大小HashMap
+     * init expectedSize HashMap
      *
-     * @param expectedSize 预期size
+     * @param expectedSize init size
      * @param <K>          key
      * @param <V>          value
      * @return HashMap
@@ -37,7 +37,7 @@ public class Maps {
             }
             return expectedSize + 1;
         } else {
-            return expectedSize < 1073741824 ? (int)((float)expectedSize / 0.75F + 1.0F) : 2147483647;
+            return expectedSize < 1073741824 ? (int) ((float) expectedSize / 0.75F + 1.0F) : 2147483647;
         }
     }
 
@@ -250,10 +250,10 @@ public class Maps {
     /**
      * Gets a short from a Map in a null-safe manner.
      * <p>
-     * The short is obtained from the results of {@link #getNumber(Map,Object)}.
+     * The short is obtained from the results of {@link #getNumber(Map, Object)}.
      *
-     * @param map  the map to use
-     * @param key  the key to look up
+     * @param map the map to use
+     * @param key the key to look up
      * @return the value in the Map as a short, <code>0</code> if null map input
      */
     public static short getShortValue(final Map map, final Object key) {
@@ -318,10 +318,10 @@ public class Maps {
     /**
      * Gets a double from a Map in a null-safe manner.
      * <p>
-     * The double is obtained from the results of {@link #getNumber(Map,Object)}.
+     * The double is obtained from the results of {@link #getNumber(Map, Object)}.
      *
-     * @param map  the map to use
-     * @param key  the key to look up
+     * @param map the map to use
+     * @param key the key to look up
      * @return the value in the Map as a double, <code>0.0</code> if null map input
      */
     public static double getDoubleValue(final Map map, final Object key) {
@@ -342,8 +342,8 @@ public class Maps {
      * <code>false</code> and non-zero returns <code>true</code>.
      * Otherwise, <code>false</code> is returned.
      *
-     * @param map  the map to use
-     * @param key  the key to look up
+     * @param map the map to use
+     * @param key the key to look up
      * @return the value in the Map as a Boolean, <code>false</code> if null map input
      */
     public static boolean getBooleanValue(final Map map, final Object key) {

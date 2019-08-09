@@ -24,6 +24,7 @@ public class Strings extends org.springframework.util.StringUtils {
      * 空字符串
      */
     public static final String EMPTY = "";
+
     public static final String SLASH = "/";
     /**
      * 换行符
@@ -365,9 +366,6 @@ public class Strings extends org.springframework.util.StringUtils {
      * @return 随机数
      */
     public static String random(int count, RandomType randomType) {
-        if (count == 0) {
-            return Strings.EMPTY;
-        }
         Assert.isTrue(count > 0, "Requested random string length " + count + " is less than 0.");
         final ThreadLocalRandom random = ThreadLocalRandom.current();
         char[] buffer = new char[count];
