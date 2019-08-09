@@ -9,12 +9,15 @@
 
 ## 项目结构
 ```shell
-*├── spring-ultron              项目父级目录
-    ├── ultron-core             核心库(请求统一返回体、常用错误代码、自定义业务异常、Jackson序列化java8日期配置、常用工具类)
-    ├── ultron-mybatis          mybatis plus自动化配置、分页工具
-    ├── ultron-redis            Redis自动化配置、操作客户端
-    ├── ultron-boot             Spring boot脚手架，servlet/reactive全局异常捕获、基于aop的注解API日志打印(支持配置文件配置日志开关，日志内容等)、WebClient http客户端封装
-    ├── ultron-cloud            Spring cloud脚手架
+*├── spring-ultron                  项目父级目录
+    ├── spring-ultron-dependencies  依赖版本统一管理
+    ├── ultron-core                 核心库(请求统一返回体、常用错误代码、自定义业务异常、Jackson序列化/反序列化配置、常用工具类等)
+    ├── ultron-mybatis              mybatis plus自动化配置、分页工具等
+    ├── ultron-redis                Redis自动化配置、操作客户端
+    ├── ultron-boot                 Spring boot脚手架，servlet/reactive全局异常捕获、基于aop的注解API日志打印(支持配置文件配置日志开关，日志内容等)、WebClient http客户端封装
+    ├── ultron-cloud                Spring cloud脚手架（待完善）
+    ├── ultron-http                 基于OKhttp3 4.0.0版本封装的http客户端，使用起来倍儿爽
+    ├── ultron-swagger              Swagger文档自动化配置(可在配置文件中开启/关闭)
 ```    
 
 ## 使用步骤
@@ -25,19 +28,45 @@
     
 ### 第二步，编译安装本项目
 
-    mvn clean install --项目会编译安装到本地maven创库
+    mvn clean install --项目会编译安装到本地maven仓库
     
 ### 第三步，在自己的工程按需添加依赖库
 
-1、核心库(请求统一返回体、常用错误代码、自定义业务异常、Jackson序列化java8日期配置、常用工具类)
+1、在项目parent pom.xml中添加：
+
+    <properties>
+        <spring-ultron.version>1.0.0</spring-ultron.version>
+        <java.version>1.8</java.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springultron</groupId>
+                <artifactId>spring-ultron-dependencies</artifactId>
+                <version>${spring-ultron.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+2、核心库(请求统一返回体、常用错误代码、自定义业务异常、Jackson序列化/反序列化配置、常用工具类等)
 
     <dependency>
        <groupId>org.springultron</groupId>
        <artifactId>ultron-core</artifactId>
-       <version>1.0.0</version>
-    </dependency>  
+    </dependency>
     
-2、mybatis plus自动化配置、分页工具
+    返回体使用示例：
+    
+        @GetMapping("/test")
+        public Result<Test>> test() {
+            Test test = new Test();
+            return Result.success(test); // or return Result.failed(ResultCode.PARAM_VALID_FAILED);
+        }
+    
+3、mybatis plus自动化配置、分页工具等
 
     <dependency>
        <groupId>org.springultron</groupId>
@@ -45,28 +74,55 @@
        <version>1.0.0</version>
     </dependency> 
     
-3、Redis自动化配置、操作客户端
+    分页工具使用示例：
+    
+        Query query = new Query();
+        query.setCurrent(1);
+        query.setSize(10);
+        String[] asces = new String[] {"sort", "order"};
+        query.setAscs(asces);
+        IPage<T> page = Condition.getPage(query);
+ 
+    
+4、Redis自动化配置、操作客户端
 
     <dependency>
        <groupId>org.springultron</groupId>
        <artifactId>ultron-redis</artifactId>
-       <version>1.0.0</version>
     </dependency>
     
-4、Spring boot脚手架，servlet/reactive全局异常捕获、基于aop的注解API日志打印(支持配置文件配置日志开关，日志内容等)、WebClient http客户端封装
+    Redis操作客户端使用示例:
+    
+        @Autowired
+        private RedisClient redisClient;
+     
+    
+5、Spring boot脚手架，servlet/reactive全局异常捕获、基于aop的注解API日志打印(支持配置文件配置日志开关，日志内容等)、WebClient http客户端封装
 
     <dependency>
        <groupId>org.springultron</groupId>
        <artifactId>ultron-boot</artifactId>
-       <version>1.0.0</version>
-    </dependency>   
+    </dependency>
     
-5、Spring cloud脚手架
+    请求日志使用示例:
+    
+        @ApiLog(description = "用户登录")
+        @GetMapping("/login")
+        public Result<User>> login() {
+            return Result.success(new User(), "登录成功");
+        }
+    请求日志配置（配置文件添加）:
+    
+        ultron:
+          log:
+            enable: true # 开启ApiLog打印
+            level: headers # 打印包括请求头
+    
+6、Spring cloud脚手架
 
     <dependency>
        <groupId>org.springultron</groupId>
        <artifactId>ultron-cloud</artifactId>
-       <version>1.0.0</version>
     </dependency>           
             
 ## 许可证
