@@ -59,13 +59,18 @@
     </dependency>
     
     返回体使用示例：
-    
         @GetMapping("/test")
         public Result<Test>> test() {
             Test test = new Test();
             return Result.success(test); // or return Result.failed(ResultCode.PARAM_VALID_FAILED);
         }
-    
+        
+    自定义异常使用：
+        @GetMapping("/test")
+        public Result<Test>> test() {
+            return ApiResult.throwFail(ResultCode.API_EXCEPTION);
+        }
+        
 3、mybatis plus自动化配置、分页工具等
 
     <dependency>
@@ -96,6 +101,12 @@
         @Autowired
         private RedisClient redisClient;
      
+        redisClient.setString("key", "value", Duration.ofSeconds(120))
+        
+        Object obj = new Object();
+        redisClient.set("key", obj, Duration.ofSeconds(120))
+        
+        ...
     
 5、Spring boot脚手架，servlet/reactive全局异常捕获、基于aop的注解API日志打印(支持配置文件配置日志开关，日志内容等)、WebClient http客户端封装
 
@@ -105,14 +116,15 @@
     </dependency>
     
     请求日志使用示例:
-    
         @ApiLog(description = "用户登录")
         @GetMapping("/login")
         public Result<User>> login() {
-            return Result.success(new User(), "登录成功");
+            UserDTO userDTO = new UserDTO();
+            ...
+            return Result.success(userDTO, "登录成功");
         }
+        
     请求日志配置（配置文件添加）:
-    
         ultron:
           log:
             enable: true # 开启ApiLog打印
@@ -124,7 +136,24 @@
        <groupId>org.springultron</groupId>
        <artifactId>ultron-cloud</artifactId>
     </dependency>           
-            
+
+7、Swagger 接口文档（基于swagger-bootstrap-ui 1.9.6）
+
+    <dependency>
+       <groupId>org.springultron</groupId>
+       <artifactId>ultron-swagger</artifactId>
+    </dependency> 
+    
+    文档配置(配置文件中添加):
+    
+        swagger:
+          enable: true  # 默认
+          title: xxx服务
+          description: xxx服务接口文档
+          contact-user: brucewuu
+          contact-email: xxx@xxx.com
+          contact-url: xxx
+                
 ## 许可证
 
 [Apache License 2.0](https://github.com/brucewuu520/spring-ultron/blob/master/LICENSE)
