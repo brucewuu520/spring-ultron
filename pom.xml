@@ -33,15 +33,15 @@
 
     <properties>
         <spring-ultron.version>1.0.0</spring-ultron.version>
-        <spring-boot.version>2.1.6.RELEASE</spring-boot.version>
+        <spring-boot.version>2.1.7.RELEASE</spring-boot.version>
         <spring-cloud.version>Greenwich.SR2</spring-cloud.version>
-        <alibaba-cloud.version>0.9.1.RELEASE</alibaba-cloud.version>
-        <okhttp3.version>4.0.1</okhttp3.version>
-        <mybatis-plus.version>3.1.2</mybatis-plus.version>
+        <alibaba-cloud.version>2.1.0.RELEASE</alibaba-cloud.version>
+        <okhttp3.version>4.1.0</okhttp3.version>
+        <mybatis-plus.version>3.2.0</mybatis-plus.version>
         <common-pool.version>2.7.0</common-pool.version>
         <swagger.version>2.9.2</swagger.version>
-        <swagger-ui.version>1.9.5</swagger-ui.version>
-        <fastjson-version>1.2.58</fastjson-version>
+        <swagger-ui.version>1.9.6</swagger-ui.version>
+        <fastjson-version>1.2.59</fastjson-version>
 
         <findbugs.version>3.0.2</findbugs.version>
 
@@ -72,20 +72,6 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-dependencies</artifactId>
-                <version>${spring-cloud.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-<!--            <dependency>-->
-<!--                <groupId>com.alibaba.cloud</groupId>-->
-<!--                <artifactId>alibaba-spring-cloud-dependencies</artifactId>-->
-<!--                <version>${alibaba-cloud.version}</version>-->
-<!--                <type>pom</type>-->
-<!--                <scope>import</scope>-->
-<!--            </dependency>-->
         </dependencies>
     </dependencyManagement>
 

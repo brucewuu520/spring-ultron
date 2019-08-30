@@ -1,5 +1,6 @@
 package org.springultron.swagger;
 
+import com.github.xiaoymin.swaggerbootstrapui.annotations.EnableSwaggerBootstrapUI;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,6 +29,7 @@ import java.util.Optional;
 @Configuration
 @EnableConfigurationProperties(SwaggerProperties.class)
 @ConditionalOnProperty(value = "swagger.enable", havingValue = "true", matchIfMissing = true)
+@EnableSwaggerBootstrapUI
 @EnableSwagger2
 public class SwaggerConfiguration {
 
@@ -39,14 +41,13 @@ public class SwaggerConfiguration {
 
     @Bean
     public Docket createRestApi() {
-        Docket docket = new Docket(DocumentationType.SWAGGER_2)
+        return new Docket(DocumentationType.SWAGGER_2)
                 .useDefaultResponseMessages(false)
                 .apiInfo(apiInfo())
                 .select()
                 .apis(RequestHandlerSelectors.withClassAnnotation(Api.class))
                 .paths(PathSelectors.any())
                 .build();
-        return docket;
     }
 
     private ApiInfo apiInfo() {
@@ -57,5 +58,4 @@ public class SwaggerConfiguration {
                 .contact(new Contact(swaggerProperties.getContactUser(), swaggerProperties.getContactUrl(), swaggerProperties.getContactEmail()))
                 .build();
     }
-
 }
