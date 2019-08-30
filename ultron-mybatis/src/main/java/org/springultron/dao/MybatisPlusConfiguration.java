@@ -1,36 +1,43 @@
 package org.springultron.dao;
 
+import com.baomidou.mybatisplus.core.parser.ISqlParser;
+import com.baomidou.mybatisplus.extension.parsers.BlockAttackSqlParser;
 import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
-import com.baomidou.mybatisplus.extension.plugins.PerformanceInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.SqlExplainInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.pagination.optimize.JsqlParserCountOptimize;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Configuration
 @EnableTransactionManagement
 @MapperScan("com.*.*.mapper*")
 public class MybatisPlusConfiguration {
-
     /**
      * 分页插件
      */
     @Bean
     @ConditionalOnMissingBean({PaginationInterceptor.class})
     public PaginationInterceptor paginationInterceptor() {
-        return new PaginationInterceptor();
+        // 开启 count 的 join 优化,只针对 left join !!!
+        return new PaginationInterceptor().setCountSqlParser(new JsqlParserCountOptimize(true));
     }
 
     /**
-     * SQL执行效率插件
-     * 设置 dev test 环境开启
+     * 防止全表更新/删除
      */
     @Bean
-    @Profile({"dev", "test"})
-    public PerformanceInterceptor performanceInterceptor() {
-        return new PerformanceInterceptor();
+    @ConditionalOnMissingBean({SqlExplainInterceptor.class})
+    public SqlExplainInterceptor sqlExplainInterceptor() {
+        SqlExplainInterceptor sqlExplainInterceptor = new SqlExplainInterceptor();
+        List<ISqlParser> sqlParserList = new ArrayList<>();
+        sqlParserList.add(new BlockAttackSqlParser());
+        sqlExplainInterceptor.setSqlParserList(sqlParserList);
+        return sqlExplainInterceptor;
     }
-
 }

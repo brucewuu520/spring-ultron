@@ -14,23 +14,23 @@ import java.util.Optional;
  * @Date: 2019-05-22 15:16
  * @Description:
  */
-@ApiModel(description = "返回信息")
-public class Result<T> implements Serializable {
+@ApiModel(description = "返回信息", value = "ApiResult")
+public class ApiResult<T> implements Serializable {
     private static final long serialVersionUID = -2832435143001472900L;
 
-    @ApiModelProperty(value = "状态码", required = true)
+    @ApiModelProperty(value = "状态码", notes = "200代表请求操作成功", dataType = "int", required = true, example = "200")
     private int code;
-    @ApiModelProperty(value = "消息", required = true)
+    @ApiModelProperty(value = "消息", required = true, example = "success", position = 1)
     private String message;
-    @ApiModelProperty(value = "返回数据")
+    @ApiModelProperty(value = "返回数据", position = 2)
     private T data;
 
-    private Result(int code, String message) {
+    private ApiResult(int code, String message) {
         this.code = code;
         this.message = message;
     }
 
-    private Result(int code, String message, T data) {
+    private ApiResult(int code, String message, T data) {
         this.code = code;
         this.message = message;
         this.data = data;
@@ -63,8 +63,8 @@ public class Result<T> implements Serializable {
     /**
      * 返回成功
      */
-    public static <T> Result<T> success() {
-        return new Result<>(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage());
+    public static <T> ApiResult<T> success() {
+        return new ApiResult<>(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage());
     }
 
     /**
@@ -72,8 +72,8 @@ public class Result<T> implements Serializable {
      *
      * @param message 提示信息
      */
-    public static <T> Result<T> success(String message) {
-        return new Result<>(ResultCode.SUCCESS.getCode(), message);
+    public static <T> ApiResult<T> success(String message) {
+        return new ApiResult<>(ResultCode.SUCCESS.getCode(), message);
     }
 
     /**
@@ -81,8 +81,8 @@ public class Result<T> implements Serializable {
      *
      * @param data 获取的数据
      */
-    public static <T> Result<T> success(T data) {
-        return new Result<>(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), data);
+    public static <T> ApiResult<T> success(T data) {
+        return new ApiResult<>(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), data);
     }
 
     /**
@@ -91,14 +91,14 @@ public class Result<T> implements Serializable {
      * @param data    获取的数据
      * @param message 提示信息
      */
-    public static <T> Result<T> success(T data, String message) {
-        return new Result<>(ResultCode.SUCCESS.getCode(), message, data);
+    public static <T> ApiResult<T> success(T data, String message) {
+        return new ApiResult<>(ResultCode.SUCCESS.getCode(), message, data);
     }
 
     /**
      * 失败返回信息
      */
-    public static <T> Result<T> failed() {
+    public static <T> ApiResult<T> failed() {
         return failed(ResultCode.FAILED);
     }
 
@@ -107,8 +107,8 @@ public class Result<T> implements Serializable {
      *
      * @param errorCode 错误码
      */
-    public static <T> Result<T> failed(IResultCode errorCode) {
-        return new Result<>(errorCode.getCode(), errorCode.getMessage());
+    public static <T> ApiResult<T> failed(IResultCode errorCode) {
+        return new ApiResult<>(errorCode.getCode(), errorCode.getMessage());
     }
 
     /**
@@ -116,8 +116,8 @@ public class Result<T> implements Serializable {
      *
      * @param message 提示信息
      */
-    public static <T> Result<T> failed(String message) {
-        return new Result<>(ResultCode.FAILED.getCode(), message);
+    public static <T> ApiResult<T> failed(String message) {
+        return new ApiResult<>(ResultCode.FAILED.getCode(), message);
     }
 
     /**
@@ -126,28 +126,28 @@ public class Result<T> implements Serializable {
      * @param code    状态码
      * @param message 消息描述
      */
-    public static <T> Result<T> failed(int code, String message) {
-        return new Result<>(code, message);
+    public static <T> ApiResult<T> failed(int code, String message) {
+        return new ApiResult<>(code, message);
     }
 
     /**
      * 请求验签失败
      */
-    public static <T> Result<T> signFailed() {
+    public static <T> ApiResult<T> signFailed() {
         return failed(ResultCode.SIGN_FAILED);
     }
 
     /**
      * 未登录或token已经过期返回信息
      */
-    public static <T> Result<T> unauthorized() {
+    public static <T> ApiResult<T> unauthorized() {
         return failed(ResultCode.UNAUTHORIZED);
     }
 
     /**
      * 未授权返回信息
      */
-    public static <T> Result<T> forbidden() {
+    public static <T> ApiResult<T> forbidden() {
         return failed(ResultCode.FORBIDDEN);
     }
 
@@ -176,8 +176,8 @@ public class Result<T> implements Serializable {
      * @param e 异常
      * @return 返回值
      */
-    public static <T> Result<T> apiException(ApiException e) {
-        return new Result<>(e.getCode(), e.getMessage());
+    public static <T> ApiResult<T> apiException(ApiException e) {
+        return new ApiResult<>(e.getCode(), e.getMessage());
     }
 
     /**
@@ -186,7 +186,7 @@ public class Result<T> implements Serializable {
      * @param result 返回结果
      * @return 是否成功
      */
-    public static boolean isSuccess(Result<?> result) {
+    public static boolean isSuccess(ApiResult<?> result) {
         return Optional.ofNullable(result)
                 .map(r -> r.code)
                 .map(code -> code == ResultCode.SUCCESS.getCode())
@@ -199,7 +199,7 @@ public class Result<T> implements Serializable {
      * @param result 返回结果
      * @return 是否失败
      */
-    public static boolean isFail(Result<?> result) {
+    public static boolean isFail(ApiResult<?> result) {
         return !isSuccess(result);
     }
 }

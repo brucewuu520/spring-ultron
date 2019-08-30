@@ -16,7 +16,7 @@ import java.time.Duration;
 import java.util.Objects;
 
 /**
- * ok http 请求封装
+ * okhttp3 请求封装
  *
  * @Auther: brucewuu
  * @Date: 2019-06-29 22:15

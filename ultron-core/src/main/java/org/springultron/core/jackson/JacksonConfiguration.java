@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilde
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 import java.time.ZoneId;
 import java.util.Locale;
@@ -28,6 +29,7 @@ public class JacksonConfiguration {
     private String dateFormat;
 
     @Bean
+    @Primary
     public Jackson2ObjectMapperBuilderCustomizer customizer() {
         return builder -> {
             builder.locale(Locale.CHINA);

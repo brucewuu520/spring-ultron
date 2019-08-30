@@ -14,12 +14,15 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.cache.RedisCacheWriter;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.RedisSerializationContext;
+import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.time.Duration;
@@ -95,13 +98,16 @@ public class RedisConfiguration extends CachingConfigurerSupport {
      * @return CacheManager
      */
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
+    @Primary
     @Bean
     @ConditionalOnMissingBean(name = {"cacheManager"})
     public CacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {
         // 生成一个默认配置，通过config对象即可对缓存进行自定义配置
         RedisCacheConfiguration cacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
                 .entryTtl(Duration.ofHours(3)) // 设置缓存的默认过期时间，使用Duration设置
-                .disableCachingNullValues(); // 不缓存空值
+                .disableCachingNullValues() // 不缓存空值
+                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(RedisSerializer.string()))
+                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(RedisSerializer.json()));
         // 使用自定义的缓存配置初始化cacheManager
         return RedisCacheManager.builder(RedisCacheWriter.nonLockingRedisCacheWriter(redisConnectionFactory))
                 .cacheDefaults(cacheConfiguration)

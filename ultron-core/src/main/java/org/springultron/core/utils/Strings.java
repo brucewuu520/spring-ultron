@@ -446,7 +446,7 @@ public class Strings extends org.springframework.util.StringUtils {
      * Convert a {@code Collection} into a delimited {@code String} (e.g., CSV).
      * <p>Useful for {@code toString()} implementations.
      *
-     * @param coll the {@code Collection} to convert
+     * @param coll the {@code Collection} to converter
      * @return the delimited {@code String}
      */
     public static String join(Collection<?> coll) {
@@ -457,7 +457,7 @@ public class Strings extends org.springframework.util.StringUtils {
      * Convert a {@code Collection} into a delimited {@code String} (e.g. CSV).
      * <p>Useful for {@code toString()} implementations.
      *
-     * @param coll      the {@code Collection} to convert
+     * @param coll      the {@code Collection} to converter
      * @param delimiter the delimiter to use (typically a ",")
      * @return the delimited {@code String}
      */

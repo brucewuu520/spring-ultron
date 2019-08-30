@@ -1,5 +1,6 @@
 package org.springultron.core.utils;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -382,7 +383,7 @@ public class Jackson {
         return getInstance().getTypeFactory().constructCollectionLikeType(ArrayList.class, elementClass);
     }
 
-    private static ObjectMapper getInstance() {
+    public static ObjectMapper getInstance() {
         return SingletonHolder.INSTANCE;
     }
 
@@ -405,6 +406,8 @@ public class Jackson {
             super.setDateFormat(new SimpleDateFormat(DateUtils.PATTERN_DATE_TIME, Locale.CHINA));
             // 允许序列化空的POJO类
             super.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+            super.setDefaultPropertyInclusion(JsonInclude.Include.NON_NULL);
+//            super.setSerializationInclusion(JsonInclude.Include.NON_NULL);
             // 忽略JSON字符串中不识别的属性
             super.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
             // 允许JSON字符串包含非引号控制字符（值小于32的ASCII字符，包含制表符和换行符）

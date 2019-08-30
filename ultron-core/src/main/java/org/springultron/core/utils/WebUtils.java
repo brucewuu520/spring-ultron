@@ -1,11 +1,9 @@
-package org.springultron.boot.servlet;
+package org.springultron.core.utils;
 
 import org.springframework.http.MediaType;
 import org.springframework.lang.Nullable;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import org.springultron.core.utils.Jackson;
-import org.springultron.core.utils.Strings;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,6 +11,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 /**
  * Servlet 工具
@@ -68,28 +67,29 @@ public class WebUtils extends org.springframework.web.util.WebUtils {
     @Nullable
     public static String getIP(HttpServletRequest request) {
         if (null == request) {
-            return Strings.EMPTY;
+            return null;
         }
+        final Predicate<String> IP_PREDICATE = (ip) -> Strings.isBlank(ip) || "unknown".equalsIgnoreCase(ip);
         String ip = request.getHeader("X-Requested-For");
-        if (Strings.isBlank(ip) || "unknown".equalsIgnoreCase(ip)) {
+        if (IP_PREDICATE.test(ip)) {
             ip = request.getHeader("X-Forwarded-For");
         }
-        if (Strings.isBlank(ip) || "unknown".equalsIgnoreCase(ip)) {
+        if (IP_PREDICATE.test(ip)) {
             ip = request.getHeader("Proxy-Client-IP");
         }
-        if (Strings.isBlank(ip) || "unknown".equalsIgnoreCase(ip)) {
+        if (IP_PREDICATE.test(ip)) {
             ip = request.getHeader("WL-Proxy-Client-IP");
         }
-        if (Strings.isBlank(ip) || "unknown".equalsIgnoreCase(ip)) {
+        if (IP_PREDICATE.test(ip)) {
             ip = request.getHeader("HTTP_CLIENT_IP");
         }
-        if (Strings.isBlank(ip) || "unknown".equalsIgnoreCase(ip)) {
+        if (IP_PREDICATE.test(ip)) {
             ip = request.getHeader("HTTP_X_FORWARDED_FOR");
         }
-        if (Strings.isBlank(ip) || "unknown".equalsIgnoreCase(ip)) {
+        if (IP_PREDICATE.test(ip)) {
             ip = request.getRemoteAddr();
         }
-        return Strings.isBlank(ip) ? Strings.EMPTY : ip.split(",")[0];
+        return Strings.isBlank(ip) ? null : ip.split(",")[0];
     }
 
     /**

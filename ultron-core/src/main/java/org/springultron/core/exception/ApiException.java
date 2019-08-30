@@ -8,7 +8,6 @@ import org.springultron.core.result.ResultCode;
  *
  * @Auther: brucewuu
  * @Date: 2019-06-03 09:46
- * @Description:
  */
 public class ApiException extends RuntimeException {
     private static final long serialVersionUID = 250919198459751841L;

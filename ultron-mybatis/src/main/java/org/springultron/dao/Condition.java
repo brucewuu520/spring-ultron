@@ -4,9 +4,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * MyBatis Plus工具
  *
@@ -24,26 +21,21 @@ public class Condition {
      */
     public static <T> IPage<T> getPage(Query query) {
         Page<T> page = new Page<>(null == query.getCurrent() ? 1 : query.getCurrent(), null == query.getSize() ? 10 : query.getSize());
-        List<OrderItem> orderItems = null;
-        OrderItem orderItem;
         if (null != query.getAscs()) {
-            orderItems = new ArrayList<>();
-            for (String asc : query.getAscs()) {
-                orderItem = OrderItem.asc(asc);
-                orderItems.add(orderItem);
+            final int length = query.getAscs().length;
+            if (length == 1) {
+                page.addOrder(OrderItem.asc(query.getAscs()[0]));
+            } else if (length > 1) {
+                page.addOrder(OrderItem.ascs(query.getAscs()));
             }
         }
         if (null != query.getDescs()) {
-            if (null == orderItems) {
-                orderItems = new ArrayList<>();
+            final int length = query.getDescs().length;
+            if (length == 1) {
+                page.addOrder(OrderItem.desc(query.getDescs()[0]));
+            } else if (length > 1) {
+                page.addOrder(OrderItem.descs(query.getDescs()));
             }
-            for (String desc : query.getDescs()) {
-                orderItem = OrderItem.desc(desc);
-                orderItems.add(orderItem);
-            }
-        }
-        if (null != orderItems) {
-            page.setOrders(orderItems);
         }
         return page;
     }
