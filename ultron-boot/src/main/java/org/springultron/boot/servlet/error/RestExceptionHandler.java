@@ -1,4 +1,4 @@
-package org.springultron.boot.servlet;
+package org.springultron.boot.servlet.error;
 
 import org.hibernate.validator.internal.engine.path.PathImpl;
 import org.slf4j.Logger;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
-import org.springultron.core.result.Result;
+import org.springultron.core.result.ApiResult;
 import org.springultron.core.result.ResultCode;
 
 import javax.validation.ConstraintViolation;
@@ -35,122 +35,121 @@ import java.util.Set;
 @RestControllerAdvice
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 public class RestExceptionHandler {
-
     private static final Logger log = LoggerFactory.getLogger(RestExceptionHandler.class);
 
     /**
      * 参数校验失败
      *
      * @param e 异常
-     * @return Result
+     * @return ApiResult
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Result handleError(MethodArgumentNotValidException e) {
+    public ApiResult handleError(MethodArgumentNotValidException e) {
         log.error("参数校验失败: {}", e.getMessage());
         return Optional.ofNullable(e.getBindingResult().getFieldError())
-                .map(fieldError -> Result.failed(ResultCode.PARAM_VALID_FAILED.getCode(), String.format("%s:%s", fieldError.getField(), fieldError.getDefaultMessage())))
-                .orElseGet(() -> Result.failed(ResultCode.PARAM_VALID_FAILED));
+                .map(fieldError -> ApiResult.failed(ResultCode.PARAM_VALID_FAILED.getCode(), String.format("%s:%s", fieldError.getField(), fieldError.getDefaultMessage())))
+                .orElseGet(() -> ApiResult.failed(ResultCode.PARAM_VALID_FAILED));
     }
 
     /**
      * 参数绑定失败
      *
      * @param e 异常
-     * @return Result
+     * @return ApiResult
      */
     @ExceptionHandler(BindException.class)
-    public Result handleError(BindException e) {
+    public ApiResult handleError(BindException e) {
         log.error("参数绑定失败: {}", e.getMessage());
         return Optional.ofNullable(e.getFieldError())
-                .map(fieldError -> Result.failed(ResultCode.PARAM_BIND_FAILED.getCode(), String.format("%s:%s", fieldError.getField(), fieldError.getDefaultMessage())))
-                .orElseGet(() -> Result.failed(ResultCode.PARAM_BIND_FAILED));
+                .map(fieldError -> ApiResult.failed(ResultCode.PARAM_BIND_FAILED.getCode(), String.format("%s:%s", fieldError.getField(), fieldError.getDefaultMessage())))
+                .orElseGet(() -> ApiResult.failed(ResultCode.PARAM_BIND_FAILED));
     }
 
     /**
      * 缺少必要的请求参数
      *
      * @param e 异常
-     * @return Result
+     * @return ApiResult
      */
     @ExceptionHandler(MissingServletRequestParameterException.class)
-    public Result handleError(MissingServletRequestParameterException e) {
+    public ApiResult handleError(MissingServletRequestParameterException e) {
         log.error("缺少必要的请求参数: {}", e.getMessage());
-        return Result.failed(ResultCode.BAD_REQUEST.getCode(), String.format("缺少必要的请求参数: %s", e.getMessage()));
+        return ApiResult.failed(ResultCode.BAD_REQUEST.getCode(), String.format("缺少必要的请求参数: %s", e.getMessage()));
     }
 
     /**
      * 请求参数格式错误
      *
      * @param e 异常
-     * @return Result
+     * @return ApiResult
      */
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public Result handleError(MethodArgumentTypeMismatchException e) {
+    public ApiResult handleError(MethodArgumentTypeMismatchException e) {
         log.error("请求参数格式错误: {}", e.getMessage());
-        return Result.failed(ResultCode.BAD_REQUEST.getCode(), String.format("请求参数格式错误: %s", e.getName()));
+        return ApiResult.failed(ResultCode.BAD_REQUEST.getCode(), String.format("请求参数格式错误: %s", e.getName()));
     }
 
     /**
      * 参数验证失败
      *
      * @param e 异常
-     * @return Result
+     * @return ApiResult
      */
     @ExceptionHandler(ConstraintViolationException.class)
-    public Result handleError(ConstraintViolationException e) {
+    public ApiResult handleError(ConstraintViolationException e) {
         log.error("参数验证失败: {}", e.getMessage());
         Set<ConstraintViolation<?>> constraintViolationSet = e.getConstraintViolations();
         ConstraintViolation<?> constraintViolation = constraintViolationSet.iterator().next();
         String path = ((PathImpl) constraintViolation.getPropertyPath()).getLeafNode().getName();
         String message = String.format("%s:%s", path, constraintViolation.getMessage());
-        return Result.failed(ResultCode.PARAM_VALID_FAILED.getCode(), message);
+        return ApiResult.failed(ResultCode.PARAM_VALID_FAILED.getCode(), message);
     }
 
     /**
      * 404没找到请求
      *
      * @param e 异常
-     * @return Result
+     * @return ApiResult
      */
     @ExceptionHandler(NoHandlerFoundException.class)
-    public Result handleError(NoHandlerFoundException e) {
+    public ApiResult handleError(NoHandlerFoundException e) {
         log.error("404没找到请求: {}", e.getMessage());
-        return Result.failed(ResultCode.NOT_FOUND);
+        return ApiResult.failed(ResultCode.NOT_FOUND);
     }
 
     /**
      * 不支持当前请求方法
      *
      * @param e 异常
-     * @return Result
+     * @return ApiResult
      */
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public Result handleError(HttpRequestMethodNotSupportedException e) {
+    public ApiResult handleError(HttpRequestMethodNotSupportedException e) {
         log.error("不支持当前请求方法: {}", e.getMessage());
-        return Result.failed(ResultCode.METHOD_NO_ALLOWED);
+        return ApiResult.failed(ResultCode.METHOD_NO_ALLOWED);
     }
 
     /**
      * 不支持当前媒体类型
      *
      * @param e 异常
-     * @return Result
+     * @return ApiResult
      */
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
-    public Result handleError(HttpMediaTypeNotSupportedException e) {
+    public ApiResult handleError(HttpMediaTypeNotSupportedException e) {
         log.error("不支持当前媒体类型: {}", e.getMessage());
-        return Result.failed(ResultCode.BAD_REQUEST.getCode(), "不支持当前媒体类型");
+        return ApiResult.failed(ResultCode.BAD_REQUEST.getCode(), "不支持当前媒体类型");
     }
 
     /**
      * 不接受的媒体类型
      *
      * @param e 异常
-     * @return Result
+     * @return ApiResult
      */
     @ExceptionHandler(HttpMediaTypeNotAcceptableException.class)
-    public Result handleError(HttpMediaTypeNotAcceptableException e) {
+    public ApiResult handleError(HttpMediaTypeNotAcceptableException e) {
         log.error("不接受的媒体类型: {}", e.getMessage());
-        return Result.failed(ResultCode.BAD_REQUEST.getCode(), "不接受的媒体类型");
+        return ApiResult.failed(ResultCode.BAD_REQUEST.getCode(), "不接受的媒体类型");
     }
 }

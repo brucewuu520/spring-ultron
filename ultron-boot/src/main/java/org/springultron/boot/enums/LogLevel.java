@@ -67,9 +67,9 @@ public enum LogLevel {
     /**
      * 请求日志配置前缀
      */
-    public static final String ULTRON_LOG_PROPS_PREFIX = "ultron.log";
+    public static final String ULTRON_LOG_PROPS_PREFIX = "ultron.logger";
     /**
      * 请求日志是否启用
      */
-    public static final String ULTRON_LOG_ENABLE = "ultron.log.enable";
+    public static final String ULTRON_LOG_ENABLE = "ultron.logger.enable";
 }

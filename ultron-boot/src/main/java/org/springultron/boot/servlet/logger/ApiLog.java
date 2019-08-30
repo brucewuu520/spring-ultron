@@ -1,4 +1,4 @@
-package org.springultron.boot.servlet.log;
+package org.springultron.boot.servlet.logger;
 
 import java.lang.annotation.*;
 

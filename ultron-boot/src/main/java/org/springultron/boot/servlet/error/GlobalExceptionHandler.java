@@ -1,4 +1,4 @@
-package org.springultron.boot.reactive;
+package org.springultron.boot.servlet.error;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,8 +7,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springultron.core.exception.ApiException;
-import org.springultron.core.result.Result;
-import reactor.core.publisher.Mono;
+import org.springultron.core.result.ApiResult;
 
 /**
  * 通用自定义异常、未知异常处理
@@ -19,9 +18,8 @@ import reactor.core.publisher.Mono;
  */
 @Order
 @RestControllerAdvice
-@ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.REACTIVE)
+@ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 public class GlobalExceptionHandler {
-
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     /**
@@ -31,15 +29,15 @@ public class GlobalExceptionHandler {
      * @return REST 返回异常结果
      */
     @ExceptionHandler(value = ApiException.class)
-    public Mono<Result> handleApiException(ApiException e) {
+    public ApiResult handleApiException(ApiException e) {
         log.error("自定义业务异常: {}", e.getMessage());
-        return Mono.just(Result.apiException(e));
+        return ApiResult.apiException(e);
     }
 
     @ExceptionHandler(Throwable.class)
-    public Mono<Result> handleError(Throwable e) {
+    public ApiResult handleError(Throwable e) {
         log.error("未知异常: {}", e.getMessage());
         // 发送：未知异常异常事件
-        return Mono.just(Result.failed("系统未知异常"));
+        return ApiResult.failed("系统未知异常");
     }
 }

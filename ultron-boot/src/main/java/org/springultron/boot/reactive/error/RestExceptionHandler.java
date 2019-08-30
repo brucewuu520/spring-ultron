@@ -1,4 +1,4 @@
-package org.springultron.boot.reactive;
+package org.springultron.boot.reactive.error;
 
 import org.hibernate.validator.internal.engine.path.PathImpl;
 import org.slf4j.Logger;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.bind.support.WebExchangeBindException;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.server.ServerWebInputException;
-import org.springultron.core.result.Result;
+import org.springultron.core.result.ApiResult;
 import org.springultron.core.result.ResultCode;
 import reactor.core.publisher.Mono;
 
@@ -32,89 +32,88 @@ import java.util.Optional;
 @RestControllerAdvice
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.REACTIVE)
 public class RestExceptionHandler {
-
     private static final Logger log = LoggerFactory.getLogger(RestExceptionHandler.class);
 
     /**
      * 参数校验失败
      *
      * @param e 异常
-     * @return Result
+     * @return ApiResult
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Mono<Result> handleError(MethodArgumentNotValidException e) {
+    public Mono<ApiResult> handleError(MethodArgumentNotValidException e) {
         log.error("参数校验失败: {}", e.getMessage());
         return Mono.just(Optional.ofNullable(e.getBindingResult().getFieldError())
-                .map(fieldError -> Result.failed(ResultCode.PARAM_VALID_FAILED.getCode(), String.format("%s:%s", fieldError.getField(), fieldError.getDefaultMessage())))
-                .orElseGet(() -> Result.failed(ResultCode.PARAM_VALID_FAILED)));
+                .map(fieldError -> ApiResult.failed(ResultCode.PARAM_VALID_FAILED.getCode(), String.format("%s:%s", fieldError.getField(), fieldError.getDefaultMessage())))
+                .orElseGet(() -> ApiResult.failed(ResultCode.PARAM_VALID_FAILED)));
     }
 
     /**
      * 参数绑定失败
      *
      * @param e 异常
-     * @return Result
+     * @return ApiResult
      */
     @ExceptionHandler(BindException.class)
-    public Mono<Result> handleError(BindException e) {
+    public Mono<ApiResult> handleError(BindException e) {
         log.error("参数绑定失败: {}", e.getMessage());
         return Mono.just(Optional.ofNullable(e.getFieldError())
-                .map(fieldError -> Result.failed(ResultCode.PARAM_BIND_FAILED.getCode(), String.format("%s:%s", fieldError.getField(), fieldError.getDefaultMessage())))
-                .orElseGet(() -> Result.failed(ResultCode.PARAM_BIND_FAILED)));
+                .map(fieldError -> ApiResult.failed(ResultCode.PARAM_BIND_FAILED.getCode(), String.format("%s:%s", fieldError.getField(), fieldError.getDefaultMessage())))
+                .orElseGet(() -> ApiResult.failed(ResultCode.PARAM_BIND_FAILED)));
     }
 
     /**
      * 参数绑定失败
      *
      * @param e 异常
-     * @return Result
+     * @return ApiResult
      */
     @ExceptionHandler(WebExchangeBindException.class)
-    public Mono<Result> handleError(WebExchangeBindException e) {
+    public Mono<ApiResult> handleError(WebExchangeBindException e) {
         log.error("参数绑定失败: {}", e.getMessage());
         return Mono.just(Optional.ofNullable(e.getFieldError())
-                .map(fieldError -> Result.failed(ResultCode.PARAM_BIND_FAILED.getCode(), String.format("%s:%s", fieldError.getField(), fieldError.getDefaultMessage())))
-                .orElseGet(() -> Result.failed(ResultCode.PARAM_BIND_FAILED)));
+                .map(fieldError -> ApiResult.failed(ResultCode.PARAM_BIND_FAILED.getCode(), String.format("%s:%s", fieldError.getField(), fieldError.getDefaultMessage())))
+                .orElseGet(() -> ApiResult.failed(ResultCode.PARAM_BIND_FAILED)));
     }
 
     /**
      * 缺少必要的请求参数
      *
      * @param e 异常
-     * @return Result
+     * @return ApiResult
      */
     @ExceptionHandler(ServerWebInputException.class)
-    public Mono<Result> handleError(ServerWebInputException e) {
+    public Mono<ApiResult> handleError(ServerWebInputException e) {
         log.error("缺少必要的请求参数: {}", e.getMessage());
         return Mono.just(Optional.ofNullable(e.getMethodParameter())
-                .map(parameter -> Result.failed(ResultCode.BAD_REQUEST.getCode(), String.format("缺少必要的请求参数: %s", parameter.getParameterName())))
-                .orElseGet(() -> Result.failed(ResultCode.BAD_REQUEST.getCode(), "缺少必要的请求参数")));
+                .map(parameter -> ApiResult.failed(ResultCode.BAD_REQUEST.getCode(), String.format("缺少必要的请求参数: %s", parameter.getParameterName())))
+                .orElseGet(() -> ApiResult.failed(ResultCode.BAD_REQUEST.getCode(), "缺少必要的请求参数")));
     }
 
     /**
      * 参数验证失败
      *
      * @param e 异常
-     * @return Result
+     * @return ApiResult
      */
     @ExceptionHandler(ConstraintViolationException.class)
-    public Mono<Result> handleError(ConstraintViolationException e) {
+    public Mono<ApiResult> handleError(ConstraintViolationException e) {
         log.error("参数验证失败: {}", e.getMessage());
         ConstraintViolation<?> constraintViolation = e.getConstraintViolations().iterator().next();
         String path = ((PathImpl) constraintViolation.getPropertyPath()).getLeafNode().getName();
         String message = String.format("%s:%s", path, constraintViolation.getMessage());
-        return Mono.just(Result.failed(ResultCode.PARAM_VALID_FAILED.getCode(), message));
+        return Mono.just(ApiResult.failed(ResultCode.PARAM_VALID_FAILED.getCode(), message));
     }
 
     /**
      * 响应状态异常
      *
      * @param e 异常
-     * @return Result
+     * @return ApiResult
      */
     @ExceptionHandler(ResponseStatusException.class)
-    public Mono<Result> handleError(ResponseStatusException e) {
+    public Mono<ApiResult> handleError(ResponseStatusException e) {
         log.error("响应状态异常: {}", e.getMessage());
-        return Mono.just(Result.failed(ResultCode.BAD_REQUEST.getCode(), String.format("响应状态异常:%s", e.getReason())));
+        return Mono.just(ApiResult.failed(ResultCode.BAD_REQUEST.getCode(), String.format("响应状态异常:%s", e.getReason())));
     }
 }
