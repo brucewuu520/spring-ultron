@@ -1,0 +1,16 @@
+spring:
+  cloud:
+    sentinel:
+      enabled: true
+feign:
+  httpclient:
+    enabled: false
+  okhttp:
+    enabled: true
+  sentinel:
+    enabled: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
