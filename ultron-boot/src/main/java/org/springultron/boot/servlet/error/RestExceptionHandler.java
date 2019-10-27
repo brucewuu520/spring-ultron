@@ -21,15 +21,15 @@ import org.springultron.core.result.ResultCode;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import javax.validation.ValidationException;
 import java.util.Optional;
 import java.util.Set;
 
 /**
  * RESTFUL API 异常信息处理
  *
- * @Auther: brucewuu
- * @Date: 2019-06-17 11:50
- * @Description:
+ * @author brucewuu
+ * @date 2019-06-17 11:50
  */
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @RestControllerAdvice
@@ -38,28 +38,28 @@ public class RestExceptionHandler {
     private static final Logger log = LoggerFactory.getLogger(RestExceptionHandler.class);
 
     /**
-     * 参数校验失败
+     * 方法参数校验异常
      *
      * @param e 异常
      * @return ApiResult
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ApiResult handleError(MethodArgumentNotValidException e) {
-        log.error("参数校验失败: {}", e.getMessage());
+        log.error("方法参数校验异常: {}", e.getMessage());
         return Optional.ofNullable(e.getBindingResult().getFieldError())
                 .map(fieldError -> ApiResult.failed(ResultCode.PARAM_VALID_FAILED.getCode(), String.format("%s:%s", fieldError.getField(), fieldError.getDefaultMessage())))
                 .orElseGet(() -> ApiResult.failed(ResultCode.PARAM_VALID_FAILED));
     }
 
     /**
-     * 参数绑定失败
+     * 参数绑定异常
      *
      * @param e 异常
      * @return ApiResult
      */
     @ExceptionHandler(BindException.class)
     public ApiResult handleError(BindException e) {
-        log.error("参数绑定失败: {}", e.getMessage());
+        log.error("参数绑定异常: {}", e.getMessage());
         return Optional.ofNullable(e.getFieldError())
                 .map(fieldError -> ApiResult.failed(ResultCode.PARAM_BIND_FAILED.getCode(), String.format("%s:%s", fieldError.getField(), fieldError.getDefaultMessage())))
                 .orElseGet(() -> ApiResult.failed(ResultCode.PARAM_BIND_FAILED));
@@ -87,6 +87,18 @@ public class RestExceptionHandler {
     public ApiResult handleError(MethodArgumentTypeMismatchException e) {
         log.error("请求参数格式错误: {}", e.getMessage());
         return ApiResult.failed(ResultCode.BAD_REQUEST.getCode(), String.format("请求参数格式错误: %s", e.getName()));
+    }
+
+    /**
+     * 参数校验异常
+     *
+     * @param e 异常
+     * @return ApiResult
+     */
+    @ExceptionHandler(ValidationException.class)
+    public ApiResult handleError(ValidationException e) {
+        log.error("参数校验异常: {}", e.getMessage());
+        return ApiResult.failed(ResultCode.PARAM_VALID_FAILED.getCode(), e.getCause().getMessage());
     }
 
     /**

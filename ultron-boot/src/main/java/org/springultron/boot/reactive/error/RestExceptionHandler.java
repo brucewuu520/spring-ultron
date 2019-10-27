@@ -19,14 +19,14 @@ import reactor.core.publisher.Mono;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import javax.validation.ValidationException;
 import java.util.Optional;
 
 /**
  * WebFlux RESTFUL API 异常信息处理
  *
- * @Auther: brucewuu
- * @Date: 2019-06-17 11:50
- * @Description:
+ * @author brucewuu
+ * @date 2019-06-17 11:50
  */
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @RestControllerAdvice
@@ -88,6 +88,18 @@ public class RestExceptionHandler {
         return Mono.just(Optional.ofNullable(e.getMethodParameter())
                 .map(parameter -> ApiResult.failed(ResultCode.BAD_REQUEST.getCode(), String.format("缺少必要的请求参数: %s", parameter.getParameterName())))
                 .orElseGet(() -> ApiResult.failed(ResultCode.BAD_REQUEST.getCode(), "缺少必要的请求参数")));
+    }
+
+    /**
+     * 参数校验异常
+     *
+     * @param e 异常
+     * @return ApiResult
+     */
+    @ExceptionHandler(ValidationException.class)
+    public Mono<ApiResult> handleError(ValidationException e) {
+        log.error("参数校验异常: {}", e.getMessage());
+        return Mono.just(ApiResult.failed(ResultCode.PARAM_VALID_FAILED.getCode(), e.getCause().getMessage()));
     }
 
     /**

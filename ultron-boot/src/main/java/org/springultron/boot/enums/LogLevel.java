@@ -3,9 +3,8 @@ package org.springultron.boot.enums;
 /**
  * 自定义日志等级
  *
- * @Auther: brucewuu
- * @Date: 2019-06-17 19:56
- * @Description:
+ * @author brucewuu
+ * @date 2019-06-17 19:56
  */
 public enum LogLevel {
     /**

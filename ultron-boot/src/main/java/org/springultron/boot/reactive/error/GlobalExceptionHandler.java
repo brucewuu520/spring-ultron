@@ -8,14 +8,14 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springultron.core.exception.ApiException;
 import org.springultron.core.result.ApiResult;
+import org.springultron.core.result.ResultCode;
 import reactor.core.publisher.Mono;
 
 /**
  * 通用自定义异常、未知异常处理
  *
- * @Auther: brucewuu
- * @Date: 2019-06-05 12:23
- * @Description:
+ * @author brucewuu
+ * @date 2019-06-05 12:23
  */
 @Order
 @RestControllerAdvice
@@ -35,9 +35,16 @@ public class GlobalExceptionHandler {
         return Mono.just(ApiResult.apiException(e));
     }
 
+    @ExceptionHandler(AssertionError.class)
+    public ApiResult handleAssertionError(AssertionError e) {
+        log.error("断言异常: {}", e.getMessage());
+        // 发送：未知异常异常事件
+        return ApiResult.failed(ResultCode.ASSERTION_ERROR.getCode(), e.getMessage());
+    }
+
     @ExceptionHandler(Throwable.class)
-    public Mono<ApiResult> handleError(Throwable e) {
-        log.error("未知异常: {}", e.getMessage());
+    public Mono<ApiResult> handleThrowable(Throwable e) {
+        log.error("未知异常: {}", e.getMessage(), e);
         // 发送：未知异常异常事件
         return Mono.just(ApiResult.failed("系统未知异常"));
     }

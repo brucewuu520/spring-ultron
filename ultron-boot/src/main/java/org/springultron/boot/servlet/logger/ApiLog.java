@@ -2,18 +2,19 @@ package org.springultron.boot.servlet.logger;
 
 import java.lang.annotation.*;
 
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
 /**
  * 自定义API请求日志注解
  *
- * @Auther: brucewuu
- * @Date: 2019-06-17 17:54
- * @Description:
+ * @author brucewuu
+ * @date 2019-06-17 17:54
  */
-@Target({ElementType.METHOD})
-@Retention(RetentionPolicy.RUNTIME)
 @Documented
+@Target({METHOD})
+@Retention(RUNTIME)
 public @interface ApiLog {
-
     /**
      * 日志描述信息
      *

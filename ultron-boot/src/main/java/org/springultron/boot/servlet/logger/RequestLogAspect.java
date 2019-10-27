@@ -32,9 +32,8 @@ import java.util.concurrent.TimeUnit;
 /**
  * AOP实现请求日志打印（只适用于SERVLET请求）
  *
- * @Auther: brucewuu
- * @Date: 2019-06-17 18:00
- * @Description:
+ * @author brucewuu
+ * @date 2019-06-17 18:00
  */
 @Order
 @Aspect

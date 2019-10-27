@@ -10,9 +10,8 @@ import org.springultron.core.convert.StringToEnumConverter;
 /**
  * API Jackson Enum and String convert eachother configurer
  *
- * @Auther: brucewuu
- * @Date: 2019-08-12 12:13
- * @Description:
+ * @author brucewuu
+ * @date 2019-08-12 12:13
  */
 @Configuration
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)

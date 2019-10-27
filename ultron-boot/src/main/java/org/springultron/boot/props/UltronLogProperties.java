@@ -6,14 +6,13 @@ import org.springultron.boot.enums.LogLevel;
 /**
  * 请求日志配置
  *
- * @Auther: brucewuu
- * @Date: 2019-06-17 17:31
- * @Description:
+ * @author brucewuu
+ * @date 2019-06-17 17:31
  */
 @ConfigurationProperties(LogLevel.ULTRON_LOG_PROPS_PREFIX)
 public class UltronLogProperties {
     /**
-     * 是否开启日志
+     * 是否开启日志，默认开启
      */
     private boolean enable = true;
     /**
