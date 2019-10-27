@@ -23,16 +23,17 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.RedisSerializer;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.time.Duration;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Redis配置
+ * 配置序列化方式以及缓存管理器 @EnableCaching 可开启方法注解缓存
  *
- * @Auther: brucewuu
- * @Date: 2019-05-31 14:26
- * @Description: redis配置 配置序列化方式以及缓存管理器 @EnableCaching 可开启方法注解缓存
+ * @author brucewuu
+ * @date 2019-05-31 14:26
  */
 @EnableCaching
 @Configuration
@@ -71,24 +72,35 @@ public class RedisConfiguration extends CachingConfigurerSupport {
     @ConditionalOnClass({ObjectMapper.class})
     @ConditionalOnMissingBean(name = {"redisTemplate"})
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
-        // 使用StringRedisSerializer来序列化和反序列化redis的key值
-        StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
         // 使用Jackson2JsonRedisSerializer来序列化和反序列化redis的value值
+        Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = jackson2JsonRedisSerializer();
+        RedisTemplate<String, Object> template = new RedisTemplate<>();
+        // 配置连接工厂
+        template.setConnectionFactory(redisConnectionFactory);
+        template.setKeySerializer(RedisSerializer.string()); // 使用StringRedisSerializer.UTF_8来序列化和反序列化redis的key值
+        template.setValueSerializer(jackson2JsonRedisSerializer);
+        template.setHashKeySerializer(RedisSerializer.string()); // 使用StringRedisSerializer.UTF_8来序列化和反序列化redis的key值
+        template.setHashValueSerializer(jackson2JsonRedisSerializer);
+        template.afterPropertiesSet();
+        return template;
+    }
+
+    private Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer() {
         Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<>(Object.class);
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
         objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
-        objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         jackson2JsonRedisSerializer.setObjectMapper(objectMapper);
-        RedisTemplate<String, Object> template = new RedisTemplate<>();
-        // 配置连接工厂
-        template.setConnectionFactory(redisConnectionFactory);
-        template.setKeySerializer(stringRedisSerializer);
-        template.setValueSerializer(jackson2JsonRedisSerializer);
-        template.setHashKeySerializer(stringRedisSerializer);
-        template.setHashValueSerializer(jackson2JsonRedisSerializer);
-        template.afterPropertiesSet();
-        return template;
+        return jackson2JsonRedisSerializer;
+    }
+
+    private RedisCacheConfiguration redisConfig(long seconds) {
+        return RedisCacheConfiguration.defaultCacheConfig()
+                .entryTtl(Duration.ofSeconds(seconds)) // 设置缓存过期时间，使用Duration设置
+                .disableCachingNullValues() // 不缓存空值
+                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(RedisSerializer.string()))
+                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(jackson2JsonRedisSerializer()));
     }
 
     /**
@@ -102,15 +114,15 @@ public class RedisConfiguration extends CachingConfigurerSupport {
     @Bean
     @ConditionalOnMissingBean(name = {"cacheManager"})
     public CacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {
-        // 生成一个默认配置，通过config对象即可对缓存进行自定义配置
-        RedisCacheConfiguration cacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
-                .entryTtl(Duration.ofHours(3)) // 设置缓存的默认过期时间，使用Duration设置
-                .disableCachingNullValues() // 不缓存空值
-                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(RedisSerializer.string()))
-                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(RedisSerializer.json()));
+        CacheEnum[] cacheEnums = CacheEnum.values();
+        Map<String, RedisCacheConfiguration> cacheConfigMap = new LinkedHashMap<>(cacheEnums.length);
+        for (CacheEnum cacheEnum : cacheEnums) {
+            cacheConfigMap.put(cacheEnum.getCacheName(), redisConfig(cacheEnum.getExpireTime()));
+        }
         // 使用自定义的缓存配置初始化cacheManager
         return RedisCacheManager.builder(RedisCacheWriter.nonLockingRedisCacheWriter(redisConnectionFactory))
-                .cacheDefaults(cacheConfiguration)
+                .cacheDefaults(redisConfig(600)) // 默认策略，未配置的 key 会使用这个
+                .withInitialCacheConfigurations(cacheConfigMap)
                 .build();
     }
 }

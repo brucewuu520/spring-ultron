@@ -14,9 +14,8 @@ import java.util.concurrent.TimeUnit;
 /**
  * Redis操作客户端
  *
- * @Auther: brucewuu
- * @Date: 2019-05-31 14:26
- * @Description:
+ * @author brucewuu
+ * @date 2019-05-31 14:26
  */
 @Component
 public class RedisClient {
