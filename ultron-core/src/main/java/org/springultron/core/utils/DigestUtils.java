@@ -9,11 +9,13 @@ import java.security.spec.X509EncodedKeySpec;
 /**
  * 加密工具封装
  *
- * @Auther: brucewuu
- * @Date: 2019-06-06 10:44
- * @Description:
+ * @author brucewuu
+ * @date 2019-06-06 10:44
  */
 public class DigestUtils extends org.springframework.util.DigestUtils {
+
+    private DigestUtils() {
+    }
 
     private static final String ALGORITHM = "RSA";
 

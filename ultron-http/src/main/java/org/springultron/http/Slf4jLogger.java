@@ -8,9 +8,8 @@ import org.springframework.lang.NonNull;
 /**
  * Slf4j 打印日志
  *
- * @Auther: brucewuu
- * @Date: 2019-06-30 16:23
- * @Description:
+ * @author brucewuu
+ * @date 2019-06-30 16:23
  */
 public class Slf4jLogger implements HttpLoggingInterceptor.Logger {
     private static final Logger log = LoggerFactory.getLogger("HttpRequest");

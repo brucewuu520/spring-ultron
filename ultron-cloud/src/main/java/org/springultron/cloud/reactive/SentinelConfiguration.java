@@ -22,9 +22,8 @@ import java.util.List;
 /**
  * Sentinel 配置类
  *
- * @Auther: brucewuu
- * @Date: 2019-08-11 11:22
- * @Description:
+ * @author brucewuu
+ * @date 2019-08-11 11:22
  */
 @Configuration
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.REACTIVE)
@@ -39,12 +38,9 @@ public class SentinelConfiguration {
         this.viewResolvers = viewResolversProvider.getIfAvailable(Collections::emptyList);
         this.serverCodecConfigurer = serverCodecConfigurer;
         // 限流、熔断统一处理类
-        WebFluxCallbackManager.setBlockHandler((exchange, throwable) -> {
-            ApiResult result = ApiResult.failed(ResultCode.FLOW_LIMITING);
-            return ServerResponse.ok()
-                    .contentType(MediaType.APPLICATION_JSON_UTF8)
-                    .syncBody(result);
-        });
+        WebFluxCallbackManager.setBlockHandler((exchange, throwable) -> ServerResponse.ok()
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .syncBody(ApiResult.failed(ResultCode.FLOW_LIMITING)));
     }
 
     @Bean

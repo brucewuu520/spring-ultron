@@ -3,9 +3,8 @@ package org.springultron.core.utils;
 /**
  * 数字类型工具
  *
- * @Auther: brucewuu
- * @Date: 2019-06-06 15:59
- * @Description:
+ * @author brucewuu
+ * @date 2019-06-06 15:59
  */
 public class NumberUtils {
 

@@ -14,9 +14,8 @@ import java.util.Optional;
 /**
  * HTTP 响应体
  *
- * @Auther: brucewuu
- * @Date: 2019-06-30 10:37
- * @Description:
+ * @author brucewuu
+ * @date 2019-06-30 10:37
  */
 public class HttpResponse {
     private final Response response;

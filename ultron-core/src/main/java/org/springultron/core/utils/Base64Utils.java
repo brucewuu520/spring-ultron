@@ -6,14 +6,12 @@ import java.nio.charset.StandardCharsets;
 /**
  * Base64 工具，默认UTF-8编码
  *
- * @Auther: brucewuu
- * @Date: 2019-06-10 16:10
- * @Description:
+ * @author brucewuu
+ * @date 2019-06-10 16:10
  */
 public class Base64Utils extends org.springframework.util.Base64Utils {
 
-    private Base64Utils() {
-    }
+    private Base64Utils() {}
 
     public static String encode(String src) {
         return encode(src, StandardCharsets.UTF_8);

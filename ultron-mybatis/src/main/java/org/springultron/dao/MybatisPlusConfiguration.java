@@ -14,9 +14,15 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * mybatis plus 自动化配置
+ *
+ * @author brucewuu
+ * @date 2019-05-28 10:58
+ */
 @Configuration
 @EnableTransactionManagement
-@MapperScan("com.*.*.mapper*")
+@MapperScan("com.**.mapper")
 public class MybatisPlusConfiguration {
     /**
      * 分页插件
@@ -35,7 +41,7 @@ public class MybatisPlusConfiguration {
     @ConditionalOnMissingBean({SqlExplainInterceptor.class})
     public SqlExplainInterceptor sqlExplainInterceptor() {
         SqlExplainInterceptor sqlExplainInterceptor = new SqlExplainInterceptor();
-        List<ISqlParser> sqlParserList = new ArrayList<>();
+        List<ISqlParser> sqlParserList = new ArrayList<>(1);
         sqlParserList.add(new BlockAttackSqlParser());
         sqlExplainInterceptor.setSqlParserList(sqlParserList);
         return sqlExplainInterceptor;

@@ -5,13 +5,11 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 /**
  * Swagger 自定义配置
  *
- * @Auther: brucewuu
- * @Date: 2019-06-27 19:40
- * @Description:
+ * @author brucewuu
+ * @date 2019-06-27 19:40
  */
 @ConfigurationProperties("swagger")
 public class SwaggerProperties {
-
     /**
      * 是否开启 swagger，默认：true
      */
@@ -40,6 +38,10 @@ public class SwaggerProperties {
      * 联系邮箱
      */
     private String contactEmail;
+    /**
+     * 全局统一鉴权配置
+     **/
+    private Authorization authorization = new Authorization();
 
     public boolean isEnable() {
         return enable;
@@ -95,5 +97,64 @@ public class SwaggerProperties {
 
     public void setContactEmail(String contactEmail) {
         this.contactEmail = contactEmail;
+    }
+
+    public Authorization getAuthorization() {
+        return authorization;
+    }
+
+    public void setAuthorization(Authorization authorization) {
+        this.authorization = authorization;
+    }
+
+    public static class Authorization {
+        /**
+         * 开启Authorization，默认：false
+         */
+        private boolean enabled = false;
+        /**
+         * 鉴权策略ID，对应 SecurityReferences ID，默认：BearerToken
+         */
+        private String name = "BearerToken";
+        /**
+         * 鉴权传递的Header参数，默认：Authorization
+         */
+        private String headerName = "Authorization";
+        /**
+         * 需要开启鉴权URL的正则，默认：^.*$
+         */
+        private String authRegex = "^.*$";
+
+        public boolean isEnabled() {
+            return enabled;
+        }
+
+        public void setEnabled(boolean enabled) {
+            this.enabled = enabled;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getHeaderName() {
+            return headerName;
+        }
+
+        public void setHeaderName(String headerName) {
+            this.headerName = headerName;
+        }
+
+        public String getAuthRegex() {
+            return authRegex;
+        }
+
+        public void setAuthRegex(String authRegex) {
+            this.authRegex = authRegex;
+        }
     }
 }

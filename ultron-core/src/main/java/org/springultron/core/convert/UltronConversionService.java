@@ -7,9 +7,8 @@ import org.springframework.util.StringValueResolver;
 /**
  * 类型 转换 服务，添加 IEnum 转换
  *
- * @Auther: brucewuu
- * @Date: 2019-08-12 11:38
- * @Description:
+ * @author brucewuu
+ * @date 2019-08-12 11:38
  */
 public class UltronConversionService extends ApplicationConversionService {
 

@@ -11,11 +11,14 @@ import java.util.concurrent.ThreadLocalRandom;
 /**
  * 字符串操作相关工具类
  *
- * @Auther: brucewuu
- * @Date: 2019-05-28 11:10
- * @Description:
+ * @author brucewuu
+ * @date 2019-05-28 11:10
  */
 public class Strings extends org.springframework.util.StringUtils {
+
+    private Strings() {
+    }
+
     /**
      * 空格
      */

@@ -8,9 +8,8 @@ import org.springframework.lang.Nullable;
 /**
  * Multipart 表单构造器
  *
- * @Auther: brucewuu
- * @Date: 2019-06-30 13:52
- * @Description:
+ * @author brucewuu
+ * @date 2019-06-30 13:52
  */
 public class MultipartFormBuilder {
     private final HttpRequest request;

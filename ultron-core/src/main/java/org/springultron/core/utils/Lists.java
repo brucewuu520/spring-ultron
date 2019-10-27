@@ -5,9 +5,8 @@ import java.util.*;
 /**
  * List工具
  *
- * @Auther: brucewuu
- * @Date: 2019-06-07 12:52
- * @Description:
+ * @author brucewuu
+ * @date 2019-06-07 12:52
  */
 public final class Lists extends org.springframework.util.CollectionUtils {
 

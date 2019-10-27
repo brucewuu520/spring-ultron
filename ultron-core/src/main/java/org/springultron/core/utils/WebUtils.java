@@ -16,11 +16,13 @@ import java.util.function.Predicate;
 /**
  * Servlet 工具
  *
- * @Auther: brucewuu
- * @Date: 2019-06-26 15:47
- * @Description:
+ * @author brucewuu
+ * @date 2019-06-26 15:47
  */
 public class WebUtils extends org.springframework.web.util.WebUtils {
+
+    private WebUtils() {
+    }
 
     /**
      * 获取 HttpServletRequest

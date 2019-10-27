@@ -8,18 +8,19 @@ import java.io.IOException;
 /**
  * 资源工具
  *
- * @Auther: brucewuu
- * @Date: 2019-06-07 17:05
- * @Description:
+ * @author brucewuu
+ * @date 2019-06-07 17:05
  */
 public class ResourceUtils extends org.springframework.util.ResourceUtils {
+
+    private ResourceUtils() {
+    }
+
     private static final String HTTP_REGEX = "^https?:.+$";
     private static final String FTP_URL_PREFIX = "ftp:";
 
     /**
-     * 获取资源
-     * <p>
-     * 支持以下协议：
+     * 获取资源，支持以下协议：
      * <p>
      * 1. classpath:
      * 2. file:

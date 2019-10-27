@@ -5,14 +5,17 @@ import java.util.Objects;
 /**
  * 对象工具类
  *
- * @Auther: brucewuu
- * @Date: 2019-06-06 18:34
- * @Description:
+ * @author brucewuu
+ * @date 2019-06-06 18:34
  */
 public class ObjectUtils extends org.springframework.util.ObjectUtils {
 
+    private ObjectUtils() {
+    }
+
     /**
      * 判断元素不为空
+     *
      * @param obj object
      * @return boolean
      */
@@ -35,8 +38,8 @@ public class ObjectUtils extends org.springframework.util.ObjectUtils {
      * ObjectUtils.equals(Boolean.TRUE, Boolean.FALSE) = false
      * </pre>
      *
-     * @param object1  the first object, may be <code>null</code>
-     * @param object2  the second object, may be <code>null</code>
+     * @param object1 the first object, may be <code>null</code>
+     * @param object2 the second object, may be <code>null</code>
      * @return <code>true</code> if the values of both objects are the same
      */
     public static boolean equals(Object object1, Object object2) {
@@ -64,8 +67,8 @@ public class ObjectUtils extends org.springframework.util.ObjectUtils {
      * ObjectUtils.notEqual(Boolean.TRUE, Boolean.FALSE) = true
      * </pre>
      *
-     * @param object1  the first object, may be <code>null</code>
-     * @param object2  the second object, may be <code>null</code>
+     * @param object1 the first object, may be <code>null</code>
+     * @param object2 the second object, may be <code>null</code>
      * @return <code>false</code> if the values of both objects are the same
      * @since 2.6
      */
@@ -75,6 +78,7 @@ public class ObjectUtils extends org.springframework.util.ObjectUtils {
 
     // ToString
     //-----------------------------------------------------------------------
+
     /**
      * <p>Gets the {@code toString} of an {@code Object} returning
      * an empty string ("") if {@code null} input.</p>
@@ -86,10 +90,10 @@ public class ObjectUtils extends org.springframework.util.ObjectUtils {
      * ObjectUtils.toString(Boolean.TRUE) = "true"
      * </pre>
      *
+     * @param obj the Object to {@code toString}, may be null
+     * @return the passed in Object's toString, or {@code ""} if {@code null} input
      * @see Strings#defaultString(String)
      * @see String#valueOf(Object)
-     * @param obj  the Object to {@code toString}, may be null
-     * @return the passed in Object's toString, or {@code ""} if {@code null} input
      * @since 2.0
      */
     public static String toString(final Object obj) {
@@ -108,11 +112,11 @@ public class ObjectUtils extends org.springframework.util.ObjectUtils {
      * ObjectUtils.toString(Boolean.TRUE, "null") = "true"
      * </pre>
      *
-     * @see Strings#defaultString(String,String)
-     * @see String#valueOf(Object)
-     * @param obj  the Object to {@code toString}, may be null
-     * @param nullDefault  the String to return if {@code null} input, may be null
+     * @param obj         the Object to {@code toString}, may be null
+     * @param nullDefault the String to return if {@code null} input, may be null
      * @return the passed in Object's toString, or {@code nullStr} if {@code null} input
+     * @see Strings#defaultString(String, String)
+     * @see String#valueOf(Object)
      */
     public static String toString(final Object obj, final String nullDefault) {
         return Objects.toString(obj, nullDefault);

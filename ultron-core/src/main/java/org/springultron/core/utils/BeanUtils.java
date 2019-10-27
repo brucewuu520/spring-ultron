@@ -8,12 +8,11 @@ import java.util.Map;
 /**
  * 实体工具
  *
- * @Auther: brucewuu
- * @Date: 2019-06-28 14:29
- * @Description:
+ * @author brucewuu
+ * @date 2019-06-28 14:29
  */
 public class BeanUtils extends org.springframework.beans.BeanUtils {
-
+    private BeanUtils() {}
     /**
      * 实例化对象
      *

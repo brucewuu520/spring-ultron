@@ -22,11 +22,13 @@ import java.util.*;
 /**
  * Jackson工具类
  *
- * @Auther: brucewuu
- * @Date: 2019-06-08 11:28
- * @Description: Jackson工具类
+ * @author brucewuu
+ * @date 2019-06-08 11:28
  */
 public class Jackson {
+
+    private Jackson() {
+    }
 
     /**
      * 将对象序列化成json字符串

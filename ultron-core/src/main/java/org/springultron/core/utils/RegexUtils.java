@@ -6,11 +6,13 @@ import java.util.regex.Pattern;
 /**
  * 正则表达式工具
  *
- * @Auther: brucewuu
- * @Date: 2019-06-06 18:06
- * @Description:
+ * @author brucewuu
+ * @date 2019-06-06 18:06
  */
 public class RegexUtils {
+
+    private RegexUtils() {
+    }
 
     /**
      * 验证手机号码

@@ -13,9 +13,8 @@ import org.springframework.stereotype.Component;
 /**
  * Spring 工具类
  *
- * @Auther: brucewuu
- * @Date: 2019-06-09 16:42
- * @Description:
+ * @author brucewuu
+ * @date 2019-06-09 16:42
  */
 @Lazy
 @Component

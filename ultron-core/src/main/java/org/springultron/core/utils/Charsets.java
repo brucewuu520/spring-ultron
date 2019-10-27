@@ -3,11 +3,12 @@ package org.springultron.core.utils;
 import java.nio.charset.Charset;
 
 /**
- * @Auther: brucewuu
- * @Date: 2019-06-07 10:32
- * @Description:
+ * @author brucewuu
+ * @date 2019-06-07 10:32
  */
 public class Charsets {
+
+    private Charsets() {}
 
     /**
      * Returns the given Charset or the default Charset if the given Charset is null.

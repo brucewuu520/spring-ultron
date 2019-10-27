@@ -8,8 +8,14 @@ import java.util.Date;
 
 /**
  * Java8时间日期转换工具
+ *
+ * @author brucewuu
+ * @date @date 2019-06-10 16:30
  */
 public class DateUtils {
+
+    private DateUtils() {
+    }
 
     public static final String PATTERN_DATE_TIME = "yyyy-MM-dd HH:mm:ss";
     public static final String PATTERN_DATE = "yyyy-MM-dd";

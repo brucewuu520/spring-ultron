@@ -8,9 +8,8 @@ import java.util.Objects;
 import java.util.function.Function;
 
 /**
- * @Auther: brucewuu
- * @Date: 2019-05-27 15:07
- * @Description:
+ * @author brucewuu
+ * @date 2019-05-27 15:07
  */
 public abstract class Converter<A, B> implements Function<A, B> {
     @Lazy

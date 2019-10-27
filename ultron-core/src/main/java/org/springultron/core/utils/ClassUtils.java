@@ -11,11 +11,13 @@ import java.lang.reflect.Method;
 /**
  * 类工具
  *
- * @Auther: brucewuu
- * @Date: 2019-06-14 23:29
- * @Description:
+ * @author brucewuu
+ * @date 2019-06-14 23:29
  */
 public class ClassUtils extends org.springframework.util.ClassUtils {
+    private ClassUtils() {
+    }
+
     private static final ParameterNameDiscoverer PARAMETER_NAME_DISCOVERER = new DefaultParameterNameDiscoverer();
 
     /**

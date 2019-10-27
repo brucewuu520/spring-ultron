@@ -17,9 +17,8 @@ import java.time.LocalTime;
 /**
  * java 8 时间默认序列化
  *
- * @Auther: brucewuu
- * @Date: 2019-06-13 17:25
- * @Description:
+ * @author brucewuu
+ * @date 2019-06-13 17:25
  */
 public final class UltronJavaTimeModule extends SimpleModule {
     private static final long serialVersionUID = 1L;

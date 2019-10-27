@@ -19,9 +19,8 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * API 接收参数 Jackson String 转换为 Enum
  *
- * @Auther: brucewuu
- * @Date: 2019-08-12 11:41
- * @Description:
+ * @author brucewuu
+ * @date 2019-08-12 11:41
  */
 public class StringToEnumConverter implements ConditionalGenericConverter {
     private static final ConcurrentHashMap<Class<?>, AccessibleObject> ENUM_CACHE_MAP = new ConcurrentHashMap<>(8);

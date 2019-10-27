@@ -18,9 +18,8 @@ import java.util.Objects;
 /**
  * okhttp3 请求封装
  *
- * @Auther: brucewuu
- * @Date: 2019-06-29 22:15
- * @Description:
+ * @author brucewuu
+ * @date 2019-06-29 22:15
  */
 public class HttpRequest {
     private static final MediaType MEDIA_TYPE_JSON = MediaType.parse("application/json;charset=utf-8");

@@ -18,11 +18,12 @@ package org.springultron.core.utils;
 /**
  * 生成的随机数类型
  *
- * @author L.cm
+ * @author brucewuu
+ * @date 2019-06-06 18:38
  */
 public enum RandomType {
-	/**
-	 * INT STRING ALL
-	 */
-	INT, STRING, ALL
+    /**
+     * INT STRING ALL
+     */
+    INT, STRING, ALL
 }

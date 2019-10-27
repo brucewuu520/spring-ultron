@@ -16,9 +16,8 @@ import java.io.IOException;
 /**
  * Sentinel 配置类
  *
- * @Auther: brucewuu
- * @Date: 2019-08-11 11:22
- * @Description:
+ * @auther brucewuu
+ * @date 2019-08-11 11:22
  */
 @Configuration
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)

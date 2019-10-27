@@ -24,6 +24,9 @@ import java.lang.reflect.UndeclaredThrowableException;
 
 /**
  * 异常处理工具类
+ *
+ * @author brucewuu
+ * @date 2019-06-03 09:30
  */
 public class Exceptions {
 

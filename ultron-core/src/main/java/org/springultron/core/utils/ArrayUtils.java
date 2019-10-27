@@ -6,11 +6,12 @@ import java.util.Arrays;
 /**
  * 数组工具
  *
- * @Auther: brucewuu
- * @Date: 2019-06-07 00:52
- * @Description:
+ * @author brucewuu
+ * @date 2019-06-07 00:52
  */
 public class ArrayUtils {
+
+    private ArrayUtils() {}
 
     /**
      * <p>Checks if an array of Objects is empty or {@code null}.

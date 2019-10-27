@@ -20,9 +20,8 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * API 响应体 Jackson Enum 转换为 String
  *
- * @Auther: brucewuu
- * @Date: 2019-08-12 11:06
- * @Description:
+ * @author brucewuu
+ * @date 2019-08-12 11:06
  */
 public class EnumToStringConverter implements ConditionalGenericConverter {
     private static final Logger log = LoggerFactory.getLogger(EnumToStringConverter.class);

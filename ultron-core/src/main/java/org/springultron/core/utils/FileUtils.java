@@ -12,31 +12,39 @@ import java.nio.charset.StandardCharsets;
 /**
  * 文件操作工具
  *
- * @Auther: brucewuu
- * @Date: 2019-07-21 10:57
- * @Description:
+ * @author brucewuu
+ * @date 2019-07-21 10:57
  */
 public class FileUtils extends FileCopyUtils {
+
+    private FileUtils() {
+    }
 
     /**
      * 获取jar包运行时的当前目录
      *
      * @return {String}
      */
-    @Nullable
     public static String getJarPath() {
+        String path = null;
         try {
             URL url = FileUtils.class.getResource(Strings.SLASH).toURI().toURL();
-            return FileUtils.toFilePath(url);
+            path = FileUtils.toFilePath(url);
         } catch (Exception e) {
-            String path = FileUtils.class.getResource(Strings.EMPTY).getPath();
-            return new File(path).getParentFile().getParentFile().getAbsolutePath();
+            e.printStackTrace();
         }
+        if (null == path) {
+            path = FileUtils.class.getResource(Strings.EMPTY).getPath();
+            path = new File(path).getParentFile().getParentFile().getAbsolutePath();
+        }
+        return path;
     }
 
     @Nullable
     public static String toFilePath(@Nullable URL url) {
-        if (url == null) { return null; }
+        if (url == null) {
+            return null;
+        }
         String protocol = url.getProtocol();
         String file = UriUtils.decode(url.getPath(), StandardCharsets.UTF_8);
         if (ResourceUtils.URL_PROTOCOL_FILE.equals(protocol)) {

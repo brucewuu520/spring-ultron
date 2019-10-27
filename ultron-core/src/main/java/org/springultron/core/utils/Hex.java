@@ -1,11 +1,13 @@
 package org.springultron.core.utils;
 
 /**
- * @Auther: brucewuu
- * @Date: 2019-06-06 11:58
- * @Description:
+ * @author brucewuu
+ * @date 2019-06-06 11:58
  */
 public class Hex {
+
+    private Hex() {
+    }
 
     private static final char[] DIGITS_LOWER;
     private static final char[] DIGITS_UPPER;
@@ -36,7 +38,7 @@ public class Hex {
         char[] out = new char[l << 1];
         int i = 0;
 
-        for(int var5 = 0; i < l; ++i) {
+        for (int var5 = 0; i < l; ++i) {
             out[var5++] = toDigits[(240 & data[i]) >>> 4];
             out[var5++] = toDigits[15 & data[i]];
         }

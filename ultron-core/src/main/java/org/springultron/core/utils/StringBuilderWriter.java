@@ -33,7 +33,6 @@ import java.io.Writer;
  * @since 2.0
  */
 public class StringBuilderWriter extends Writer implements Serializable {
-
     private static final long serialVersionUID = -146927496096066153L;
     private final StringBuilder builder;
 

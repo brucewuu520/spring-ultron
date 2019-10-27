@@ -16,9 +16,10 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 /**
- * @Auther: brucewuu
- * @Date: 2019-06-01 18:25
- * @Description:
+ * Jackson自动化配置
+ *
+ * @author brucewuu
+ * @date 2019-06-01 18:25
  */
 @Configuration
 @ConditionalOnClass({ObjectMapper.class})
@@ -28,8 +29,8 @@ public class JacksonConfiguration {
     @Value("${spring.jackson.date-format:yyyy-MM-dd HH:mm:ss}")
     private String dateFormat;
 
-    @Bean
     @Primary
+    @Bean
     public Jackson2ObjectMapperBuilderCustomizer customizer() {
         return builder -> {
             builder.locale(Locale.CHINA);

@@ -8,9 +8,8 @@ import org.springultron.core.convert.UltronConversionService;
 /**
  * 基于 Spring ConversionService 的类型转换
  *
- * @Auther: brucewuu
- * @Date: 2019-08-12 11:31
- * @Description:
+ * @author brucewuu
+ * @date 2019-08-12 11:31
  */
 @SuppressWarnings("unchecked")
 public class ConvertUtils {

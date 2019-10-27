@@ -7,11 +7,13 @@ import java.nio.charset.StandardCharsets;
 /**
  * IO工具
  *
- * @Auther: brucewuu
- * @Date: 2019-06-07 01:09
- * @Description:
+ * @author brucewuu
+ * @date 2019-06-07 01:09
  */
 public class IOUtils {
+
+    private IOUtils() {
+    }
 
     /**
      * Represents the end-of-file (or stream).

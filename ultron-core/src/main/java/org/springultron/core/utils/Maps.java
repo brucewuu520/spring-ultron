@@ -8,11 +8,13 @@ import java.util.Map;
 /**
  * Map Utils
  *
- * @Auther: brucewuu
- * @Date: 2019-06-07 12:54
- * @Description:
+ * @author brucewuu
+ * @date 2019-06-07 12:54
  */
 public class Maps {
+
+    private Maps() {
+    }
 
     public static <K, V> HashMap<K, V> newHashMap() {
         return new HashMap<>();

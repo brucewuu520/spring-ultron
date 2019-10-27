@@ -8,13 +8,12 @@ import java.io.Serializable;
 import java.util.Optional;
 
 /**
- * 通用请求返回对象
+ * 通用请求返回体
  *
- * @Auther: brucewuu
- * @Date: 2019-05-22 15:16
- * @Description:
+ * @author brucewuu
+ * @date 2019-05-22 15:16
  */
-@ApiModel(description = "返回信息", value = "ApiResult")
+@ApiModel(description = "返回体", value = "ApiResult")
 public class ApiResult<T> implements Serializable {
     private static final long serialVersionUID = -2832435143001472900L;
 
@@ -138,17 +137,31 @@ public class ApiResult<T> implements Serializable {
     }
 
     /**
-     * 未登录或token已经过期返回信息
+     * 未认证
      */
     public static <T> ApiResult<T> unauthorized() {
         return failed(ResultCode.UNAUTHORIZED);
     }
 
     /**
-     * 未授权返回信息
+     * 未认证
+     */
+    public static <T> ApiResult<T> unauthorized(String message) {
+        return failed(ResultCode.UNAUTHORIZED.getCode(), message);
+    }
+
+    /**
+     * 未授权
      */
     public static <T> ApiResult<T> forbidden() {
         return failed(ResultCode.FORBIDDEN);
+    }
+
+    /**
+     * 未授权
+     */
+    public static <T> ApiResult<T> forbidden(String message) {
+        return failed(ResultCode.FORBIDDEN.getCode(), message);
     }
 
     /**
@@ -168,7 +181,6 @@ public class ApiResult<T> implements Serializable {
     public static void throwFail(String message) {
         throw new ApiException(message, ResultCode.FAILED.getCode());
     }
-
 
     /**
      * REST API 异常返回

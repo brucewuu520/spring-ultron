@@ -10,9 +10,8 @@ import javax.annotation.Resource;
 /**
  * 负载均衡的 WebClient
  *
- * @Auther: brucewuu
- * @Date: 2019-08-23 14:36
- * @Description:
+ * @author brucewuu
+ * @date 2019-08-23 14:36
  */
 @Configuration
 public class LBWebClientConfiguration {
@@ -22,7 +21,6 @@ public class LBWebClientConfiguration {
 
     /**
      * 负载均衡的 WebClient
-     *
      *
      * @return WebClient
      */
