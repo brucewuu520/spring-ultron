@@ -3,8 +3,8 @@ package org.springultron.boot.base;
 import org.springframework.web.multipart.MultipartFile;
 import org.springultron.boot.props.UltronUploadProperties;
 import org.springultron.core.result.ApiResult;
+import org.springultron.core.utils.IdUtils;
 import org.springultron.core.utils.Maps;
-import org.springultron.core.utils.Strings;
 
 import java.io.File;
 import java.io.IOException;
@@ -43,7 +43,7 @@ public interface IController {
                 && !suffixName.equals(".jpeg") && !suffixName.equals(".gif")) {
             return ApiResult.failed("不是图片文件");
         }
-        fileName = Strings.randomUUID() + suffixName;
+        fileName = IdUtils.randomUUID() + suffixName;
         LocalDate localDate = LocalDate.now();
         StringBuilder fileBuilder = new StringBuilder(58)
                 .append(properties.getUploadPathPattern().replace("*", ""))

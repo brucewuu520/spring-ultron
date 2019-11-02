@@ -3,6 +3,7 @@ package org.springultron.http;
 import com.fasterxml.jackson.core.type.TypeReference;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
+import org.springultron.core.exception.Exceptions;
 import org.springultron.core.utils.Jackson;
 
 import java.io.IOException;
@@ -42,7 +43,7 @@ public class HttpResponse {
                 try {
                     return body.bytes();
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    throw Exceptions.unchecked(e);
                 }
             }).orElseThrow(() -> new RuntimeException("response body is null"));
         } finally {
@@ -64,7 +65,7 @@ public class HttpResponse {
                 try {
                     return body.string();
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    throw Exceptions.unchecked(e);
                 }
             }).orElseThrow(() -> new RuntimeException("response body is null"));
         } finally {
