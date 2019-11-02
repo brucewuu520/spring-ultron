@@ -297,7 +297,6 @@ public class RedisClient {
      * @param key   缓存 key
      * @param start 开始索引
      * @param end   结束索引
-     * @param <V>   值泛型
      * @return 值结合 start=0 end=-1可返还列表所有数据
      */
     public <V> List<V> range(String key, long start, long end) {
@@ -333,10 +332,10 @@ public class RedisClient {
      *
      * @param key        缓存 key
      * @param collection 值集合
-     * @param <V>        值泛型
      * @return 列表长度
      */
-    public <V> Long leftPushAll(String key, Collection<V> collection) {
+    public Long leftPushAll(String key, Collection collection) {
+        //noinspection unchecked
         return redisTemplate.opsForList().leftPushAll(key, collection);
     }
 
@@ -368,10 +367,10 @@ public class RedisClient {
      *
      * @param key        缓存 key
      * @param collection 值集合
-     * @param <V>        值泛型
      * @return 列表长度
      */
-    public <V> Long rightPushAll(String key, Collection<V> collection) {
+    public Long rightPushAll(String key, Collection collection) {
+        //noinspection unchecked
         return redisTemplate.opsForList().rightPushAll(key, collection);
     }
 
@@ -423,7 +422,7 @@ public class RedisClient {
     }
 
     /**
-     * 判断缓存中是否有对应的value
+     * 判断key是否存在
      *
      * @param key 缓存 key
      * @return 是否存在
@@ -469,16 +468,12 @@ public class RedisClient {
     }
 
     /**
-     * 生成 缓存key，以英文冒号隔开
+     * 生成缓存key，以英文冒号隔开
      *
-     * @param objs 参数
+     * @param keys kes
      * @return key string
      */
-    public static String getKey(Object... objs) {
-        StringBuilder builder = new StringBuilder();
-        for (Object obj : objs) {
-            builder.append(obj).append(":");
-        }
-        return builder.substring(0, builder.length() - 1);
+    public static String getKey(String... keys) {
+        return String.join(":", keys).toUpperCase();
     }
 }

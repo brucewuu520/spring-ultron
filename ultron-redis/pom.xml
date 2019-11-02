@@ -30,15 +30,14 @@
             <optional>true</optional>
         </dependency>
         <dependency>
+            <groupId>org.springultron</groupId>
+            <artifactId>ultron-core</artifactId>
+            <version>${spring-ultron.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-pool2</artifactId>
             <version>${common-pool.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <scope>provided</scope>
-            <optional>true</optional>
         </dependency>
     </dependencies>
 
