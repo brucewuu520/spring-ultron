@@ -1,12 +1,11 @@
 package org.springultron.core.utils;
 
-import org.springframework.util.Assert;
-
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * 字符串操作相关工具类
@@ -33,18 +32,6 @@ public class Strings extends org.springframework.util.StringUtils {
      * 换行符
      */
     public static final String LINE_SEPARATOR = System.lineSeparator();
-    /**
-     * 随机数
-     */
-    private static final String S_INT;
-    private static final String S_STR;
-    private static final String S_ALL;
-
-    static {
-        S_INT = "0123456789";
-        S_STR = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-        S_ALL = S_INT + S_STR;
-    }
 
     public static boolean isNotEmpty(String str) {
         return !Strings.isEmpty(str);
@@ -342,49 +329,6 @@ public class Strings extends org.springframework.util.StringUtils {
     }
 
     /**
-     * 生成uuid
-     *
-     * @return UUID
-     */
-    public static String randomUUID() {
-        ThreadLocalRandom random = ThreadLocalRandom.current();
-        return new UUID(random.nextLong(), random.nextLong()).toString().replace("-", "");
-    }
-
-    /**
-     * 随机数生成
-     *
-     * @param count 字符长度
-     * @return 随机数
-     */
-    public static String random(int count) {
-        return random(count, RandomType.ALL);
-    }
-
-    /**
-     * 随机数生成
-     *
-     * @param count      字符长度
-     * @param randomType 随机数类别
-     * @return 随机数
-     */
-    public static String random(int count, RandomType randomType) {
-        Assert.isTrue(count > 0, "Requested random string length " + count + " is less than 0.");
-        final ThreadLocalRandom random = ThreadLocalRandom.current();
-        char[] buffer = new char[count];
-        for (int i = 0; i < count; i++) {
-            if (RandomType.INT == randomType) {
-                buffer[i] = S_INT.charAt(random.nextInt(S_INT.length()));
-            } else if (RandomType.STRING == randomType) {
-                buffer[i] = S_STR.charAt(random.nextInt(S_STR.length()));
-            } else {
-                buffer[i] = S_ALL.charAt(random.nextInt(S_ALL.length()));
-            }
-        }
-        return new String(buffer);
-    }
-
-    /**
      * <p>Overlays part of a String with another String.</p>
      * <p/>
      * <p>A {@code null} string input returns {@code null}.
@@ -410,7 +354,7 @@ public class Strings extends org.springframework.util.StringUtils {
      * @param overlay the String to overlay, may be null
      * @param start   the position to start overlaying at
      * @param end     the position to stop overlaying before
-     * @return overlayed String, {@code null} if null String input
+     * @return overlay String, {@code null} if null String input
      * @since 2.0
      */
     public static String overlay(final String str, String overlay, int start, int end) {

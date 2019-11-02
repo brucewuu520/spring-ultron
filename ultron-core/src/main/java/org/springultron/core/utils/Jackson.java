@@ -1,6 +1,8 @@
 package org.springultron.core.utils;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -400,12 +402,14 @@ public class Jackson {
             super();
             // 设置地点为中国
             super.setLocale(Locale.CHINA);
+            // 设置为系统默认时区
+            super.setTimeZone(TimeZone.getTimeZone(ZoneId.systemDefault()));
+            // 序列化时，Date日期的统一格式
+            super.setDateFormat(new SimpleDateFormat(DateUtils.PATTERN_DATE_TIME, Locale.CHINA));
             // 去掉默认的时间戳格式
             super.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-            // 设置为中国上海时区
-            super.setTimeZone(TimeZone.getTimeZone(ZoneId.systemDefault()));
-            // 序列化时，日期的统一格式
-            super.setDateFormat(new SimpleDateFormat(DateUtils.PATTERN_DATE_TIME, Locale.CHINA));
+            setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+            enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
             // 允许序列化空的POJO类
             super.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
             super.setDefaultPropertyInclusion(JsonInclude.Include.NON_NULL);
@@ -417,7 +421,7 @@ public class Jackson {
             // 允许单引号（非标准）
             super.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
             super.configure(JsonParser.Feature.ALLOW_BACKSLASH_ESCAPING_ANY_CHARACTER, true);
-            // 日期格式化
+            // java8日期格式化
             super.registerModule(new UltronJavaTimeModule());
             super.findAndRegisterModules();
         }

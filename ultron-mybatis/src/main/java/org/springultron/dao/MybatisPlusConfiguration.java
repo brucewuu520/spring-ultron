@@ -22,7 +22,7 @@ import java.util.List;
  */
 @Configuration
 @EnableTransactionManagement
-@MapperScan("com.**.mapper")
+@MapperScan("com.*.*.mapper")
 public class MybatisPlusConfiguration {
     /**
      * 分页插件
