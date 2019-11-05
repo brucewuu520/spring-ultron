@@ -409,7 +409,7 @@ public class Jackson {
             // 去掉默认的时间戳格式
             super.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
             setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
-            enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
+//            enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL); // 加上后会导致序列化后的字符串前面多了序列化对象地址(不是一个json字符串了)
             // 允许序列化空的POJO类
             super.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
             super.setDefaultPropertyInclusion(JsonInclude.Include.NON_NULL);
@@ -422,8 +422,8 @@ public class Jackson {
             super.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
             super.configure(JsonParser.Feature.ALLOW_BACKSLASH_ESCAPING_ANY_CHARACTER, true);
             // java8日期格式化
-            super.registerModule(new UltronJavaTimeModule());
             super.findAndRegisterModules();
+            super.registerModule(new UltronJavaTimeModule());
         }
 
         @Override
