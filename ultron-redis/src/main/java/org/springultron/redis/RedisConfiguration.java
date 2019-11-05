@@ -1,9 +1,12 @@
 package org.springultron.redis;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -36,9 +39,9 @@ import java.util.Map;
  * @author brucewuu
  * @date 2019-05-31 14:26
  */
-@EnableCaching
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @AutoConfigureBefore({RedisAutoConfiguration.class})
+@EnableCaching
 public class RedisConfiguration extends CachingConfigurerSupport {
 
     /**
@@ -68,15 +71,23 @@ public class RedisConfiguration extends CachingConfigurerSupport {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
         objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
+        // 不反序列化为null的字段
+        objectMapper.setDefaultPropertyInclusion(JsonInclude.Include.NON_NULL);
         // 反序列化时去掉多余的字段
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        // 日期格式化
-        objectMapper.registerModule(new UltronJavaTimeModule());
+        // 允许单引号（非标准）
+        objectMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
+        // 忽略无法转换的对象
+        objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+        // 忽略JSON字符串中不识别的属性
+        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         objectMapper.findAndRegisterModules();
+        // java8日期格式化
+        objectMapper.registerModule(new UltronJavaTimeModule());
         return new GenericJackson2JsonRedisSerializer(objectMapper);
     }
 
-    //    private Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer() {
+//    private Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer() {
 //        Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<>(Object.class);
 //        ObjectMapper objectMapper = new ObjectMapper();
 //        objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
@@ -101,6 +112,8 @@ public class RedisConfiguration extends CachingConfigurerSupport {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         // 配置连接工厂
         template.setConnectionFactory(redisConnectionFactory);
+        // 禁用defaultSerializer
+        template.setEnableDefaultSerializer(false);
         // 使用StringRedisSerializer.UTF_8来序列化和反序列化redis的key值
         template.setKeySerializer(RedisSerializer.string());
         template.setValueSerializer(redisSerializer);

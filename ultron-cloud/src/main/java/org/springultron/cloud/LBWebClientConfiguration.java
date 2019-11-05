@@ -13,7 +13,7 @@ import javax.annotation.Resource;
  * @author brucewuu
  * @date 2019-08-23 14:36
  */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 public class LBWebClientConfiguration {
 
     @Resource

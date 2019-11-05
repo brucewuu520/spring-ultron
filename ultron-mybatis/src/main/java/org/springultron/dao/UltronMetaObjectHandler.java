@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
  * @author brucewuu
  * @date 2019-06-28 22:46
  */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 public class UltronMetaObjectHandler implements MetaObjectHandler {
 
     @Override

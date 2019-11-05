@@ -16,10 +16,10 @@ import java.io.IOException;
 /**
  * Sentinel 配置类
  *
- * @auther brucewuu
+ * @author brucewuu
  * @date 2019-08-11 11:22
  */
-@Configuration
+@Configuration(proxyBeanMethods = true)
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 public class SentinelConfiguration {
 

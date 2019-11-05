@@ -15,7 +15,7 @@ import org.springultron.boot.props.UltronUploadProperties;
  * @author brucewuu
  * @date 2019/10/8 09:58
  */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @AutoConfigureAfter(UltronAutoConfiguration.class)
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.REACTIVE)
 public class UltronUploadConfiguration implements WebFluxConfigurer {

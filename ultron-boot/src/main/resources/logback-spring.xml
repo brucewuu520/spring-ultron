@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration sacn="false" debug="false">
+    <springProperty scop="context" name="spring.application.name" source="spring.application.name" defaultValue="ultron"/>
+    <springProperty scop="context" name="logging.level" source="logging.level" defaultValue="INFO"/>
+    <springProperty scop="context" name="logging.file.path" source="logging.file.path" defaultValue="logs/${spring.application.name}" />
+    <springProperty scop="context" name="logging.file.maxSize" source="logging.file.maxSize" defaultValue="10MB" />
+    <springProperty scop="context" name="logging.file.maxHistory" source="logging.file.maxHistory" defaultValue="30" />
+    <!-- 定义日志输出格式变量：%d表示时间 花括号内为时间格式 %level表示日志级别 %thread表示线程名 %logger{0}表示输出日志的类名 [%line]表示行号用方括号包裹 %msg表示日志消息 %n换行 -->
+    <property name="log.pattern" value="[%d{'MM-dd HH:mm:ss,SSS'}] %level [%thread] %logger{0}[%line] - %msg%n" />
+    <!-- 定义日志字符集 -->
+    <property name="log.charset" value="UTF-8" />
+    <!-- Console log output -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <charset>${log.charset}</charset>
+            <pattern>${log.pattern}</pattern>
+        </encoder>
+    </appender>
+    <!-- 获取比info级别高(包括info级别)但除error级别的日志-->
+    <appender name="INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logging.file.path}/info.log</file>
+        <!-- 追加到文件结尾 -->
+        <append>true</append>
+        <!-- 过滤掉error级别日志-->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>DENY</onMatch>
+            <onMismatch>ACCEPT</onMismatch>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${logging.file.path}/%d{yyyy-MM}/info.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxFileSize>${logging.file.maxSize}</maxFileSize>
+            <maxHistory>${logging.file.maxHistory}</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <charset>${log.charset}</charset>
+            <pattern>${log.pattern}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Log file error output -->
+    <appender name="ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logging.file.path}/error.log</file>
+        <!-- 追加到文件结尾 -->
+        <append>true</append>
+        <!-- 过滤掉低于error级别日志-->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${logging.file.path}/%d{yyyy-MM}/error.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxFileSize>${logging.file.maxSize}</maxFileSize>
+            <maxHistory>${logging.file.maxHistory}</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <charset>${log.charset}</charset>
+            <pattern>${log.pattern}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Level: FATAL 0  ERROR 3  WARN 4  INFO 6  DEBUG 7 -->
+    <root level="${logging.level}">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="INFO" />
+        <appender-ref ref="ERROR" />
+    </root>
+</configuration>

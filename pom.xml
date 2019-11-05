@@ -5,7 +5,7 @@
     <groupId>org.springultron</groupId>
     <artifactId>spring-ultron</artifactId>
     <description>Spring Boot/Cloud multi module common library</description>
-    <version>1.0.0</version>
+    <version>2.0.0</version>
     <packaging>pom</packaging>
 
     <licenses>
@@ -32,11 +32,11 @@
     </scm>
 
     <properties>
-        <spring-ultron.version>1.0.0</spring-ultron.version>
-        <spring-boot.version>2.1.9.RELEASE</spring-boot.version>
+        <spring-ultron.version>2.0.0</spring-ultron.version>
+        <spring-boot.version>2.2.0.RELEASE</spring-boot.version>
         <spring-cloud.version>Greenwich.SR3</spring-cloud.version>
         <alibaba-cloud.version>2.1.0.RELEASE</alibaba-cloud.version>
-        <okhttp3.version>4.2.1</okhttp3.version>
+        <okhttp3.version>4.2.2</okhttp3.version>
         <mybatis-plus.version>3.2.0</mybatis-plus.version>
         <common-pool.version>2.7.0</common-pool.version>
         <swagger.version>2.9.2</swagger.version>

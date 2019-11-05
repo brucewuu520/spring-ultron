@@ -16,11 +16,11 @@ public enum ResultCode implements IResultCode {
     FORBIDDEN(403, "Forbidden"),
     NOT_FOUND(404, "404 Not Found"),
     METHOD_NO_ALLOWED(405, "Method Not Allowed"),
-    PARAM_BIND_FAILED(406, "Param Bind Fail"),
-    PARAM_VALID_FAILED(407, "Param Verify Fail"),
-    API_EXCEPTION(417, "Operation Fail"),
-    FLOW_LIMITING(444, "Flow Limiting"),
-    ASSERTION_ERROR(445, "Assert Fail");
+    PARAM_BIND_FAILED(406, "Param Bind Fail"), // 参数绑定失败
+    PARAM_VALID_FAILED(407, "Param Verify Fail"), // 参数校验失败
+    API_EXCEPTION(417, "Operation Fail"), // 操作失败
+    FLOW_LIMITING(444, "Flow Limiting"), // 限流
+    ASSERTION_ERROR(445, "Assert Fail"); // 断言失败
 
     private final int code;
     private final String message;

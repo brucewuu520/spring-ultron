@@ -28,7 +28,7 @@ import java.util.Optional;
  * @author brucewuu
  * @date 2019-06-27 19:52
  */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @EnableConfigurationProperties(SwaggerProperties.class)
 @ConditionalOnProperty(value = "swagger.enable", havingValue = "true", matchIfMissing = true)
 @EnableSwaggerBootstrapUI

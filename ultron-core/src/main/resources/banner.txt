@@ -20,4 +20,4 @@ ${AnsiColor.GREEN}
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
          佛祖保佑       永不宕机       永无Bug
 ==================================================
-${AnsiColor.BLUE}:: ${spring.application.name} ${AnsiColor.BLUE}:: Powered by: Spring Ultron: 1.0.0 ${AnsiColor.BLUE}:: Running Spring Boot ${spring-boot.version}
+${AnsiColor.BLUE}:: ${spring.application.name} ${AnsiColor.BLUE}:: Powered by: Spring Ultron: ${spring-ultron.version} ${AnsiColor.BLUE}:: Running Spring Boot ${spring-boot.version}

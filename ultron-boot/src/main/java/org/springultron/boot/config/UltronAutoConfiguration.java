@@ -11,7 +11,7 @@ import org.springultron.boot.props.UltronUploadProperties;
  * @author brucewuu
  * @date 2019-06-29 20:56
  */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @EnableConfigurationProperties({
         UltronLogProperties.class,
         UltronUploadProperties.class

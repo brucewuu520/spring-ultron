@@ -12,7 +12,9 @@ import java.util.Map;
  * @date 2019-06-28 14:29
  */
 public class BeanUtils extends org.springframework.beans.BeanUtils {
+
     private BeanUtils() {}
+
     /**
      * 实例化对象
      *

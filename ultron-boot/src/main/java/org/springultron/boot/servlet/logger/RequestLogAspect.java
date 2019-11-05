@@ -37,7 +37,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Order
 @Aspect
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @AutoConfigureAfter(UltronAutoConfiguration.class)
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 @ConditionalOnProperty(value = LogLevel.ULTRON_LOG_ENABLE, havingValue = "true", matchIfMissing = true)

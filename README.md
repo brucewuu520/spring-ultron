@@ -1,5 +1,5 @@
 ## 前言
-在基于Spring boot/cloud的微服务项目中，要创建若干module，每个module都要依赖Redis、mybatis和一些基础工具类等等，本项目就是为了简化Spring boot的配置，在自己项目中提炼出来的公共服务配置和工具，简化大型项目的开发依赖，未来会不断完善
+在基于Spring boot/cloud的微服务项目中，要创建若干module，每个module都要依赖Redis、mybatis和一些基础工具类等等，本项目就是为了简化Spring boot的配置，在自己项目中提炼出来的公共服务配置和工具，简化大型项目的开发依赖
 
 ### Ultron
 本项目命名SpringUltron，灵感来自复仇者联盟2:奥创纪元，奥创是一个强大的人工智能机器人，希望本项目越来越强大，基于更多的自动化配置和抽象，能在项目开发中节约更多的时间
@@ -76,7 +76,6 @@
     <dependency>
        <groupId>org.springultron</groupId>
        <artifactId>ultron-mybatis</artifactId>
-       <version>1.0.0</version>
     </dependency> 
     
     分页工具使用示例：
@@ -153,6 +152,10 @@
           contact-user: brucewuu
           contact-email: xxx@xxx.com
           contact-url: xxx
+                
+
+## 更新日志
+* 2.0版本基于Spring boot 2.2.0               
                 
 ## 许可证
 

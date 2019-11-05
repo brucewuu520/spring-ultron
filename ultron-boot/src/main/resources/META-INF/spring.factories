@@ -1,11 +1,9 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   org.springultron.boot.config.UltronAutoConfiguration,\
-  org.springultron.boot.servlet.config.UltronConverterConfiguration,\
   org.springultron.boot.servlet.config.UltronUploadConfiguration,\
   org.springultron.boot.servlet.logger.RequestLogAspect,\
   org.springultron.boot.servlet.error.GlobalExceptionHandler,\
   org.springultron.boot.servlet.error.RestExceptionHandler,\
-  org.springultron.boot.reactive.config.UltronConverterConfiguration,\
   org.springultron.boot.reactive.config.UltronUploadConfiguration,\
   org.springultron.boot.reactive.error.GlobalExceptionHandler,\
   org.springultron.boot.reactive.error.RestExceptionHandler

@@ -21,7 +21,7 @@ import java.util.TimeZone;
  * @author brucewuu
  * @date 2019-06-01 18:25
  */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @ConditionalOnClass({ObjectMapper.class})
 @AutoConfigureBefore({JacksonAutoConfiguration.class})
 public class JacksonConfiguration {
@@ -38,7 +38,6 @@ public class JacksonConfiguration {
             builder.simpleDateFormat(dateFormat);
             // 序列化时过滤为null的字段
             builder.serializationInclusion(JsonInclude.Include.NON_NULL);
-            // 注意不处理 featuresToEnable 和 featuresToDisable 避免安全问题
             builder.modules(new UltronJavaTimeModule());
         };
     }

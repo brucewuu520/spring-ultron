@@ -406,24 +406,20 @@ public class Jackson {
             super.setTimeZone(TimeZone.getTimeZone(ZoneId.systemDefault()));
             // 序列化时，Date日期的统一格式
             super.setDateFormat(new SimpleDateFormat(DateUtils.PATTERN_DATE_TIME, Locale.CHINA));
-            // 去掉默认的时间戳格式
-            super.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-            setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
-            enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
+            super.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
             // 允许序列化空的POJO类
             super.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
             super.setDefaultPropertyInclusion(JsonInclude.Include.NON_NULL);
 //            super.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-            // 忽略JSON字符串中不识别的属性
-            super.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-            // 允许JSON字符串包含非引号控制字符（值小于32的ASCII字符，包含制表符和换行符）
-            super.configure(JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true);
             // 允许单引号（非标准）
             super.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
-            super.configure(JsonParser.Feature.ALLOW_BACKSLASH_ESCAPING_ANY_CHARACTER, true);
+            // 忽略无法转换的对象
+            super.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+            // 忽略JSON字符串中不识别的属性
+            super.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
             // java8日期格式化
-            super.registerModule(new UltronJavaTimeModule());
             super.findAndRegisterModules();
+            super.registerModule(new UltronJavaTimeModule());
         }
 
         @Override

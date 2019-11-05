@@ -122,7 +122,7 @@ public class RedisClient {
      * @param value 值
      * @return 是否设置成功
      */
-    public boolean setIfAbsent(String key, String value) {
+    public boolean setIfAbsent(String key, Object value) {
         return Optional.ofNullable(redisTemplate.opsForValue().setIfAbsent(key, value)).orElse(Boolean.FALSE);
     }
 
@@ -134,7 +134,7 @@ public class RedisClient {
      * @param timeout 缓存过期时间
      * @return 是否设置成功
      */
-    public boolean setIfAbsent(String key, String value, Duration timeout) {
+    public boolean setIfAbsent(String key, Object value, Duration timeout) {
         return Optional.ofNullable(redisTemplate.opsForValue().setIfAbsent(key, value, timeout)).orElse(Boolean.FALSE);
     }
 
@@ -432,7 +432,7 @@ public class RedisClient {
     }
 
     /**
-     * 批量删除缓存
+     * 批量删除缓存，如果缓存key不存在返回false
      *
      * @param keys 缓存 key数组
      */

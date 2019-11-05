@@ -15,7 +15,7 @@ import springfox.documentation.swagger2.configuration.Swagger2DocumentationConfi
  * @author brucewuu
  * @date 2019-08-10 10:49
  */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @ConditionalOnClass(Swagger2DocumentationConfiguration.class)
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.REACTIVE)
 @ConditionalOnProperty(value = "swagger.enable", havingValue = "true", matchIfMissing = true)

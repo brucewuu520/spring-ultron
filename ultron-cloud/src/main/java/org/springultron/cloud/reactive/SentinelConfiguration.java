@@ -25,7 +25,7 @@ import java.util.List;
  * @author brucewuu
  * @date 2019-08-11 11:22
  */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.REACTIVE)
 public class SentinelConfiguration {
 
