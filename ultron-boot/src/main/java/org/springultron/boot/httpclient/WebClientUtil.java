@@ -196,9 +196,9 @@ public final class WebClientUtil {
         return WebClient.create()
                 .post()
                 .uri(targetUrl)
-                .accept(MediaType.APPLICATION_JSON_UTF8)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .syncBody(reqBody)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(reqBody)
                 .retrieve()
                 .bodyToMono(returnType);
     }
@@ -219,9 +219,9 @@ public final class WebClientUtil {
                 .post()
                 .uri(baseUrl)
                 .header(headerName, headers)
-                .accept(MediaType.APPLICATION_JSON_UTF8)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .syncBody(reqBody)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(reqBody)
                 .retrieve()
                 .bodyToMono(returnType);
     }
@@ -241,9 +241,9 @@ public final class WebClientUtil {
                 .post()
                 .uri(baseUrl)
                 .headers(headers -> headers.addAll(headerMap))
-                .accept(MediaType.APPLICATION_JSON_UTF8)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .syncBody(reqBody)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(reqBody)
                 .retrieve()
                 .bodyToMono(returnType);
     }
@@ -299,7 +299,7 @@ public final class WebClientUtil {
         return WebClient.create()
                 .post()
                 .uri(baseUrl)
-                .syncBody(formData)
+                .bodyValue(formData)
                 .retrieve()
                 .bodyToMono(returnType);
     }

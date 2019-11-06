@@ -7,7 +7,6 @@ import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.time.LocalDate;
 import java.util.Arrays;
 
 /**
@@ -135,15 +134,16 @@ public class AES {
     }
 
     public static void main(String[] args) throws Exception {
-        LocalDate localDate = LocalDate.now();
+//        LocalDate localDate = LocalDate.now();
         // 本月份
 //        int month = localDate.getMonthValue();
-        System.err.println(localDate.getDayOfWeek().getValue());
+//        System.err.println(localDate.getDayOfWeek().getValue());
 //        System.err.println(generateKey(256));
 //        String key = "NJUfll7QQuWbJ/BNggSzgwkYzlGgbwuI";
 //        String str = "ak47ijg";
 //        System.err.println(encrypt(str, key));
 //        System.err.println(decrypt("str", ));
+        System.err.println(String.join("|", "x987", "fdlk", "1321d"));
     }
 
 }
