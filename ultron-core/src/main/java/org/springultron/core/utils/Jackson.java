@@ -6,10 +6,7 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.type.CollectionLikeType;
 import com.fasterxml.jackson.databind.type.MapType;
 import org.springultron.core.exception.Exceptions;
@@ -29,8 +26,7 @@ import java.util.*;
  */
 public class Jackson {
 
-    private Jackson() {
-    }
+    private Jackson() {}
 
     /**
      * 将对象序列化成json字符串
@@ -400,12 +396,12 @@ public class Jackson {
 
         JacksonObjectMapper() {
             super();
-            // 设置地点为中国
-            super.setLocale(Locale.CHINA);
+            // 设置地点系统默认
+            super.setLocale(Locale.getDefault());
             // 设置为系统默认时区
             super.setTimeZone(TimeZone.getTimeZone(ZoneId.systemDefault()));
             // 序列化时，Date日期的统一格式
-            super.setDateFormat(new SimpleDateFormat(DateUtils.PATTERN_DATE_TIME, Locale.CHINA));
+            super.setDateFormat(new SimpleDateFormat(DateUtils.PATTERN_DATE_TIME, Locale.getDefault()));
             // 去掉默认的时间戳格式
             super.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
             setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);

@@ -19,8 +19,10 @@ import org.springultron.boot.props.UltronLogProperties;
 import org.springultron.core.utils.Jackson;
 import org.springultron.core.utils.Strings;
 import org.springultron.core.utils.WebUtils;
+import reactor.core.publisher.Mono;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Enumeration;
 import java.util.concurrent.TimeUnit;
@@ -100,7 +102,7 @@ public class RequestLogAspect {
             }
         }
         // 打印请求的 IP
-        reqLog.append("IP             : ").append(request.getRemoteAddr());
+        reqLog.append("IP             : ").append(WebUtils.getIP(request));
         reqLog.append(Strings.LINE_SEPARATOR);
         // 打印请求入参
         reqLog.append("Request Args   : ").append(Jackson.toJson(point.getArgs()));
@@ -108,8 +110,28 @@ public class RequestLogAspect {
         try {
             // 执行请求获取返回值
             Object result = point.proceed();
-            // 打印出参
-            reqLog.append("Response Body  : ").append(Jackson.toJson(result));
+            if (result instanceof Serializable) {
+                // 打印出参
+                reqLog.append("Response Body  : ").append(Jackson.toJson(result));
+            }
+//            if (ClassUtils.isPresent("org.reactivestreams.Publisher", null)) {
+//                if (result instanceof Mono) {
+//                    //noinspection unchecked,UnassignedFluxMonoInstance
+//                    ((Mono<Object>) result).publishOn(Schedulers.immediate()).doOnSuccess((object) -> {
+//                        // 打印出参
+//                        reqLog.append("Response Body  : ").append(Jackson.toJson(object));
+//                    });
+//                } else if (result instanceof Flux) {
+//                    //noinspection unchecked,UnassignedFluxMonoInstance
+//                    ((Flux<Object>) result).publishOn(Schedulers.immediate()).doOnNext(object -> {
+//                        // 打印出参
+//                        reqLog.append("Response Body  : ").append(Jackson.toJson(object));
+//                    });
+//                }
+//            } else {
+//                // 打印出参
+//                reqLog.append("Response Body  : ").append(Jackson.toJson(result));
+//            }
             return result;
         } finally {
             reqLog.append(Strings.LINE_SEPARATOR);
