@@ -20,6 +20,26 @@ public final class WebClientUtil {
     private WebClientUtil() {
     }
 
+    private static volatile WebClient INSTANCE;
+
+    public static WebClient getInstance() {
+        WebClient webClient = INSTANCE;
+        if (null == webClient) {
+            synchronized (WebClientUtil.class) {
+                webClient = INSTANCE;
+                if (null == webClient) {
+                    webClient = WebClient.create();
+                    WebClientUtil.INSTANCE = webClient;
+                }
+            }
+        }
+        return webClient;
+    }
+
+    public static void setInstance(WebClient.Builder builder) {
+        WebClientUtil.INSTANCE = builder.build();
+    }
+
     /**
      * 发起GET请求
      *
@@ -29,7 +49,7 @@ public final class WebClientUtil {
      * @return 返回值Mono对象
      */
     public static <T> Mono<T> get(String targetUrl, Class<T> returnType) {
-        return WebClient.create()
+        return getInstance()
                 .get()
                 .uri(targetUrl)
                 .retrieve()
@@ -85,7 +105,7 @@ public final class WebClientUtil {
      * @return 返回值Mono对象
      */
     public static <T> Mono<T> get(URI uri, Class<T> returnType) {
-        return WebClient.create()
+        return getInstance()
                 .get()
                 .uri(uri)
                 .retrieve()
@@ -102,7 +122,7 @@ public final class WebClientUtil {
      * @return 返回值Mono对象
      */
     public static <T> Mono<T> get(String baseUrl, Object[] uriVariables, Class<T> returnType) {
-        return WebClient.create()
+        return getInstance()
                 .get()
                 .uri(baseUrl, uriVariables)
                 .retrieve()
@@ -119,7 +139,7 @@ public final class WebClientUtil {
      * @return 返回值Mono对象
      */
     public static <T> Mono<T> get(String baseUrl, Map<String, ?> uriVariables, Class<T> returnType) {
-        return WebClient.create()
+        return getInstance()
                 .get()
                 .uri(baseUrl, uriVariables)
                 .retrieve()
@@ -137,7 +157,7 @@ public final class WebClientUtil {
      * @return 返回值Mono对象
      */
     public static <T> Mono<T> get(String targetUrl, Class<T> returnType, String headerName, String... headers) {
-        return WebClient.create()
+        return getInstance()
                 .get()
                 .uri(targetUrl)
                 .header(headerName, headers)
@@ -155,7 +175,7 @@ public final class WebClientUtil {
      * @return 返回值Mono对象
      */
     public static <T> Mono<T> get(final String targetUrl, final MultiValueMap<String, String> headerMap, final Class<T> returnType) {
-        return WebClient.create()
+        return getInstance()
                 .get()
                 .uri(targetUrl)
                 .headers(headers -> headers.addAll(headerMap))
@@ -175,7 +195,7 @@ public final class WebClientUtil {
      * @return 返回值Mono对象
      */
     public static <T> Mono<T> get(String baseUrl, Map<String, ?> uriVariables, Class<T> returnType, String headerName, String... headers) {
-        return WebClient.create()
+        return getInstance()
                 .get()
                 .uri(baseUrl, uriVariables)
                 .header(headerName, headers)
@@ -193,7 +213,7 @@ public final class WebClientUtil {
      * @return 返回值Mono对象
      */
     public static <T> Mono<T> postJSON(String targetUrl, Object reqBody, Class<T> returnType) {
-        return WebClient.create()
+        return getInstance()
                 .post()
                 .uri(targetUrl)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
@@ -215,7 +235,7 @@ public final class WebClientUtil {
      * @return 返回值Mono对象
      */
     public static <T> Mono<T> postJSON(String baseUrl, Object reqBody, Class<T> returnType, String headerName, String... headers) {
-        return WebClient.create()
+        return getInstance()
                 .post()
                 .uri(baseUrl)
                 .header(headerName, headers)
@@ -237,7 +257,7 @@ public final class WebClientUtil {
      * @return 返回值Mono对象
      */
     public static <T> Mono<T> postJSON(final String baseUrl, final MultiValueMap<String, String> headerMap, final Object reqBody, final Class<T> returnType) {
-        return WebClient.create()
+        return getInstance()
                 .post()
                 .uri(baseUrl)
                 .headers(headers -> headers.addAll(headerMap))
@@ -258,7 +278,7 @@ public final class WebClientUtil {
      * @return 返回值Mono对象
      */
     public static <T> Mono<T> postForm(String baseUrl, BodyInserters.FormInserter<String> formInserter, Class<T> returnType) {
-        return WebClient.create()
+        return getInstance()
                 .post()
                 .uri(baseUrl)
                 .body(formInserter)
@@ -277,7 +297,7 @@ public final class WebClientUtil {
      * @return 返回值Mono对象
      */
     public static <T> Mono<T> postForm(final String baseUrl, final MultiValueMap<String, String> headerMap, final BodyInserters.FormInserter<String> formInserter, final Class<T> returnType) {
-        return WebClient.create()
+        return getInstance()
                 .post()
                 .uri(baseUrl)
                 .headers(headers -> headers.addAll(headerMap))
@@ -296,7 +316,7 @@ public final class WebClientUtil {
      * @return 返回值Mono对象
      */
     public static <T> Mono<T> postForm(String baseUrl, MultiValueMap<String, String> formData, Class<T> returnType) {
-        return WebClient.create()
+        return getInstance()
                 .post()
                 .uri(baseUrl)
                 .syncBody(formData)

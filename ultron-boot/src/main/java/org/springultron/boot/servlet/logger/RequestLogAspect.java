@@ -16,13 +16,9 @@ import org.springframework.core.annotation.Order;
 import org.springultron.boot.config.UltronAutoConfiguration;
 import org.springultron.boot.enums.LogLevel;
 import org.springultron.boot.props.UltronLogProperties;
-import org.springultron.core.result.ApiResult;
-import org.springultron.core.utils.ClassUtils;
 import org.springultron.core.utils.Jackson;
 import org.springultron.core.utils.Strings;
 import org.springultron.core.utils.WebUtils;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
@@ -112,29 +108,8 @@ public class RequestLogAspect {
         try {
             // 执行请求获取返回值
             Object result = point.proceed();
-            if (result instanceof ApiResult) {
-                // 打印出参
-                reqLog.append("Response Body  : ").append(Jackson.toJson(result));
-            } else {
-                if (ClassUtils.isPresent("org.reactivestreams.Publisher", null)) {
-                    if (result instanceof Mono) {
-                        //noinspection unchecked
-                        ((Mono<Object>) result).subscribe(object -> {
-                            // 打印出参
-                            reqLog.append("Response Body  : ").append(Jackson.toJson(object));
-                        });
-                    } else if (result instanceof Flux) {
-                        //noinspection unchecked
-                        ((Flux<Object>) result).subscribe(object -> {
-                            // 打印出参
-                            reqLog.append("Response Body  : ").append(Jackson.toJson(object));
-                        });
-                    }
-                } else {
-                    // 打印出参
-                    reqLog.append("Response Body  : {}").append(Jackson.toJson(result));
-                }
-            }
+            // 打印出参
+            reqLog.append("Response Body  : ").append(Jackson.toJson(result));
             return result;
         } finally {
             reqLog.append(Strings.LINE_SEPARATOR);
