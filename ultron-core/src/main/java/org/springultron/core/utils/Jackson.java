@@ -400,12 +400,12 @@ public class Jackson {
 
         JacksonObjectMapper() {
             super();
-            // 设置地点为中国
-            super.setLocale(Locale.CHINA);
+            // 设置地点系统默认
+            super.setLocale(Locale.getDefault());
             // 设置为系统默认时区
             super.setTimeZone(TimeZone.getTimeZone(ZoneId.systemDefault()));
             // 序列化时，Date日期的统一格式
-            super.setDateFormat(new SimpleDateFormat(DateUtils.PATTERN_DATE_TIME, Locale.CHINA));
+            super.setDateFormat(new SimpleDateFormat(DateUtils.PATTERN_DATE_TIME, Locale.getDefault()));
             super.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
             // 允许序列化空的POJO类
             super.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);

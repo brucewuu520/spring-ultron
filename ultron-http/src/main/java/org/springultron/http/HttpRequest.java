@@ -44,7 +44,7 @@ public class HttpRequest {
     private Duration connectTimeout;
     private Duration readTimeout;
     private Duration writeTimeout;
-    private static volatile HttpLoggingInterceptor globalLoggingInterceptor = null;
+    private static volatile HttpLoggingInterceptor globalLoggingInterceptor;
     private HttpLoggingInterceptor.Level level;
 
     private HttpRequest(final Request.Builder requestBuilder, final HttpUrl.Builder urlBuilder, final String method) {

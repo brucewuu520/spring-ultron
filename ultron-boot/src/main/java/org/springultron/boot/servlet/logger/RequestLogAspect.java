@@ -52,8 +52,7 @@ public class RequestLogAspect {
      * 以自定义注解 @ApiLog 为切点
      */
     @Pointcut("@annotation(org.springultron.boot.servlet.logger.ApiLog)")
-    public void apiLog() {
-    }
+    public void apiLog() {}
 
     /**
      * 环绕
