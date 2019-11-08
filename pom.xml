@@ -41,15 +41,15 @@
         <common-pool.version>2.7.0</common-pool.version>
         <swagger.version>2.9.2</swagger.version>
         <swagger-ui.version>1.9.6</swagger-ui.version>
-        <fastjson-version>1.2.62</fastjson-version>
+        <fastjson.version>1.2.62</fastjson.version>
 
         <findbugs.version>3.0.2</findbugs.version>
 
         <!-- Maven Plugin Versions -->
         <java.version>1.8</java.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
-        <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
-        <maven-javadoc-plugin.version>2.10.4</maven-javadoc-plugin.version>
+        <maven-source-plugin.version>3.2.0</maven-source-plugin.version>
+        <maven-javadoc-plugin.version>3.1.1</maven-javadoc-plugin.version>
     </properties>
 
     <modules>
@@ -106,6 +106,7 @@
                 <executions>
                     <execution>
                         <id>attach-sources</id>
+                        <phase>package</phase>
                         <goals>
                             <goal>jar-no-fork</goal>
                         </goals>
@@ -120,11 +121,11 @@
                     <charset>UTF-8</charset>
                     <encoding>UTF-8</encoding>
                     <docencoding>UTF-8</docencoding>
-                    <aggregate>true</aggregate>
                 </configuration>
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>
+                        <phase>package</phase>
                         <goals>
                             <goal>jar</goal>
                         </goals>
@@ -136,14 +137,14 @@
 
     <profiles>
         <profile>
-            <id>jdk8</id>
+            <id>disable-javadoc-Xdoclint</id>
             <activation>
-                <!--当jdk环境版本为1.8时，此profile被激活-->
-                <jdk>1.8</jdk>
+                <!--当jdk环境版本为1.8以上时，此profile被激活-->
+                <jdk>[1.8,)</jdk>
             </activation>
             <properties>
                 <!-- Turn off JDK 8's lint checks: -->
-                <additionalparam>-Xdoclint:none</additionalparam>
+                <additionalJOption>-Xdoclint:none</additionalJOption>
             </properties>
         </profile>
         <profile>
@@ -157,6 +158,7 @@
                         <executions>
                             <execution>
                                 <id>attach-sources</id>
+                                <phase>package</phase>
                                 <goals>
                                     <goal>jar-no-fork</goal>
                                 </goals>
@@ -171,11 +173,11 @@
                             <charset>UTF-8</charset>
                             <encoding>UTF-8</encoding>
                             <docencoding>UTF-8</docencoding>
-                            <aggregate>true</aggregate>
                         </configuration>
                         <executions>
                             <execution>
                                 <id>attach-javadocs</id>
+                                <phase>package</phase>
                                 <goals>
                                     <goal>jar</goal>
                                 </goals>
