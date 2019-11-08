@@ -36,12 +36,12 @@
         <spring-boot.version>2.2.1.RELEASE</spring-boot.version>
         <spring-cloud.version>Greenwich.SR3</spring-cloud.version>
         <alibaba-cloud.version>2.1.0.RELEASE</alibaba-cloud.version>
-        <okhttp3.version>4.2.2</okhttp3.version>
+        <okhttp4.version>4.2.2</okhttp4.version>
         <mybatis-plus.version>3.2.0</mybatis-plus.version>
-        <common-pool.version>2.7.0</common-pool.version>
+        <common-pool2.version>2.7.0</common-pool2.version>
         <swagger.version>2.9.2</swagger.version>
         <swagger-ui.version>1.9.6</swagger-ui.version>
-        <fastjson-version>1.2.62</fastjson-version>
+        <fastjson.version>1.2.62</fastjson.version>
 
         <findbugs.version>3.0.2</findbugs.version>
 
