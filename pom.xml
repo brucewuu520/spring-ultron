@@ -38,7 +38,6 @@
         <alibaba-cloud.version>2.1.0.RELEASE</alibaba-cloud.version>
         <okhttp4.version>4.2.2</okhttp4.version>
         <mybatis-plus.version>3.2.0</mybatis-plus.version>
-        <common-pool2.version>2.7.0</common-pool2.version>
         <swagger.version>2.9.2</swagger.version>
         <swagger-ui.version>1.9.6</swagger-ui.version>
         <fastjson.version>1.2.62</fastjson.version>
