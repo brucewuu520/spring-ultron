@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * HTTP 响应体
+ * HTTP 响应体封装
  *
  * @author brucewuu
  * @date 2019-06-30 10:37

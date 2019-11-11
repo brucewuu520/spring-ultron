@@ -3,7 +3,7 @@ package org.springultron.http;
 import okhttp3.FormBody;
 
 /**
- * 表单构造器
+ * form表单构造器
  *
  * @author brucewuu
  * @date 2019-06-30 10:28
