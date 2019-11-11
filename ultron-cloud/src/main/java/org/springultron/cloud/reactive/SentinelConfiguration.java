@@ -39,8 +39,8 @@ public class SentinelConfiguration {
         this.serverCodecConfigurer = serverCodecConfigurer;
         // 限流、熔断统一处理类
         WebFluxCallbackManager.setBlockHandler((exchange, throwable) -> ServerResponse.ok()
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .syncBody(ApiResult.failed(ResultCode.FLOW_LIMITING)));
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(ApiResult.failed(ResultCode.FLOW_LIMITING)));
     }
 
     @Bean

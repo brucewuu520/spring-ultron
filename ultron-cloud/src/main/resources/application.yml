@@ -1,14 +1,13 @@
 spring:
   cloud:
+    httpclientfactories:
+      apache:
+        enabled: false
+      ok:
+        enabled: false
     sentinel:
       enabled: true
-feign:
-  httpclient:
-    enabled: false
-  okhttp:
-    enabled: true
-  sentinel:
-    enabled: true
+
 management:
   endpoints:
     web:
