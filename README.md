@@ -85,7 +85,7 @@
         query.setSize(10);
         String[] asces = new String[] {"sort", "order"};
         query.setAscs(asces);
-        IPage<T> page = Condition.getPage(query);
+        IPage<T> page = PageUtils.getPage(query);
  
     
 4、Redis自动化配置、操作客户端
@@ -111,14 +111,14 @@
     
         @CachePut(value = "user#300", key = "#id")
     
-5、Spring boot脚手架，servlet/reactive全局异常捕获、基于aop的注解API日志打印(支持配置文件配置日志开关，日志内容等)、WebClient http客户端封装
+5、Spring boot脚手架，servlet/全局异常捕获、基于aop的注解API日志打印(支持配置文件配置日志开关，日志内容等)、WebClient http客户端封装
 
     <dependency>
        <groupId>org.springultron</groupId>
        <artifactId>ultron-boot</artifactId>
     </dependency>
     
-    请求日志使用示例:
+    请求日志使用示例(不支持reactive运行环境):
         @ApiLog(description = "用户登录")
         @GetMapping("/login")
         public Result<User>> login() {
@@ -131,7 +131,23 @@
         ultron:
           log:
             enable: true # 开启ApiLog打印
-            level: headers # 打印包括请求头
+            level: headers # 打印包括请求头 none/body
+            
+    WebClient http客户端使用示例：
+    需添加：
+    
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
+        </dependency>
+     
+    使用示例：
+        
+        Map<String, Object> params = Maps.newHashMap(3);
+        params.put("id", 108);
+        params.put("name", "张三");
+        params.put("age", 23);
+        Mono<JSONObject> mono = WebClientUtil.postJSON("https://xxx", params, JSONObject.class)
     
 6、Spring cloud脚手架
 
@@ -157,7 +173,53 @@
           contact-email: xxx@xxx.com
           contact-url: xxx
                 
+8、基于OkHttp3 4.x版本使用示例
 
+    <properties>
+        <okhttp3.version>4.2.2</okhttp3.version>
+    </properties>
+    
+    <dependency>
+        <groupId>org.springultron</groupId>
+        <artifactId>ultron-http</artifactId>
+    </dependency>  
+
+    使用示例：
+    
+       JSONObject result = HttpRequest.get("https://xxx")
+                  .query("name1", "value1")
+                  .query("name2", "value2")
+                  .log()
+                  .execute()
+                  .asObject(JSONObject.class);
+       
+       Map<String, Object> params = Maps.newHashMap(3);
+               params.put("id", 108);
+               params.put("name", "张三");
+               params.put("age", 23);           
+       JSONObject result = HttpRequest.post("https://xxx")
+                         .bodyJson(params)
+                         .log()
+                         .execute()
+                         .asObject(JSONObject.class);
+                         
+    异步示例：
+    
+       HttpRequest.get("https://xxx")
+             .query("name1", "value1")
+             .query("name2", "value2")
+             .enqueue(new Callback() {
+                 @Override
+                 public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                     
+                 }
+     
+                 @Override
+                 public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+     
+                 })
+    
+    
 ## 更新日志
 * 2.0版本基于Spring boot 2.2.x
 * 1.0版基于Spring boot 2.1.x 请切换分支1.x
