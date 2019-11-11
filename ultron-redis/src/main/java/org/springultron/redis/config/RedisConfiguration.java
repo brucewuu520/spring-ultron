@@ -1,4 +1,4 @@
-package org.springultron.redis;
+package org.springultron.redis.config;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -11,26 +11,13 @@ import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
-import org.springframework.cache.CacheManager;
-import org.springframework.cache.annotation.CachingConfigurerSupport;
-import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
-import org.springframework.data.redis.cache.RedisCacheConfiguration;
-import org.springframework.data.redis.cache.RedisCacheManager;
-import org.springframework.data.redis.cache.RedisCacheWriter;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springultron.core.jackson.UltronJavaTimeModule;
-
-import java.time.Duration;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * Redis配置
@@ -41,29 +28,7 @@ import java.util.Map;
  */
 @Configuration(proxyBeanMethods = false)
 @AutoConfigureBefore({RedisAutoConfiguration.class})
-@EnableCaching
-public class RedisConfiguration extends CachingConfigurerSupport {
-
-    /**
-     * 自定义的缓存key的生成策略(消息队列 暂时用不到 自行忽略)
-     * 此方法将会根据类名+方法名+所有参数的值生成唯一的一个key,即使@Cacheable中的value属性一样，key也会不一样。
-     * 若想使用这个key只需要将注解上keyGenerator的值设置为keyGenerator即可
-     *
-     * @return 自定义策略生成的key
-     */
-    @Bean
-    @ConditionalOnMissingBean(name = {"keyGenerator"})
-    public KeyGenerator keyGenerator() {
-        return (target, method, params) -> {
-            StringBuilder sb = new StringBuilder();
-            sb.append(target.getClass().getName());
-            sb.append(method.getName());
-            for (Object obj : params) {
-                sb.append(obj.toString());
-            }
-            return sb.toString();
-        };
-    }
+public class RedisConfiguration {
 
     @Bean
     @ConditionalOnClass({ObjectMapper.class})
@@ -125,34 +90,26 @@ public class RedisConfiguration extends CachingConfigurerSupport {
         return template;
     }
 
-    private RedisCacheConfiguration redisConfig(long seconds, RedisSerializer<Object> redisSerializer) {
-        return RedisCacheConfiguration.defaultCacheConfig()
-                .entryTtl(Duration.ofSeconds(seconds)) // 设置缓存过期时间，使用Duration设置
-                .disableCachingNullValues() // 不缓存空值
-                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(RedisSerializer.string()))
-                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(redisSerializer));
-    }
+//    @Primary
+//    @Bean
+//    public RedisCacheManager cacheManager(CacheProperties cacheProperties, CacheManagerCustomizers cacheManagerCustomizers, ObjectProvider<RedisCacheConfiguration> redisCacheConfiguration, ObjectProvider<RedisCacheManagerBuilderCustomizer> redisCacheManagerBuilderCustomizers, RedisConnectionFactory redisConnectionFactory, RedisSerializer<Object> redisSerializer) {
+//        CacheEnum[] cacheEnums = CacheEnum.values();
+//        Map<String, RedisCacheConfiguration> cacheConfigMap = new LinkedHashMap<>(cacheEnums.length);
+//        for (CacheEnum cacheEnum : cacheEnums) {
+//            cacheConfigMap.put(cacheEnum.getCacheName(), redisConfig(cacheEnum.getExpireTime(), redisSerializer));
+//        }
+//        // 使用自定义的缓存配置初始化cacheManager
+//        return RedisCacheManager.builder(RedisCacheWriter.nonLockingRedisCacheWriter(redisConnectionFactory))
+//                .cacheDefaults(redisConfig(600, redisSerializer)) // 默认策略，未配置的 key 会使用这个
+//                .withInitialCacheConfigurations(cacheConfigMap)
+//                .build();
+//    }
 
-    /**
-     * 配置缓存管理器
-     *
-     * @param redisConnectionFactory redis连接工厂
-     * @return CacheManager
-     */
-    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
-    @Primary
-    @Bean
-    @ConditionalOnMissingBean(name = {"cacheManager"})
-    public CacheManager cacheManager(RedisConnectionFactory redisConnectionFactory, RedisSerializer<Object> redisSerializer) {
-        CacheEnum[] cacheEnums = CacheEnum.values();
-        Map<String, RedisCacheConfiguration> cacheConfigMap = new LinkedHashMap<>(cacheEnums.length);
-        for (CacheEnum cacheEnum : cacheEnums) {
-            cacheConfigMap.put(cacheEnum.getCacheName(), redisConfig(cacheEnum.getExpireTime(), redisSerializer));
-        }
-        // 使用自定义的缓存配置初始化cacheManager
-        return RedisCacheManager.builder(RedisCacheWriter.nonLockingRedisCacheWriter(redisConnectionFactory))
-                .cacheDefaults(redisConfig(600, redisSerializer)) // 默认策略，未配置的 key 会使用这个
-                .withInitialCacheConfigurations(cacheConfigMap)
-                .build();
-    }
+//    private RedisCacheConfiguration redisConfig(long seconds, RedisSerializer<Object> redisSerializer) {
+//        return RedisCacheConfiguration.defaultCacheConfig()
+//                .entryTtl(Duration.ofSeconds(seconds)) // 设置缓存过期时间，使用Duration设置
+//                .disableCachingNullValues() // 不缓存空值
+//                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(RedisSerializer.string()))
+//                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(redisSerializer));
+//    }
 }
