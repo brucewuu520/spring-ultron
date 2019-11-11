@@ -148,13 +148,27 @@
         params.put("name", "张三");
         params.put("age", 23);
         Mono<JSONObject> mono = WebClientUtil.postJSON("https://xxx", params, JSONObject.class)
+        
+    异步任务线程池配置：
+        
+        ultron:
+          async:
+            core-pool-size: 2         # 核心线程数，默认：2
+            max-pool-size: 100        # 线程池最大数量，默认：100  
+            queue-capacity: 10000     # 线程池队列容量，默认：10000
+            keep-alive-seconds: 300   # 空闲线程存活时间，默认：300秒
     
-6、Spring cloud脚手架
+6、Spring cloud脚手架(基于alibaba-cloud 2.1.0)
 
     <dependency>
        <groupId>org.springultron</groupId>
        <artifactId>ultron-cloud</artifactId>
-    </dependency>           
+    </dependency>
+    
+    负载均衡的http客户端使用（比RestTemplate性能要好得多）:
+    
+        @Autowire
+        private WebClient lbWebClient;           
 
 7、Swagger 接口文档（基于swagger-bootstrap-ui 1.9.6）
 
