@@ -106,6 +106,10 @@
         redisClient.set("key", obj, Duration.ofSeconds(120))
         
         ...
+        
+    Spring cache 扩展cache name 支持 # 号分隔 cache name 和 超时 ttl(单位秒)。使用示例：
+    
+        @CachePut(value = "user#300", key = "#id")
     
 5、Spring boot脚手架，servlet/reactive全局异常捕获、基于aop的注解API日志打印(支持配置文件配置日志开关，日志内容等)、WebClient http客户端封装
 
@@ -155,7 +159,10 @@
                 
 
 ## 更新日志
-* 2.0版本基于Spring boot 2.2.0               
+* 2.0版本基于Spring boot 2.2.0
+
+## 鸣谢
+感谢 [Mica](https://github.com/lets-mica/mica)，有些工具类和配置参考了mica            
                 
 ## 许可证
 
