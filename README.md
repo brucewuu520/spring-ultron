@@ -35,7 +35,7 @@
 1、在项目parent pom.xml中添加：
 
     <properties>
-        <spring-ultron.version>1.0.0</spring-ultron.version>
+        <spring-ultron.version>2.0.0</spring-ultron.version>
         <java.version>1.8</java.version>
     </properties>
 
@@ -159,7 +159,7 @@
                 
 
 ## 更新日志
-* 2.0版本基于Spring boot 2.2.0
+* 2.0版本基于Spring boot 2.2.x
 
 ## 鸣谢
 感谢 [Mica](https://github.com/lets-mica/mica)，有些工具类和配置参考了mica            
