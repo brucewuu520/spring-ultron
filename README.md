@@ -160,6 +160,7 @@
 
 ## 更新日志
 * 2.0版本基于Spring boot 2.2.x
+* 1.0版基于Spring boot 2.1.x 请切换分支1.x
 
 ## 鸣谢
 感谢 [Mica](https://github.com/lets-mica/mica)，有些工具类和配置参考了mica            
