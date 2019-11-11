@@ -69,6 +69,7 @@ public class RequestLogAspect {
         final long startTime = System.nanoTime();
         // 构建成一条长日志，避免并发下日志错乱
         StringBuilder reqLog = new StringBuilder(300);
+        reqLog.append(Strings.LINE_SEPARATOR);
         reqLog.append("================ Start ================");
         reqLog.append(Strings.LINE_SEPARATOR);
         // 获取 @ApiLog 注解的描述信息
