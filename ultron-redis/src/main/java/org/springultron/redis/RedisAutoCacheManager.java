@@ -30,13 +30,14 @@ public class RedisAutoCacheManager extends RedisCacheManager {
             String[] array = name.split("#");
             if (array.length > 1) {
                 name = array[0];
-                long cacheAge = -1;
+                long cacheAge = 0;
                 try {
                     cacheAge = Long.parseLong(array[1]);
                 } catch (final NumberFormatException ignored) {
                 }
-                if (null != cacheConfig) {
-                    cacheConfig.entryTtl(Duration.ofSeconds(cacheAge));
+                Duration ttl = Duration.ofSeconds(cacheAge);
+                if (cacheConfig != null && cacheConfig.getTtl().compareTo(ttl) != 0) {
+                    cacheConfig = cacheConfig.entryTtl(ttl);
                 }
             }
         }
