@@ -12,7 +12,8 @@ import java.time.Duration;
 import java.util.Map;
 
 /**
- * Redis Cache 扩展cache name自动化配置
+ * Redis Cache扩展扩展cache name
+ * 支持 # 号分隔 cache name 和 超时 ttl(单位秒)。
  *
  * @author brucewuu
  * @date 2019/11/10 18:05

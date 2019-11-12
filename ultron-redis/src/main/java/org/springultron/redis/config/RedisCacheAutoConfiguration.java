@@ -54,8 +54,7 @@ public class RedisCacheAutoConfiguration extends CachingConfigurerSupport {
     @Override
     public KeyGenerator keyGenerator() {
         return (target, method, params) -> {
-            StringBuilder sb = new StringBuilder();
-            sb.append(target.getClass().getName());
+            StringBuilder sb = new StringBuilder(target.getClass().getName());
             sb.append(method.getName());
             for (Object obj : params) {
                 sb.append(obj.toString());
