@@ -10,7 +10,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
-import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,13 +30,14 @@ import java.util.Map;
 
 /**
  * Redis配置
- * 配置序列化方式以及缓存管理器 @EnableCaching 可开启方法注解缓存
+ * 配置Jackson序列化
+ * 配置Redis cache缓存管理器
  *
  * @author brucewuu
  * @date 2019-05-31 14:26
  */
-@EnableCaching
 @Configuration
+@ConditionalOnClass({ObjectMapper.class})
 @AutoConfigureBefore({RedisAutoConfiguration.class})
 public class RedisConfiguration extends CachingConfigurerSupport {
 
@@ -50,6 +50,7 @@ public class RedisConfiguration extends CachingConfigurerSupport {
      */
     @Bean
     @ConditionalOnMissingBean(name = {"keyGenerator"})
+    @Override
     public KeyGenerator keyGenerator() {
         return (target, method, params) -> {
             StringBuilder sb = new StringBuilder();
@@ -63,7 +64,6 @@ public class RedisConfiguration extends CachingConfigurerSupport {
     }
 
     @Bean
-    @ConditionalOnClass({ObjectMapper.class})
     public RedisSerializer<Object> redisSerializer() {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
@@ -110,14 +110,6 @@ public class RedisConfiguration extends CachingConfigurerSupport {
         return template;
     }
 
-    private RedisCacheConfiguration redisConfig(long seconds, RedisSerializer<Object> redisSerializer) {
-        return RedisCacheConfiguration.defaultCacheConfig()
-                .entryTtl(Duration.ofSeconds(seconds)) // 设置缓存过期时间，使用Duration设置
-                .disableCachingNullValues() // 不缓存空值
-                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(RedisSerializer.string()))
-                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(redisSerializer));
-    }
-
     /**
      * 配置缓存管理器
      *
@@ -129,14 +121,18 @@ public class RedisConfiguration extends CachingConfigurerSupport {
     @Bean
     @ConditionalOnMissingBean(name = {"cacheManager"})
     public CacheManager cacheManager(RedisConnectionFactory redisConnectionFactory, RedisSerializer<Object> redisSerializer) {
+        RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
+                .disableCachingNullValues()
+                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(RedisSerializer.string()))
+                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(redisSerializer));
         CacheEnum[] cacheEnums = CacheEnum.values();
         Map<String, RedisCacheConfiguration> cacheConfigMap = new LinkedHashMap<>(cacheEnums.length);
         for (CacheEnum cacheEnum : cacheEnums) {
-            cacheConfigMap.put(cacheEnum.getCacheName(), redisConfig(cacheEnum.getExpireTime(), redisSerializer));
+            cacheConfigMap.put(cacheEnum.getCacheName(), redisCacheConfiguration.entryTtl(Duration.ofSeconds(cacheEnum.getExpireTime())));
         }
         // 使用自定义的缓存配置初始化cacheManager
         return RedisCacheManager.builder(RedisCacheWriter.nonLockingRedisCacheWriter(redisConnectionFactory))
-                .cacheDefaults(redisConfig(600, redisSerializer)) // 默认策略，未配置的 key 会使用这个
+                .cacheDefaults(redisCacheConfiguration.entryTtl(Duration.ofSeconds(600))) // 默认策略，未配置的 key 会使用这个
                 .withInitialCacheConfigurations(cacheConfigMap)
                 .build();
     }
