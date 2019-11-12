@@ -22,7 +22,11 @@ import org.springultron.core.jackson.UltronJavaTimeModule;
 
 /**
  * Redis配置
- * 配置序列化方式以及缓存管理器 @EnableCaching 可开启方法注解缓存
+ * <p>
+ * 序列化策略：
+ * 默认使用Jackson序列化Redis value，当没有依赖Jackson时默认使用jdk序列化
+ * 用户可自定义注入redisSerializer 或 redisTemplate Bean来实现自定义配置
+ * </p>
  *
  * @author brucewuu
  * @date 2019-05-31 14:26
@@ -31,6 +35,11 @@ import org.springultron.core.jackson.UltronJavaTimeModule;
 @AutoConfigureBefore({RedisAutoConfiguration.class})
 public class RedisConfiguration {
 
+    /**
+     * 自定义Redis value序列化方式
+     *
+     * @return RedisSerializer<Object>
+     */
     @Bean
     @ConditionalOnClass({ObjectMapper.class})
     @ConditionalOnMissingBean(name = {"redisSerializer"})
@@ -51,7 +60,7 @@ public class RedisConfiguration {
         // 忽略JSON字符串中不识别的属性
         objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         objectMapper.findAndRegisterModules();
-        // java8日期格式化
+        // 配置java8日期序列化
         objectMapper.registerModule(new UltronJavaTimeModule());
         return new GenericJackson2JsonRedisSerializer(objectMapper);
     }
@@ -60,6 +69,7 @@ public class RedisConfiguration {
      * 配置自定义RedisTemplate
      *
      * @param redisConnectionFactory redis连接工厂
+     * @param redisSerializer        value序列化方式
      * @return RedisTemplate<String, Object>
      */
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
@@ -67,7 +77,7 @@ public class RedisConfiguration {
     @ConditionalOnMissingBean(name = {"redisTemplate"})
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory, @Autowired(required = false) RedisSerializer<Object> redisSerializer) {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
-        // 配置连接工厂
+        // 设置连接工厂
         template.setConnectionFactory(redisConnectionFactory);
         // 使用StringRedisSerializer.UTF_8来序列化和反序列化redis的key值
         template.setKeySerializer(RedisSerializer.string());
