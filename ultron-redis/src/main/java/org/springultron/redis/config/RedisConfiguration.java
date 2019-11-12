@@ -7,6 +7,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -32,6 +33,7 @@ public class RedisConfiguration {
 
     @Bean
     @ConditionalOnClass({ObjectMapper.class})
+    @ConditionalOnMissingBean(name = {"redisSerializer"})
     public RedisSerializer<Object> redisSerializer() {
         ObjectMapper objectMapper = new ObjectMapper();
         // 指定要序列化的域，field,get和set,以及修饰符范围，ANY是都有包括private和public
@@ -63,17 +65,16 @@ public class RedisConfiguration {
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Bean
     @ConditionalOnMissingBean(name = {"redisTemplate"})
-    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory, RedisSerializer<Object> redisSerializer) {
+    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory, @Autowired(required = false) RedisSerializer<Object> redisSerializer) {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         // 配置连接工厂
         template.setConnectionFactory(redisConnectionFactory);
-        // 禁用defaultSerializer
-        template.setEnableDefaultSerializer(false);
         // 使用StringRedisSerializer.UTF_8来序列化和反序列化redis的key值
         template.setKeySerializer(RedisSerializer.string());
         template.setValueSerializer(redisSerializer);
         template.setHashKeySerializer(RedisSerializer.string());
         template.setHashValueSerializer(redisSerializer);
+        template.afterPropertiesSet();
         return template;
     }
 }
