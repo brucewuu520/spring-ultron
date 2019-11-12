@@ -45,18 +45,13 @@ public interface IController {
         }
         fileName = IdUtils.randomUUID() + suffixName;
         LocalDate localDate = LocalDate.now();
-        StringBuilder fileBuilder = new StringBuilder(58)
-                .append(properties.getUploadPathPattern().replace("*", ""))
-                .append("image/")
-                .append(localDate.getYear())
-                .append("/")
-                .append(localDate.getMonthValue())
-                .append("/")
-                .append(fileName);
-        final String filePath = fileBuilder.toString();
+        final String filePath = properties.getUploadPathPattern().replace("*", "") +
+                "image/" + localDate.getYear() + "/" + localDate.getMonthValue() + "/" + fileName;
         File dest = new File(properties.getSavePath() + filePath);
         if (!dest.getParentFile().exists()) {
-            dest.getParentFile().mkdirs();
+            if (!dest.getParentFile().mkdirs()) {
+                return ApiResult.failed("图片上传失败");
+            }
         }
         try {
             file.transferTo(dest);
