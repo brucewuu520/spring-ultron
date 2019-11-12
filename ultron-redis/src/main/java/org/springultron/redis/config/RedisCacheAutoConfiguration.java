@@ -80,7 +80,7 @@ public class RedisCacheAutoConfiguration extends CachingConfigurerSupport {
     public RedisCacheManager cacheManager(CacheProperties cacheProperties, CacheManagerCustomizers cacheManagerCustomizers, ObjectProvider<RedisCacheConfiguration> redisCacheConfiguration, RedisConnectionFactory redisConnectionFactory, RedisSerializer<Object> redisSerializer) {
         RedisCacheWriter redisCacheWriter = RedisCacheWriter.nonLockingRedisCacheWriter(redisConnectionFactory);
         RedisCacheConfiguration cacheConfiguration = this.determineConfiguration(cacheProperties, redisCacheConfiguration, redisSerializer);
-        Map<String, RedisCacheConfiguration> initialCaches = new LinkedHashMap<>();
+        final Map<String, RedisCacheConfiguration> initialCaches = new LinkedHashMap<>();
         List<String> cacheNames = cacheProperties.getCacheNames();
         if (!cacheNames.isEmpty()) {
             cacheNames.forEach(cacheName -> initialCaches.put(cacheName, cacheConfiguration));

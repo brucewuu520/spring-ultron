@@ -4,6 +4,7 @@ import org.springframework.data.redis.cache.RedisCache;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.cache.RedisCacheWriter;
+import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.util.StringUtils;
 
@@ -22,6 +23,7 @@ public class RedisAutoCacheManager extends RedisCacheManager {
         super(cacheWriter, defaultCacheConfiguration, initialCacheConfigurations, allowInFlightCacheCreation);
     }
 
+    @NonNull
     @Override
     protected RedisCache createRedisCache(String name, @Nullable RedisCacheConfiguration cacheConfig) {
         if (!StringUtils.isEmpty(name) && name.contains("#")) {
