@@ -36,7 +36,7 @@ public class SpringUtils implements ApplicationContextAware, DisposableBean {
 
     @Nullable
     public static <T> T getBean(String beanId) {
-        if (Strings.isEmpty(beanId) || null == context)
+        if (StringUtils.isEmpty(beanId) || null == context)
             return null;
         //noinspection unchecked
         return (T) context.getBean(beanId);
@@ -44,7 +44,7 @@ public class SpringUtils implements ApplicationContextAware, DisposableBean {
 
     @Nullable
     public static <T> T getBean(String beanName, Class<T> clazz) {
-        if (Strings.isEmpty(beanName) || null == clazz || null == context)
+        if (StringUtils.isEmpty(beanName) || null == clazz || null == context)
             return null;
         return context.getBean(beanName, clazz);
     }

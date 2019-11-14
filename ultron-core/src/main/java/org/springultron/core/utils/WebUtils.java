@@ -71,7 +71,7 @@ public class WebUtils extends org.springframework.web.util.WebUtils {
         if (null == request) {
             return null;
         }
-        final Predicate<String> IP_PREDICATE = (ip) -> Strings.isBlank(ip) || "unknown".equalsIgnoreCase(ip);
+        final Predicate<String> IP_PREDICATE = (ip) -> StringUtils.isBlank(ip) || "unknown".equalsIgnoreCase(ip);
         String ip = request.getHeader("X-Requested-For");
         if (IP_PREDICATE.test(ip)) {
             ip = request.getHeader("X-Forwarded-For");
@@ -91,7 +91,7 @@ public class WebUtils extends org.springframework.web.util.WebUtils {
         if (IP_PREDICATE.test(ip)) {
             ip = request.getRemoteAddr();
         }
-        return Strings.isBlank(ip) ? null : ip.split(",")[0];
+        return StringUtils.isBlank(ip) ? null : ip.split(",")[0];
     }
 
     /**

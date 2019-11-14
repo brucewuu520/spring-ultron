@@ -13,9 +13,9 @@ import java.util.List;
  * @author brucewuu
  * @date 2019-05-28 11:10
  */
-public class Strings extends org.springframework.util.StringUtils {
+public class StringUtils extends org.springframework.util.StringUtils {
 
-    private Strings() {
+    private StringUtils() {
     }
 
     /**
@@ -34,7 +34,7 @@ public class Strings extends org.springframework.util.StringUtils {
     public static final String LINE_SEPARATOR = System.lineSeparator();
 
     public static boolean isNotEmpty(String str) {
-        return !Strings.isEmpty(str);
+        return !StringUtils.isEmpty(str);
     }
 
     /**
@@ -56,7 +56,7 @@ public class Strings extends org.springframework.util.StringUtils {
      * @see Character#isWhitespace
      */
     public static boolean isBlank(final CharSequence cs) {
-        return !Strings.hasText(cs);
+        return !StringUtils.hasText(cs);
     }
 
     /**
@@ -75,7 +75,7 @@ public class Strings extends org.springframework.util.StringUtils {
      * @see Character#isWhitespace
      */
     public static boolean isNotBlank(final CharSequence cs) {
-        return Strings.hasText(cs);
+        return StringUtils.hasText(cs);
     }
 
     /**
@@ -397,7 +397,7 @@ public class Strings extends org.springframework.util.StringUtils {
      * @return the delimited {@code String}
      */
     public static String join(Collection<?> coll) {
-        return Strings.collectionToCommaDelimitedString(coll);
+        return StringUtils.collectionToCommaDelimitedString(coll);
     }
 
     /**
@@ -409,7 +409,7 @@ public class Strings extends org.springframework.util.StringUtils {
      * @return the delimited {@code String}
      */
     public static String join(Collection<?> coll, String delimiter) {
-        return Strings.collectionToDelimitedString(coll, delimiter);
+        return StringUtils.collectionToDelimitedString(coll, delimiter);
     }
 
     public static byte[] getBytes(final String string) {
