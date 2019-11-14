@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>ultron-swagger</artifactId>
     <name>ultron-swagger</name>
-    <description>API docs use swagger2</description>
+    <description>API docs use knife4j/swagger2</description>
     <packaging>jar</packaging>
 
     <parent>
