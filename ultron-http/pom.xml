@@ -3,7 +3,8 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>ultron-http</artifactId>
-    <description>OkHttp3 client for version 4.0.1</description>
+    <name>ultron-http</name>
+    <description>OkHttp3 client for version 4.x</description>
     <packaging>jar</packaging>
 
     <parent>
