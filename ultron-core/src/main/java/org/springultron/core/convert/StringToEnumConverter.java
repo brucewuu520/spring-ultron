@@ -5,7 +5,7 @@ import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.core.convert.converter.ConditionalGenericConverter;
 import org.springframework.lang.Nullable;
 import org.springultron.core.utils.ConvertUtils;
-import org.springultron.core.utils.Strings;
+import org.springultron.core.utils.StringUtils;
 
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Constructor;
@@ -39,7 +39,7 @@ public class StringToEnumConverter implements ConditionalGenericConverter {
     @Nullable
     @Override
     public Object convert(@Nullable Object source, TypeDescriptor sourceType, TypeDescriptor targetType) {
-        if (Strings.isBlank((String) source)) {
+        if (StringUtils.isBlank((String) source)) {
             return null;
         }
         Class<?> targetClazz = targetType.getType();

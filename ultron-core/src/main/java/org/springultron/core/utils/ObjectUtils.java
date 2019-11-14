@@ -92,12 +92,12 @@ public class ObjectUtils extends org.springframework.util.ObjectUtils {
      *
      * @param obj the Object to {@code toString}, may be null
      * @return the passed in Object's toString, or {@code ""} if {@code null} input
-     * @see Strings#defaultString(String)
+     * @see StringUtils#defaultString(String)
      * @see String#valueOf(Object)
      * @since 2.0
      */
     public static String toString(final Object obj) {
-        return Objects.toString(obj, Strings.EMPTY);
+        return Objects.toString(obj, StringUtils.EMPTY);
     }
 
     /**
@@ -115,7 +115,7 @@ public class ObjectUtils extends org.springframework.util.ObjectUtils {
      * @param obj         the Object to {@code toString}, may be null
      * @param nullDefault the String to return if {@code null} input, may be null
      * @return the passed in Object's toString, or {@code nullStr} if {@code null} input
-     * @see Strings#defaultString(String, String)
+     * @see StringUtils#defaultString(String, String)
      * @see String#valueOf(Object)
      */
     public static String toString(final Object obj, final String nullDefault) {

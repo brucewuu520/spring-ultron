@@ -28,13 +28,13 @@ public class FileUtils extends FileCopyUtils {
     public static String getJarPath() {
         String path = null;
         try {
-            URL url = FileUtils.class.getResource(Strings.SLASH).toURI().toURL();
+            URL url = FileUtils.class.getResource(StringUtils.SLASH).toURI().toURL();
             path = FileUtils.toFilePath(url);
         } catch (Exception e) {
             e.printStackTrace();
         }
         if (null == path) {
-            path = FileUtils.class.getResource(Strings.EMPTY).getPath();
+            path = FileUtils.class.getResource(StringUtils.EMPTY).getPath();
             path = new File(path).getParentFile().getParentFile().getAbsolutePath();
         }
         return path;
