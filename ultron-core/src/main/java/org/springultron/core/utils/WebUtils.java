@@ -102,7 +102,7 @@ public class WebUtils extends org.springframework.web.util.WebUtils {
      */
     public static void renderJson(HttpServletResponse response, Object result) {
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
-        response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         try (PrintWriter writer = response.getWriter()) {
             writer.write(Jackson.toJson(result));
         } catch (IOException e) {
