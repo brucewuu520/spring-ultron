@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>ultron-core</artifactId>
     <name>ultron-core</name>
-    <description>Spring Boot common core</description>
+    <description>Spring Boot common core,jackson auto configuration,utils and so on</description>
     <packaging>jar</packaging>
 
     <parent>
