@@ -3,6 +3,7 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>spring-ultron-dependencies</artifactId>
+    <name>spring-ultron-dependencies</name>
     <description>Spring Ultron Dependencies</description>
     <packaging>pom</packaging>
 
@@ -49,6 +50,7 @@
                 <artifactId>ultron-swagger</artifactId>
                 <version>${spring-ultron.version}</version>
             </dependency>
+
         </dependencies>
     </dependencyManagement>
 

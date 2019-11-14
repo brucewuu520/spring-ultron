@@ -15,11 +15,11 @@ public class SwaggerProperties {
      */
     private boolean enable = true;
     /**
-     * 标题，默认：XXX服务
+     * 标题，默认：在线接口文档
      */
     private String title;
     /**
-     * 详情，默认：XXX服务
+     * 详情，默认：在线接口文档
      */
     private String description;
     /**
