@@ -26,6 +26,10 @@ public class UltronAsyncProperties {
      * 空闲线程存活时间，默认：300秒
      */
     private int keepAliveSeconds = 300;
+    /**
+     * 线程名称前缀
+     */
+    private String threadNamePrefix = "ultron-async-executor-";
 
     public int getCorePoolSize() {
         return corePoolSize;
@@ -57,5 +61,13 @@ public class UltronAsyncProperties {
 
     public void setKeepAliveSeconds(int keepAliveSeconds) {
         this.keepAliveSeconds = keepAliveSeconds;
+    }
+
+    public String getThreadNamePrefix() {
+        return threadNamePrefix;
+    }
+
+    public void setThreadNamePrefix(String threadNamePrefix) {
+        this.threadNamePrefix = threadNamePrefix;
     }
 }

@@ -1,19 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration sacn="false" debug="false">
-    <springProperty scop="context" name="spring.application.name" source="spring.application.name" defaultValue="ultron"/>
-    <springProperty scop="context" name="logging.level" source="logging.level" defaultValue="INFO"/>
-    <springProperty scop="context" name="logging.file.path" source="logging.file.path" defaultValue="logs/${spring.application.name}" />
-    <springProperty scop="context" name="logging.file.maxSize" source="logging.file.maxSize" defaultValue="30MB" />
-    <springProperty scop="context" name="logging.file.maxHistory" source="logging.file.maxHistory" defaultValue="30" />
+    <springProperty scop="context" name="spring.application.name" source="spring.application.name" defaultValue="ultron" />
+    <!-- 定义日志等级-->
+    <springProperty scop="context" name="logging.level" source="log.level" defaultValue="INFO" />
     <!-- 定义日志输出格式变量：%d表示时间 花括号内为时间格式 %level表示日志级别 %thread表示线程名 %logger{0}表示输出日志的类名 [%line]表示行号用方括号包裹 %msg表示日志消息 %n换行 -->
-    <property name="log.pattern" value="[%d{'MM-dd HH:mm:ss,SSS'}] %level [%thread] %logger{0}[%line] - %msg%n" />
+    <springProperty scop="context" name="logging.pattern" source="log.pattern" defaultValue="[%d{'MM-dd HH:mm:ss,SSS'}] %level [%thread] %logger{0}[%line] - %msg%n" />
     <!-- 定义日志字符集 -->
-    <property name="log.charset" value="UTF-8" />
+    <springProperty scop="context" name="logging.charset" source="log.charset" defaultValue="UTF-8" />
+    <springProperty scop="context" name="logging.file.path" source="logging.file.path" defaultValue="logs/${spring.application.name}" />
+    <springProperty scop="context" name="logging.file.maxSize" source="logging.file.max-size" defaultValue="10MB" />
+    <springProperty scop="context" name="logging.file.maxHistory" source="logging.file.max-history" defaultValue="360" />
+    <springProperty scop="context" name="logging.file.totalSizeCap" source="logging.file.total-size-cap" defaultValue="100GB" />
+    <springProperty scop="context" name="logging.file.cleanHistoryOnStart" source="logging.file.clean-history-on-start" defaultValue="false" />
+
     <!-- Console log output -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <charset>${log.charset}</charset>
-            <pattern>${log.pattern}</pattern>
+            <charset>${logging.charset}</charset>
+            <pattern>${logging.pattern}</pattern>
         </encoder>
     </appender>
     <!-- 获取比info级别高(包括info级别)但除error级别的日志-->
@@ -28,13 +32,20 @@
             <onMismatch>ACCEPT</onMismatch>
         </filter>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${logging.file.path}/%d{yyyy-MM}/info.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <fileNamePattern>${logging.file.path}/info/%d{yyyy-MM,aux}/info.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <!-- 每个日志文件最大：maxFileSize，保存多少天：maxHistory，但日志文件最多：totalSizeCap-->
             <maxFileSize>${logging.file.maxSize}</maxFileSize>
+            <!-- 保存文件的最大数量，异步删除旧文件。例如，如果指定每天滚动更新，并将maxHistory设置为360，则将保留1年的存档文件，删除1年以上的文件-->
             <maxHistory>${logging.file.maxHistory}</maxHistory>
+            <!-- 所有存档文件的总大小，超过总大小上限时，将异步删除最旧的存档文件。totalSizeCap属性还要求设置maxHistory属性。此外，总是先应用“最大历史记录”限制，然后应用“总大小上限”限制-->
+            <totalSizeCap>${logging.file.totalSizeCap}</totalSizeCap>
+            <!-- 如果设置为true，则在appender启动时将执行存档删除。默认情况下，此属性设置为false。档案移除通常在翻滚期间执行。但是，有些应用程序可能没有足够长的寿命来触发回滚。
+                因此，对于这种短命的应用程序，存档删除可能永远没有机会执行。通过将cleanHistoryOnStart设置为true，将在appender启动时执行存档删除-->
+            <cleanHistoryOnStart>${logging.file.cleanHistoryOnStart}</cleanHistoryOnStart>
         </rollingPolicy>
         <encoder>
-            <charset>${log.charset}</charset>
-            <pattern>${log.pattern}</pattern>
+            <charset>${logging.charset}</charset>
+            <pattern>${logging.pattern}</pattern>
         </encoder>
     </appender>
 
@@ -48,17 +59,24 @@
             <level>ERROR</level>
         </filter>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${logging.file.path}/%d{yyyy-MM}/error.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <fileNamePattern>${logging.file.path}/error/%d{yyyy-MM,aux}/error.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <!-- 每个日志文件最大：maxFileSize，保存多少天：maxHistory，但日志文件最多：totalSizeCap-->
             <maxFileSize>${logging.file.maxSize}</maxFileSize>
+            <!-- 保存文件的最大数量，异步删除旧文件。例如，如果指定每天滚动更新，并将maxHistory设置为360，则将保留1年的存档文件，删除1年以上的文件-->
             <maxHistory>${logging.file.maxHistory}</maxHistory>
+            <!-- 所有存档文件的总大小，超过总大小上限时，将异步删除最旧的存档文件。totalSizeCap属性还要求设置maxHistory属性。此外，总是先应用“最大历史记录”限制，然后应用“总大小上限”限制。-->
+            <totalSizeCap>${logging.file.totalSizeCap}</totalSizeCap>
+            <!-- 如果设置为true，则在appender启动时将执行存档删除。默认情况下，此属性设置为false。档案移除通常在翻滚期间执行。但是，有些应用程序可能没有足够长的寿命来触发回滚。
+                因此，对于这种短命的应用程序，存档删除可能永远没有机会执行。通过将cleanHistoryOnStart设置为true，将在appender启动时执行存档删除-->
+            <cleanHistoryOnStart>${logging.file.cleanHistoryOnStart}</cleanHistoryOnStart>
         </rollingPolicy>
         <encoder>
-            <charset>${log.charset}</charset>
-            <pattern>${log.pattern}</pattern>
+            <charset>${logging.charset}</charset>
+            <pattern>${logging.pattern}</pattern>
         </encoder>
     </appender>
 
-    <!-- Level: FATAL 0  ERROR 3  WARN 4  INFO 6  DEBUG 7 -->
+    <!-- Level: TRACE DEBUG INFO WARN ERROR FATAL OFF-->
     <root level="${logging.level}">
         <appender-ref ref="CONSOLE" />
         <appender-ref ref="INFO" />

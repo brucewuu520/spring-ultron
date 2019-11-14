@@ -36,7 +36,7 @@ public class UltronExecutorConfiguration extends AsyncConfigurerSupport {
         taskExecutor.setMaxPoolSize(properties.getMaxPoolSize());
         taskExecutor.setQueueCapacity(properties.getQueueCapacity());
         taskExecutor.setKeepAliveSeconds(properties.getKeepAliveSeconds());
-        taskExecutor.setThreadNamePrefix("ultron-async-executor-");
+        taskExecutor.setThreadNamePrefix(properties.getThreadNamePrefix());
         taskExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
         return taskExecutor;
     }
