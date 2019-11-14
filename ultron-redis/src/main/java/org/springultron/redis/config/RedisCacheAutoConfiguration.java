@@ -101,16 +101,17 @@ public class RedisCacheAutoConfiguration extends CachingConfigurerSupport {
         if (redisSerializer != null) {
             config = config.serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(redisSerializer));
         }
+
         if (redisProperties.getTimeToLive() != null) {
             config = config.entryTtl(redisProperties.getTimeToLive());
         }
 
-        if (redisProperties.getKeyPrefix() != null) {
-            config = config.prefixKeysWith(redisProperties.getKeyPrefix());
-        }
-
         if (!redisProperties.isCacheNullValues()) {
             config = config.disableCachingNullValues();
+        }
+
+        if (redisProperties.getKeyPrefix() != null) {
+            config = config.prefixKeysWith(redisProperties.getKeyPrefix());
         }
 
         if (!redisProperties.isUseKeyPrefix()) {
