@@ -1,9 +1,8 @@
 package org.springultron.swagger;
 
-import com.github.xiaoymin.swaggerbootstrapui.annotations.EnableSwaggerBootstrapUI;
+import com.github.xiaoymin.knife4j.spring.annotations.EnableSwaggerBootstrapUi;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -31,14 +30,11 @@ import java.util.Optional;
 @Configuration
 @EnableConfigurationProperties(SwaggerProperties.class)
 @ConditionalOnProperty(value = "swagger.enable", havingValue = "true", matchIfMissing = true)
-@EnableSwaggerBootstrapUI
+@EnableSwaggerBootstrapUi
 @EnableSwagger2
 public class SwaggerConfiguration {
 
     private final SwaggerProperties swaggerProperties;
-
-    @Value("${spring.application.name}")
-    private String applicationName;
 
     @Autowired
     public SwaggerConfiguration(SwaggerProperties swaggerProperties) {
@@ -63,8 +59,8 @@ public class SwaggerConfiguration {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title(Optional.ofNullable(swaggerProperties.getTitle()).orElseGet(() -> applicationName + " 接口服务"))
-                .description(Optional.ofNullable(swaggerProperties.getDescription()).orElseGet(() -> applicationName + " 接口服务"))
+                .title(Optional.ofNullable(swaggerProperties.getTitle()).orElse("在线接口文档"))
+                .description(Optional.ofNullable(swaggerProperties.getDescription()).orElse("在线接口文档"))
                 .version(swaggerProperties.getVersion())
                 .contact(new Contact(swaggerProperties.getContactUser(), swaggerProperties.getContactUrl(), swaggerProperties.getContactEmail()))
                 .build();

@@ -1,4 +1,1 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  org.springultron.swagger.SwaggerConfiguration,\
-  org.springultron.swagger.servlet.SwaggerAutoConfiguration,\
-  org.springultron.swagger.reactive.SwaggerAutoConfiguration
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=org.springultron.swagger.SwaggerConfiguration
