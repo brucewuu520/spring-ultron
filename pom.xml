@@ -4,6 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.springultron</groupId>
     <artifactId>spring-ultron</artifactId>
+    <name>spring-ultron-build</name>
     <description>Spring Boot/Cloud multi module common library</description>
     <version>2.0.0</version>
     <packaging>pom</packaging>
@@ -39,7 +40,7 @@
         <okhttp4.version>4.2.2</okhttp4.version>
         <mybatis-plus.version>3.2.0</mybatis-plus.version>
         <swagger.version>2.9.2</swagger.version>
-        <swagger-ui.version>1.9.6</swagger-ui.version>
+        <knife4j.version>1.9.6</knife4j.version>
         <fastjson.version>1.2.62</fastjson.version>
 
         <findbugs.version>3.0.2</findbugs.version>
