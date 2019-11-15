@@ -17,7 +17,6 @@
 
 package org.springultron.core.utils;
 
-
 import java.io.Serializable;
 import java.io.Writer;
 
