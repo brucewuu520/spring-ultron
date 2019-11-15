@@ -6,11 +6,13 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
+import org.springframework.cache.interceptor.CacheAspectSupport;
 import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -117,7 +119,8 @@ public class RedisConfiguration extends CachingConfigurerSupport {
     }
 
     /**
-     * 配置缓存管理器
+     * 配置缓存管理器(替换默认的 RedisCacheManager)
+     * 需手动配置 @EnableCaching开启缓存
      *
      * @param redisConnectionFactory redis连接工厂
      * @return CacheManager
@@ -125,6 +128,7 @@ public class RedisConfiguration extends CachingConfigurerSupport {
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Primary
     @Bean
+    @ConditionalOnBean({CacheAspectSupport.class})
     @ConditionalOnMissingBean(name = {"cacheManager"})
     public CacheManager cacheManager(RedisConnectionFactory redisConnectionFactory, @Autowired(required = false) RedisSerializer<Object> redisSerializer) {
         RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig().disableCachingNullValues();
