@@ -3,19 +3,21 @@ package org.springultron.redis.config;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration;
 import org.springframework.boot.autoconfigure.cache.CacheManagerCustomizer;
 import org.springframework.boot.autoconfigure.cache.CacheManagerCustomizers;
 import org.springframework.boot.autoconfigure.cache.CacheProperties;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.interceptor.CacheAspectSupport;
 import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.cache.RedisCacheWriter;
@@ -31,18 +33,24 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * Redis Cache 自动化配置，扩展cache name
- * 支持 # 号分隔 cache name 和 超时 ttl(单位秒)。
+ * Redis Cache 自动化配置替换系统默认的cacheManager
+ * 扩展cache name 支持 # 号分隔 cache name 和 超时 ttl(单位秒)。
+ *
  * <p>
  * 示例：@CachePut(value = "user#300", key = "#id")
+ * </p>
+ *
+ * <p>
+ * 需手动开启@EnableCaching注解
+ * </p>
  *
  * @author brucewuu
  * @date 2019/11/10 17:34
  */
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnBean({CacheAspectSupport.class})
-//@AutoConfigureBefore({org.springframework.boot.autoconfigure.cache.RedisCacheConfiguration.class})
-@AutoConfigureAfter({CacheAutoConfiguration.class})
+@AutoConfigureBefore({CacheAutoConfiguration.class})
+@AutoConfigureAfter({RedisAutoConfiguration.class})
 @EnableConfigurationProperties({CacheProperties.class})
 public class RedisCacheAutoConfiguration extends CachingConfigurerSupport {
 
@@ -74,14 +82,14 @@ public class RedisCacheAutoConfiguration extends CachingConfigurerSupport {
     }
 
     /**
-     * 配置缓存管理器
+     * 配置缓存管理器，替换系统默认的cacheManager {@link org.springframework.boot.autoconfigure.cache.RedisCacheConfiguration}
      *
      * @param redisConnectionFactory redis连接工厂
      * @return CacheManager
      */
-    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
-    @Primary
-    @Bean("redisCacheManager")
+    @SuppressWarnings({"SpringJavaInjectionPointsAutowiringInspection", "JavadocReference"})
+    @Bean
+    @ConditionalOnMissingBean({CacheManager.class})
     public RedisCacheManager cacheManager(CacheProperties cacheProperties, CacheManagerCustomizers cacheManagerCustomizers, ObjectProvider<RedisCacheConfiguration> redisCacheConfiguration, RedisConnectionFactory redisConnectionFactory, @Autowired(required = false) RedisSerializer<Object> redisSerializer) {
         RedisCacheWriter redisCacheWriter = RedisCacheWriter.nonLockingRedisCacheWriter(redisConnectionFactory);
         RedisCacheConfiguration cacheConfiguration = this.determineConfiguration(cacheProperties, redisCacheConfiguration, redisSerializer);
