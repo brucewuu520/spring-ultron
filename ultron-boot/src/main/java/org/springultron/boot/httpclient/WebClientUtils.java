@@ -15,9 +15,9 @@ import java.util.Map;
  * @author brucewuu
  * @date 2019-06-17 19:00
  */
-public final class WebClientUtil {
+public final class WebClientUtils {
 
-    private WebClientUtil() {
+    private WebClientUtils() {
     }
 
     private static volatile WebClient INSTANCE;
@@ -25,11 +25,11 @@ public final class WebClientUtil {
     public static WebClient getInstance() {
         WebClient webClient = INSTANCE;
         if (null == webClient) {
-            synchronized (WebClientUtil.class) {
+            synchronized (WebClientUtils.class) {
                 webClient = INSTANCE;
                 if (null == webClient) {
                     webClient = WebClient.create();
-                    WebClientUtil.INSTANCE = webClient;
+                    WebClientUtils.INSTANCE = webClient;
                 }
             }
         }
@@ -37,7 +37,7 @@ public final class WebClientUtil {
     }
 
     public static void setInstance(WebClient.Builder builder) {
-        WebClientUtil.INSTANCE = builder.build();
+        WebClientUtils.INSTANCE = builder.build();
     }
 
     /**
