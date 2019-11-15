@@ -3,13 +3,15 @@ package org.springultron.redis.config;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration;
 import org.springframework.boot.autoconfigure.cache.CacheManagerCustomizer;
 import org.springframework.boot.autoconfigure.cache.CacheManagerCustomizers;
 import org.springframework.boot.autoconfigure.cache.CacheProperties;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
+import org.springframework.cache.interceptor.CacheAspectSupport;
 import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,7 +40,9 @@ import java.util.stream.Collectors;
  * @date 2019/11/10 17:34
  */
 @Configuration(proxyBeanMethods = false)
-@AutoConfigureAfter({RedisAutoConfiguration.class})
+@ConditionalOnBean({CacheAspectSupport.class})
+//@AutoConfigureBefore({org.springframework.boot.autoconfigure.cache.RedisCacheConfiguration.class})
+@AutoConfigureAfter({CacheAutoConfiguration.class})
 @EnableConfigurationProperties({CacheProperties.class})
 public class RedisCacheAutoConfiguration extends CachingConfigurerSupport {
 
@@ -77,7 +81,7 @@ public class RedisCacheAutoConfiguration extends CachingConfigurerSupport {
      */
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Primary
-    @Bean
+    @Bean("redisCacheManager")
     public RedisCacheManager cacheManager(CacheProperties cacheProperties, CacheManagerCustomizers cacheManagerCustomizers, ObjectProvider<RedisCacheConfiguration> redisCacheConfiguration, RedisConnectionFactory redisConnectionFactory, @Autowired(required = false) RedisSerializer<Object> redisSerializer) {
         RedisCacheWriter redisCacheWriter = RedisCacheWriter.nonLockingRedisCacheWriter(redisConnectionFactory);
         RedisCacheConfiguration cacheConfiguration = this.determineConfiguration(cacheProperties, redisCacheConfiguration, redisSerializer);
