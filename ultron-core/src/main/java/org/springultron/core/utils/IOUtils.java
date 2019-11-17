@@ -17,7 +17,6 @@ public class IOUtils {
 
     /**
      * Represents the end-of-file (or stream).
-     * @since 2.5 (made public)
      */
     private static final int EOF = -1;
 
@@ -29,9 +28,9 @@ public class IOUtils {
 
     /**
      * 输入流转String 默认UTF-8编码
+     *
      * @param input 输入流
-     * @return
-     * @throws IOException
+     * @throws IOException if an I/O error occurs
      */
     public static String toString(final InputStream input) throws IOException {
         return toString(input, StandardCharsets.UTF_8);
@@ -67,12 +66,11 @@ public class IOUtils {
      * number of bytes cannot be returned as an int. For large streams
      * use the <code>copyLarge(InputStream, OutputStream)</code> method.
      *
-     * @param input the <code>InputStream</code> to read from
+     * @param input  the <code>InputStream</code> to read from
      * @param output the <code>OutputStream</code> to write to
      * @return the number of bytes copied, or -1 if &gt; Integer.MAX_VALUE
      * @throws NullPointerException if the input or output is null
      * @throws IOException          if an I/O error occurs
-     * @since 1.1
      */
     public static int copy(final InputStream input, final OutputStream output) throws IOException {
         final long count = copyLarge(input, output);
@@ -89,13 +87,12 @@ public class IOUtils {
      * This method buffers the input internally, so there is no need to use a <code>BufferedInputStream</code>.
      * <p>
      *
-     * @param input the <code>InputStream</code> to read from
-     * @param output the <code>OutputStream</code> to write to
+     * @param input      the <code>InputStream</code> to read from
+     * @param output     the <code>OutputStream</code> to write to
      * @param bufferSize the bufferSize used to copy from the input to the output
      * @return the number of bytes copied
      * @throws NullPointerException if the input or output is null
      * @throws IOException          if an I/O error occurs
-     * @since 2.5
      */
     public static long copy(final InputStream input, final OutputStream output, final int bufferSize) throws IOException {
         return copyLarge(input, output, new byte[bufferSize]);
@@ -110,12 +107,11 @@ public class IOUtils {
      * <p>
      * This method uses {@link InputStreamReader}.
      *
-     * @param input the <code>InputStream</code> to read from
-     * @param output the <code>Writer</code> to write to
+     * @param input         the <code>InputStream</code> to read from
+     * @param output        the <code>Writer</code> to write to
      * @param inputEncoding the encoding to use for the input stream, null means platform default
      * @throws NullPointerException if the input or output is null
      * @throws IOException          if an I/O error occurs
-     * @since 2.3
      */
     public static void copy(final InputStream input, final Writer output, final Charset inputEncoding) throws IOException {
         final InputStreamReader in = new InputStreamReader(input, Charsets.toCharset(inputEncoding));
@@ -133,12 +129,11 @@ public class IOUtils {
      * number of chars cannot be returned as an int. For large streams
      * use the <code>copyLarge(Reader, Writer)</code> method.
      *
-     * @param input the <code>Reader</code> to read from
+     * @param input  the <code>Reader</code> to read from
      * @param output the <code>Writer</code> to write to
      * @return the number of characters copied, or -1 if &gt; Integer.MAX_VALUE
      * @throws NullPointerException if the input or output is null
      * @throws IOException          if an I/O error occurs
-     * @since 1.1
      */
     public static int copy(final Reader input, final Writer output) throws IOException {
         final long count = copyLarge(input, output);
@@ -157,12 +152,11 @@ public class IOUtils {
      * <p>
      * The buffer size is given by {@link #DEFAULT_BUFFER_SIZE}.
      *
-     * @param input the <code>InputStream</code> to read from
+     * @param input  the <code>InputStream</code> to read from
      * @param output the <code>OutputStream</code> to write to
      * @return the number of bytes copied
      * @throws NullPointerException if the input or output is null
      * @throws IOException          if an I/O error occurs
-     * @since 1.3
      */
     public static long copyLarge(final InputStream input, final OutputStream output) throws IOException {
         return copy(input, output, DEFAULT_BUFFER_SIZE);
@@ -176,13 +170,12 @@ public class IOUtils {
      * <code>BufferedInputStream</code>.
      * <p>
      *
-     * @param input the <code>InputStream</code> to read from
+     * @param input  the <code>InputStream</code> to read from
      * @param output the <code>OutputStream</code> to write to
      * @param buffer the buffer to use for the copy
      * @return the number of bytes copied
      * @throws NullPointerException if the input or output is null
      * @throws IOException          if an I/O error occurs
-     * @since 2.2
      */
     public static long copyLarge(final InputStream input, final OutputStream output, final byte[] buffer) throws IOException {
         long count = 0;
@@ -202,12 +195,11 @@ public class IOUtils {
      * <p>
      * The buffer size is given by {@link #DEFAULT_BUFFER_SIZE}.
      *
-     * @param input the <code>Reader</code> to read from
+     * @param input  the <code>Reader</code> to read from
      * @param output the <code>Writer</code> to write to
      * @return the number of characters copied
      * @throws NullPointerException if the input or output is null
      * @throws IOException          if an I/O error occurs
-     * @since 1.3
      */
     public static long copyLarge(final Reader input, final Writer output) throws IOException {
         return copyLarge(input, output, new char[DEFAULT_BUFFER_SIZE]);
@@ -220,13 +212,12 @@ public class IOUtils {
      * <code>BufferedReader</code>.
      * <p>
      *
-     * @param input the <code>Reader</code> to read from
+     * @param input  the <code>Reader</code> to read from
      * @param output the <code>Writer</code> to write to
      * @param buffer the buffer to be used for the copy
      * @return the number of characters copied
      * @throws NullPointerException if the input or output is null
      * @throws IOException          if an I/O error occurs
-     * @since 2.2
      */
     public static long copyLarge(final Reader input, final Writer output, final char[] buffer) throws IOException {
         long count = 0;
