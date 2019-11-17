@@ -47,6 +47,30 @@ public class RSA {
     }
 
     /**
+     * 生成RSA签名秘钥对
+     *
+     * @param algorithms 算法 {@link RsaAlgorithms}
+     */
+    public static KeyPair generateKeyPair(RsaAlgorithms algorithms) throws NoSuchAlgorithmException {
+        int keySizeInBits;
+        switch (algorithms) {
+            case RSA_SHA256:
+                keySizeInBits = 2048;
+                break;
+            case RSA_SHA384:
+                keySizeInBits = 3072;
+                break;
+            case RSA_SHA512:
+                keySizeInBits = 4096;
+                break;
+            default:
+                keySizeInBits = 1024;
+                break;
+        }
+        return generateKeyPair(keySizeInBits);
+    }
+
+    /**
      * 获取公钥字符串 base64
      *
      * @param keyPair {@link KeyPair}
