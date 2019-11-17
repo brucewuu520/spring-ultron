@@ -2,6 +2,7 @@ package org.springultron.core.utils;
 
 import org.springframework.core.io.*;
 import org.springframework.util.Assert;
+import org.springultron.core.pool.StringPool;
 
 import java.io.IOException;
 
@@ -61,7 +62,7 @@ public class ResourceUtils extends org.springframework.util.ResourceUtils {
             return IOUtils.toString(getResource(resourceLocation).getInputStream());
         } catch (IOException e) {
             e.printStackTrace();
-            return StringUtils.EMPTY;
+            return StringPool.EMPTY;
         }
     }
 }

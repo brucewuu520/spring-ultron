@@ -4,6 +4,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.util.UriUtils;
+import org.springultron.core.pool.StringPool;
 
 import java.io.File;
 import java.net.URL;
@@ -28,13 +29,13 @@ public class FileUtils extends FileCopyUtils {
     public static String getJarPath() {
         String path = null;
         try {
-            URL url = FileUtils.class.getResource(StringUtils.SLASH).toURI().toURL();
+            URL url = FileUtils.class.getResource(StringPool.SLASH).toURI().toURL();
             path = FileUtils.toFilePath(url);
         } catch (Exception e) {
             e.printStackTrace();
         }
         if (null == path) {
-            path = FileUtils.class.getResource(StringUtils.EMPTY).getPath();
+            path = FileUtils.class.getResource(StringPool.EMPTY).getPath();
             path = new File(path).getParentFile().getParentFile().getAbsolutePath();
         }
         return path;

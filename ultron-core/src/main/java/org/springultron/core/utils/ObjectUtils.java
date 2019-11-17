@@ -1,5 +1,7 @@
 package org.springultron.core.utils;
 
+import org.springultron.core.pool.StringPool;
+
 import java.util.Objects;
 
 /**
@@ -97,7 +99,7 @@ public class ObjectUtils extends org.springframework.util.ObjectUtils {
      * @since 2.0
      */
     public static String toString(final Object obj) {
-        return Objects.toString(obj, StringUtils.EMPTY);
+        return Objects.toString(obj, StringPool.EMPTY);
     }
 
     /**

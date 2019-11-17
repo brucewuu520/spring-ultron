@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
-import java.util.function.Predicate;
 
 /**
  * Servlet 工具
@@ -48,50 +47,6 @@ public class WebUtils extends org.springframework.web.util.WebUtils {
                 .map(a -> (ServletRequestAttributes) a)
                 .map(ServletRequestAttributes::getResponse)
                 .orElse(null);
-    }
-
-    /**
-     * 获取ip
-     *
-     * @return {String}
-     */
-    @Nullable
-    public static String getIP() {
-        return getIP(WebUtils.getRequest());
-    }
-
-    /**
-     * 获取ip
-     *
-     * @param request HttpServletRequest
-     * @return ip address
-     */
-    @Nullable
-    public static String getIP(HttpServletRequest request) {
-        if (null == request) {
-            return null;
-        }
-        final Predicate<String> IP_PREDICATE = (ip) -> StringUtils.isBlank(ip) || "unknown".equalsIgnoreCase(ip);
-        String ip = request.getHeader("X-Requested-For");
-        if (IP_PREDICATE.test(ip)) {
-            ip = request.getHeader("X-Forwarded-For");
-        }
-        if (IP_PREDICATE.test(ip)) {
-            ip = request.getHeader("Proxy-Client-IP");
-        }
-        if (IP_PREDICATE.test(ip)) {
-            ip = request.getHeader("WL-Proxy-Client-IP");
-        }
-        if (IP_PREDICATE.test(ip)) {
-            ip = request.getHeader("HTTP_CLIENT_IP");
-        }
-        if (IP_PREDICATE.test(ip)) {
-            ip = request.getHeader("HTTP_X_FORWARDED_FOR");
-        }
-        if (IP_PREDICATE.test(ip)) {
-            ip = request.getRemoteAddr();
-        }
-        return StringUtils.isBlank(ip) ? null : ip.split(",")[0];
     }
 
     /**

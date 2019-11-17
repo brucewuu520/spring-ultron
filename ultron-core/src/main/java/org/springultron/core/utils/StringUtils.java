@@ -1,10 +1,11 @@
 package org.springultron.core.utils;
 
+import org.springultron.core.pool.StringPool;
+
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -18,20 +19,6 @@ public class StringUtils extends org.springframework.util.StringUtils {
     private StringUtils() {
     }
 
-    /**
-     * 空格
-     */
-    public static final String SPACE = " ";
-    /**
-     * 空字符串
-     */
-    public static final String EMPTY = "";
-
-    public static final String SLASH = "/";
-    /**
-     * 换行符
-     */
-    public static final String LINE_SEPARATOR = System.lineSeparator();
 
     public static boolean isNotEmpty(String str) {
         return !StringUtils.isEmpty(str);
@@ -115,9 +102,6 @@ public class StringUtils extends org.springframework.util.StringUtils {
      * @param cs1 the first CharSequence, may be {@code null}
      * @param cs2 the second CharSequence, may be {@code null}
      * @return {@code true} if the CharSequences are equal (case-sensitive), or both {@code null}
-     * @see Object#equals(Object)
-     * @see #equalsIgnoreCase(CharSequence, CharSequence)
-     * @since 3.0 Changed signature from equals(String, String) to equals(CharSequence, CharSequence)
      */
     public static boolean equals(final CharSequence cs1, final CharSequence cs2) {
         if (cs1 == cs2) {
@@ -143,96 +127,6 @@ public class StringUtils extends org.springframework.util.StringUtils {
     }
 
     /**
-     * <p>Compares two CharSequences, returning {@code true} if they represent
-     * equal sequences of characters, ignoring case.</p>
-     *
-     * <p>{@code null}s are handled without exceptions. Two {@code null}
-     * references are considered equal. The comparison is <strong>case insensitive</strong>.</p>
-     *
-     * <pre>
-     * Strings.equalsIgnoreCase(null, null)   = true
-     * Strings.equalsIgnoreCase(null, "abc")  = false
-     * Strings.equalsIgnoreCase("abc", null)  = false
-     * Strings.equalsIgnoreCase("abc", "abc") = true
-     * Strings.equalsIgnoreCase("abc", "ABC") = true
-     * </pre>
-     *
-     * @param cs1 the first CharSequence, may be {@code null}
-     * @param cs2 the second CharSequence, may be {@code null}
-     * @return {@code true} if the CharSequences are equal (case-insensitive), or both {@code null}
-     * @see #equals(CharSequence, CharSequence)
-     * @since 3.0 Changed signature from equalsIgnoreCase(String, String) to equalsIgnoreCase(CharSequence, CharSequence)
-     */
-    public static boolean equalsIgnoreCase(final CharSequence cs1, final CharSequence cs2) {
-        if (cs1 == cs2) {
-            return true;
-        }
-        if (cs1 == null || cs2 == null) {
-            return false;
-        }
-        if (cs1.length() != cs2.length()) {
-            return false;
-        }
-        return regionMatches(cs1, true, 0, cs2, 0, cs1.length());
-    }
-
-    /**
-     * Green implementation of regionMatches.
-     *
-     * @param cs         the {@code CharSequence} to be processed
-     * @param ignoreCase whether or not to be case insensitive
-     * @param thisStart  the index to start on the {@code cs} CharSequence
-     * @param substring  the {@code CharSequence} to be looked for
-     * @param start      the index to start on the {@code substring} CharSequence
-     * @param length     character length of the region
-     * @return whether the region matched
-     */
-    private static boolean regionMatches(final CharSequence cs, final boolean ignoreCase, final int thisStart,
-                                         final CharSequence substring, final int start, final int length) {
-        if (cs instanceof String && substring instanceof String) {
-            return ((String) cs).regionMatches(ignoreCase, thisStart, (String) substring, start, length);
-        }
-        int index1 = thisStart;
-        int index2 = start;
-        int tmpLen = length;
-
-        // Extract these first so we detect NPEs the same as the java.lang.String version
-        final int srcLen = cs.length() - thisStart;
-        final int otherLen = substring.length() - start;
-
-        // Check for invalid parameters
-        if (thisStart < 0 || start < 0 || length < 0) {
-            return false;
-        }
-
-        // Check that the regions are long enough
-        if (srcLen < length || otherLen < length) {
-            return false;
-        }
-
-        while (tmpLen-- > 0) {
-            final char c1 = cs.charAt(index1++);
-            final char c2 = substring.charAt(index2++);
-
-            if (c1 == c2) {
-                continue;
-            }
-
-            if (!ignoreCase) {
-                return false;
-            }
-
-            // The same check as in String.regionMatches():
-            if (Character.toUpperCase(c1) != Character.toUpperCase(c2)
-                    && Character.toLowerCase(c1) != Character.toLowerCase(c2)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    /**
      * <p>Returns either the passed in String,
      * or if the String is {@code null}, an empty String ("").</p>
      *
@@ -249,7 +143,7 @@ public class StringUtils extends org.springframework.util.StringUtils {
      * @see String#valueOf(Object)
      */
     public static String defaultString(final String str) {
-        return defaultString(str, EMPTY);
+        return defaultString(str, StringPool.EMPTY);
     }
 
     /**
@@ -382,34 +276,7 @@ public class StringUtils extends org.springframework.util.StringUtils {
             start = end;
             end = temp;
         }
-        return new StringBuilder(len + start - end + overlay.length() + 1)
-                .append(str, 0, start)
-                .append(overlay)
-                .append(str.substring(end))
-                .toString();
-    }
-
-    /**
-     * Convert a {@code Collection} into a delimited {@code String} (e.g., CSV).
-     * <p>Useful for {@code toString()} implementations.
-     *
-     * @param coll the {@code Collection} to converter
-     * @return the delimited {@code String}
-     */
-    public static String join(Collection<?> coll) {
-        return StringUtils.collectionToCommaDelimitedString(coll);
-    }
-
-    /**
-     * Convert a {@code Collection} into a delimited {@code String} (e.g. CSV).
-     * <p>Useful for {@code toString()} implementations.
-     *
-     * @param coll      the {@code Collection} to converter
-     * @param delimiter the delimiter to use (typically a ",")
-     * @return the delimited {@code String}
-     */
-    public static String join(Collection<?> coll, String delimiter) {
-        return StringUtils.collectionToDelimitedString(coll, delimiter);
+        return str.substring(0, start) + overlay + str.substring(end);
     }
 
     public static byte[] getBytes(final String string) {
@@ -706,7 +573,7 @@ public class StringUtils extends org.springframework.util.StringUtils {
      *                          separators are treated as one separator.
      * @return an array of parsed Strings, {@code null} if null String input
      */
-    @SuppressWarnings({"ToArrayCallWithZeroLengthArrayArgument", "Duplicates"})
+    @SuppressWarnings({"ToArrayCallWithZeroLengthArrayArgument", "Duplicates", "ConstantConditions"})
     private static String[] splitWorker(final String str, final char separatorChar, final boolean preserveAllTokens) {
         // Performance tuned for 2.0 (JDK1.4)
         if (str == null) {

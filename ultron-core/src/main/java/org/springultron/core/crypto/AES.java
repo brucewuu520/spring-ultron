@@ -13,7 +13,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
 /**
- * AES加密解密算法实现
+ * AES加密/解密算法实现
  * 高级加密标准（英语：Advanced Encryption Standard，缩写：AES）
  * 对于Java中AES的默认模式是：AES/ECB/PKCS5Padding，如果使用CryptoJS，请调整为：padding: CryptoJS.pad.Pkcs7
  *
@@ -197,7 +197,7 @@ public class AES {
             return decrypted;
         }
     }
-//
+
 //    public static void main(String[] args) {
 ////        System.err.println(generateKey(192));
 //        String key = "nvJ0hh3EbeD/CoYLKVA6W8McjrXKYLOl";

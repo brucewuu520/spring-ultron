@@ -17,7 +17,7 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 
 /**
- * RSA公钥/私钥/签名加密解密
+ * RSA公钥/私钥/签名/加密/解密算法实现
  * 默认补位方式为RSA/ECB/PKCS1Padding
  * <p>
  * 由于非对称加密速度极其缓慢，一般文件不使用它来加密而是使用对称加密
@@ -27,7 +27,6 @@ import java.security.spec.X509EncodedKeySpec;
  * @author brucewuu
  * @date 2019/10/28 22:36
  */
-@SuppressWarnings("WeakerAccess")
 public class RSA {
 
     private RSA() {
