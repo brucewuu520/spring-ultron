@@ -16,8 +16,8 @@ import org.springframework.core.annotation.Order;
 import org.springultron.boot.config.UltronAutoConfiguration;
 import org.springultron.boot.enums.LogLevel;
 import org.springultron.boot.props.UltronLogProperties;
+import org.springultron.core.pool.StringPool;
 import org.springultron.core.utils.Jackson;
-import org.springultron.core.utils.StringUtils;
 import org.springultron.core.utils.WebUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -69,9 +69,9 @@ public class RequestLogAspect {
         final long startTime = System.nanoTime();
         // 构建成一条长日志，避免并发下日志错乱
         StringBuilder reqLog = new StringBuilder(300);
-        reqLog.append(StringUtils.LINE_SEPARATOR);
+        reqLog.append(StringPool.LINE_SEPARATOR);
         reqLog.append("================ Start ================");
-        reqLog.append(StringUtils.LINE_SEPARATOR);
+        reqLog.append(StringPool.LINE_SEPARATOR);
         // 获取 @ApiLog 注解的描述信息
         String methodDescription = getAspectLogDescription(point);
         // 打印调用 controller 的全路径以及执行方法
@@ -79,16 +79,16 @@ public class RequestLogAspect {
                 .append(point.getSignature().getDeclaringTypeName())
                 .append(".")
                 .append(point.getSignature().getName());
-        reqLog.append(StringUtils.LINE_SEPARATOR);
+        reqLog.append(StringPool.LINE_SEPARATOR);
         // 打印请求 url
         reqLog.append("URL            : ").append(request.getRequestURL());
-        reqLog.append(StringUtils.LINE_SEPARATOR);
+        reqLog.append(StringPool.LINE_SEPARATOR);
         // 打印描述信息
         reqLog.append("Description    : ").append(methodDescription);
-        reqLog.append(StringUtils.LINE_SEPARATOR);
+        reqLog.append(StringPool.LINE_SEPARATOR);
         // 打印 Http method
         reqLog.append("HTTP Method    : ").append(request.getMethod());
-        reqLog.append(StringUtils.LINE_SEPARATOR);
+        reqLog.append(StringPool.LINE_SEPARATOR);
         if (LogLevel.HEADERS.equals(ultronLogProperties.getLevel())) {
             // 打印请求头
             Enumeration<String> headers = request.getHeaderNames();
@@ -96,15 +96,15 @@ public class RequestLogAspect {
                 String headerName = headers.nextElement();
                 String headerValue = request.getHeader(headerName);
                 reqLog.append("HTTP Header    : ").append(headerName).append("=").append(headerValue);
-                reqLog.append(StringUtils.LINE_SEPARATOR);
+                reqLog.append(StringPool.LINE_SEPARATOR);
             }
         }
         // 打印请求的 IP
         reqLog.append("IP             : ").append(request.getRemoteAddr());
-        reqLog.append(StringUtils.LINE_SEPARATOR);
+        reqLog.append(StringPool.LINE_SEPARATOR);
         // 打印请求入参
         reqLog.append("Request Args   : ").append(Jackson.toJson(point.getArgs()));
-        reqLog.append(StringUtils.LINE_SEPARATOR);
+        reqLog.append(StringPool.LINE_SEPARATOR);
         try {
             // 执行请求获取返回值
             Object result = point.proceed();
@@ -112,12 +112,12 @@ public class RequestLogAspect {
             reqLog.append("Response Body  : ").append(Jackson.toJson(result));
             return result;
         } finally {
-            reqLog.append(StringUtils.LINE_SEPARATOR);
+            reqLog.append(StringPool.LINE_SEPARATOR);
             // 执行耗时
             reqLog.append("Time-Consuming : ").append(TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime)).append(" ms");
-            reqLog.append(StringUtils.LINE_SEPARATOR);
+            reqLog.append(StringPool.LINE_SEPARATOR);
             reqLog.append("================ End ================");
-            reqLog.append(StringUtils.LINE_SEPARATOR);
+            reqLog.append(StringPool.LINE_SEPARATOR);
             log.info(reqLog.toString());
         }
     }

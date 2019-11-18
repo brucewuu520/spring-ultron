@@ -8,20 +8,20 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @author brucewuu
  * @date 2019/11/11 14:31
  */
-@ConfigurationProperties(prefix = "ultron.async")
-public class UltronAsyncProperties {
+@ConfigurationProperties(prefix = "ultron.task")
+public class UltronTaskProperties {
     /**
-     * 核心线程数，默认：2
+     * 核心线程数，默认：3
      */
-    private int corePoolSize = 2;
+    private int corePoolSize = 3;
     /**
-     * 线程池最大数量，默认：100
+     * 线程池最大数量，默认：300
      */
-    private int maxPoolSize = 100;
+    private int maxPoolSize = 300;
     /**
-     * 线程池队列容量，默认：10000
+     * 线程池队列容量，默认：30000
      */
-    private int queueCapacity = 10000;
+    private int queueCapacity = 30000;
     /**
      * 空闲线程存活时间，默认：300秒
      */
@@ -29,7 +29,7 @@ public class UltronAsyncProperties {
     /**
      * 线程名称前缀
      */
-    private String threadNamePrefix = "ultron-async-executor-";
+    private String threadNamePrefix = "ultron-task-";
 
     public int getCorePoolSize() {
         return corePoolSize;

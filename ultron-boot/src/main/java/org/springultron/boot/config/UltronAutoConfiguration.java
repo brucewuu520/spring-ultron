@@ -2,7 +2,7 @@ package org.springultron.boot.config;
 
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
-import org.springultron.boot.props.UltronAsyncProperties;
+import org.springultron.boot.props.UltronTaskProperties;
 import org.springultron.boot.props.UltronLogProperties;
 import org.springultron.boot.props.UltronUploadProperties;
 
@@ -14,7 +14,7 @@ import org.springultron.boot.props.UltronUploadProperties;
  */
 @Configuration(proxyBeanMethods = false)
 @EnableConfigurationProperties({
-        UltronAsyncProperties.class,
+        UltronTaskProperties.class,
         UltronLogProperties.class,
         UltronUploadProperties.class
 })
