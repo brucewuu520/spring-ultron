@@ -27,7 +27,7 @@ import java.security.spec.X509EncodedKeySpec;
  * @author brucewuu
  * @date 2019/10/28 22:36
  */
-public class RSA {
+public final class RSA {
 
     private RSA() {
     }

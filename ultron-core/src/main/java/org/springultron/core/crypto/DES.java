@@ -23,7 +23,7 @@ import java.security.NoSuchAlgorithmException;
  * @author brucewuu
  * @date 2019/11/17 16:04
  */
-public class DES {
+public final class DES {
     private DES() {
     }
 

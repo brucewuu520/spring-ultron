@@ -17,7 +17,7 @@ import java.security.NoSuchAlgorithmException;
  * @author brucewuu
  * @date 2019-06-06 10:44
  */
-public class DigestUtils extends org.springframework.util.DigestUtils {
+public final class DigestUtils extends org.springframework.util.DigestUtils {
 
     private static final int STREAM_BUFFER_LENGTH = 1024;
 

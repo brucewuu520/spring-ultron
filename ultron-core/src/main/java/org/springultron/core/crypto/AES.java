@@ -20,7 +20,7 @@ import java.util.Arrays;
  * @author brucewuu
  * @date 2019/10/28 11:38
  */
-public class AES {
+public final class AES {
 
     private AES() {
     }
