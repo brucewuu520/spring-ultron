@@ -20,9 +20,9 @@ import java.util.List;
  * @author brucewuu
  * @date 2019-05-28 10:58
  */
-@Configuration(proxyBeanMethods = false)
-@EnableTransactionManagement
 @MapperScan("com.*.*.mapper")
+@EnableTransactionManagement
+@Configuration(proxyBeanMethods = false)
 public class MybatisPlusConfiguration {
     /**
      * 分页插件
