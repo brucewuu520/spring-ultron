@@ -836,7 +836,8 @@ public class RSA {
         try {
             final int dataLength = data.length;
             final int maxBlockSize = blockSize < 0 ? dataLength : blockSize;
-            if (dataLength <= maxBlockSize) { // 不足分段
+            // 不足分段
+            if (dataLength <= maxBlockSize) {
                 return cipher.doFinal(data, 0, dataLength);
             }
             outputStream = new ByteArrayOutputStream();
