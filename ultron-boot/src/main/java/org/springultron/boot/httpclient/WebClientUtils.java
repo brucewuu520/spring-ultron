@@ -149,18 +149,18 @@ public final class WebClientUtils {
     /**
      * 发起GET请求
      *
-     * @param targetUrl  请求URL
-     * @param returnType 返回值类型
-     * @param headerName Header Name
-     * @param headers    Header Value
-     * @param <T>        返回值泛型
+     * @param targetUrl   请求URL
+     * @param returnType  返回值类型
+     * @param headerName  Header Name
+     * @param headerValue Header Value
+     * @param <T>         返回值泛型
      * @return 返回值Mono对象
      */
-    public static <T> Mono<T> get(String targetUrl, Class<T> returnType, String headerName, String... headers) {
+    public static <T> Mono<T> get(String targetUrl, String headerName, String headerValue, Class<T> returnType) {
         return getInstance()
                 .get()
                 .uri(targetUrl)
-                .header(headerName, headers)
+                .header(headerName, headerValue)
                 .retrieve()
                 .bodyToMono(returnType);
     }
@@ -174,7 +174,7 @@ public final class WebClientUtils {
      * @param <T>        返回值泛型
      * @return 返回值Mono对象
      */
-    public static <T> Mono<T> get(final String targetUrl, final MultiValueMap<String, String> headerMap, final Class<T> returnType) {
+    public static <T> Mono<T> get(String targetUrl, MultiValueMap<String, String> headerMap, Class<T> returnType) {
         return getInstance()
                 .get()
                 .uri(targetUrl)
@@ -190,15 +190,15 @@ public final class WebClientUtils {
      * @param uriVariables url路径参数(id=1,name=tom)
      * @param returnType   返回值类型
      * @param headerName   Header Name
-     * @param headers      Header Value
+     * @param headerValue  Header Value
      * @param <T>          返回值泛型
      * @return 返回值Mono对象
      */
-    public static <T> Mono<T> get(String baseUrl, Map<String, ?> uriVariables, Class<T> returnType, String headerName, String... headers) {
+    public static <T> Mono<T> get(String baseUrl, Map<String, ?> uriVariables, String headerName, String headerValue, Class<T> returnType) {
         return getInstance()
                 .get()
                 .uri(baseUrl, uriVariables)
-                .header(headerName, headers)
+                .header(headerName, headerValue)
                 .retrieve()
                 .bodyToMono(returnType);
     }
@@ -226,19 +226,19 @@ public final class WebClientUtils {
     /**
      * 发起POST请求（contentType: application/json;charset=UTF-8）
      *
-     * @param baseUrl    请求地址
-     * @param reqBody    请求body
-     * @param returnType 返回值类型
-     * @param headerName Header Name
-     * @param headers    Header Value
-     * @param <T>        返回值泛型
+     * @param baseUrl     请求地址
+     * @param reqBody     请求body
+     * @param returnType  返回值类型
+     * @param headerName  Header Name
+     * @param headerValue Header Value
+     * @param <T>         返回值泛型
      * @return 返回值Mono对象
      */
-    public static <T> Mono<T> postJSON(String baseUrl, Object reqBody, Class<T> returnType, String headerName, String... headers) {
+    public static <T> Mono<T> postJSON(String baseUrl, String headerName, String headerValue, Object reqBody, Class<T> returnType) {
         return getInstance()
                 .post()
                 .uri(baseUrl)
-                .header(headerName, headers)
+                .header(headerName, headerValue)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(reqBody)
@@ -256,11 +256,11 @@ public final class WebClientUtils {
      * @param <T>        返回值泛型
      * @return 返回值Mono对象
      */
-    public static <T> Mono<T> postJSON(final String baseUrl, final MultiValueMap<String, String> headerMap, final Object reqBody, final Class<T> returnType) {
+    public static <T> Mono<T> postJSON(String baseUrl, Map<String, String> headerMap, Object reqBody, Class<T> returnType) {
         return getInstance()
                 .post()
                 .uri(baseUrl)
-                .headers(headers -> headers.addAll(headerMap))
+                .headers(headers -> headers.setAll(headerMap))
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(reqBody)
@@ -290,17 +290,38 @@ public final class WebClientUtils {
      * 发起POST 表单请求（contentType: application/x-www-form-urlencoded）
      *
      * @param baseUrl      请求地址
+     * @param headerName   Header Name
+     * @param headerValue  Header Value
+     * @param formInserter 表单参数
+     * @param returnType   返回值类型
+     * @param <T>          返回值泛型
+     * @return 返回值Mono对象
+     */
+    public static <T> Mono<T> postForm(String baseUrl, String headerName, String headerValue, BodyInserters.FormInserter<String> formInserter, Class<T> returnType) {
+        return getInstance()
+                .post()
+                .uri(baseUrl)
+                .header(headerName, headerValue)
+                .body(formInserter)
+                .retrieve()
+                .bodyToMono(returnType);
+    }
+
+    /**
+     * 发起POST 表单请求（contentType: application/x-www-form-urlencoded）
+     *
+     * @param baseUrl      请求地址
      * @param headerMap    headers
      * @param formInserter 表单参数
      * @param returnType   返回值类型
      * @param <T>          返回值泛型
      * @return 返回值Mono对象
      */
-    public static <T> Mono<T> postForm(final String baseUrl, final MultiValueMap<String, String> headerMap, final BodyInserters.FormInserter<String> formInserter, final Class<T> returnType) {
+    public static <T> Mono<T> postForm(String baseUrl, Map<String, String> headerMap, BodyInserters.FormInserter<String> formInserter, Class<T> returnType) {
         return getInstance()
                 .post()
                 .uri(baseUrl)
-                .headers(headers -> headers.addAll(headerMap))
+                .headers(headers -> headers.setAll(headerMap))
                 .body(formInserter)
                 .retrieve()
                 .bodyToMono(returnType);

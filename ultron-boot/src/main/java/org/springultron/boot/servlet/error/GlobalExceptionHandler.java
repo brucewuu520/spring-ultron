@@ -43,8 +43,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Throwable.class)
     public ApiResult handleThrowable(Throwable e) {
-        log.error("未知异常: {}", e.getMessage(), e);
-        // 发送：未知异常异常事件
-        return ApiResult.failed("系统未知异常");
+        log.error("系统异常", e);
+        return ApiResult.failed(e.getMessage());
     }
 }
