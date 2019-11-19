@@ -52,7 +52,7 @@
         <dependency>
             <groupId>org.springultron</groupId>
             <artifactId>ultron-boot</artifactId>
-            <version>${spring-ultron.version}</version>
+            <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>

@@ -17,7 +17,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 @ConditionalOnClass({WebClient.class})
 @ConditionalOnBean({ReactorLoadBalancerExchangeFilterFunction.class})
 public class LBWebClientConfiguration {
-
     /**
      * 负载均衡的 WebClient
      *
