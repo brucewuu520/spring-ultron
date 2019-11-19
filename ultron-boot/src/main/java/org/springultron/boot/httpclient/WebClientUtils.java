@@ -336,7 +336,7 @@ public final class WebClientUtils {
      * @param <T>        返回值泛型
      * @return 返回值Mono对象
      */
-    public static <T> Mono<T> postForm(String baseUrl, MultiValueMap<String, String> formData, Class<T> returnType) {
+    public static <T> Mono<T> postForm(String baseUrl, Object formData, Class<T> returnType) {
         return getInstance()
                 .post()
                 .uri(baseUrl)
