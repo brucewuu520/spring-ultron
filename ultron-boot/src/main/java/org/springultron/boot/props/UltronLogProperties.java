@@ -12,9 +12,9 @@ import org.springultron.boot.enums.LogLevel;
 @ConfigurationProperties(LogLevel.ULTRON_LOG_PROPS_PREFIX)
 public class UltronLogProperties {
     /**
-     * 是否开启日志，默认开启
+     * 是否开启日志，默认关闭
      */
-    private boolean enable = true;
+    private boolean enable = false;
     /**
      * 日志等级
      */

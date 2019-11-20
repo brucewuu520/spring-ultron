@@ -36,7 +36,7 @@ import java.util.concurrent.TimeUnit;
 @Configuration(proxyBeanMethods = false)
 @AutoConfigureAfter(UltronAutoConfiguration.class)
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
-@ConditionalOnProperty(value = LogLevel.ULTRON_LOG_ENABLE, havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(value = LogLevel.ULTRON_LOG_ENABLE, havingValue = "false")
 public class RequestLogAspect {
     private static final Logger log = LoggerFactory.getLogger("RequestLogAspect");
 
@@ -64,8 +64,9 @@ public class RequestLogAspect {
         }
         // 开始打印请求日志
         final HttpServletRequest request = WebUtils.getRequest();
-        if (null == request)
+        if (null == request) {
             return point.proceed();
+        }
         final long startTime = System.nanoTime();
         // 构建成一条长日志，避免并发下日志错乱
         StringBuilder reqLog = new StringBuilder(300);

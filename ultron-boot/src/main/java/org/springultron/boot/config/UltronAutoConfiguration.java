@@ -1,7 +1,9 @@
 package org.springultron.boot.config;
 
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springultron.boot.props.UltronTaskProperties;
 import org.springultron.boot.props.UltronLogProperties;
 import org.springultron.boot.props.UltronUploadProperties;
@@ -19,5 +21,11 @@ import org.springultron.boot.props.UltronUploadProperties;
         UltronUploadProperties.class
 })
 public class UltronAutoConfiguration {
+
+    @Lazy
+    @Bean
+    public SpringUtils springUtils() {
+        return new SpringUtils();
+    }
 
 }
