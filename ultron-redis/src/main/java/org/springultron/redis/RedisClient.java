@@ -29,6 +29,24 @@ public class RedisClient {
         this.redisTemplate = redisTemplate;
     }
 
+    public StringRedisTemplate getStringRedisTemplate() {
+        return stringRedisTemplate;
+    }
+
+    public RedisTemplate<String, Object> getRedisTemplate() {
+        return redisTemplate;
+    }
+
+    /**
+     * 生成缓存key，以英文冒号隔开
+     *
+     * @param keys kes
+     * @return key string
+     */
+    public static String genKey(String... keys) {
+        return String.join(":", keys).toUpperCase();
+    }
+
     /**
      * 设置缓存键、值为String类型
      *
@@ -438,15 +456,17 @@ public class RedisClient {
      */
     public boolean delete(String... keys) {
         final int length = null == keys ? 0 : keys.length;
-        if (length == 0)
+        if (length == 0) {
             return true;
+        }
         Boolean result = null;
         if (length == 1) {
             result = redisTemplate.delete(keys[0]);
         } else {
             Long l = redisTemplate.delete(Arrays.asList(keys));
-            if (null != l && l > 0)
+            if (null != l && l > 0) {
                 result = true;
+            }
         }
         return null == result ? false : result;
     }
@@ -458,22 +478,9 @@ public class RedisClient {
      */
     public boolean deleteByPattern(String pattern) {
         Set<String> keys = redisTemplate.keys(pattern);
-        if (CollectionUtils.isEmpty(keys))
+        if (CollectionUtils.isEmpty(keys)) {
             return true;
+        }
         return Optional.ofNullable(redisTemplate.delete(keys)).map(l -> l > 0).orElse(Boolean.FALSE);
-    }
-
-    public RedisTemplate<String, Object> getRedisTemplate() {
-        return redisTemplate;
-    }
-
-    /**
-     * 生成缓存key，以英文冒号隔开
-     *
-     * @param keys kes
-     * @return key string
-     */
-    public static String getKey(String... keys) {
-        return String.join(":", keys).toUpperCase();
     }
 }

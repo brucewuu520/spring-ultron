@@ -31,7 +31,7 @@
         <dependency>
             <groupId>org.springultron</groupId>
             <artifactId>ultron-core</artifactId>
-            <version>${spring-ultron.version}</version>
+            <version>${project.parent.version}</version>
         </dependency>
     </dependencies>
 

@@ -40,6 +40,7 @@ public class RedisConfiguration {
      *
      * @return RedisSerializer<Object>
      */
+    @SuppressWarnings("deprecation")
     @Bean
     @ConditionalOnClass({ObjectMapper.class})
     @ConditionalOnMissingBean(name = {"redisSerializer"})
