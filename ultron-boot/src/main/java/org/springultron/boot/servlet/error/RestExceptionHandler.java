@@ -15,6 +15,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springultron.core.result.ApiResult;
 import org.springultron.core.result.ResultCode;
@@ -163,5 +164,17 @@ public class RestExceptionHandler {
     public ApiResult handleError(HttpMediaTypeNotAcceptableException e) {
         log.error("不接受的媒体类型: {}", e.getMessage());
         return ApiResult.failed(ResultCode.BAD_REQUEST.getCode(), "不接受的媒体类型");
+    }
+
+    /**
+     * 文件上传异常
+     *
+     * @param e 异常
+     * @return ApiResult
+     */
+    @ExceptionHandler(MultipartException.class)
+    public ApiResult handleError(MultipartException e) {
+        log.error("文件太大: {}", e.getMessage());
+        return ApiResult.failed(ResultCode.PAYLOAD_TOO_LARGE);
     }
 }

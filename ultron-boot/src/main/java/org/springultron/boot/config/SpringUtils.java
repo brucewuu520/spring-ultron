@@ -32,12 +32,12 @@ public class SpringUtils implements ApplicationContextAware, DisposableBean {
         return context.getBean(clazz);
     }
 
+    @SuppressWarnings("unchecked")
     @Nullable
     public static <T> T getBean(String beanId) {
         if (StringUtils.isEmpty(beanId) || null == context) {
             return null;
         }
-        //noinspection unchecked
         return (T) context.getBean(beanId);
     }
 
@@ -64,7 +64,7 @@ public class SpringUtils implements ApplicationContextAware, DisposableBean {
     }
 
     @Override
-    public void destroy() throws Exception {
+    public void destroy() {
         SpringUtils.context = null;
     }
 }

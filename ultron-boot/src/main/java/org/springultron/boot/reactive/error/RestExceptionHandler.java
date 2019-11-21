@@ -11,6 +11,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.bind.support.WebExchangeBindException;
+import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.server.ServerWebInputException;
 import org.springultron.core.result.ApiResult;
@@ -127,5 +128,17 @@ public class RestExceptionHandler {
     public Mono<ApiResult> handleError(ResponseStatusException e) {
         log.error("响应状态异常: {}", e.getMessage());
         return Mono.just(ApiResult.failed(ResultCode.BAD_REQUEST.getCode(), String.format("响应状态异常:%s", e.getReason())));
+    }
+
+    /**
+     * 文件上传异常
+     *
+     * @param e 异常
+     * @return ApiResult
+     */
+    @ExceptionHandler(MultipartException.class)
+    public Mono<ApiResult> handleError(MultipartException e) {
+        log.error("文件太大: {}", e.getMessage());
+        return Mono.just(ApiResult.failed(ResultCode.PAYLOAD_TOO_LARGE));
     }
 }

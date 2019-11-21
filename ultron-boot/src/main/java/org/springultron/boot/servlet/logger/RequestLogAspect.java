@@ -17,6 +17,7 @@ import org.springultron.boot.config.UltronAutoConfiguration;
 import org.springultron.boot.enums.LogLevel;
 import org.springultron.boot.props.UltronLogProperties;
 import org.springultron.core.pool.StringPool;
+import org.springultron.core.utils.IpUtils;
 import org.springultron.core.utils.Jackson;
 import org.springultron.core.utils.WebUtils;
 
@@ -101,7 +102,7 @@ public class RequestLogAspect {
             }
         }
         // 打印请求的 IP
-        reqLog.append("IP             : ").append(request.getRemoteAddr());
+        reqLog.append("IP             : ").append(IpUtils.getIP(request));
         reqLog.append(StringPool.LINE_SEPARATOR);
         // 打印请求入参
         reqLog.append("Request Args   : ").append(Jackson.toJson(point.getArgs()));

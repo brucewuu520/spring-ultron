@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplicat
 import org.springframework.core.annotation.Order;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springultron.core.exception.ApiException;
+import org.springultron.core.exception.ServiceException;
 import org.springultron.core.result.ApiResult;
 import org.springultron.core.result.ResultCode;
 import reactor.core.publisher.Mono;
@@ -29,8 +29,8 @@ public class GlobalExceptionHandler {
      * @param e 业务异常
      * @return REST 返回异常结果
      */
-    @ExceptionHandler(value = ApiException.class)
-    public Mono<ApiResult> handleApiException(ApiException e) {
+    @ExceptionHandler(value = ServiceException.class)
+    public Mono<ApiResult> handleApiException(ServiceException e) {
         log.error("自定义业务异常: {}", e.getMessage());
         return Mono.just(ApiResult.apiException(e));
     }
