@@ -12,7 +12,7 @@ import java.io.Serializable;
  * @date 2019-06-07 22:09
  */
 @ApiModel(description = "分页查询条件")
-public class Query implements Serializable {
+public class PageQuery implements Serializable {
     private static final long serialVersionUID = -8776470243161254413L;
     /**
      * 当前页

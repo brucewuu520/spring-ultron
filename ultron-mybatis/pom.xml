@@ -29,9 +29,9 @@
             <version>${mybatis-plus.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
-            <version>${swagger.version}</version>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-annotations</artifactId>
+            <version>1.5.22</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
