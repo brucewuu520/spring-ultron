@@ -64,7 +64,7 @@ public class SpringUtils implements ApplicationContextAware, DisposableBean {
     }
 
     @Override
-    public void destroy() throws Exception {
+    public void destroy() {
         SpringUtils.context = null;
     }
 }
