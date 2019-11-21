@@ -6,6 +6,7 @@ import org.springultron.core.pool.PatternPool;
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 /**
@@ -44,7 +45,7 @@ public class IpUtils {
         if (null == request) {
             return null;
         }
-        final Predicate<String> predicate = (ip) -> StringUtils.isBlank(ip) || "unknown".equalsIgnoreCase(ip);
+        final Predicate<String> predicate = (ip) -> StringUtils.isEmpty(ip) || "unknown".equalsIgnoreCase(ip);
         String ip = request.getHeader("X-Requested-For");
         if (predicate.test(ip)) {
             ip = request.getHeader("X-Forwarded-For");
@@ -71,7 +72,13 @@ public class IpUtils {
                 // 未知主机异常
             }
         }
-        return StringUtils.isBlank(ip) ? null : ip.split(",")[0];
+        return Optional.ofNullable(ip).map(p -> {
+            if (p.contains(",")) {
+                return p.split(",")[0];
+            } else {
+                return p;
+            }
+        }).orElse(null);
     }
 
     /**

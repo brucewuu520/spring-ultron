@@ -2,7 +2,7 @@ package org.springultron.core.result;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.springultron.core.exception.ApiException;
+import org.springultron.core.exception.ServiceException;
 
 import java.io.Serializable;
 import java.util.Optional;
@@ -61,6 +61,8 @@ public class ApiResult<T> implements Serializable {
 
     /**
      * 返回成功
+     *
+     * @param <T> 泛型标记
      */
     public static <T> ApiResult<T> success() {
         return new ApiResult<>(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage());
@@ -70,6 +72,7 @@ public class ApiResult<T> implements Serializable {
      * 返回成功
      *
      * @param message 提示信息
+     * @param <T>     泛型标记
      */
     public static <T> ApiResult<T> success(String message) {
         return new ApiResult<>(ResultCode.SUCCESS.getCode(), message);
@@ -79,6 +82,7 @@ public class ApiResult<T> implements Serializable {
      * 成功返回结果
      *
      * @param data 获取的数据
+     * @param <T>  泛型标记
      */
     public static <T> ApiResult<T> success(T data) {
         return new ApiResult<>(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), data);
@@ -89,6 +93,7 @@ public class ApiResult<T> implements Serializable {
      *
      * @param data    获取的数据
      * @param message 提示信息
+     * @param <T>     泛型标记
      */
     public static <T> ApiResult<T> success(T data, String message) {
         return new ApiResult<>(ResultCode.SUCCESS.getCode(), message, data);
@@ -96,6 +101,8 @@ public class ApiResult<T> implements Serializable {
 
     /**
      * 失败返回信息
+     *
+     * @param <T> 泛型标记
      */
     public static <T> ApiResult<T> failed() {
         return failed(ResultCode.FAILED);
@@ -104,7 +111,8 @@ public class ApiResult<T> implements Serializable {
     /**
      * 失败返回信息
      *
-     * @param errorCode 错误码
+     * @param errorCode 异常枚举
+     * @param <T>       泛型标记
      */
     public static <T> ApiResult<T> failed(IResultCode errorCode) {
         return new ApiResult<>(errorCode.getCode(), errorCode.getMessage());
@@ -114,6 +122,7 @@ public class ApiResult<T> implements Serializable {
      * 失败返回信息
      *
      * @param message 提示信息
+     * @param <T>     泛型标记
      */
     public static <T> ApiResult<T> failed(String message) {
         return new ApiResult<>(ResultCode.FAILED.getCode(), message);
@@ -124,13 +133,48 @@ public class ApiResult<T> implements Serializable {
      *
      * @param code    状态码
      * @param message 消息描述
+     * @param <T>     泛型标记
      */
     public static <T> ApiResult<T> failed(int code, String message) {
         return new ApiResult<>(code, message);
     }
 
     /**
+     * 根据状态判断返回成功or失败
+     *
+     * @param status 状态
+     * @param <T>    泛型标记
+     */
+    public static <T> ApiResult<T> status(boolean status) {
+        return status ? ApiResult.success() : ApiResult.failed();
+    }
+
+    /**
+     * 根据状态判断返回成功or失败
+     *
+     * @param status  状态
+     * @param message 异常信息
+     * @param <T>     泛型标记
+     */
+    public static <T> ApiResult<T> status(boolean status, String message) {
+        return status ? ApiResult.success() : ApiResult.failed(message);
+    }
+
+    /**
+     * 根据状态判断返回成功or失败
+     *
+     * @param status    状态
+     * @param errorCode 异常枚举
+     * @param <T>       泛型标记
+     */
+    public static <T> ApiResult<T> status(boolean status, IResultCode errorCode) {
+        return status ? ApiResult.success() : ApiResult.failed(errorCode);
+    }
+
+    /**
      * 请求验签失败
+     *
+     * @param <T> 泛型标记
      */
     public static <T> ApiResult<T> signFailed() {
         return failed(ResultCode.SIGN_FAILED);
@@ -138,6 +182,8 @@ public class ApiResult<T> implements Serializable {
 
     /**
      * 未认证
+     *
+     * @param <T> 泛型标记
      */
     public static <T> ApiResult<T> unauthorized() {
         return failed(ResultCode.UNAUTHORIZED);
@@ -145,6 +191,8 @@ public class ApiResult<T> implements Serializable {
 
     /**
      * 未认证
+     *
+     * @param <T> 泛型标记
      */
     public static <T> ApiResult<T> unauthorized(String message) {
         return failed(ResultCode.UNAUTHORIZED.getCode(), message);
@@ -152,6 +200,8 @@ public class ApiResult<T> implements Serializable {
 
     /**
      * 未授权
+     *
+     * @param <T> 泛型标记
      */
     public static <T> ApiResult<T> forbidden() {
         return failed(ResultCode.FORBIDDEN);
@@ -159,6 +209,8 @@ public class ApiResult<T> implements Serializable {
 
     /**
      * 未授权
+     *
+     * @param <T> 泛型标记
      */
     public static <T> ApiResult<T> forbidden(String message) {
         return failed(ResultCode.FORBIDDEN.getCode(), message);
@@ -170,7 +222,7 @@ public class ApiResult<T> implements Serializable {
      * @param resultCode IResultCode
      */
     public static void throwFail(IResultCode resultCode) {
-        throw new ApiException(resultCode.getMessage(), resultCode.getCode());
+        throw new ServiceException(resultCode.getMessage(), resultCode.getCode());
     }
 
     /**
@@ -179,16 +231,16 @@ public class ApiResult<T> implements Serializable {
      * @param message 异常信息
      */
     public static void throwFail(String message) {
-        throw new ApiException(message, ResultCode.FAILED.getCode());
+        throw new ServiceException(message, ResultCode.FAILED.getCode());
     }
 
     /**
      * REST API 异常返回
      *
-     * @param e 异常
-     * @return 返回值
+     * @param e   异常
+     * @param <T> 泛型标记
      */
-    public static <T> ApiResult<T> apiException(ApiException e) {
+    public static <T> ApiResult<T> apiException(ServiceException e) {
         return new ApiResult<>(e.getCode(), e.getMessage());
     }
 

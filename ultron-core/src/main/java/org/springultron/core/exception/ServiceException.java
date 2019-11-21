@@ -9,7 +9,7 @@ import org.springultron.core.result.ResultCode;
  * @author brucewuu
  * @date 2019-06-03 09:46
  */
-public class ApiException extends RuntimeException {
+public class ServiceException extends RuntimeException {
     private static final long serialVersionUID = 250919198459751841L;
 
     /**
@@ -17,33 +17,33 @@ public class ApiException extends RuntimeException {
      */
     private int code = ResultCode.API_EXCEPTION.getCode();
 
-    public ApiException() {
+    public ServiceException() {
     }
 
-    public ApiException(String message) {
+    public ServiceException(String message) {
         super(message);
     }
 
-    public ApiException(int code) {
+    public ServiceException(int code) {
         this.code = code;
     }
 
-    public ApiException(String message, int code) {
+    public ServiceException(String message, int code) {
         super(message);
         this.code = code;
     }
 
-    public ApiException(String message, Throwable cause, int code) {
+    public ServiceException(String message, Throwable cause, int code) {
         super(message, cause);
         this.code = code;
     }
 
-    public ApiException(Throwable cause, int code) {
+    public ServiceException(Throwable cause, int code) {
         super(cause);
         this.code = code;
     }
 
-    public ApiException(IResultCode resultCode) {
+    public ServiceException(IResultCode resultCode) {
         super(resultCode.getMessage());
         this.code = resultCode.getCode();
     }

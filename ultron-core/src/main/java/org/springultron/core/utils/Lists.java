@@ -20,6 +20,7 @@ public final class Lists extends org.springframework.util.CollectionUtils {
         return new ArrayList<>(initialCapacity);
     }
 
+    @SafeVarargs
     public static <E> ArrayList<E> newArrayList(E... elements) {
         Objects.requireNonNull(elements, "elements can not be null");
         int capacity = computeArrayListCapacity(elements.length);
@@ -72,6 +73,7 @@ public final class Lists extends org.springframework.util.CollectionUtils {
         return (Collection<T>) iterable;
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public static <T> boolean addAll(Collection<T> addTo, Iterator<? extends T> iterator) {
         Objects.requireNonNull(addTo);
         Objects.requireNonNull(iterator);
