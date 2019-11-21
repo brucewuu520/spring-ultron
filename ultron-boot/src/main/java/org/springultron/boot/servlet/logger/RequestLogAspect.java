@@ -16,6 +16,7 @@ import org.springframework.core.annotation.Order;
 import org.springultron.boot.config.UltronAutoConfiguration;
 import org.springultron.boot.enums.LogLevel;
 import org.springultron.boot.props.UltronLogProperties;
+import org.springultron.core.utils.IpUtils;
 import org.springultron.core.utils.Jackson;
 import org.springultron.core.utils.StringUtils;
 import org.springultron.core.utils.WebUtils;
@@ -66,8 +67,9 @@ public class RequestLogAspect {
         }
         // 开始打印请求日志
         final HttpServletRequest request = WebUtils.getRequest();
-        if (null == request)
+        if (null == request) {
             return point.proceed();
+        }
         final long startTime = System.nanoTime();
         // 构建成一条长日志，避免并发下日志错乱
         StringBuilder reqLog = new StringBuilder(300);
@@ -101,7 +103,7 @@ public class RequestLogAspect {
             }
         }
         // 打印请求的 IP
-        reqLog.append("IP             : ").append(WebUtils.getIP(request));
+        reqLog.append("IP             : ").append(IpUtils.getIP(request));
         reqLog.append(StringUtils.LINE_SEPARATOR);
         // 打印请求入参
         reqLog.append("Request Args   : ").append(Jackson.toJson(point.getArgs()));

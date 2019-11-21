@@ -11,6 +11,15 @@ import java.util.Map;
 
 /**
  * 基于WebClient的HTTP请求封装
+ * Spring boot官方创建并预配置了一个WebClient.Builder
+ * 建议在组件中注入WebClient.Builder webClientBuilder来使用WebClient实例
+ * <p>
+ * private final WebClient webClient;
+ * <p>
+ * public MyService(WebClient.Builder webClientBuilder) {
+ * this.webClient = webClientBuilder.baseUrl("https://example.org").build();
+ * }
+ * </P>
  *
  * @author brucewuu
  * @date 2019-06-17 19:00

@@ -1,14 +1,13 @@
-package org.springultron.core.utils;
+package org.springultron.boot.config;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationEvent;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
-import org.springframework.stereotype.Component;
+import org.springultron.core.utils.StringUtils;
 
 /**
  * Spring 工具类
@@ -16,8 +15,6 @@ import org.springframework.stereotype.Component;
  * @author brucewuu
  * @date 2019-06-09 16:42
  */
-@Lazy
-@Component
 public class SpringUtils implements ApplicationContextAware, DisposableBean {
 
     private static ApplicationContext context;
@@ -29,23 +26,26 @@ public class SpringUtils implements ApplicationContextAware, DisposableBean {
 
     @Nullable
     public static <T> T getBean(Class<T> clazz) {
-        if (null == clazz || null == context)
+        if (null == clazz || null == context) {
             return null;
+        }
         return context.getBean(clazz);
     }
 
+    @SuppressWarnings("unchecked")
     @Nullable
     public static <T> T getBean(String beanId) {
-        if (StringUtils.isEmpty(beanId) || null == context)
+        if (StringUtils.isEmpty(beanId) || null == context) {
             return null;
-        //noinspection unchecked
+        }
         return (T) context.getBean(beanId);
     }
 
     @Nullable
     public static <T> T getBean(String beanName, Class<T> clazz) {
-        if (StringUtils.isEmpty(beanName) || null == clazz || null == context)
+        if (StringUtils.isEmpty(beanName) || null == clazz || null == context) {
             return null;
+        }
         return context.getBean(beanName, clazz);
     }
 

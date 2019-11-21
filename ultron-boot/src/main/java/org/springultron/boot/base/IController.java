@@ -6,8 +6,9 @@ import org.springultron.core.result.ApiResult;
 import org.springultron.core.utils.IdUtils;
 import org.springultron.core.utils.Maps;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.HashMap;
 
@@ -29,6 +30,13 @@ public interface IController {
         return "redirect:".concat(url);
     }
 
+    /**
+     * 图片上传方法
+     *
+     * @param file       文件
+     * @param properties 文件上传路径配置
+     * @return 上传结果
+     */
     default ApiResult uploadImage(MultipartFile file, UltronUploadProperties properties) {
         if (file.isEmpty()) {
             return ApiResult.failed("图片不能为空");
@@ -39,29 +47,19 @@ public interface IController {
         }
         // 后缀名
         String suffixName = fileName.substring(fileName.lastIndexOf("."));
-        if (!suffixName.equals(".jpg") && !suffixName.equals(".png")
-                && !suffixName.equals(".jpeg") && !suffixName.equals(".gif")) {
+        if (!".jpg".equals(suffixName) && !".png".equals(suffixName)
+                && !".jpeg".equals(suffixName) && !".gif".equals(suffixName)) {
             return ApiResult.failed("不是图片文件");
         }
         fileName = IdUtils.randomUUID() + suffixName;
         LocalDate localDate = LocalDate.now();
-        StringBuilder fileBuilder = new StringBuilder(58)
-                .append(properties.getUploadPathPattern().replace("*", ""))
-                .append("image/")
-                .append(localDate.getYear())
-                .append("/")
-                .append(localDate.getMonthValue())
-                .append("/")
-                .append(fileName);
-        final String filePath = fileBuilder.toString();
-        File dest = new File(properties.getSavePath() + filePath);
-        if (!dest.getParentFile().exists()) {
-            dest.getParentFile().mkdirs();
-        }
+        final String destFile = properties.getUploadPathPattern().replace("*", "") +
+                "image/" + localDate.getYear() + "/" + localDate.getMonthValue() + "/" + fileName;
         try {
-            file.transferTo(dest);
+            Path path = Paths.get(properties.getSavePath() + destFile);
+            file.transferTo(path);
             HashMap<String, String> hashMap = Maps.newHashMap(1);
-            hashMap.put("url", filePath);
+            hashMap.put("url", destFile);
             return ApiResult.success(hashMap);
         } catch (IOException e) {
             e.printStackTrace();
