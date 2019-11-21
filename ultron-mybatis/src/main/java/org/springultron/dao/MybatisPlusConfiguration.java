@@ -9,6 +9,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ import java.util.List;
 @MapperScan("com.*.*.mapper")
 @EnableTransactionManagement
 @Configuration(proxyBeanMethods = false)
+@Import({UltronMetaObjectHandler.class})
 public class MybatisPlusConfiguration {
     /**
      * 分页插件
