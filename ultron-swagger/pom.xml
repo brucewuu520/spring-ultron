@@ -42,6 +42,11 @@
             <artifactId>knife4j-spring-ui</artifactId>
             <version>${knife4j.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
+        </dependency>
     </dependencies>
 
 </project>
