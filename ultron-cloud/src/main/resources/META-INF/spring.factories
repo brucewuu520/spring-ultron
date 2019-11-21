@@ -1,4 +1,4 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   org.springultron.cloud.servlet.SentinelConfiguration,\
   org.springultron.cloud.reactive.SentinelConfiguration,\
-  org.springultron.cloud.LBWebClientConfiguration
+  org.springultron.cloud.LbWebClientConfiguration

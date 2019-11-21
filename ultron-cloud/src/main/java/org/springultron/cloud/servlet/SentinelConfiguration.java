@@ -19,7 +19,7 @@ import java.io.IOException;
  * @author brucewuu
  * @date 2019-08-11 11:22
  */
-@Configuration(proxyBeanMethods = true)
+@Configuration(proxyBeanMethods = false)
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 public class SentinelConfiguration {
 

@@ -18,39 +18,48 @@
             <dependency>
                 <groupId>org.springultron</groupId>
                 <artifactId>ultron-boot</artifactId>
-                <version>${spring-ultron.version}</version>
+                <version>${project.parent.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springultron</groupId>
                 <artifactId>ultron-cloud</artifactId>
-                <version>${spring-ultron.version}</version>
+                <version>${project.parent.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springultron</groupId>
                 <artifactId>ultron-core</artifactId>
-                <version>${spring-ultron.version}</version>
+                <version>${project.parent.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springultron</groupId>
                 <artifactId>ultron-http</artifactId>
-                <version>${spring-ultron.version}</version>
+                <version>${project.parent.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springultron</groupId>
                 <artifactId>ultron-mybatis</artifactId>
-                <version>${spring-ultron.version}</version>
+                <version>${project.parent.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springultron</groupId>
                 <artifactId>ultron-redis</artifactId>
-                <version>${spring-ultron.version}</version>
+                <version>${project.parent.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springultron</groupId>
                 <artifactId>ultron-swagger</artifactId>
-                <version>${spring-ultron.version}</version>
+                <version>${project.parent.version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastjson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
