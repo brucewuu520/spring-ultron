@@ -33,15 +33,18 @@
     </scm>
 
     <properties>
-        <spring-ultron.version>1.0.0</spring-ultron.version>
-        <spring-boot.version>2.1.9.RELEASE</spring-boot.version>
-        <spring-cloud.version>Greenwich.SR3</spring-cloud.version>
-        <alibaba-cloud.version>2.1.0.RELEASE</alibaba-cloud.version>
+        <!-- boot dependencies start-->
+        <spring-boot.version>2.1.10.RELEASE</spring-boot.version>
         <okhttp4.version>4.2.2</okhttp4.version>
         <mybatis-plus.version>3.2.0</mybatis-plus.version>
-        <swagger.version>2.9.2</swagger.version>
         <knife4j.version>1.9.6</knife4j.version>
+        <!-- boot dependencies end-->
+        <!-- cloud dependencies start-->
+        <spring-cloud.version>Greenwich.SR4</spring-cloud.version>
+        <alibaba-cloud.version>2.1.1.RELEASE</alibaba-cloud.version>
         <fastjson.version>1.2.62</fastjson.version>
+        <guava.version>22.0</guava.version>
+        <!-- cloud dependencies end-->
 
         <findbugs.version>3.0.2</findbugs.version>
 
