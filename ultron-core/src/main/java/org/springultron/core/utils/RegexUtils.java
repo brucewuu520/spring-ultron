@@ -1,5 +1,7 @@
 package org.springultron.core.utils;
 
+import org.springultron.core.pool.PatternPool;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,7 +23,7 @@ public class RegexUtils {
      * @return {boolean}
      */
     public static boolean matchPhone(String phone) {
-        return match(phone, "^1[23456789]\\d{9}$");
+        return isMatch(phone, PatternPool.MOBILE);
     }
 
     /**
@@ -31,7 +33,7 @@ public class RegexUtils {
      * @return {boolean}
      */
     public static boolean matchUserName(String userName) {
-        return match(userName, "^[a-zA-Z][a-zA-Z0-9_]{4,15}$");
+        return isMatch(userName, "^[a-zA-Z][a-zA-Z0-9_]{4,15}$");
     }
 
     /**
@@ -41,7 +43,7 @@ public class RegexUtils {
      * @return {boolean}
      */
     public static boolean matchNickName(String nickName) {
-        return match(nickName, "^[a-zA-Z\\u4E00-\\u9FA5][a-zA-Z0-9_\\u4E00-\\u9FA5]{1,11}$");
+        return isMatch(nickName, "^[a-zA-Z\\u4E00-\\u9FA5][a-zA-Z0-9_\\u4E00-\\u9FA5]{1,11}$");
     }
 
     /**
@@ -51,29 +53,32 @@ public class RegexUtils {
      * @return {boolean}
      */
     public static boolean matchEmail(String email) {
-        return match(email, "^\\w+([-+.]*\\w+)*@([\\da-z](-[\\da-z])?)+(\\.{1,2}[a-z]+)+$");
+        return isMatch(email, PatternPool.EMAIL);
     }
 
     /**
-     * 验证手机号或者邮箱
+     * 给定内容是否匹配正则
      *
-     * @param text 手机号或者邮箱
-     * @return {boolean}
+     * @param content 内容
+     * @param pattern 模式
      */
-    public static boolean matchPhoneOrEmail(String text) {
-        return match(text, "(^1[23456789]\\d{9}$)|(^\\w+([-+.]*\\w+)*@([\\da-z](-[\\da-z])?)+(\\.{1,2}[a-z]+)+$)");
+    public static boolean isMatch(CharSequence content, Pattern pattern) {
+        if (content == null || pattern == null) {
+            return false;
+        }
+        return pattern.matcher(content).matches();
     }
 
     /**
      * 编译传入正则表达式和字符串去匹配,忽略大小写
      *
-     * @param text  字符串
+     * @param content  内容
      * @param regex 正则
      * @return {boolean}
      */
-    public static boolean match(String text, String regex) {
+    public static boolean isMatch(CharSequence content, String regex) {
         Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
-        Matcher matcher = pattern.matcher(text);
+        Matcher matcher = pattern.matcher(content);
         return matcher.matches();
     }
 

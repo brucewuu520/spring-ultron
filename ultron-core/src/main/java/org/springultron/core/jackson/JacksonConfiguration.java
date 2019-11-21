@@ -33,7 +33,7 @@ public class JacksonConfiguration {
     @Bean
     public Jackson2ObjectMapperBuilderCustomizer customizer() {
         return builder -> {
-            builder.locale(Locale.CHINA);
+            builder.locale(Locale.getDefault());
             builder.timeZone(TimeZone.getTimeZone(ZoneId.systemDefault()));
             builder.simpleDateFormat(dateFormat);
             // 序列化时过滤为null的字段
