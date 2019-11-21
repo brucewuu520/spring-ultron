@@ -1,7 +1,7 @@
 package org.springultron.core.pool;
 
 /**
- * 常用字符串常量池
+ * 字符串常量池
  *
  * @author brucewuu
  * @date 2019/11/17 15:15

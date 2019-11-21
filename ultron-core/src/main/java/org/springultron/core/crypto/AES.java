@@ -115,8 +115,9 @@ public final class AES {
      * @return 加密后的字节数组
      */
     public static byte[] encrypt(AesAlgorithms algorithms, byte[] data, byte[] key) {
-        if (algorithms == AesAlgorithms.AES_CBC_PKCS7)
+        if (algorithms == AesAlgorithms.AES_CBC_PKCS7) {
             Assert.isTrue(key.length == 32, "IllegalAesKey, aesKey's length must be 32");
+        }
         try {
             SecretKeySpec keySpec = new SecretKeySpec(key, KEY_ALGORITHM);
             Cipher cipher = Cipher.getInstance(algorithms.getValue());
@@ -142,8 +143,9 @@ public final class AES {
      * @return 解密后的字节数组
      */
     public static byte[] decrypt(AesAlgorithms algorithms, byte[] data, byte[] key) {
-        if (algorithms == AesAlgorithms.AES_CBC_PKCS7)
+        if (algorithms == AesAlgorithms.AES_CBC_PKCS7) {
             Assert.isTrue(key.length == 32, "IllegalAesKey, aesKey's length must be 32");
+        }
         try {
             Cipher cipher = Cipher.getInstance(algorithms.getValue());
             SecretKeySpec keySpec = new SecretKeySpec(key, KEY_ALGORITHM);

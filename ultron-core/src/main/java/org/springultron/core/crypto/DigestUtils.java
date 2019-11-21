@@ -179,7 +179,7 @@ public final class DigestUtils extends org.springframework.util.DigestUtils {
         return mac.doFinal();
     }
 
-    public static String hmacHex(final String algorithm, final ByteBuffer valueToDigest, final String key) throws IOException {
+    public static String hmacHex(final String algorithm, final ByteBuffer valueToDigest, final String key) {
         return Hex.encodeHexString(hmac(algorithm, valueToDigest, key));
     }
 
