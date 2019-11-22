@@ -2,7 +2,6 @@ package org.springultron.boot.config;
 
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
 import org.springframework.aop.interceptor.SimpleAsyncUncaughtExceptionHandler;
-import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.task.TaskExecutionAutoConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -20,13 +19,15 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 
 /**
- * spring boot异步任务线程池配置
+ * 异步任务/定时任务使用自定义线程池配置
+ * <p>
+ * 不使用官方提供的线程池配置 {@link TaskExecutionAutoConfiguration}
+ * </p>
  *
  * @author brucewuu
  * @date 2019/11/11 14:52
  */
 @Configuration(proxyBeanMethods = false)
-@AutoConfigureBefore({TaskExecutionAutoConfiguration.class})
 public class UltronTaskAutoConfiguration extends AsyncConfigurerSupport {
 
     private final UltronTaskProperties properties;
