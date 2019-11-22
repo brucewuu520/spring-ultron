@@ -1,7 +1,6 @@
 package org.springultron.redis.config;
 
 import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration;
@@ -12,10 +11,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.cache.CacheManager;
-import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.interceptor.CacheAspectSupport;
-import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
@@ -43,6 +39,7 @@ import java.util.stream.Collectors;
  * <p>
  * 需手动开启@EnableCaching注解
  * </p>
+ * {@link CacheAutoConfiguration}
  *
  * @author brucewuu
  * @date 2019/11/10 17:34
@@ -52,28 +49,7 @@ import java.util.stream.Collectors;
 @AutoConfigureBefore({CacheAutoConfiguration.class})
 @AutoConfigureAfter({RedisAutoConfiguration.class})
 @EnableConfigurationProperties({CacheProperties.class})
-public class RedisCacheAutoConfiguration extends CachingConfigurerSupport {
-
-    /**
-     * 自定义的缓存key的生成策略
-     * 此方法将会根据类名+方法名+所有参数的值生成唯一的一个key,即使@Cacheable中的value属性一样，key也会不一样。
-     * 若想使用这个key只需要将注解上keyGenerator的值设置为keyGenerator即可
-     *
-     * @return 自定义策略生成的key
-     */
-    @Bean
-    @ConditionalOnMissingBean(name = {"keyGenerator"})
-    @Override
-    public KeyGenerator keyGenerator() {
-        return (target, method, params) -> {
-            StringBuilder sb = new StringBuilder(target.getClass().getName());
-            sb.append(method.getName());
-            for (Object obj : params) {
-                sb.append(obj.toString());
-            }
-            return sb.toString();
-        };
-    }
+public class RedisCacheAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
@@ -89,8 +65,7 @@ public class RedisCacheAutoConfiguration extends CachingConfigurerSupport {
      */
     @SuppressWarnings({"SpringJavaInjectionPointsAutowiringInspection", "JavadocReference"})
     @Bean
-    @ConditionalOnMissingBean({CacheManager.class})
-    public RedisCacheManager cacheManager(CacheProperties cacheProperties, CacheManagerCustomizers cacheManagerCustomizers, ObjectProvider<RedisCacheConfiguration> redisCacheConfiguration, RedisConnectionFactory redisConnectionFactory, @Autowired(required = false) RedisSerializer<Object> redisSerializer) {
+    public RedisCacheManager cacheManager(CacheProperties cacheProperties, CacheManagerCustomizers cacheManagerCustomizers, ObjectProvider<RedisCacheConfiguration> redisCacheConfiguration, RedisConnectionFactory redisConnectionFactory, ObjectProvider<RedisSerializer<Object>> redisSerializer) {
         RedisCacheWriter redisCacheWriter = RedisCacheWriter.nonLockingRedisCacheWriter(redisConnectionFactory);
         RedisCacheConfiguration cacheConfiguration = this.determineConfiguration(cacheProperties, redisCacheConfiguration, redisSerializer);
         final Map<String, RedisCacheConfiguration> initialCaches = new LinkedHashMap<>();
@@ -103,13 +78,14 @@ public class RedisCacheAutoConfiguration extends CachingConfigurerSupport {
         return cacheManagerCustomizers.customize(redisCacheManager);
     }
 
-    private RedisCacheConfiguration determineConfiguration(CacheProperties cacheProperties, ObjectProvider<RedisCacheConfiguration> redisCacheConfiguration, @Nullable RedisSerializer<Object> redisSerializer) {
-        return redisCacheConfiguration.getIfAvailable(() -> this.createConfiguration(cacheProperties, redisSerializer));
+    private RedisCacheConfiguration determineConfiguration(CacheProperties cacheProperties, ObjectProvider<RedisCacheConfiguration> redisCacheConfiguration, ObjectProvider<RedisSerializer<Object>> redisSerializer) {
+        return redisCacheConfiguration.getIfAvailable(() -> this.createConfiguration(cacheProperties, redisSerializer.getIfAvailable()));
     }
 
     private RedisCacheConfiguration createConfiguration(CacheProperties cacheProperties, @Nullable RedisSerializer<Object> redisSerializer) {
         CacheProperties.Redis redisProperties = cacheProperties.getRedis();
         RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig();
+
         if (redisSerializer != null) {
             config = config.serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(redisSerializer));
         }
