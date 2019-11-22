@@ -4,9 +4,9 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.springultron</groupId>
     <artifactId>spring-ultron</artifactId>
+    <version>1.0.0</version>
     <name>spring-ultron-build</name>
     <description>Spring Boot/Cloud multi module common library</description>
-    <version>1.0.0</version>
     <packaging>pom</packaging>
 
     <licenses>
@@ -35,7 +35,7 @@
     <properties>
         <!-- boot dependencies start-->
         <spring-boot.version>2.1.10.RELEASE</spring-boot.version>
-        <okhttp4.version>4.2.2</okhttp4.version>
+        <okhttp3.version>4.2.2</okhttp3.version>
         <mybatis-plus.version>3.2.0</mybatis-plus.version>
         <knife4j.version>1.9.6</knife4j.version>
         <!-- boot dependencies end-->
