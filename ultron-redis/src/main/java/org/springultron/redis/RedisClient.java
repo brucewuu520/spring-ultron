@@ -29,6 +29,24 @@ public class RedisClient {
         this.redisTemplate = redisTemplate;
     }
 
+    public StringRedisTemplate getStringRedisTemplate() {
+        return stringRedisTemplate;
+    }
+
+    public RedisTemplate<String, Object> getRedisTemplate() {
+        return redisTemplate;
+    }
+
+    /**
+     * 生成缓存key，以英文冒号隔开
+     *
+     * @param keys kes
+     * @return key string
+     */
+    public static String genKey(String... keys) {
+        return String.join(":", keys).toUpperCase();
+    }
+
     /**
      * 设置缓存键、值为String类型
      *
@@ -461,19 +479,5 @@ public class RedisClient {
         if (CollectionUtils.isEmpty(keys))
             return true;
         return Optional.ofNullable(redisTemplate.delete(keys)).map(l -> l > 0).orElse(Boolean.FALSE);
-    }
-
-    public RedisTemplate<String, Object> getRedisTemplate() {
-        return redisTemplate;
-    }
-
-    /**
-     * 生成缓存key，以英文冒号隔开
-     *
-     * @param keys kes
-     * @return key string
-     */
-    public static String getKey(String... keys) {
-        return String.join(":", keys).toUpperCase();
     }
 }
