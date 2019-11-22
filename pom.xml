@@ -4,9 +4,9 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.springultron</groupId>
     <artifactId>spring-ultron</artifactId>
+    <version>2.0.0</version>
     <name>spring-ultron-build</name>
     <description>Spring Boot/Cloud multi module common library</description>
-    <version>2.0.0</version>
     <packaging>pom</packaging>
 
     <licenses>
@@ -35,10 +35,9 @@
     <properties>
         <!-- boot dependencies start-->
         <spring-boot.version>2.2.1.RELEASE</spring-boot.version>
-        <okhttp4.version>4.2.2</okhttp4.version>
         <mybatis-plus.version>3.2.0</mybatis-plus.version>
-        <swagger.version>2.9.2</swagger.version>
         <knife4j.version>1.9.6</knife4j.version>
+        <okhttp3.version>4.2.2</okhttp3.version>
         <!-- boot dependencies end-->
         <!-- cloud dependencies start-->
         <spring-cloud.version>Greenwich.SR4</spring-cloud.version>
