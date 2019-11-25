@@ -8,4 +8,4 @@ ${AnsiColor.GREEN}
          | |                  __/ |
          |_|                 |___/
 
-${AnsiColor.GREEN}:: ${spring.application.name} ${AnsiColor.GREEN}:: Powered by: Spring Ultron:: ${spring-ultron.version} ${AnsiColor.GREEN}:: Running Spring Boot ${spring-boot.version}
+${AnsiColor.GREEN}:: ${spring.application.name} ${AnsiColor.GREEN}:: Powered by: Spring Ultron:: ${project.parent.version} ${AnsiColor.GREEN}:: Running Spring Boot ${spring-boot.version}
