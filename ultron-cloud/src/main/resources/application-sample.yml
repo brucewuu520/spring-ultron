@@ -1,4 +1,8 @@
+server:
+  port: 8081
 spring:
+  application:
+    name: xxx-service
   cloud:
     httpclientfactories:
       apache:
@@ -7,6 +11,9 @@ spring:
         enabled: false
     sentinel:
       enabled: true
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
 
 management:
   endpoints:

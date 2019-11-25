@@ -1,23 +1,12 @@
 package org.springultron.cloud.reactive;
 
-import com.alibaba.csp.sentinel.adapter.spring.webflux.SentinelWebFluxFilter;
-import com.alibaba.csp.sentinel.adapter.spring.webflux.callback.WebFluxCallbackManager;
-import com.alibaba.csp.sentinel.adapter.spring.webflux.exception.SentinelBlockExceptionHandler;
-import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.alibaba.csp.sentinel.adapter.spring.webflux.callback.BlockRequestHandler;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.MediaType;
-import org.springframework.http.codec.ServerCodecConfigurer;
 import org.springframework.web.reactive.function.server.ServerResponse;
-import org.springframework.web.reactive.result.view.ViewResolver;
-import org.springultron.core.result.ApiResult;
 import org.springultron.core.result.ResultCode;
-
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Sentinel 配置类
@@ -29,31 +18,14 @@ import java.util.List;
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.REACTIVE)
 public class SentinelConfiguration {
 
-    private final List<ViewResolver> viewResolvers;
-    private final ServerCodecConfigurer serverCodecConfigurer;
-
-    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
-    @Autowired
-    public SentinelConfiguration(ObjectProvider<List<ViewResolver>> viewResolversProvider, ServerCodecConfigurer serverCodecConfigurer) {
-        this.viewResolvers = viewResolversProvider.getIfAvailable(Collections::emptyList);
-        this.serverCodecConfigurer = serverCodecConfigurer;
-        // 限流、熔断统一处理类
-        WebFluxCallbackManager.setBlockHandler((exchange, throwable) -> ServerResponse.ok()
+    /**
+     * 限流、熔断异常处理
+     */
+    @Bean
+    public BlockRequestHandler blockRequestHandler() {
+        return (exchange, throwable) -> ServerResponse.status(ResultCode.FLOW_LIMITING.getCode())
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(ApiResult.failed(ResultCode.FLOW_LIMITING)));
+                .bodyValue(ResultCode.FLOW_LIMITING.getMessage());
     }
 
-    @Bean
-    @Order(-1)
-    public SentinelBlockExceptionHandler sentinelBlockExceptionHandler() {
-        // Register the block exception handler for Spring WebFlux.
-        return new SentinelBlockExceptionHandler(viewResolvers, serverCodecConfigurer);
-    }
-
-    @Bean
-    @Order(-1)
-    public SentinelWebFluxFilter sentinelWebFluxFilter() {
-        // Register the Sentinel WebFlux filter.
-        return new SentinelWebFluxFilter();
-    }
 }
