@@ -1,5 +1,6 @@
 package org.springultron.boot.httpclient;
 
+import org.springframework.boot.autoconfigure.web.reactive.function.client.WebClientAutoConfiguration;
 import org.springframework.http.MediaType;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
@@ -14,17 +15,17 @@ import java.util.Map;
  * Spring boot官方创建并预配置了一个WebClient.Builder
  * 建议在组件中注入WebClient.Builder webClientBuilder来使用WebClient实例
  * <p>
- * private final WebClient webClient;
+ * {@link WebClientAutoConfiguration}
  *
+ * private final WebClient webClient;
  * public MyService(WebClient.Builder webClientBuilder) {
- *      this.webClient = webClientBuilder.baseUrl("https://example.org").build();
+ * this.webClient = webClientBuilder.baseUrl("https://example.org").build();
  * }
  * </P>
  *
  * @author brucewuu
  * @date 2019-06-17 19:00
  */
-@Deprecated
 public final class WebClientUtils {
 
     private WebClientUtils() {
