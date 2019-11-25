@@ -10,9 +10,9 @@ import java.nio.charset.StandardCharsets;
  * @author brucewuu
  * @date 2019-06-07 01:09
  */
-public class IOUtils {
+public class IoUtils {
 
-    private IOUtils() {
+    private IoUtils() {
     }
 
     /**
@@ -227,5 +227,19 @@ public class IOUtils {
             count += n;
         }
         return count;
+    }
+
+    /**
+     * 关闭流
+     *
+     * @param closeable 被关闭对象
+     */
+    public static void closeQuietly(Closeable closeable) {
+        if (null != closeable) {
+            try {
+                closeable.close();
+            } catch (IOException ignored) {
+            }
+        }
     }
 }
