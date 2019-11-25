@@ -2,6 +2,7 @@ package org.springultron.core.crypto;
 
 import org.springultron.core.exception.Exceptions;
 import org.springframework.util.Base64Utils;
+import org.springultron.core.utils.IoUtils;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -831,8 +832,8 @@ public final class RSA {
      * @param blockSize 加/解密块大小
      */
     private static byte[] doFinalWithBlock(Cipher cipher, byte[] data, final int blockSize) throws BadPaddingException, IllegalBlockSizeException, IOException {
-        ByteArrayOutputStream outputStream = null;
         BufferedOutputStream bufferedOutputStream = null;
+        ByteArrayOutputStream outputStream = null;
         try {
             final int dataLength = data.length;
             final int maxBlockSize = blockSize < 0 ? dataLength : blockSize;
@@ -855,15 +856,8 @@ public final class RSA {
             bufferedOutputStream.flush();
             return outputStream.toByteArray();
         } finally {
-            try {
-                if (null != bufferedOutputStream) {
-                    bufferedOutputStream.close();
-                }
-                if (null != outputStream) {
-                    outputStream.close();
-                }
-            } catch (IOException ignored) {
-            }
+            IoUtils.closeQuietly(outputStream);
+            IoUtils.closeQuietly(bufferedOutputStream);
         }
     }
 
