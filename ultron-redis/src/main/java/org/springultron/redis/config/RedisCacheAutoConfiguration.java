@@ -65,11 +65,11 @@ public class RedisCacheAutoConfiguration {
      */
     @SuppressWarnings({"SpringJavaInjectionPointsAutowiringInspection", "JavadocReference"})
     @Bean
-    public RedisCacheManager cacheManager(CacheProperties cacheProperties, CacheManagerCustomizers cacheManagerCustomizers, ObjectProvider<RedisCacheConfiguration> redisCacheConfiguration, RedisConnectionFactory redisConnectionFactory, ObjectProvider<RedisSerializer<Object>> redisSerializer) {
+    public RedisCacheManager cacheManager(CacheProperties cacheProperties, CacheManagerCustomizers cacheManagerCustomizers, ObjectProvider<RedisCacheConfiguration> redisCacheConfiguration, ObjectProvider<RedisSerializer<Object>> redisSerializer, RedisConnectionFactory redisConnectionFactory) {
         RedisCacheWriter redisCacheWriter = RedisCacheWriter.nonLockingRedisCacheWriter(redisConnectionFactory);
         RedisCacheConfiguration cacheConfiguration = this.determineConfiguration(cacheProperties, redisCacheConfiguration, redisSerializer);
-        final Map<String, RedisCacheConfiguration> initialCaches = new LinkedHashMap<>();
         List<String> cacheNames = cacheProperties.getCacheNames();
+        final Map<String, RedisCacheConfiguration> initialCaches = new LinkedHashMap<>(cacheNames.size());
         if (!cacheNames.isEmpty()) {
             cacheNames.forEach(cacheName -> initialCaches.put(cacheName, cacheConfiguration));
         }
