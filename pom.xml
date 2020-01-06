@@ -34,13 +34,13 @@
 
     <properties>
         <!-- boot dependencies start-->
-        <spring-boot.version>2.2.1.RELEASE</spring-boot.version>
-        <mybatis-plus.version>3.2.0</mybatis-plus.version>
-        <knife4j.version>1.9.6</knife4j.version>
-        <okhttp3.version>4.2.2</okhttp3.version>
+        <spring-boot.version>2.2.2.RELEASE</spring-boot.version>
+        <mybatis-plus.version>3.3.0</mybatis-plus.version>
+        <knife4j.version>2.0.1</knife4j.version>
+        <okhttp3.version>4.3.0</okhttp3.version>
         <!-- boot dependencies end-->
         <!-- cloud dependencies start-->
-        <spring-cloud.version>Greenwich.SR4</spring-cloud.version>
+        <spring-cloud.version>Hoxton.SR1</spring-cloud.version>
         <alibaba-cloud.version>2.1.1.RELEASE</alibaba-cloud.version>
         <fastjson.version>1.2.62</fastjson.version>
         <guava.version>22.0</guava.version>
