@@ -1,4 +1,4 @@
-${AnsiColor.GREEN}
+${AnsiColor.BRIGHT_CYAN}
     _____            _               _    _ _ _ _ _   _
    / ____|          (_)             | |  | ( ) ( ) | ( )
   | (___  _ __  _ __ _ _ __   __ _  | |  | |/| |/| |_|/ _ __ ___  _ __
@@ -8,4 +8,4 @@ ${AnsiColor.GREEN}
          | |                  __/ |
          |_|                 |___/
 
-${AnsiColor.GREEN}:: ${spring.application.name} ${AnsiColor.GREEN}:: Powered by: Spring Ultron:: ${project.parent.version} ${AnsiColor.GREEN}:: Running Spring Boot ${spring-boot.version}
+${AnsiColor.BRIGHT_CYAN} :: ${spring.application.name}${AnsiColor.BRIGHT_CYAN} :: Running Spring Boot ${spring-boot.version} :: Spring Ultron 2.0.0 🏃🏃🏃 ${AnsiColor.DEFAULT}

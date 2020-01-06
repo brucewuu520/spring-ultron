@@ -33,10 +33,10 @@ public class BeanUtils extends org.springframework.beans.BeanUtils {
      * @param <T>      泛型标记
      * @return 对象
      */
+    @SuppressWarnings("unchecked")
     public static <T> T newInstance(String clazzStr) {
         try {
             Class<?> clazz = Class.forName(clazzStr);
-            //noinspection unchecked
             return (T) instantiateClass(clazz);
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(String.format("class %s not found", clazzStr));
@@ -63,8 +63,8 @@ public class BeanUtils extends org.springframework.beans.BeanUtils {
      * @param bean 对象
      * @return Map
      */
+    @SuppressWarnings("unchecked")
     public static Map<String, Object> toMap(Object bean) {
-        //noinspection unchecked
         return BeanMap.create(bean);
     }
 
