@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.web.reactive.function.client.WebClient;
 
 /**
- * 负载均衡的WebClient(反应式)
+ * 负载均衡的WebClient(反应式、懒加载)
  * 使用方法：
  * <p>
  * 1、添加依赖：spring-cloud-starter-loadbalancer
@@ -22,7 +22,7 @@ import org.springframework.web.reactive.function.client.WebClient;
  */
 @Lazy
 @Configuration(proxyBeanMethods = false)
-@ConditionalOnBean({ReactorLoadBalancerExchangeFilterFunction.class})
+@ConditionalOnBean({WebClient.Builder.class, ReactorLoadBalancerExchangeFilterFunction.class})
 public class LbWebClientConfiguration {
     /**
      * 负载均衡的 WebClient
