@@ -16,7 +16,7 @@ import java.util.Map;
  * 建议在组件中注入WebClient.Builder webClientBuilder来使用WebClient实例
  * <p>
  * {@link WebClientAutoConfiguration}
- *
+ * <p>
  * private final WebClient webClient;
  * public MyService(WebClient.Builder webClientBuilder) {
  * this.webClient = webClientBuilder.baseUrl("https://example.org").build();
@@ -351,6 +351,47 @@ public final class WebClientUtils {
         return getInstance()
                 .post()
                 .uri(baseUrl)
+                .bodyValue(formData)
+                .retrieve()
+                .bodyToMono(returnType);
+    }
+
+    /**
+     * 发起POST 表单请求（contentType: application/x-www-form-urlencoded）
+     *
+     * @param baseUrl     请求地址
+     * @param headerName  Header Name
+     * @param headerValue Header Value
+     * @param formData    表单参数<K,V>
+     * @param returnType  返回值类型
+     * @param <T>         返回值泛型
+     * @return 返回值Mono对象
+     */
+    public static <T> Mono<T> postForm(String baseUrl, String headerName, String headerValue, Object formData, Class<T> returnType) {
+        return getInstance()
+                .post()
+                .uri(baseUrl)
+                .header(headerName, headerValue)
+                .bodyValue(formData)
+                .retrieve()
+                .bodyToMono(returnType);
+    }
+
+    /**
+     * 发起POST 表单请求（contentType: application/x-www-form-urlencoded）
+     *
+     * @param baseUrl    请求地址
+     * @param headerMap  headers
+     * @param formData   表单参数<K,V>
+     * @param returnType 返回值类型
+     * @param <T>        返回值泛型
+     * @return 返回值Mono对象
+     */
+    public static <T> Mono<T> postForm(String baseUrl, Map<String, String> headerMap, Object formData, Class<T> returnType) {
+        return getInstance()
+                .post()
+                .uri(baseUrl)
+                .headers(headers -> headers.setAll(headerMap))
                 .bodyValue(formData)
                 .retrieve()
                 .bodyToMono(returnType);

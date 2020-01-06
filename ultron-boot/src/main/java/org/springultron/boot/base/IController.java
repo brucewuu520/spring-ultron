@@ -14,8 +14,6 @@ import org.springultron.core.utils.Maps;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.HashMap;
 
@@ -182,13 +180,18 @@ public interface IController {
         }
         fileName = IdUtils.randomUUID() + suffixName;
         LocalDate localDate = LocalDate.now();
-        final String destFile = properties.getUploadPathPattern().replace("*", "") +
+        final String destFilePath = properties.getUploadPathPattern().replace("*", "") +
                 "image/" + localDate.getYear() + "/" + localDate.getMonthValue() + "/" + fileName;
         try {
-            Path path = Paths.get(properties.getSavePath() + destFile);
-            file.transferTo(path);
+            File destFile = new File(properties.getSavePath() + destFilePath);
+            if (!destFile.exists()) {
+                if (!destFile.mkdirs()) {
+                    return ApiResult.failed("图片创建失败");
+                }
+            }
+            file.transferTo(destFile);
             HashMap<String, String> hashMap = Maps.newHashMap(1);
-            hashMap.put("url", destFile);
+            hashMap.put("url",destFilePath);
             return ApiResult.success(hashMap);
         } catch (IOException e) {
             e.printStackTrace();
