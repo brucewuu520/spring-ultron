@@ -21,6 +21,6 @@ public class UltronMetaObjectHandler implements MetaObjectHandler {
 
     @Override
     public void updateFill(MetaObject metaObject) {
-        this.setUpdateFieldValByName("updateAt", LocalDateTime.now(), metaObject);
+        this.setFieldValByName("updateAt", LocalDateTime.now(), metaObject);
     }
 }
