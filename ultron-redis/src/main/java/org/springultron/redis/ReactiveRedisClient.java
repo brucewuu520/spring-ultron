@@ -1,36 +1,38 @@
 package org.springultron.redis;
 
+import org.reactivestreams.Publisher;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.core.TimeoutUtils;
-import org.springframework.util.CollectionUtils;
+import org.springframework.data.redis.core.ReactiveRedisTemplate;
+import org.springframework.data.redis.core.ReactiveStringRedisTemplate;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.time.Duration;
-import java.util.*;
-import java.util.concurrent.TimeUnit;
+import java.time.Instant;
+import java.util.Collection;
+import java.util.Map;
 
 /**
- * Redis操作客户端
+ * 反应式Redis操作客户端
  *
  * @author brucewuu
- * @date 2019-05-31 14:26
+ * @date 2019/11/26 18:17
  */
 @SuppressWarnings("SpringJavaAutowiredMembersInspection")
-public class RedisClient {
+public class ReactiveRedisClient {
 
     @Autowired
-    private StringRedisTemplate stringRedisTemplate;
+    private ReactiveStringRedisTemplate reactiveStringRedisTemplate;
 
     @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
+    private ReactiveRedisTemplate<String, Object> reactiveRedisTemplate;
 
-    public StringRedisTemplate getStringRedisTemplate() {
-        return stringRedisTemplate;
+    public ReactiveStringRedisTemplate getReactiveStringRedisTemplate() {
+        return reactiveStringRedisTemplate;
     }
 
-    public RedisTemplate<String, Object> getRedisTemplate() {
-        return redisTemplate;
+    public ReactiveRedisTemplate<String, Object> getReactiveRedisTemplate() {
+        return reactiveRedisTemplate;
     }
 
     /**
@@ -49,8 +51,8 @@ public class RedisClient {
      * @param key   缓存key
      * @param value 值
      */
-    public void setString(String key, String value) {
-        stringRedisTemplate.opsForValue().set(key, value);
+    public Mono<Boolean> setString(String key, String value) {
+        return reactiveStringRedisTemplate.opsForValue().set(key, value);
     }
 
     /**
@@ -60,8 +62,8 @@ public class RedisClient {
      * @param value   值
      * @param timeout 缓存过期时间
      */
-    public void setString(String key, String value, Duration timeout) {
-        stringRedisTemplate.opsForValue().set(key, value, timeout);
+    public Mono<Boolean> setString(String key, String value, Duration timeout) {
+        return reactiveStringRedisTemplate.opsForValue().set(key, value, timeout);
     }
 
     /**
@@ -71,8 +73,8 @@ public class RedisClient {
      * @param value 值
      * @return 是否设置成功
      */
-    public boolean setStringIfAbsent(String key, String value) {
-        return Optional.ofNullable(stringRedisTemplate.opsForValue().setIfAbsent(key, value)).orElse(Boolean.FALSE);
+    public Mono<Boolean> setStringIfAbsent(String key, String value) {
+        return reactiveStringRedisTemplate.opsForValue().setIfAbsent(key, value);
     }
 
     /**
@@ -83,8 +85,8 @@ public class RedisClient {
      * @param timeout 缓存过期时间
      * @return 是否设置成功
      */
-    public boolean setStringIfAbsent(String key, String value, Duration timeout) {
-        return Optional.ofNullable(stringRedisTemplate.opsForValue().setIfAbsent(key, value, timeout)).orElse(Boolean.FALSE);
+    public Mono<Boolean> setStringIfAbsent(String key, String value, Duration timeout) {
+        return reactiveStringRedisTemplate.opsForValue().setIfAbsent(key, value, timeout);
     }
 
     /**
@@ -94,8 +96,8 @@ public class RedisClient {
      * @param value 值
      * @return 是否设置成功
      */
-    public boolean setStringIfPresent(String key, String value) {
-        return Optional.ofNullable(stringRedisTemplate.opsForValue().setIfPresent(key, value)).orElse(Boolean.FALSE);
+    public Mono<Boolean> setStringIfPresent(String key, String value) {
+        return reactiveStringRedisTemplate.opsForValue().setIfPresent(key, value);
     }
 
     /**
@@ -106,8 +108,8 @@ public class RedisClient {
      * @param timeout 缓存过期时间
      * @return 是否设置成功
      */
-    public boolean setStringIfPresent(String key, String value, Duration timeout) {
-        return Optional.ofNullable(stringRedisTemplate.opsForValue().setIfPresent(key, value, timeout)).orElse(Boolean.FALSE);
+    public Mono<Boolean> setStringIfPresent(String key, String value, Duration timeout) {
+        return reactiveStringRedisTemplate.opsForValue().setIfPresent(key, value, timeout);
     }
 
     /**
@@ -116,8 +118,8 @@ public class RedisClient {
      * @param key 缓存key
      * @return 缓存值
      */
-    public String getString(String key) {
-        return stringRedisTemplate.opsForValue().get(key);
+    public Mono<String> getString(String key) {
+        return reactiveStringRedisTemplate.opsForValue().get(key);
     }
 
     /**
@@ -127,8 +129,8 @@ public class RedisClient {
      * @param newValue 新值
      * @return 旧值
      */
-    public String getStringAndSet(String key, String newValue) {
-        return stringRedisTemplate.opsForValue().getAndSet(key, newValue);
+    public Mono<String> getStringAndSet(String key, String newValue) {
+        return reactiveStringRedisTemplate.opsForValue().getAndSet(key, newValue);
     }
 
     /**
@@ -137,8 +139,8 @@ public class RedisClient {
      * @param key   缓存key
      * @param value 值
      */
-    public void set(String key, Object value) {
-        redisTemplate.opsForValue().set(key, value);
+    public Mono<Boolean> set(String key, Object value) {
+        return reactiveRedisTemplate.opsForValue().set(key, value);
     }
 
     /**
@@ -148,8 +150,8 @@ public class RedisClient {
      * @param value   值
      * @param timeout 缓存过期时间
      */
-    public void set(String key, Object value, Duration timeout) {
-        redisTemplate.opsForValue().set(key, value, timeout);
+    public Mono<Boolean> set(String key, Object value, Duration timeout) {
+        return reactiveRedisTemplate.opsForValue().set(key, value, timeout);
     }
 
     /**
@@ -159,8 +161,8 @@ public class RedisClient {
      * @param value 值
      * @return 是否设置成功
      */
-    public boolean setIfAbsent(String key, Object value) {
-        return Optional.ofNullable(redisTemplate.opsForValue().setIfAbsent(key, value)).orElse(Boolean.FALSE);
+    public Mono<Boolean> setIfAbsent(String key, Object value) {
+        return reactiveRedisTemplate.opsForValue().setIfAbsent(key, value);
     }
 
     /**
@@ -171,8 +173,8 @@ public class RedisClient {
      * @param timeout 缓存过期时间
      * @return 是否设置成功
      */
-    public boolean setIfAbsent(String key, Object value, Duration timeout) {
-        return Optional.ofNullable(redisTemplate.opsForValue().setIfAbsent(key, value, timeout)).orElse(Boolean.FALSE);
+    public Mono<Boolean> setIfAbsent(String key, Object value, Duration timeout) {
+        return reactiveRedisTemplate.opsForValue().setIfAbsent(key, value, timeout);
     }
 
     /**
@@ -182,8 +184,8 @@ public class RedisClient {
      * @param value 值
      * @return 是否设置成功
      */
-    public boolean setIfPresent(String key, Object value) {
-        return Optional.ofNullable(redisTemplate.opsForValue().setIfPresent(key, value)).orElse(Boolean.FALSE);
+    public Mono<Boolean> setIfPresent(String key, Object value) {
+        return reactiveRedisTemplate.opsForValue().setIfPresent(key, value);
     }
 
     /**
@@ -194,8 +196,8 @@ public class RedisClient {
      * @param timeout 缓存过期时间
      * @return 是否设置成功
      */
-    public boolean setIfPresent(String key, Object value, Duration timeout) {
-        return Optional.ofNullable(redisTemplate.opsForValue().setIfPresent(key, value, timeout)).orElse(Boolean.FALSE);
+    public Mono<Boolean> setIfPresent(String key, Object value, Duration timeout) {
+        return reactiveRedisTemplate.opsForValue().setIfPresent(key, value, timeout);
     }
 
     /**
@@ -205,9 +207,9 @@ public class RedisClient {
      * @param <V> 缓存泛型
      * @return 缓存值
      */
-    public <V> V get(String key) {
+    public <V> Mono<V> get(String key) {
         //noinspection unchecked
-        return (V) redisTemplate.opsForValue().get(key);
+        return (Mono<V>) reactiveRedisTemplate.opsForValue().get(key);
     }
 
     /**
@@ -218,9 +220,9 @@ public class RedisClient {
      * @param <V>      缓存值泛型
      * @return 旧值
      */
-    public <V> V getAndSet(String key, Object newValue) {
+    public <V> Mono<V> getAndSet(String key, Object newValue) {
         //noinspection unchecked
-        return (V) redisTemplate.opsForValue().getAndSet(key, newValue);
+        return (Mono<V>) reactiveRedisTemplate.opsForValue().getAndSet(key, newValue);
     }
 
     /**
@@ -229,8 +231,8 @@ public class RedisClient {
      * @param key 缓存 key
      * @return 自增后的值
      */
-    public Long increment(String key) {
-        return stringRedisTemplate.opsForValue().increment(key);
+    public Mono<Long> increment(String key) {
+        return reactiveStringRedisTemplate.opsForValue().increment(key);
     }
 
     /**
@@ -240,11 +242,11 @@ public class RedisClient {
      * @param delta 增量
      * @return 自增后的值
      */
-    public Long increment(String key, long delta) {
+    public Mono<Long> increment(String key, long delta) {
         if (delta < 0) {
             throw new IllegalArgumentException("递增因子必须大于0");
         }
-        return stringRedisTemplate.opsForValue().increment(key, delta);
+        return reactiveStringRedisTemplate.opsForValue().increment(key, delta);
     }
 
     /**
@@ -253,8 +255,8 @@ public class RedisClient {
      * @param key 缓存 key
      * @return 自减后的值
      */
-    public Long decrement(String key) {
-        return stringRedisTemplate.opsForValue().decrement(key);
+    public Mono<Long> decrement(String key) {
+        return reactiveStringRedisTemplate.opsForValue().decrement(key);
     }
 
     /**
@@ -264,22 +266,22 @@ public class RedisClient {
      * @param delta 减量
      * @return 自减后的值
      */
-    public Long decrement(String key, long delta) {
+    public Mono<Long> decrement(String key, long delta) {
         if (delta < 0) {
             throw new IllegalArgumentException("递减因子必须大于0");
         }
-        return stringRedisTemplate.opsForValue().decrement(key, delta);
+        return reactiveStringRedisTemplate.opsForValue().decrement(key, delta);
     }
 
     /**
-     * 判断Hash表中是否存在缓存项item
+     * 判断Hash链表中是否存在缓存项item
      *
      * @param key  缓存 key
      * @param item item 项
      * @return 存在:true 不存在:false
      */
-    public boolean hasKey(String key, String item) {
-        return redisTemplate.opsForHash().hasKey(key, item);
+    public Mono<Boolean> hasKey(String key, String item) {
+        return reactiveRedisTemplate.opsForHash().hasKey(key, item);
     }
 
     /**
@@ -288,8 +290,8 @@ public class RedisClient {
      * @param key 缓存 key
      * @return Hash数据结构
      */
-    public Map<Object, Object> hget(String key) {
-        return redisTemplate.opsForHash().entries(key);
+    public Flux<Map.Entry<Object, Object>> hget(String key) {
+        return reactiveRedisTemplate.opsForHash().entries(key);
     }
 
     /**
@@ -300,9 +302,9 @@ public class RedisClient {
      * @param <V>  值泛型
      * @return Hash数据结构中item项值
      */
-    public <V> V hget(String key, String item) {
+    public <V> Mono<V> hget(String key, String item) {
         //noinspection unchecked
-        return (V) redisTemplate.opsForHash().get(key, item);
+        return (Mono<V>) reactiveRedisTemplate.opsForHash().get(key, item);
     }
 
     /**
@@ -311,8 +313,8 @@ public class RedisClient {
      * @param key 缓存 key
      * @param map 对应多个键值
      */
-    public void hset(String key, Map<String, Object> map) {
-        redisTemplate.opsForHash().putAll(key, map);
+    public Mono<Boolean> hset(String key, Map<String, Object> map) {
+        return reactiveRedisTemplate.opsForHash().putAll(key, map);
     }
 
     /**
@@ -322,30 +324,40 @@ public class RedisClient {
      * @param map     对应多个键值
      * @param timeout 过期时长
      */
-    public boolean hset(final String key, Map<String, Object> map, Duration timeout) {
-        redisTemplate.opsForHash().putAll(key, map);
-        return expire(key, timeout);
+    public Mono<Boolean> hset(final String key, Map<String, Object> map, Duration timeout) {
+        return reactiveRedisTemplate.opsForHash().putAll(key, map)
+                .filter(success -> success)
+                .flatMap(success -> expire(key, timeout));
     }
 
     /**
-     * 向一张Hash表中放入数据,如果不存在将自动创建
+     * 向一张Hash链表中放入数据,如果不存在将自动创建
      *
      * @param key   缓存 key
      * @param item  项
      * @param value 值
      */
-    public void hset(String key, String item, Object value) {
-        redisTemplate.opsForHash().put(key, item, value);
+    public Mono<Boolean> hset(String key, String item, Object value) {
+        return reactiveRedisTemplate.opsForHash().put(key, item, value);
     }
 
     /**
-     * 删除Hash表中的值
+     * 删除整个Hash链链表
+     *
+     * @param key 键 不能为null
+     */
+    public Mono<Boolean> hdel(String key) {
+        return reactiveRedisTemplate.opsForHash().delete(key);
+    }
+
+    /**
+     * 删除Hash链表中的值
      *
      * @param key  键 不能为null
      * @param item 项 可以使多个 不能为null
      */
-    public boolean hdel(String key, Object... item) {
-        return Optional.of(redisTemplate.opsForHash().delete(key, item)).map(l -> l > 0).orElse(Boolean.FALSE);
+    public Mono<Long> hdel(String key, Object... item) {
+        return reactiveRedisTemplate.opsForHash().remove(key, item);
     }
 
     /**
@@ -354,8 +366,8 @@ public class RedisClient {
      * @param key 缓存 key
      * @return 缓存集合长度
      */
-    public Long size(String key) {
-        return redisTemplate.opsForList().size(key);
+    public Mono<Long> size(String key) {
+        return reactiveRedisTemplate.opsForList().size(key);
     }
 
     /**
@@ -366,9 +378,9 @@ public class RedisClient {
      * @param <V>   值泛型
      * @return 缓存值
      */
-    public <V> V get(String key, long index) {
+    public <V> Mono<V> get(String key, long index) {
         //noinspection unchecked
-        return (V) redisTemplate.opsForList().index(key, index);
+        return (Mono<V>) reactiveRedisTemplate.opsForList().index(key, index);
     }
 
     /**
@@ -379,9 +391,9 @@ public class RedisClient {
      * @param end   结束索引
      * @return 值结合 start=0 end=-1可返还列表所有数据
      */
-    public <V> List<V> range(String key, long start, long end) {
+    public <V> Flux<V> range(String key, long start, long end) {
         //noinspection unchecked
-        return (List<V>) redisTemplate.opsForList().range(key, start, end);
+        return (Flux<V>) reactiveRedisTemplate.opsForList().range(key, start, end);
     }
 
     /**
@@ -392,8 +404,8 @@ public class RedisClient {
      * @param <V>   值泛型
      * @return 列表长度
      */
-    public <V> Long leftPush(String key, V value) {
-        return redisTemplate.opsForList().leftPush(key, value);
+    public <V> Mono<Long> leftPush(String key, V value) {
+        return reactiveRedisTemplate.opsForList().leftPush(key, value);
     }
 
     /**
@@ -403,8 +415,8 @@ public class RedisClient {
      * @param values 值数组
      * @return 列表长度
      */
-    public Long leftPushAll(String key, Object... values) {
-        return redisTemplate.opsForList().leftPushAll(key, values);
+    public Mono<Long> leftPushAll(String key, Object... values) {
+        return reactiveRedisTemplate.opsForList().leftPushAll(key, values);
     }
 
     /**
@@ -414,9 +426,9 @@ public class RedisClient {
      * @param collection 值集合
      * @return 列表长度
      */
-    public Long leftPushAll(String key, Collection collection) {
+    public Mono<Long> leftPushAll(String key, Collection collection) {
         //noinspection unchecked
-        return redisTemplate.opsForList().leftPushAll(key, collection);
+        return reactiveRedisTemplate.opsForList().leftPushAll(key, collection);
     }
 
     /**
@@ -427,8 +439,8 @@ public class RedisClient {
      * @param <V>   值泛型
      * @return 列表长度
      */
-    public <V> Long leftPushIfPresent(String key, V value) {
-        return redisTemplate.opsForList().leftPushIfPresent(key, value);
+    public <V> Mono<Long> leftPushIfPresent(String key, V value) {
+        return reactiveRedisTemplate.opsForList().leftPushIfPresent(key, value);
     }
 
     /**
@@ -439,8 +451,8 @@ public class RedisClient {
      * @param <V>   值泛型
      * @return 列表长度
      */
-    public <V> Long rightPush(String key, V value) {
-        return redisTemplate.opsForList().rightPush(key, value);
+    public <V> Mono<Long> rightPush(String key, V value) {
+        return reactiveRedisTemplate.opsForList().rightPush(key, value);
     }
 
     /**
@@ -450,8 +462,8 @@ public class RedisClient {
      * @param values 值数组
      * @return 列表长度
      */
-    public Long rightPushAll(String key, Object... values) {
-        return redisTemplate.opsForList().rightPushAll(key, values);
+    public Mono<Long> rightPushAll(String key, Object... values) {
+        return reactiveRedisTemplate.opsForList().rightPushAll(key, values);
     }
 
     /**
@@ -461,9 +473,9 @@ public class RedisClient {
      * @param collection 值集合
      * @return 列表长度
      */
-    public Long rightPushAll(String key, Collection collection) {
+    public Mono<Long> rightPushAll(String key, Collection collection) {
         //noinspection unchecked
-        return redisTemplate.opsForList().rightPushAll(key, collection);
+        return reactiveRedisTemplate.opsForList().rightPushAll(key, collection);
     }
 
     /**
@@ -474,18 +486,18 @@ public class RedisClient {
      * @param <V>   值泛型
      * @return 列表长度
      */
-    public <V> Long rightPushIfPresent(String key, V value) {
-        return redisTemplate.opsForList().rightPushIfPresent(key, value);
+    public <V> Mono<Long> rightPushIfPresent(String key, V value) {
+        return reactiveRedisTemplate.opsForList().rightPushIfPresent(key, value);
     }
 
     /**
      * 根据key 获取过期时间
      *
      * @param key 缓存 key
-     * @return 时间(毫秒) 返回0代表为永久有效, 返回-2代表key不存在或已过期
+     * @return Duration时间
      */
-    public long getExpire(String key) {
-        return Optional.ofNullable(redisTemplate.getExpire(key)).orElse(-2L);
+    public Mono<Duration> getExpire(String key) {
+        return reactiveRedisTemplate.getExpire(key);
     }
 
     /**
@@ -496,23 +508,19 @@ public class RedisClient {
      * @param timeout 过期时长
      * @return 是否设置成功
      */
-    public boolean expire(String key, Duration timeout) {
-        if (TimeoutUtils.hasMillis(timeout)) {
-            return Optional.ofNullable(redisTemplate.expire(key, timeout.toMillis(), TimeUnit.MILLISECONDS)).orElse(Boolean.FALSE);
-        } else {
-            return Optional.ofNullable(redisTemplate.expire(key, timeout.getSeconds(), TimeUnit.SECONDS)).orElse(Boolean.FALSE);
-        }
+    public Mono<Boolean> expire(String key, Duration timeout) {
+        return reactiveRedisTemplate.expire(key, timeout);
     }
 
     /**
      * 设置缓存过期日期
      *
-     * @param key  缓存 key
-     * @param date 过期日期
+     * @param key      缓存 key
+     * @param expireAt 过期日期
      * @return 是否设置成功
      */
-    public boolean expireAt(String key, Date date) {
-        return Optional.ofNullable(redisTemplate.expireAt(key, date)).orElse(Boolean.FALSE);
+    public Mono<Boolean> expireAt(String key, Instant expireAt) {
+        return reactiveRedisTemplate.expireAt(key, expireAt);
     }
 
     /**
@@ -521,8 +529,8 @@ public class RedisClient {
      * @param key 缓存 key
      * @return 是否设置成功
      */
-    public boolean persist(String key) {
-        return Optional.ofNullable(redisTemplate.persist(key)).orElse(Boolean.FALSE);
+    public Mono<Boolean> persist(String key) {
+        return reactiveRedisTemplate.persist(key);
     }
 
     /**
@@ -531,30 +539,26 @@ public class RedisClient {
      * @param key 缓存 key
      * @return 是否存在
      */
-    public boolean exists(String key) {
-        return Optional.ofNullable(redisTemplate.hasKey(key)).orElse(Boolean.FALSE);
+    public Mono<Boolean> exists(String key) {
+        return reactiveRedisTemplate.hasKey(key);
     }
 
     /**
-     * 批量删除缓存，如果缓存key不存在返回false
+     * 批量删除缓存
      *
      * @param keys 缓存 key数组
      */
-    public boolean delete(String... keys) {
-        final int length = null == keys ? 0 : keys.length;
-        if (length == 0) {
-            return true;
-        }
-        Boolean result = null;
-        if (length == 1) {
-            result = redisTemplate.delete(keys[0]);
-        } else {
-            Long l = redisTemplate.delete(Arrays.asList(keys));
-            if (null != l && l > 0) {
-                result = true;
-            }
-        }
-        return null == result ? false : result;
+    public Mono<Long> delete(String... keys) {
+        return reactiveRedisTemplate.delete(keys);
+    }
+
+    /**
+     * 批量删除缓存
+     *
+     * @param keys 缓存 key流
+     */
+    public Mono<Long> delete(Publisher<String> keys) {
+        return reactiveRedisTemplate.delete(keys);
     }
 
     /**
@@ -562,11 +566,7 @@ public class RedisClient {
      *
      * @param pattern 匹配的前缀
      */
-    public boolean deleteByPattern(String pattern) {
-        Set<String> keys = redisTemplate.keys(pattern);
-        if (CollectionUtils.isEmpty(keys)) {
-            return true;
-        }
-        return Optional.ofNullable(redisTemplate.delete(keys)).map(l -> l > 0).orElse(Boolean.FALSE);
+    public Mono<Long> deleteByPattern(String pattern) {
+        return reactiveRedisTemplate.delete(reactiveRedisTemplate.keys(pattern));
     }
 }

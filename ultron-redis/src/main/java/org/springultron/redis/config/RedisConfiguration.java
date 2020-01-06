@@ -76,7 +76,7 @@ public class RedisConfiguration {
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Bean
     @ConditionalOnMissingBean(name = {"redisTemplate"})
-    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory, ObjectProvider<RedisSerializer<Object>> redisSerializer) {
+    public RedisTemplate<String, Object> redisTemplate(ObjectProvider<RedisSerializer<Object>> redisSerializer, RedisConnectionFactory redisConnectionFactory) {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         // 设置连接工厂
         template.setConnectionFactory(redisConnectionFactory);
