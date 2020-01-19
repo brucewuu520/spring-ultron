@@ -84,12 +84,11 @@ public class RedisConfiguration {
         template.setKeySerializer(RedisSerializer.string());
         template.setHashKeySerializer(RedisSerializer.string());
         redisSerializer.ifAvailable(serializer -> {
+            template.setEnableDefaultSerializer(false);
             template.setDefaultSerializer(serializer);
             template.setValueSerializer(serializer);
             template.setHashValueSerializer(serializer);
-            template.setEnableDefaultSerializer(false);
         });
-        template.afterPropertiesSet();
         return template;
     }
 }

@@ -39,7 +39,7 @@ public class PageQuery implements Serializable {
      * 默认只第1页时查询
      */
     @ApiModelProperty(value = "是否查询总数,默认只第1页时查询", position = 4)
-    private boolean isSearchCount = false;
+    private Boolean isSearchCount;
 
     public Integer getCurrent() {
         return current;
@@ -73,11 +73,11 @@ public class PageQuery implements Serializable {
         this.descs = descs;
     }
 
-    public boolean isSearchCount() {
+    public Boolean getSearchCount() {
         return isSearchCount;
     }
 
-    public void setSearchCount(boolean searchCount) {
+    public void setSearchCount(Boolean searchCount) {
         isSearchCount = searchCount;
     }
 }

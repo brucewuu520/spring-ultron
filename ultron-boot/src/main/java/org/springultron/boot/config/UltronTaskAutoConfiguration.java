@@ -46,7 +46,7 @@ public class UltronTaskAutoConfiguration extends AsyncConfigurerSupport {
         taskExecutor.setKeepAliveSeconds(properties.getKeepAliveSeconds());
         taskExecutor.setThreadNamePrefix(properties.getThreadNamePrefix());
         taskExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
-        taskExecutor.afterPropertiesSet();
+//        taskExecutor.afterPropertiesSet(); // 该方法Spring会自动调用
         return taskExecutor;
     }
 
@@ -64,7 +64,7 @@ public class UltronTaskAutoConfiguration extends AsyncConfigurerSupport {
             taskScheduler.setPoolSize(properties.getCorePoolSize());
             taskScheduler.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
             taskScheduler.setThreadNamePrefix("ultron-scheduling-");
-            taskScheduler.afterPropertiesSet();
+//            taskScheduler.afterPropertiesSet(); // 该方法Spring会自动调用
             scheduledTaskRegistrar.setTaskScheduler(taskScheduler);
         };
     }

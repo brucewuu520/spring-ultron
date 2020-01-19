@@ -23,8 +23,12 @@ public class PageUtils {
      */
     public static <T> IPage<T> getPage(PageQuery query) {
         Page<T> page = new Page<>(null == query.getCurrent() ? 1 : query.getCurrent(), null == query.getSize() ? 10 : query.getSize());
-        if (null != query.getCurrent() && query.getCurrent() != 1) {
-            page.setSearchCount(query.isSearchCount());
+        if (query.getSearchCount() == null) {
+            if (query.getCurrent() != null && query.getCurrent() > 1) {
+                page.setSearchCount(false);
+            }
+        } else {
+            page.setSearchCount(query.getSearchCount());
         }
         if (null != query.getAscs()) {
             final int length = query.getAscs().length;

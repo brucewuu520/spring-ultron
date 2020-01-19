@@ -34,10 +34,11 @@
 
     <properties>
         <!-- boot dependencies start-->
-        <spring-boot.version>2.2.2.RELEASE</spring-boot.version>
-        <mybatis-plus.version>3.3.0</mybatis-plus.version>
+        <spring-boot.version>2.2.3.RELEASE</spring-boot.version>
+        <mybatis-plus.version>3.3.1</mybatis-plus.version>
         <knife4j.version>2.0.1</knife4j.version>
-        <okhttp3.version>4.3.0</okhttp3.version>
+        <okhttp4.version>4.3.0</okhttp4.version>
+        <jwt.version>0.10.7</jwt.version>
         <!-- boot dependencies end-->
         <!-- cloud dependencies start-->
         <spring-cloud.version>Hoxton.SR1</spring-cloud.version>
@@ -63,6 +64,7 @@
         <module>ultron-http</module>
         <module>ultron-mybatis</module>
         <module>ultron-redis</module>
+        <module>ultron-security</module>
         <module>ultron-swagger</module>
     </modules>
 
@@ -73,7 +75,7 @@
                 <artifactId>spring-boot-dependencies</artifactId>
                 <version>${spring-boot.version}</version>
                 <type>pom</type>
-                <scope>import</scope>
+                <scope>provided</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>

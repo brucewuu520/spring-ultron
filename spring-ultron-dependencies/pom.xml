@@ -13,6 +13,10 @@
         <version>2.0.0</version>
     </parent>
 
+    <properties>
+        <okhttp3.version>${okhttp4.version}</okhttp3.version>
+    </properties>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -43,6 +47,11 @@
             <dependency>
                 <groupId>org.springultron</groupId>
                 <artifactId>ultron-redis</artifactId>
+                <version>${project.parent.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springultron</groupId>
+                <artifactId>ultron-security</artifactId>
                 <version>${project.parent.version}</version>
             </dependency>
             <dependency>
