@@ -291,6 +291,7 @@ public final class WebClientUtils {
                 .post()
                 .uri(baseUrl)
                 .body(formInserter)
+                .accept(MediaType.APPLICATION_JSON_UTF8)
                 .retrieve()
                 .bodyToMono(returnType);
     }
@@ -311,6 +312,7 @@ public final class WebClientUtils {
                 .uri(baseUrl)
                 .headers(headers -> headers.addAll(headerMap))
                 .body(formInserter)
+                .accept(MediaType.APPLICATION_JSON_UTF8)
                 .retrieve()
                 .bodyToMono(returnType);
     }
@@ -329,6 +331,7 @@ public final class WebClientUtils {
                 .post()
                 .uri(baseUrl)
                 .syncBody(formData)
+                .accept(MediaType.APPLICATION_JSON_UTF8)
                 .retrieve()
                 .bodyToMono(returnType);
     }
