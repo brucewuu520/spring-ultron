@@ -1,6 +1,6 @@
 package org.springultron.cloud.servlet;
 
-import com.alibaba.csp.sentinel.adapter.servlet.callback.UrlBlockHandler;
+import com.alibaba.csp.sentinel.adapter.spring.webmvc.callback.BlockExceptionHandler;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,7 +22,7 @@ public class SentinelConfiguration {
      * 限流、熔断异常处理
      */
     @Bean
-    public UrlBlockHandler urlBlockHandler() {
+    public BlockExceptionHandler blockExceptionHandler() {
         return (request, response, e) -> ServerResponse.status(ResultCode.FLOW_LIMITING.getCode())
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(ResultCode.FLOW_LIMITING.getMessage());
