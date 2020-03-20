@@ -60,6 +60,7 @@ public class WebUtils extends org.springframework.web.util.WebUtils {
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         try (PrintWriter writer = response.getWriter()) {
             writer.write(Jackson.toJson(result));
+            writer.flush();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

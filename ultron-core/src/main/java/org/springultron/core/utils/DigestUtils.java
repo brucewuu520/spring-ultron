@@ -1,6 +1,6 @@
-package org.springultron.core.crypto;
+package org.springultron.core.utils;
 
-import org.springultron.core.utils.Hex;
+import org.springultron.core.exception.CryptoException;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -17,49 +17,101 @@ import java.security.NoSuchAlgorithmException;
  * @author brucewuu
  * @date 2019-06-06 10:44
  */
-public final class DigestUtils extends org.springframework.util.DigestUtils {
+public class DigestUtils {
+
+    private DigestUtils() {
+    }
 
     private static final int STREAM_BUFFER_LENGTH = 1024;
 
-    private DigestUtils() {
+    public static byte[] md5(byte[] valueToDigest) {
+        return digest("MD5", valueToDigest);
+    }
+
+    public static byte[] md5(String valueToDigest) {
+        return digest("MD5", valueToDigest.getBytes(StandardCharsets.UTF_8));
+    }
+
+    public static byte[] md5(InputStream valueToDigest) throws IOException {
+        return digest("MD5", valueToDigest);
     }
 
     /**
      * Calculates the MD5 digest and returns the value as a 32 character hex string.
      *
-     * @param data Data to digest
+     * @param valueToDigest Data to digest
      * @return MD5 digest as a hex string
      */
-    public static String md5Hex(final String data) {
-        return DigestUtils.md5DigestAsHex(data.getBytes(StandardCharsets.UTF_8));
-    }
-
-    public static String sha1Hex(final String srcStr) {
-        return hashHex("SHA-1", srcStr);
-    }
-
-    public static String sha256Hex(final String srcStr) {
-        return hashHex("SHA-256", srcStr);
-    }
-
-    public static String sha384Hex(final String srcStr) {
-        return hashHex("SHA-384", srcStr);
-    }
-
-    public static String sha512Hex(final String srcStr) {
-        return hashHex("SHA-512", srcStr);
-    }
-
-    public static String hashHex(final String algorithm, final String srcStr) {
-        byte[] bytes = getDigest(algorithm).digest(srcStr.getBytes(StandardCharsets.UTF_8));
+    public static String md5Hex(final String valueToDigest) {
+        byte[] bytes = md5(valueToDigest);
         return Hex.encodeHexString(bytes);
     }
 
-    private static MessageDigest getDigest(final String algorithm) {
+    public static String sha1Hex(final String valueToDigest) {
+        return hashHex("SHA-1", valueToDigest);
+    }
+
+    public static String sha256Hex(final String valueToDigest) {
+        return hashHex("SHA-256", valueToDigest);
+    }
+
+    public static String sha384Hex(final String valueToDigest) {
+        return hashHex("SHA-384", valueToDigest);
+    }
+
+    public static String sha512Hex(final String valueToDigest) {
+        return hashHex("SHA-512", valueToDigest);
+    }
+
+    /**
+     * hash摘要算法
+     *
+     * @param algorithm     算法
+     * @param valueToDigest data
+     * @return digest as a hex string
+     */
+    public static String hashHex(final String algorithm, final String valueToDigest) {
+        byte[] bytes = digest(algorithm, valueToDigest.getBytes(StandardCharsets.UTF_8));
+        return Hex.encodeHexString(bytes);
+    }
+
+    /**
+     * 摘要算法
+     *
+     * @param algorithm     算法
+     * @param valueToDigest data
+     * @return digest as byte array
+     */
+    public static byte[] digest(final String algorithm, final byte[] valueToDigest) {
+        return getDigest(algorithm).digest(valueToDigest);
+    }
+
+    /**
+     * 摘要算法
+     *
+     * @param algorithm     算法
+     * @param valueToDigest data输入流
+     * @return digest as byte array
+     */
+    public static byte[] digest(final String algorithm, final InputStream valueToDigest) {
+        MessageDigest messageDigest = getDigest(algorithm);
+        final byte[] buffer = new byte[STREAM_BUFFER_LENGTH];
+        int read;
+        try {
+            while ((read = valueToDigest.read(buffer, 0, STREAM_BUFFER_LENGTH)) > -1) {
+                messageDigest.update(buffer, 0, read);
+            }
+            return messageDigest.digest();
+        } catch (final IOException e) {
+            throw new CryptoException(e);
+        }
+    }
+
+    public static MessageDigest getDigest(final String algorithm) {
         try {
             return MessageDigest.getInstance(algorithm);
         } catch (final NoSuchAlgorithmException e) {
-            throw new IllegalStateException("Could not find MessageDigest with algorithm \"" + algorithm + "\"", e);
+            throw new CryptoException("Could not find MessageDigest with algorithm \"" + algorithm + "\"", e);
         }
     }
 
@@ -205,13 +257,13 @@ public final class DigestUtils extends org.springframework.util.DigestUtils {
             mac.init(keySpec);
             return mac;
         } catch (final NoSuchAlgorithmException | InvalidKeyException e) {
-            throw new IllegalArgumentException(e);
+            throw new CryptoException(e);
         }
     }
 
     public static Mac getInitializedMac(final String algorithm, final String key) {
         if (key == null) {
-            throw new IllegalArgumentException("Null key");
+            throw new CryptoException("Null key");
         }
         try {
             final SecretKeySpec keySpec = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), algorithm);
@@ -219,7 +271,8 @@ public final class DigestUtils extends org.springframework.util.DigestUtils {
             mac.init(keySpec);
             return mac;
         } catch (final NoSuchAlgorithmException | InvalidKeyException e) {
-            throw new IllegalArgumentException(e);
+            throw new CryptoException(e);
         }
     }
+
 }

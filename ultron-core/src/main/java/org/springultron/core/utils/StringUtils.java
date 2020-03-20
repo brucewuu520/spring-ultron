@@ -705,4 +705,152 @@ public class StringUtils extends org.springframework.util.StringUtils {
         }
         return list.toArray(new String[list.size()]);
     }
+
+    /**
+     * 指定范围内查找字符串，忽略大小写
+     *
+     * @param str       字符串
+     * @param searchStr 需要查找位置的字符串
+     * @return 位置
+     * @since 3.2.1
+     */
+    public static int lastIndexOfIgnoreCase(final CharSequence str, final CharSequence searchStr) {
+        return lastIndexOfIgnoreCase(str, searchStr, str.length());
+    }
+
+    /**
+     * 指定范围内查找字符串，忽略大小写<br>
+     * fromIndex 为搜索起始位置，从后往前计数
+     *
+     * @param str       字符串
+     * @param searchStr 需要查找位置的字符串
+     * @param fromIndex 起始位置，从后往前计数
+     * @return 位置
+     * @since 3.2.1
+     */
+    public static int lastIndexOfIgnoreCase(final CharSequence str, final CharSequence searchStr, int fromIndex) {
+        return lastIndexOf(str, searchStr, fromIndex, true);
+    }
+
+    /**
+     * 指定范围内查找字符串<br>
+     * fromIndex 为搜索起始位置，从后往前计数
+     *
+     * @param str        字符串
+     * @param searchStr  需要查找位置的字符串
+     * @param fromIndex  起始位置，从后往前计数
+     * @param ignoreCase 是否忽略大小写
+     * @return 位置
+     * @since 3.2.1
+     */
+    public static int lastIndexOf(final CharSequence str, final CharSequence searchStr, int fromIndex, boolean ignoreCase) {
+        if (str == null || searchStr == null) {
+            return -1;
+        }
+        if (fromIndex < 0) {
+            fromIndex = 0;
+        }
+        fromIndex = Math.min(fromIndex, str.length());
+
+        if (searchStr.length() == 0) {
+            return fromIndex;
+        }
+
+        if (false == ignoreCase) {
+            // 不忽略大小写调用JDK方法
+            return str.toString().lastIndexOf(searchStr.toString(), fromIndex);
+        }
+
+        for (int i = fromIndex; i > 0; i--) {
+            if (isSubEquals(str, i, searchStr, 0, searchStr.length(), true)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * 截取两个字符串的不同部分（长度一致），判断截取的子串是否相同<br>
+     * 任意一个字符串为null返回false
+     *
+     * @param str1       第一个字符串
+     * @param start1     第一个字符串开始的位置
+     * @param str2       第二个字符串
+     * @param start2     第二个字符串开始的位置
+     * @param length     截取长度
+     * @param ignoreCase 是否忽略大小写
+     * @return 子串是否相同
+     * @since 3.2.1
+     */
+    public static boolean isSubEquals(CharSequence str1, int start1, CharSequence str2, int start2, int length, boolean ignoreCase) {
+        if (null == str1 || null == str2) {
+            return false;
+        }
+        return str1.toString().regionMatches(ignoreCase, start1, str2.toString(), start2, length);
+    }
+
+    /**
+     * 改进JDK subString<br>
+     * index从0开始计算，最后一个字符为-1<br>
+     * 如果from和to位置一样，返回 "" <br>
+     * 如果from或to为负数，则按照length从后向前数位置，如果绝对值大于字符串长度，则from归到0，to归到length<br>
+     * 如果经过修正的index中from大于to，则互换from和to example: <br>
+     * abcdefgh 2 3 =》 c <br>
+     * abcdefgh 2 -3 =》 cde <br>
+     *
+     * @param str       String
+     * @param fromIndex 开始的index（包括）
+     * @param toIndex   结束的index（不包括）
+     * @return 字串
+     */
+    public static String sub(CharSequence str, int fromIndex, int toIndex) {
+        if (isEmpty(str)) {
+            return null == str ? null : str.toString();
+        }
+        int len = str.length();
+
+        if (fromIndex < 0) {
+            fromIndex = len + fromIndex;
+            if (fromIndex < 0) {
+                fromIndex = 0;
+            }
+        } else if (fromIndex > len) {
+            fromIndex = len;
+        }
+
+        if (toIndex < 0) {
+            toIndex = len + toIndex;
+            if (toIndex < 0) {
+                toIndex = len;
+            }
+        } else if (toIndex > len) {
+            toIndex = len;
+        }
+
+        if (toIndex < fromIndex) {
+            int tmp = fromIndex;
+            fromIndex = toIndex;
+            toIndex = tmp;
+        }
+
+        if (fromIndex == toIndex) {
+            return StringPool.EMPTY;
+        }
+
+        return str.toString().substring(fromIndex, toIndex);
+    }
+
+    /**
+     * 切割指定位置之后部分的字符串
+     *
+     * @param string    字符串
+     * @param fromIndex 切割开始的位置（包括）
+     * @return 切割后后剩余的后半部分字符串
+     */
+    public static String subSuf(CharSequence string, int fromIndex) {
+        if (isEmpty(string)) {
+            return null;
+        }
+        return sub(string, fromIndex, string.length());
+    }
 }

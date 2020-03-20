@@ -1,5 +1,9 @@
 package org.springultron.core.utils;
 
+import org.springultron.core.pool.PatternPool;
+
+import java.math.BigInteger;
+
 /**
  * @author brucewuu
  * @date 2019-06-06 11:58
@@ -58,47 +62,60 @@ public class Hex {
         return encodeHex(data, toLowerCase ? DIGITS_LOWER : DIGITS_UPPER);
     }
 
-    private static char[] encodeHex(byte[] data, char[] toDigits) {
-        int l = data.length;
-        char[] out = new char[l << 1];
-        int i = 0;
-
-        for (int var5 = 0; i < l; ++i) {
-            out[var5++] = toDigits[(240 & data[i]) >>> 4];
-            out[var5++] = toDigits[15 & data[i]];
+    /**
+     * Hex（16进制）字符串转为BigInteger
+     *
+     * @param hexStr Hex(16进制字符串)
+     * @return {@link BigInteger}
+     * @since 5.2.0
+     */
+    public static BigInteger toBigInteger(String hexStr) {
+        if (null == hexStr) {
+            return null;
         }
+        return new BigInteger(hexStr, 16);
+    }
 
+    /**
+     * 将字节数组转换为十六进制字符数组
+     *
+     * @param data     byte[]
+     * @param toDigits 用于控制输出的char[]
+     * @return 十六进制char[]
+     */
+    private static char[] encodeHex(byte[] data, char[] toDigits) {
+        final int len = data.length;
+        final char[] out = new char[len << 1]; // len*2
+        for (int i = 0, j = 0; i < len; i++) {
+            out[j++] = toDigits[(0xF0 & data[i]) >>> 4]; // 高位
+            out[j++] = toDigits[0x0F & data[i]]; // 低位
+        }
         return out;
     }
 
-    protected static int toDigit(final char ch, final int index) {
+    /**
+     * 验证是否为Hex（16进制）字符串
+     *
+     * @param value 值
+     * @return 是否为Hex（16进制）字符串
+     */
+    public static boolean isHex(CharSequence value) {
+        return RegexUtils.isMatch(value, PatternPool.HEX);
+    }
+
+    /**
+     * 将十六进制字符转换成一个整数
+     *
+     * @param ch    十六进制char
+     * @param index 十六进制字符在字符数组中的位置
+     * @return 一个整数
+     * @throws IllegalArgumentException 当ch不是一个合法的十六进制字符时，抛出运行时异常
+     */
+    private static int toDigit(final char ch, final int index) {
         final int digit = Character.digit(ch, 16);
         if (digit == -1) {
             throw new IllegalArgumentException("Illegal hexadecimal character " + ch + " at index " + index);
         }
         return digit;
     }
-
-//    /**
-//     * byte数组转化为16进制字符串
-//     *
-//     * @param bytes byte数组
-//     * @return String
-//     */
-//    public static String byteToHexString(byte[] bytes) {
-//        StringBuilder sb = new StringBuilder();
-//        for (byte aByte : bytes) {
-//            String strHex = Integer.toHexString(aByte);
-//            if (strHex.length() > 3) {
-//                sb.append(strHex.substring(6));
-//            } else {
-//                if (strHex.length() < 2) {
-//                    sb.append("0").append(strHex);
-//                } else {
-//                    sb.append(strHex);
-//                }
-//            }
-//        }
-//        return sb.toString();
-//    }
 }

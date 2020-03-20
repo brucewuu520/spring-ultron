@@ -16,6 +16,7 @@
 
 package org.springultron.core.exception;
 
+import org.springultron.core.pool.StringPool;
 import org.springultron.core.utils.StringBuilderWriter;
 
 import java.io.PrintWriter;
@@ -83,6 +84,29 @@ public class Exceptions {
                 return unwrapped;
             }
         }
+    }
+
+    /**
+     * 获得完整消息，包括异常名，消息格式为：{SimpleClassName}: {ThrowableMessage}
+     *
+     * @param e 异常
+     * @return 完整消息
+     */
+    public static String getMessage(Throwable e) {
+        if (null == e) {
+            return StringPool.EMPTY;
+        }
+        return String.format("%s: %s", e.getClass().getSimpleName(), e.getMessage());
+    }
+
+    /**
+     * 获得消息，调用异常类的getMessage方法
+     *
+     * @param e 异常
+     * @return 消息
+     */
+    public static String getSimpleMessage(Throwable e) {
+        return (null == e) ? StringPool.EMPTY : e.getMessage();
     }
 
     /**
