@@ -33,7 +33,7 @@ public class SimpleAuthenticationSuccessHandler implements AuthenticationSuccess
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         String username = userDetails.getUsername();
         String token = jwtProcessor.generateToken(username);
-        HashMap<String, String> hashMap = Maps.newHashMap(2);
+        HashMap<String, String> hashMap = Maps.newHashMap(1);
         hashMap.put("token", token);
         WebUtils.renderJson(response, ApiResult.success(hashMap, "login success"));
     }

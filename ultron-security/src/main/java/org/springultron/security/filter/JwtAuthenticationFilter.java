@@ -1,8 +1,10 @@
 package org.springultron.security.filter;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -56,6 +58,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 // 放入安全上下文中
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            } catch (ExpiredJwtException e) {
+                authenticationEntryPoint.commence(request, response, new CredentialsExpiredException("token is expired"));
             } catch (JwtException e) {
                 authenticationEntryPoint.commence(request, response, new BadCredentialsException("token is invalid"));
             } catch (AuthenticationException e) {

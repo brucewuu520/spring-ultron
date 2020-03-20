@@ -1,8 +1,6 @@
 package org.springultron.security.jwt;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Base64Utils;
@@ -17,16 +15,18 @@ import java.util.Optional;
 /**
  * JWT工具类
  *
- * @Author: brucewuu
- * @Date: 2019/10/23 14:48
+ * @author brucewuu
+ * @date 2019/10/23 14:48
  */
-public class JwtUtils {
+public final class JwtUtils {
+
     private JwtUtils() {
         throw new UnsupportedOperationException("u can't instantiate me...");
     }
 
     /**
      * 生成JWT加密秘钥
+     * 支持 SHA-256 SHA-384 SHA-512算法
      * 默认使用SHA-512算法
      */
     public static String generateSecret() {
@@ -45,7 +45,18 @@ public class JwtUtils {
     }
 
     /**
+     * 生成token的过期时间
+     *
+     * @param expiration 有效期时长(单位:秒)
+     */
+    @Nullable
+    private static Date generateExpirationDate(Long expiration) {
+        return Optional.ofNullable(expiration).map(time -> new Date(System.currentTimeMillis() + time * 1000)).orElse(null);
+    }
+
+    /**
      * 生成JWT
+     * 支持 SHA-256 SHA-384 SHA-512算法
      * 默认使用HS512算法
      *
      * @param claims jwt负载
@@ -72,28 +83,18 @@ public class JwtUtils {
     }
 
     /**
+     * 获取JWT载体
+     */
+    @Nullable
+    public static Claims obtainClaims(String token, String secret) {
+        return Jwts.parserBuilder().setSigningKey(DatatypeConverter.parseBase64Binary(secret)).build().parseClaimsJws(token).getBody();
+    }
+
+    /**
      * 从JWT中获取userName
      */
     @Nullable
     public static String obtainUsername(String token, String secret) {
         return Optional.ofNullable(obtainClaims(token, secret)).map(Claims::getAudience).orElse(null);
-    }
-
-    /**
-     * 获取JWT载体
-     */
-    @Nullable
-    public static Claims obtainClaims(String token, String secret) {
-        return Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(secret)).parseClaimsJws(token).getBody();
-    }
-
-    /**
-     * 生成token的过期时间
-     *
-     * @param expiration 有效期时长(ms)
-     */
-    @Nullable
-    private static Date generateExpirationDate(Long expiration) {
-        return Optional.ofNullable(expiration).map(e -> new Date(System.currentTimeMillis() + e * 1000)).orElse(null);
     }
 }

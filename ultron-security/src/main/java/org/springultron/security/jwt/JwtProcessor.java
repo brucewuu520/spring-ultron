@@ -3,6 +3,7 @@ package org.springultron.security.jwt;
 import io.jsonwebtoken.JwtException;
 import org.springframework.lang.Nullable;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Repository;
 
 /**
  * jwt解析处理器
