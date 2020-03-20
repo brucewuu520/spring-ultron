@@ -35,7 +35,7 @@ public class Knife4jAutoConfiguration {
     @ConditionalOnProperty(value = "knife4j.basic.enable", havingValue = "true")
     @Bean
     public SecurityBasicAuthFilter securityBasicAuthFilter(Knife4jProperties knife4jProperties) {
-        return new SecurityBasicAuthFilter(true, knife4jProperties.getBasic().getUsername(), knife4jProperties.getBasic().getPassword());
+        return new SecurityBasicAuthFilter(knife4jProperties.getBasic().isEnable(), knife4jProperties.getBasic().getUsername(), knife4jProperties.getBasic().getPassword());
     }
 
     @ConditionalOnProperty(value = "knife4j.production", havingValue = "true")
