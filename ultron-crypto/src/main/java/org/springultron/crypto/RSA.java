@@ -1,7 +1,7 @@
-package org.springultron.core.crypto;
+package org.springultron.crypto;
 
-import org.springultron.core.exception.Exceptions;
 import org.springframework.util.Base64Utils;
+import org.springultron.core.exception.CryptoException;
 import org.springultron.core.utils.IoUtils;
 
 import javax.crypto.BadPaddingException;
@@ -13,16 +13,26 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.*;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.PKCS8EncodedKeySpec;
-import java.security.spec.X509EncodedKeySpec;
+import java.security.interfaces.RSAKey;
 
 /**
  * RSA公钥/私钥/签名/加密/解密算法实现
  * 默认补位方式为RSA/ECB/PKCS1Padding
+ *
  * <p>
  * 由于非对称加密速度极其缓慢，一般文件不使用它来加密而是使用对称加密
  * 非对称加密算法可以用来对对称加密的密钥加密，这样保证密钥的安全也就保证了数据的安全
+ * </p>
+ *
+ * <p>
+ * 针对 RSA 的几种填充方式：
+ * RSA/ECB/NoPadding 钥模长-1
+ * RSA/ECB/PKCS1Padding 钥模长 -11
+ * RSA/ECB/OAEPWithSHA1AndMGF1Padding 钥模长-41
+ * </br>
+ * 举个例子，默认情况：
+ * 对RSA/None/NoPadding 长度限制是 127(加密)和128(解密)
+ * 而RSA/ECB/PKCS1Padding 长度限制是 117(加密)和128(解密)
  * </p>
  *
  * @author brucewuu
@@ -41,10 +51,8 @@ public final class RSA {
      * @param keySizeInBits 模长度：1024 2048 4096
      * @return {@link KeyPair}
      */
-    public static KeyPair generateKeyPair(int keySizeInBits) throws NoSuchAlgorithmException {
-        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(KEY_ALGORITHM);
-        keyPairGenerator.initialize(keySizeInBits);
-        return keyPairGenerator.genKeyPair();
+    public static KeyPair generateKeyPair(int keySizeInBits) {
+        return SecureUtils.generateKeyPair(KEY_ALGORITHM, keySizeInBits);
     }
 
     /**
@@ -52,7 +60,7 @@ public final class RSA {
      *
      * @param algorithms 算法 {@link RsaAlgorithms}
      */
-    public static KeyPair generateKeyPair(RsaAlgorithms algorithms) throws NoSuchAlgorithmException {
+    public static KeyPair generateKeyPair(RsaAlgorithms algorithms) {
         int keySizeInBits;
         switch (algorithms) {
             case RSA_SHA256:
@@ -92,33 +100,7 @@ public final class RSA {
     }
 
     /**
-     * 将RSA公钥字符串转为 {@link PublicKey}
-     *
-     * @param publicKey 公钥字符串 base64
-     * @return {@link PublicKey}
-     */
-    public static PublicKey generatePublicKey(String publicKey) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        byte[] keyBytes = Base64Utils.decodeFromString(publicKey);
-        X509EncodedKeySpec keySpec = new X509EncodedKeySpec(keyBytes);
-        KeyFactory keyFactory = KeyFactory.getInstance(KEY_ALGORITHM);
-        return keyFactory.generatePublic(keySpec);
-    }
-
-    /**
-     * 将RSA私钥字符串转为 {@link PrivateKey}
-     *
-     * @param privateKey 私钥字符串 base64
-     * @return {@link PrivateKey}
-     */
-    public static PrivateKey generatePrivateKey(String privateKey) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        byte[] keyBytes = Base64Utils.decodeFromString(privateKey);
-        PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(keyBytes);
-        KeyFactory keyFactory = KeyFactory.getInstance(KEY_ALGORITHM);
-        return keyFactory.generatePrivate(keySpec);
-    }
-
-    /**
-     * 数字签名
+     * 数字签名（base64）
      *
      * @param algorithms 签名算法
      * @param data       签名文本
@@ -126,12 +108,9 @@ public final class RSA {
      * @return base64
      */
     public static String sign(RsaAlgorithms algorithms, String data, String privateKey) {
-        try {
-            byte[] signBytes = sign(algorithms, data.getBytes(StandardCharsets.UTF_8), generatePrivateKey(privateKey));
-            return Base64Utils.encodeToString(signBytes);
-        } catch (Exception e) {
-            throw Exceptions.unchecked(e);
-        }
+        final PrivateKey key = SecureUtils.generatePrivateKey(KEY_ALGORITHM, Base64Utils.decodeFromString(privateKey));
+        byte[] signBytes = sign(algorithms, data.getBytes(StandardCharsets.UTF_8), key);
+        return Base64Utils.encodeToString(signBytes);
     }
 
     /**
@@ -141,26 +120,14 @@ public final class RSA {
      * @param data       签名文本
      * @param privateKey 私钥 {@link PrivateKey}
      */
-    public static byte[] sign(RsaAlgorithms algorithms, byte[] data, PrivateKey privateKey) throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
-        Signature signature = Signature.getInstance(algorithms.getValue());
-        signature.initSign(privateKey);
-        signature.update(data);
-        return signature.sign();
-    }
-
-    /**
-     * 校验签名
-     *
-     * @param algorithms 签名算法
-     * @param data       明文
-     * @param publicKey  公钥字符串 base64
-     * @param sign       签名字符串 base64
-     */
-    public static boolean verify(RsaAlgorithms algorithms, String data, String publicKey, String sign) {
+    public static byte[] sign(RsaAlgorithms algorithms, byte[] data, PrivateKey privateKey) {
         try {
-            return verify(algorithms, data.getBytes(StandardCharsets.UTF_8), generatePublicKey(publicKey), Base64Utils.decodeFromString(sign));
-        } catch (Exception e) {
-            throw Exceptions.unchecked(e);
+            Signature signature = Signature.getInstance(algorithms.getValue());
+            signature.initSign(privateKey);
+            signature.update(data);
+            return signature.sign();
+        } catch (NoSuchAlgorithmException | InvalidKeyException | SignatureException e) {
+            throw new CryptoException(e);
         }
     }
 
@@ -168,15 +135,33 @@ public final class RSA {
      * 校验签名
      *
      * @param algorithms 签名算法
-     * @param data       明文数据
-     * @param publicKey  公钥 {@link PublicKey}
-     * @param sign       签名后数据
+     * @param data       签名前的原始数据
+     * @param publicKey  公钥字符串 base64
+     * @param sign       签名后数据 base64
      */
-    public static boolean verify(RsaAlgorithms algorithms, byte[] data, PublicKey publicKey, byte[] sign) throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
-        Signature signature = Signature.getInstance(algorithms.getValue());
-        signature.initVerify(publicKey);
-        signature.update(data);
-        return signature.verify(sign);
+    public static boolean verify(RsaAlgorithms algorithms, String data, String publicKey, String sign) {
+        final PublicKey key = SecureUtils.generatePublicKey(KEY_ALGORITHM, Base64Utils.decodeFromString(publicKey));
+        return verify(algorithms, data.getBytes(StandardCharsets.UTF_8), key, Base64Utils.decodeFromString(sign));
+
+    }
+
+    /**
+     * 校验签名
+     *
+     * @param algorithms 签名算法
+     * @param data       签名前的原始数据
+     * @param publicKey  公钥 {@link PublicKey}
+     * @param sign       签名后的数据
+     */
+    public static boolean verify(RsaAlgorithms algorithms, byte[] data, PublicKey publicKey, byte[] sign) {
+        try {
+            Signature signature = Signature.getInstance(algorithms.getValue());
+            signature.initVerify(publicKey);
+            signature.update(data);
+            return signature.verify(sign);
+        } catch (NoSuchAlgorithmException | SignatureException | InvalidKeyException e) {
+            throw new CryptoException(e);
+        }
     }
 
     /**
@@ -209,7 +194,7 @@ public final class RSA {
      * @param data      待加密数据字节数组
      * @param publicKey 公钥 {@link PublicKey}
      */
-    public static byte[] encryptByPublicKey(byte[] data, PublicKey publicKey) throws NoSuchPaddingException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException, IOException {
+    public static byte[] encryptByPublicKey(byte[] data, PublicKey publicKey) {
         return encryptByPublicKey(RsaAlgorithms.RSA_ECB_PKCS1, data, publicKey);
     }
 
@@ -223,7 +208,7 @@ public final class RSA {
      * @param publicKey        公钥 {@link PublicKey}
      * @param encryptBlockSize 加密块大小（生成秘钥对时模长度：keySizeInBits/8 - 11）
      */
-    public static byte[] encryptByPublicKey(byte[] data, PublicKey publicKey, int encryptBlockSize) throws NoSuchPaddingException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException, IOException {
+    public static byte[] encryptByPublicKey(byte[] data, PublicKey publicKey, int encryptBlockSize) {
         return encryptByPublicKey(RsaAlgorithms.RSA_ECB_PKCS1, data, publicKey, encryptBlockSize);
     }
 
@@ -250,7 +235,7 @@ public final class RSA {
      * @param encryptBlockSize 加密块大小（生成秘钥对时模长度：keySizeInBits/8 - 11）
      */
     public static String encryptByPublicKey(RsaAlgorithms algorithms, String data, String publicKey, int encryptBlockSize) {
-        byte[] encryptBytes = encryptByPublicKey(algorithms, data.getBytes(StandardCharsets.UTF_8), publicKey, -1);
+        byte[] encryptBytes = encryptByPublicKey(algorithms, data.getBytes(StandardCharsets.UTF_8), publicKey, encryptBlockSize);
         return Base64Utils.encodeToString(encryptBytes);
     }
 
@@ -261,7 +246,7 @@ public final class RSA {
      * @param data       待加密文本
      * @param publicKey  公钥 {@link PublicKey}
      */
-    public static String encryptByPublicKey(RsaAlgorithms algorithms, String data, PublicKey publicKey) throws NoSuchPaddingException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException, IOException {
+    public static String encryptByPublicKey(RsaAlgorithms algorithms, String data, PublicKey publicKey) {
         return encryptByPublicKey(algorithms, data, publicKey, -1);
     }
 
@@ -276,7 +261,7 @@ public final class RSA {
      * @param publicKey        公钥 {@link PublicKey}
      * @param encryptBlockSize 加密块大小（生成秘钥对时模长度：keySizeInBits/8 - 11）
      */
-    public static String encryptByPublicKey(RsaAlgorithms algorithms, String data, PublicKey publicKey, int encryptBlockSize) throws NoSuchPaddingException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException, IOException {
+    public static String encryptByPublicKey(RsaAlgorithms algorithms, String data, PublicKey publicKey, int encryptBlockSize) {
         byte[] encryptBytes = encryptByPublicKey(algorithms, data.getBytes(StandardCharsets.UTF_8), publicKey, encryptBlockSize);
         return Base64Utils.encodeToString(encryptBytes);
     }
@@ -289,11 +274,7 @@ public final class RSA {
      * @param publicKey  公钥字符串 base64
      */
     public static byte[] encryptByPublicKey(RsaAlgorithms algorithms, byte[] data, String publicKey) {
-        try {
-            return encryptByPublicKey(algorithms, data, generatePublicKey(publicKey), -1);
-        } catch (Exception e) {
-            throw Exceptions.unchecked(e);
-        }
+        return encryptByPublicKey(algorithms, data, publicKey, -1);
     }
 
     /**
@@ -308,11 +289,8 @@ public final class RSA {
      * @param encryptBlockSize 加密块大小（生成秘钥对时模长度：keySizeInBits/8 - 11）
      */
     public static byte[] encryptByPublicKey(RsaAlgorithms algorithms, byte[] data, String publicKey, int encryptBlockSize) {
-        try {
-            return encryptByPublicKey(algorithms, data, generatePublicKey(publicKey), encryptBlockSize);
-        } catch (Exception e) {
-            throw Exceptions.unchecked(e);
-        }
+        final PublicKey key = SecureUtils.generatePublicKey(KEY_ALGORITHM, Base64Utils.decodeFromString(publicKey));
+        return encryptByPublicKey(algorithms, data, key, encryptBlockSize);
     }
 
     /**
@@ -322,7 +300,7 @@ public final class RSA {
      * @param data       待加密数据字节数组
      * @param publicKey  公钥 {@link PublicKey}
      */
-    public static byte[] encryptByPublicKey(RsaAlgorithms algorithms, byte[] data, PublicKey publicKey) throws NoSuchPaddingException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException, IOException {
+    public static byte[] encryptByPublicKey(RsaAlgorithms algorithms, byte[] data, PublicKey publicKey) {
         return encryptByPublicKey(algorithms, data, publicKey, -1);
     }
 
@@ -335,10 +313,26 @@ public final class RSA {
      * @param publicKey        公钥 {@link PublicKey}
      * @param encryptBlockSize 加密块大小（生成秘钥对时模长度：keySizeInBits/8 - 11）
      */
-    public static byte[] encryptByPublicKey(RsaAlgorithms algorithms, byte[] data, PublicKey publicKey, int encryptBlockSize) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException, IOException {
-        Cipher cipher = Cipher.getInstance(algorithms.getValue());
-        cipher.init(Cipher.ENCRYPT_MODE, publicKey);
-        return doFinalWithBlock(cipher, data, encryptBlockSize);
+    public static byte[] encryptByPublicKey(RsaAlgorithms algorithms, byte[] data, PublicKey publicKey, int encryptBlockSize) {
+        try {
+            final Cipher cipher = createCipher(algorithms.getValue());
+            cipher.init(Cipher.ENCRYPT_MODE, publicKey);
+            if (encryptBlockSize < 0) {
+                if (GlobalBouncyCastleProvider.INSTANCE.getProvider() == null) {
+                    // 在非使用BC库情况下，blockSize使用默认的算法，加密数据长度 <= 模长-11
+                    encryptBlockSize = ((RSAKey) publicKey).getModulus().bitLength() / 8 - 11;
+                } else {
+                    // 在引入BC库情况下，自动获取块大小
+                    final int blockSize = cipher.getBlockSize();
+                    if (blockSize > 0) {
+                        encryptBlockSize = blockSize;
+                    }
+                }
+            }
+            return doFinalWithBlock(cipher, data, encryptBlockSize);
+        } catch (Exception e) {
+            throw new CryptoException(e);
+        }
     }
 
     /**
@@ -371,7 +365,7 @@ public final class RSA {
      * @param data       待加密文本
      * @param privateKey 私钥字符串 base64
      */
-    public static byte[] encryptByPrivateKey(byte[] data, PrivateKey privateKey) throws NoSuchPaddingException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException, IOException {
+    public static byte[] encryptByPrivateKey(byte[] data, PrivateKey privateKey) {
         return encryptByPrivateKey(RsaAlgorithms.RSA_ECB_PKCS1, data, privateKey);
     }
 
@@ -385,7 +379,7 @@ public final class RSA {
      * @param privateKey       私钥字符串 base64
      * @param encryptBlockSize 加密块大小（生成秘钥对时模长度：keySizeInBits/8 - 11）
      */
-    public static byte[] encryptByPrivateKey(byte[] data, PrivateKey privateKey, int encryptBlockSize) throws NoSuchPaddingException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException, IOException {
+    public static byte[] encryptByPrivateKey(byte[] data, PrivateKey privateKey, int encryptBlockSize) {
         return encryptByPrivateKey(RsaAlgorithms.RSA_ECB_PKCS1, data, privateKey, encryptBlockSize);
     }
 
@@ -423,7 +417,7 @@ public final class RSA {
      * @param data       待加密文本
      * @param privateKey 私钥 {@link PrivateKey}
      */
-    public static String encryptByPrivateKey(RsaAlgorithms algorithms, String data, PrivateKey privateKey) throws NoSuchPaddingException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException, IOException {
+    public static String encryptByPrivateKey(RsaAlgorithms algorithms, String data, PrivateKey privateKey) {
         return encryptByPrivateKey(algorithms, data, privateKey, -1);
     }
 
@@ -438,7 +432,7 @@ public final class RSA {
      * @param privateKey       私钥 {@link PrivateKey}
      * @param encryptBlockSize 加密块大小（生成秘钥对时模长度：keySizeInBits/8 - 11）
      */
-    public static String encryptByPrivateKey(RsaAlgorithms algorithms, String data, PrivateKey privateKey, int encryptBlockSize) throws NoSuchPaddingException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException, IOException {
+    public static String encryptByPrivateKey(RsaAlgorithms algorithms, String data, PrivateKey privateKey, int encryptBlockSize) {
         byte[] encryptBytes = encryptByPrivateKey(algorithms, data.getBytes(StandardCharsets.UTF_8), privateKey, encryptBlockSize);
         return Base64Utils.encodeToString(encryptBytes);
     }
@@ -466,11 +460,8 @@ public final class RSA {
      * @param encryptBlockSize 加密块大小（生成秘钥对时模长度：keySizeInBits/8 - 11）
      */
     public static byte[] encryptByPrivateKey(RsaAlgorithms algorithms, byte[] data, String privateKey, int encryptBlockSize) {
-        try {
-            return encryptByPrivateKey(algorithms, data, generatePrivateKey(privateKey), encryptBlockSize);
-        } catch (Exception e) {
-            throw Exceptions.unchecked(e);
-        }
+        final PrivateKey key = SecureUtils.generatePrivateKey(KEY_ALGORITHM, Base64Utils.decodeFromString(privateKey));
+        return encryptByPrivateKey(algorithms, data, key, encryptBlockSize);
     }
 
     /**
@@ -480,7 +471,7 @@ public final class RSA {
      * @param data       待加密数据字节数组
      * @param privateKey 私钥 {@link PrivateKey}
      */
-    public static byte[] encryptByPrivateKey(RsaAlgorithms algorithms, byte[] data, PrivateKey privateKey) throws NoSuchPaddingException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException, IOException {
+    public static byte[] encryptByPrivateKey(RsaAlgorithms algorithms, byte[] data, PrivateKey privateKey) {
         return encryptByPrivateKey(algorithms, data, privateKey, -1);
     }
 
@@ -495,10 +486,26 @@ public final class RSA {
      * @param privateKey       私钥 {@link PrivateKey}
      * @param encryptBlockSize 加密块大小（生成秘钥对时模长度：keySizeInBits/8 - 11）
      */
-    public static byte[] encryptByPrivateKey(RsaAlgorithms algorithms, byte[] data, PrivateKey privateKey, int encryptBlockSize) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException, IOException {
-        Cipher cipher = Cipher.getInstance(algorithms.getValue());
-        cipher.init(Cipher.ENCRYPT_MODE, privateKey);
-        return doFinalWithBlock(cipher, data, encryptBlockSize);
+    public static byte[] encryptByPrivateKey(RsaAlgorithms algorithms, byte[] data, PrivateKey privateKey, int encryptBlockSize) {
+        try {
+            final Cipher cipher = createCipher(algorithms.getValue());
+            cipher.init(Cipher.ENCRYPT_MODE, privateKey);
+            if (encryptBlockSize < 0) {
+                if (GlobalBouncyCastleProvider.INSTANCE.getProvider() == null) {
+                    // 在非使用BC库情况下，blockSize使用默认的算法，加密数据长度 <= 模长-11
+                    encryptBlockSize = ((RSAKey) privateKey).getModulus().bitLength() / 8 - 11;
+                } else {
+                    // 在引入BC库情况下，自动获取块大小
+                    final int blockSize = cipher.getBlockSize();
+                    if (blockSize > 0) {
+                        encryptBlockSize = blockSize;
+                    }
+                }
+            }
+            return doFinalWithBlock(cipher, data, encryptBlockSize);
+        } catch (Exception e) {
+            throw new CryptoException(e);
+        }
     }
 
     /**
@@ -531,7 +538,7 @@ public final class RSA {
      * @param data      待解密数据字节数组
      * @param publicKey 公钥 {@link PublicKey}
      */
-    public static byte[] decryptByByPublicKey(byte[] data, PublicKey publicKey) throws NoSuchPaddingException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException, IOException {
+    public static byte[] decryptByByPublicKey(byte[] data, PublicKey publicKey) {
         return decryptByByPublicKey(RsaAlgorithms.RSA_ECB_PKCS1, data, publicKey);
     }
 
@@ -545,7 +552,7 @@ public final class RSA {
      * @param publicKey        公钥 {@link PublicKey}
      * @param decryptBlockSize 解密块大小（生成秘钥对时模长度：keySizeInBits/8）
      */
-    public static byte[] decryptByByPublicKey(byte[] data, PublicKey publicKey, int decryptBlockSize) throws NoSuchPaddingException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException, IOException {
+    public static byte[] decryptByByPublicKey(byte[] data, PublicKey publicKey, int decryptBlockSize) {
         return decryptByByPublicKey(RsaAlgorithms.RSA_ECB_PKCS1, data, publicKey, decryptBlockSize);
     }
 
@@ -583,7 +590,7 @@ public final class RSA {
      * @param data       待解密文本
      * @param publicKey  公钥 {@link PublicKey}
      */
-    public static String decryptByByPublicKey(RsaAlgorithms algorithms, String data, PublicKey publicKey) throws NoSuchPaddingException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException, IOException {
+    public static String decryptByByPublicKey(RsaAlgorithms algorithms, String data, PublicKey publicKey) {
         return decryptByByPublicKey(algorithms, data, publicKey, -1);
     }
 
@@ -598,7 +605,7 @@ public final class RSA {
      * @param publicKey        公钥 {@link PublicKey}
      * @param decryptBlockSize 解密块大小（生成秘钥对时模长度：keySizeInBits/8）
      */
-    public static String decryptByByPublicKey(RsaAlgorithms algorithms, String data, PublicKey publicKey, int decryptBlockSize) throws NoSuchPaddingException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException, IOException {
+    public static String decryptByByPublicKey(RsaAlgorithms algorithms, String data, PublicKey publicKey, int decryptBlockSize) {
         byte[] decryptBytes = decryptByByPublicKey(algorithms, Base64Utils.decodeFromString(data), publicKey, decryptBlockSize);
         return new String(decryptBytes, StandardCharsets.UTF_8);
     }
@@ -626,11 +633,8 @@ public final class RSA {
      * @param decryptBlockSize 解密块大小（生成秘钥对时模长度：keySizeInBits/8）
      */
     public static byte[] decryptByByPublicKey(RsaAlgorithms algorithms, byte[] data, String publicKey, int decryptBlockSize) {
-        try {
-            return decryptByByPublicKey(algorithms, data, generatePublicKey(publicKey), decryptBlockSize);
-        } catch (Exception e) {
-            throw Exceptions.unchecked(e);
-        }
+        final PublicKey key = SecureUtils.generatePublicKey(KEY_ALGORITHM, Base64Utils.decodeFromString(publicKey));
+        return decryptByByPublicKey(algorithms, data, key, decryptBlockSize);
     }
 
     /**
@@ -640,7 +644,7 @@ public final class RSA {
      * @param data       待解密数据字节数组
      * @param publicKey  公钥 {@link PublicKey}
      */
-    public static byte[] decryptByByPublicKey(RsaAlgorithms algorithms, byte[] data, PublicKey publicKey) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException, IOException {
+    public static byte[] decryptByByPublicKey(RsaAlgorithms algorithms, byte[] data, PublicKey publicKey) {
         return decryptByByPublicKey(algorithms, data, publicKey, -1);
     }
 
@@ -655,10 +659,26 @@ public final class RSA {
      * @param publicKey        公钥 {@link PublicKey}
      * @param decryptBlockSize 解密块大小（生成秘钥对时模长度：keySizeInBits/8）
      */
-    public static byte[] decryptByByPublicKey(RsaAlgorithms algorithms, byte[] data, PublicKey publicKey, int decryptBlockSize) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException, IOException {
-        Cipher cipher = Cipher.getInstance(algorithms.getValue());
-        cipher.init(Cipher.DECRYPT_MODE, publicKey);
-        return doFinalWithBlock(cipher, data, decryptBlockSize);
+    public static byte[] decryptByByPublicKey(RsaAlgorithms algorithms, byte[] data, PublicKey publicKey, int decryptBlockSize) {
+        try {
+            final Cipher cipher = createCipher(algorithms.getValue());
+            cipher.init(Cipher.DECRYPT_MODE, publicKey);
+            if (decryptBlockSize < 0) {
+                if (GlobalBouncyCastleProvider.INSTANCE.getProvider() == null) {
+                    // 在非使用BC库情况下，blockSize使用默认的算法
+                    decryptBlockSize = ((RSAKey) publicKey).getModulus().bitLength() / 8;
+                } else {
+                    // 在引入BC库情况下，自动获取块大小
+                    final int blockSize = cipher.getBlockSize();
+                    if (blockSize > 0) {
+                        decryptBlockSize = blockSize;
+                    }
+                }
+            }
+            return doFinalWithBlock(cipher, data, decryptBlockSize);
+        } catch (Exception e) {
+            throw new CryptoException(e);
+        }
     }
 
     /**
@@ -691,7 +711,7 @@ public final class RSA {
      * @param data       待解密数据字节数组
      * @param privateKey 私钥 {@link PrivateKey}
      */
-    public static byte[] decryptByByPrivateKey(byte[] data, PrivateKey privateKey) throws NoSuchPaddingException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException, IOException {
+    public static byte[] decryptByByPrivateKey(byte[] data, PrivateKey privateKey) {
         return decryptByByPrivateKey(RsaAlgorithms.RSA_ECB_PKCS1, data, privateKey);
     }
 
@@ -705,7 +725,7 @@ public final class RSA {
      * @param privateKey       私钥字符串 base64
      * @param decryptBlockSize 解密块大小（生成秘钥对时模长度：keySizeInBits/8）
      */
-    public static byte[] decryptByByPrivateKey(byte[] data, PrivateKey privateKey, int decryptBlockSize) throws NoSuchPaddingException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException, IOException {
+    public static byte[] decryptByByPrivateKey(byte[] data, PrivateKey privateKey, int decryptBlockSize) {
         return decryptByByPrivateKey(RsaAlgorithms.RSA_ECB_PKCS1, data, privateKey, decryptBlockSize);
     }
 
@@ -743,7 +763,7 @@ public final class RSA {
      * @param data       待解密文本 base64
      * @param privateKey 私钥 {@link PrivateKey}
      */
-    public static String decryptByByPrivateKey(RsaAlgorithms algorithms, String data, PrivateKey privateKey) throws NoSuchPaddingException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException, IOException {
+    public static String decryptByByPrivateKey(RsaAlgorithms algorithms, String data, PrivateKey privateKey) {
         return decryptByByPrivateKey(algorithms, data, privateKey, -1);
     }
 
@@ -758,7 +778,7 @@ public final class RSA {
      * @param privateKey       私钥 {@link PrivateKey}
      * @param decryptBlockSize 解密块大小（生成秘钥对时模长度：keySizeInBits/8）
      */
-    public static String decryptByByPrivateKey(RsaAlgorithms algorithms, String data, PrivateKey privateKey, int decryptBlockSize) throws NoSuchPaddingException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException, IOException {
+    public static String decryptByByPrivateKey(RsaAlgorithms algorithms, String data, PrivateKey privateKey, int decryptBlockSize) {
         byte[] decryptBytes = decryptByByPrivateKey(algorithms, Base64Utils.decodeFromString(data), privateKey, decryptBlockSize);
         return new String(decryptBytes, StandardCharsets.UTF_8);
     }
@@ -786,11 +806,8 @@ public final class RSA {
      * @param decryptBlockSize 解密块大小（生成秘钥对时模长度：keySizeInBits/8）
      */
     public static byte[] decryptByByPrivateKey(RsaAlgorithms algorithms, byte[] data, String privateKey, int decryptBlockSize) {
-        try {
-            return decryptByByPrivateKey(algorithms, data, generatePrivateKey(privateKey), decryptBlockSize);
-        } catch (Exception e) {
-            throw Exceptions.unchecked(e);
-        }
+        final PrivateKey key = SecureUtils.generatePrivateKey(KEY_ALGORITHM, Base64Utils.decodeFromString(privateKey));
+        return decryptByByPrivateKey(algorithms, data, key, decryptBlockSize);
     }
 
     /**
@@ -800,7 +817,7 @@ public final class RSA {
      * @param data       待解密数据字节数组
      * @param privateKey 私钥 {@link PrivateKey}
      */
-    public static byte[] decryptByByPrivateKey(RsaAlgorithms algorithms, byte[] data, PrivateKey privateKey) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException, IOException {
+    public static byte[] decryptByByPrivateKey(RsaAlgorithms algorithms, byte[] data, PrivateKey privateKey) {
         return decryptByByPrivateKey(algorithms, data, privateKey, -1);
     }
 
@@ -815,10 +832,45 @@ public final class RSA {
      * @param privateKey       私钥 {@link PrivateKey}
      * @param decryptBlockSize 解密块大小（生成秘钥对时模长度：keySizeInBits/8）
      */
-    public static byte[] decryptByByPrivateKey(RsaAlgorithms algorithms, byte[] data, PrivateKey privateKey, int decryptBlockSize) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException, IOException {
-        Cipher cipher = Cipher.getInstance(algorithms.getValue());
-        cipher.init(Cipher.DECRYPT_MODE, privateKey);
-        return doFinalWithBlock(cipher, data, decryptBlockSize);
+    public static byte[] decryptByByPrivateKey(RsaAlgorithms algorithms, byte[] data, PrivateKey privateKey, int decryptBlockSize) {
+        try {
+            final Cipher cipher = createCipher(algorithms.getValue());
+            cipher.init(Cipher.DECRYPT_MODE, privateKey);
+            if (decryptBlockSize < 0) {
+                if (GlobalBouncyCastleProvider.INSTANCE.getProvider() == null) {
+                    // 在非使用BC库情况下，blockSize使用默认的算法
+                    decryptBlockSize = ((RSAKey) privateKey).getModulus().bitLength() / 8;
+                } else {
+                    // 在引入BC库情况下，自动获取块大小
+                    final int blockSize = cipher.getBlockSize();
+                    if (blockSize > 0) {
+                        decryptBlockSize = blockSize;
+                    }
+                }
+            }
+            return doFinalWithBlock(cipher, data, decryptBlockSize);
+        } catch (Exception e) {
+            throw new CryptoException(e);
+        }
+    }
+
+    /**
+     * 创建{@link Cipher}
+     *
+     * @param algorithm 算法
+     * @return {@link Cipher}
+     */
+    private static Cipher createCipher(String algorithm) throws NoSuchPaddingException, NoSuchAlgorithmException {
+        Provider provider = GlobalBouncyCastleProvider.INSTANCE.getProvider();
+        Cipher cipher;
+        try {
+            cipher = (provider == null) ? Cipher.getInstance(algorithm) : Cipher.getInstance(algorithm, provider);
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
+            // 在Linux下，未引入BC库可能会导致RSA/ECB/PKCS1Padding算法无法找到，此时使用默认算法
+            System.err.println(e.getMessage() + "  \"使用默认算法：RSA");
+            cipher = Cipher.getInstance(RsaAlgorithms.RSA.getValue());
+        }
+        return cipher;
     }
 
     /**
@@ -860,20 +912,4 @@ public final class RSA {
             IoUtils.closeQuietly(bufferedOutputStream);
         }
     }
-
-//    public static void main(String[] args) throws Exception {
-//        String data = "春天里那个百花香，我和妹妹把手牵";
-//        byte[] dataBytes = data.getBytes(StandardCharsets.UTF_8);
-////        RsaAlgorithms algorithms = RsaAlgorithms.RSA_NONE;
-//        KeyPair keyPair = generateKeyPair(1024);
-//        PublicKey publicKey = keyPair.getPublic();
-//        PrivateKey privateKey = keyPair.getPrivate();
-////        byte[] signBytes = sign(algorithms, dataBytes, privateKey);
-////        System.err.println("数字签名:" + Base64Utils.encodeToString(signBytes));
-////        System.err.println("签名校验:" + verify(algorithms, dataBytes, publicKey, signBytes));
-//        String encryptData = encryptByPrivateKey(data, Base64Utils.encodeToString(privateKey.getEncoded()));
-//        System.err.println("--加密后:" + encryptData);
-//        String decryptData = decryptByByPublicKey(encryptData, Base64Utils.encodeToString(publicKey.getEncoded()));
-//        System.err.println("--解密后:" + decryptData);
-//    }
 }

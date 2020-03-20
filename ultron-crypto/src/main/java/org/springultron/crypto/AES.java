@@ -1,15 +1,14 @@
-package org.springultron.core.crypto;
+package org.springultron.crypto;
 
 import org.springframework.util.Assert;
-import org.springultron.core.exception.Exceptions;
+import org.springultron.core.exception.CryptoException;
 import org.springultron.core.utils.Base64Utils;
+import org.springultron.core.utils.Hex;
 
 import javax.crypto.Cipher;
-import javax.crypto.KeyGenerator;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
-import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
 /**
@@ -34,14 +33,41 @@ public final class AES {
      * https://www.cnblogs.com/mrjade/p/10886378.html
      * </p>
      *
-     * @param length 位数，可以是 128(24位)、192(32位)、256(44) 越大越安全
+     * @param keySize key位数，可以是 128(24位)、192(32位)、256(44位) 越大越安全
      * @return key base64
      */
-    public static String generateKey(final int length) throws NoSuchAlgorithmException {
-        KeyGenerator keyGenerator = KeyGenerator.getInstance(KEY_ALGORITHM);
-        keyGenerator.init(length);
-        byte[] keyBytes = keyGenerator.generateKey().getEncoded();
+    public static String generateKeyBase64(final int keySize) {
+        byte[] keyBytes = generateKey(keySize);
         return Base64Utils.encodeToString(keyBytes);
+    }
+
+    /**
+     * 生成AES加密秘钥（Hex 16进制编码）
+     * <p>
+     * 192、256位秘钥需下载并安装JCE无限制权限策略文件
+     * https://www.cnblogs.com/mrjade/p/10886378.html
+     * </p>
+     *
+     * @param keySize key位数，可以是 128(24位)、192(32位)、256(44位) 越大越安全
+     * @return key Hex 16进制编码
+     */
+    public static String generateKeyHex(final int keySize) {
+        byte[] keyBytes = generateKey(keySize);
+        return Hex.encodeHexString(keyBytes);
+    }
+
+    /**
+     * 生成AES加密秘钥
+     * <p>
+     * 192、256位秘钥需下载并安装JCE无限制权限策略文件
+     * https://www.cnblogs.com/mrjade/p/10886378.html
+     * </p>
+     *
+     * @param keySize key位数，可以是 128(24位)、192(32位)、256(44位) 越大越安全
+     * @return key byte
+     */
+    public static byte[] generateKey(final int keySize) {
+        return SecureUtils.generateKey(KEY_ALGORITHM, keySize).getEncoded();
     }
 
     /**
@@ -56,17 +82,6 @@ public final class AES {
     }
 
     /**
-     * 解密，默认使用：AES/ECB/PKCS5Padding 算法
-     *
-     * @param data 已加密字符串 base64
-     * @param key  key
-     * @return 解密结果
-     */
-    public static String decrypt(String data, String key) {
-        return decrypt(AesAlgorithms.AES_ECB_PKCS5, data, key);
-    }
-
-    /**
      * 加密
      *
      * @param algorithms 算法
@@ -78,32 +93,12 @@ public final class AES {
         byte[] dataBytes = data.getBytes(StandardCharsets.UTF_8);
         byte[] keyBytes;
         if (algorithms == AesAlgorithms.AES_ECB_PKCS5) {
-            keyBytes = Base64Utils.decodeFromString(key);
+            keyBytes = SecureUtils.decode(key);
         } else {
             keyBytes = key.getBytes(StandardCharsets.UTF_8);
         }
         byte[] encryptBytes = encrypt(algorithms, dataBytes, keyBytes);
         return Base64Utils.encodeToString(encryptBytes);
-    }
-
-    /**
-     * 解密
-     *
-     * @param algorithms 算法
-     * @param data       待解密字符串 base64
-     * @param key        秘钥
-     * @return 解密后文本
-     */
-    public static String decrypt(AesAlgorithms algorithms, String data, String key) {
-        byte[] dataBytes = Base64Utils.decodeFromString(data);
-        byte[] keyBytes;
-        if (algorithms == AesAlgorithms.AES_ECB_PKCS5) {
-            keyBytes = Base64Utils.decodeFromString(key);
-        } else {
-            keyBytes = key.getBytes(StandardCharsets.UTF_8);
-        }
-        byte[] decryptBytes = decrypt(algorithms, dataBytes, keyBytes);
-        return new String(decryptBytes, StandardCharsets.UTF_8);
     }
 
     /**
@@ -120,7 +115,7 @@ public final class AES {
         }
         try {
             SecretKeySpec keySpec = new SecretKeySpec(key, KEY_ALGORITHM);
-            Cipher cipher = Cipher.getInstance(algorithms.getValue());
+            final Cipher cipher = SecureUtils.createCipher(algorithms.getValue());
             if (algorithms == AesAlgorithms.AES_ECB_PKCS5) {
                 cipher.init(Cipher.ENCRYPT_MODE, keySpec);
                 return cipher.doFinal(data);
@@ -130,8 +125,70 @@ public final class AES {
                 return cipher.doFinal(Pkcs7Encoder.encode(data));
             }
         } catch (Exception e) {
-            throw Exceptions.unchecked(e);
+            throw new CryptoException(e);
         }
+    }
+
+    /**
+     * 加密，默认使用：AES/ECB/PKCS5Padding 算法
+     *
+     * @param data 待加密字符串
+     * @param key  key
+     * @return 加密结果 Hex 16进制编码
+     */
+    public static String encryptHex(String data, String key) {
+        return encryptHex(AesAlgorithms.AES_ECB_PKCS5, data, key);
+    }
+
+    /**
+     * 加密
+     *
+     * @param algorithms 算法
+     * @param data       待加密字符串
+     * @param key        秘钥字符串
+     * @return 加密结果 Hex 16进制编码
+     */
+    public static String encryptHex(AesAlgorithms algorithms, String data, String key) {
+        byte[] dataBytes = data.getBytes(StandardCharsets.UTF_8);
+        byte[] keyBytes;
+        if (algorithms == AesAlgorithms.AES_ECB_PKCS5) {
+            keyBytes = SecureUtils.decode(key);
+        } else {
+            keyBytes = key.getBytes(StandardCharsets.UTF_8);
+        }
+        byte[] encryptBytes = encrypt(algorithms, dataBytes, keyBytes);
+        return Hex.encodeHexString(encryptBytes);
+    }
+
+    /**
+     * 解密，默认使用：AES/ECB/PKCS5Padding 算法
+     *
+     * @param data 已加密字符串 base64
+     * @param key  key
+     * @return 解密结果
+     */
+    public static String decrypt(String data, String key) {
+        return decrypt(AesAlgorithms.AES_ECB_PKCS5, data, key);
+    }
+
+    /**
+     * 解密
+     *
+     * @param algorithms 算法
+     * @param data       待解密字符串 base64
+     * @param key        秘钥
+     * @return 解密后文本
+     */
+    public static String decrypt(AesAlgorithms algorithms, String data, String key) {
+        byte[] dataBytes = SecureUtils.decode(data);
+        byte[] keyBytes;
+        if (algorithms == AesAlgorithms.AES_ECB_PKCS5) {
+            keyBytes = SecureUtils.decode(key);
+        } else {
+            keyBytes = key.getBytes(StandardCharsets.UTF_8);
+        }
+        byte[] decryptBytes = decrypt(algorithms, dataBytes, keyBytes);
+        return new String(decryptBytes, StandardCharsets.UTF_8);
     }
 
     /**
@@ -147,7 +204,7 @@ public final class AES {
             Assert.isTrue(key.length == 32, "IllegalAesKey, aesKey's length must be 32");
         }
         try {
-            Cipher cipher = Cipher.getInstance(algorithms.getValue());
+            final Cipher cipher = SecureUtils.createCipher(algorithms.getValue());
             SecretKeySpec keySpec = new SecretKeySpec(key, KEY_ALGORITHM);
             if (algorithms == AesAlgorithms.AES_ECB_PKCS5) {
                 cipher.init(Cipher.DECRYPT_MODE, keySpec);
@@ -158,7 +215,7 @@ public final class AES {
                 return Pkcs7Encoder.decode(cipher.doFinal(data));
             }
         } catch (Exception e) {
-            throw Exceptions.unchecked(e);
+            throw new CryptoException(e);
         }
     }
 
@@ -201,13 +258,14 @@ public final class AES {
     }
 
 //    public static void main(String[] args) {
-////        System.err.println(generateKey(192));
-//        String key = "nvJ0hh3EbeD/CoYLKVA6W8McjrXKYLOl";
-////        String key = RandomUtils.random(32);
-//        String str = "春天里那个百花香，我和妹妹把手牵";
-//        str = encrypt(AesAlgorithms.AES_CBC_PKCS7, str, key);
-//        System.err.println("加密后:" + str);
-//        System.err.println("解密后:" + decrypt(AesAlgorithms.AES_CBC_PKCS7, str, key));
+//        String key = generateKeyBase64(256);
+//        String key = RandomUtils.random(32);
+//        System.err.println("秘钥：" + key);
+//        String str = "{春天里那个百花香，:我和妹妹把手牵:}";
+//        AesAlgorithms aesAlgorithms = AesAlgorithms.AES_ECB_PKCS5;
+//        str = encryptHex(aesAlgorithms, str, key);
+//        System.err.println("加密后：" + str);
+//        System.err.println("解密后：" + decrypt(aesAlgorithms, str, key));
 //    }
 
 }

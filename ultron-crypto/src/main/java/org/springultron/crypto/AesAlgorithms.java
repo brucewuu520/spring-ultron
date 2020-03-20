@@ -1,4 +1,4 @@
-package org.springultron.core.crypto;
+package org.springultron.crypto;
 
 /**
  * AES加密算法类型
