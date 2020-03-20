@@ -42,7 +42,7 @@ public class RestExceptionHandler {
      * @return ApiResult
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Mono<ApiResult> handleError(MethodArgumentNotValidException e) {
+    public Mono<ApiResult<Object>> handleError(MethodArgumentNotValidException e) {
         log.error("参数校验失败: {}", e.getMessage());
         return Mono.just(Optional.ofNullable(e.getBindingResult().getFieldError())
                 .map(fieldError -> ApiResult.failed(ResultCode.PARAM_VALID_FAILED.getCode(), String.format("%s:%s", fieldError.getField(), fieldError.getDefaultMessage())))
@@ -56,7 +56,7 @@ public class RestExceptionHandler {
      * @return ApiResult
      */
     @ExceptionHandler(BindException.class)
-    public Mono<ApiResult> handleError(BindException e) {
+    public Mono<ApiResult<Object>> handleError(BindException e) {
         log.error("参数绑定失败: {}", e.getMessage());
         return Mono.just(Optional.ofNullable(e.getFieldError())
                 .map(fieldError -> ApiResult.failed(ResultCode.PARAM_BIND_FAILED.getCode(), String.format("%s:%s", fieldError.getField(), fieldError.getDefaultMessage())))
@@ -70,7 +70,7 @@ public class RestExceptionHandler {
      * @return ApiResult
      */
     @ExceptionHandler(WebExchangeBindException.class)
-    public Mono<ApiResult> handleError(WebExchangeBindException e) {
+    public Mono<ApiResult<Object>> handleError(WebExchangeBindException e) {
         log.error("参数绑定失败: {}", e.getMessage());
         return Mono.just(Optional.ofNullable(e.getFieldError())
                 .map(fieldError -> ApiResult.failed(ResultCode.PARAM_BIND_FAILED.getCode(), String.format("%s:%s", fieldError.getField(), fieldError.getDefaultMessage())))
@@ -84,7 +84,7 @@ public class RestExceptionHandler {
      * @return ApiResult
      */
     @ExceptionHandler(ServerWebInputException.class)
-    public Mono<ApiResult> handleError(ServerWebInputException e) {
+    public Mono<ApiResult<Object>> handleError(ServerWebInputException e) {
         log.error("缺少必要的请求参数: {}", e.getMessage());
         return Mono.just(Optional.ofNullable(e.getMethodParameter())
                 .map(parameter -> ApiResult.failed(ResultCode.BAD_REQUEST.getCode(), String.format("缺少必要的请求参数: %s", parameter.getParameterName())))
@@ -98,7 +98,7 @@ public class RestExceptionHandler {
      * @return ApiResult
      */
     @ExceptionHandler(ValidationException.class)
-    public Mono<ApiResult> handleError(ValidationException e) {
+    public Mono<ApiResult<Object>> handleError(ValidationException e) {
         log.error("参数校验异常: {}", e.getMessage());
         return Mono.just(ApiResult.failed(ResultCode.PARAM_VALID_FAILED.getCode(), e.getCause().getMessage()));
     }
@@ -110,7 +110,7 @@ public class RestExceptionHandler {
      * @return ApiResult
      */
     @ExceptionHandler(ConstraintViolationException.class)
-    public Mono<ApiResult> handleError(ConstraintViolationException e) {
+    public Mono<ApiResult<Object>> handleError(ConstraintViolationException e) {
         log.error("参数验证失败: {}", e.getMessage());
         ConstraintViolation<?> constraintViolation = e.getConstraintViolations().iterator().next();
         String path = ((PathImpl) constraintViolation.getPropertyPath()).getLeafNode().getName();
@@ -125,7 +125,7 @@ public class RestExceptionHandler {
      * @return ApiResult
      */
     @ExceptionHandler(ResponseStatusException.class)
-    public Mono<ApiResult> handleError(ResponseStatusException e) {
+    public Mono<ApiResult<Object>> handleError(ResponseStatusException e) {
         log.error("响应状态异常: {}", e.getMessage());
         return Mono.just(ApiResult.failed(ResultCode.BAD_REQUEST.getCode(), String.format("响应状态异常:%s", e.getReason())));
     }
@@ -137,7 +137,7 @@ public class RestExceptionHandler {
      * @return ApiResult
      */
     @ExceptionHandler(MultipartException.class)
-    public Mono<ApiResult> handleError(MultipartException e) {
+    public Mono<ApiResult<Object>> handleError(MultipartException e) {
         log.error("文件太大: {}", e.getMessage());
         return Mono.just(ApiResult.failed(ResultCode.PAYLOAD_TOO_LARGE));
     }

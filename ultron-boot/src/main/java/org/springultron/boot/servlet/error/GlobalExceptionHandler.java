@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplicat
 import org.springframework.core.annotation.Order;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springultron.core.exception.CryptoException;
 import org.springultron.core.exception.ServiceException;
 import org.springultron.core.result.ApiResult;
 import org.springultron.core.result.ResultCode;
@@ -29,20 +30,32 @@ public class GlobalExceptionHandler {
      * @return REST 返回异常结果
      */
     @ExceptionHandler(value = ServiceException.class)
-    public ApiResult handleApiException(ServiceException e) {
+    public ApiResult<Object> handleApiException(ServiceException e) {
         log.error("自定义业务异常: {}", e.getMessage());
         return ApiResult.apiException(e);
     }
 
+    /**
+     * 加解密异常处理
+     *
+     * @param e 加解密异常
+     * @return REST 返回异常结果
+     */
+    @ExceptionHandler(value = CryptoException.class)
+    public ApiResult<Object> handleCryptoException(CryptoException e) {
+        log.error("加解密异常: {}", e.getMessage());
+        return ApiResult.failed(ResultCode.SIGN_FAILED);
+    }
+
     @ExceptionHandler(AssertionError.class)
-    public ApiResult handleAssertionError(AssertionError e) {
+    public ApiResult<Object> handleAssertionError(AssertionError e) {
         log.error("断言异常: {}", e.getMessage());
         // 发送：未知异常异常事件
         return ApiResult.failed(ResultCode.ASSERTION_ERROR.getCode(), e.getMessage());
     }
 
     @ExceptionHandler(Throwable.class)
-    public ApiResult handleThrowable(Throwable e) {
+    public ApiResult<Object> handleThrowable(Throwable e) {
         log.error("系统异常", e);
         return ApiResult.failed(e.getMessage());
     }

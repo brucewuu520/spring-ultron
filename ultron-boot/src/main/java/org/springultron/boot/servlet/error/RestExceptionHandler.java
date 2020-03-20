@@ -45,7 +45,7 @@ public class RestExceptionHandler {
      * @return ApiResult
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ApiResult handleError(MethodArgumentNotValidException e) {
+    public ApiResult<Object> handleError(MethodArgumentNotValidException e) {
         log.error("方法参数校验异常: {}", e.getMessage());
         return Optional.ofNullable(e.getBindingResult().getFieldError())
                 .map(fieldError -> ApiResult.failed(ResultCode.PARAM_VALID_FAILED.getCode(), String.format("%s:%s", fieldError.getField(), fieldError.getDefaultMessage())))
@@ -59,7 +59,7 @@ public class RestExceptionHandler {
      * @return ApiResult
      */
     @ExceptionHandler(BindException.class)
-    public ApiResult handleError(BindException e) {
+    public ApiResult<Object> handleError(BindException e) {
         log.error("参数绑定异常: {}", e.getMessage());
         return Optional.ofNullable(e.getFieldError())
                 .map(fieldError -> ApiResult.failed(ResultCode.PARAM_BIND_FAILED.getCode(), String.format("%s:%s", fieldError.getField(), fieldError.getDefaultMessage())))
@@ -73,7 +73,7 @@ public class RestExceptionHandler {
      * @return ApiResult
      */
     @ExceptionHandler(MissingServletRequestParameterException.class)
-    public ApiResult handleError(MissingServletRequestParameterException e) {
+    public ApiResult<Object> handleError(MissingServletRequestParameterException e) {
         log.error("缺少必要的请求参数: {}", e.getMessage());
         return ApiResult.failed(ResultCode.BAD_REQUEST.getCode(), String.format("缺少必要的请求参数: %s", e.getMessage()));
     }
@@ -85,7 +85,7 @@ public class RestExceptionHandler {
      * @return ApiResult
      */
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public ApiResult handleError(MethodArgumentTypeMismatchException e) {
+    public ApiResult<Object> handleError(MethodArgumentTypeMismatchException e) {
         log.error("请求参数格式错误: {}", e.getMessage());
         return ApiResult.failed(ResultCode.BAD_REQUEST.getCode(), String.format("请求参数格式错误: %s", e.getName()));
     }
@@ -97,7 +97,7 @@ public class RestExceptionHandler {
      * @return ApiResult
      */
     @ExceptionHandler(ValidationException.class)
-    public ApiResult handleError(ValidationException e) {
+    public ApiResult<Object> handleError(ValidationException e) {
         log.error("参数校验异常: {}", e.getMessage());
         return ApiResult.failed(ResultCode.PARAM_VALID_FAILED.getCode(), e.getCause().getMessage());
     }
@@ -109,7 +109,7 @@ public class RestExceptionHandler {
      * @return ApiResult
      */
     @ExceptionHandler(ConstraintViolationException.class)
-    public ApiResult handleError(ConstraintViolationException e) {
+    public ApiResult<Object> handleError(ConstraintViolationException e) {
         log.error("参数验证失败: {}", e.getMessage());
         Set<ConstraintViolation<?>> constraintViolationSet = e.getConstraintViolations();
         ConstraintViolation<?> constraintViolation = constraintViolationSet.iterator().next();
@@ -125,7 +125,7 @@ public class RestExceptionHandler {
      * @return ApiResult
      */
     @ExceptionHandler(NoHandlerFoundException.class)
-    public ApiResult handleError(NoHandlerFoundException e) {
+    public ApiResult<Object> handleError(NoHandlerFoundException e) {
         log.error("404没找到请求: {}", e.getMessage());
         return ApiResult.failed(ResultCode.NOT_FOUND);
     }
@@ -137,7 +137,7 @@ public class RestExceptionHandler {
      * @return ApiResult
      */
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public ApiResult handleError(HttpRequestMethodNotSupportedException e) {
+    public ApiResult<Object> handleError(HttpRequestMethodNotSupportedException e) {
         log.error("不支持当前请求方法: {}", e.getMessage());
         return ApiResult.failed(ResultCode.METHOD_NO_ALLOWED);
     }
@@ -149,7 +149,7 @@ public class RestExceptionHandler {
      * @return ApiResult
      */
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
-    public ApiResult handleError(HttpMediaTypeNotSupportedException e) {
+    public ApiResult<Object> handleError(HttpMediaTypeNotSupportedException e) {
         log.error("不支持当前媒体类型: {}", e.getMessage());
         return ApiResult.failed(ResultCode.BAD_REQUEST.getCode(), "不支持当前媒体类型");
     }
@@ -161,7 +161,7 @@ public class RestExceptionHandler {
      * @return ApiResult
      */
     @ExceptionHandler(HttpMediaTypeNotAcceptableException.class)
-    public ApiResult handleError(HttpMediaTypeNotAcceptableException e) {
+    public ApiResult<Object> handleError(HttpMediaTypeNotAcceptableException e) {
         log.error("不接受的媒体类型: {}", e.getMessage());
         return ApiResult.failed(ResultCode.BAD_REQUEST.getCode(), "不接受的媒体类型");
     }
@@ -173,7 +173,7 @@ public class RestExceptionHandler {
      * @return ApiResult
      */
     @ExceptionHandler(MultipartException.class)
-    public ApiResult handleError(MultipartException e) {
+    public ApiResult<Object> handleError(MultipartException e) {
         log.error("文件太大: {}", e.getMessage());
         return ApiResult.failed(ResultCode.PAYLOAD_TOO_LARGE);
     }
