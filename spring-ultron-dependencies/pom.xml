@@ -36,6 +36,11 @@
             </dependency>
             <dependency>
                 <groupId>org.springultron</groupId>
+                <artifactId>ultron-crypto</artifactId>
+                <version>${project.parent.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springultron</groupId>
                 <artifactId>ultron-http</artifactId>
                 <version>${project.parent.version}</version>
             </dependency>
