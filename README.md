@@ -12,11 +12,13 @@
 *├── spring-ultron                  项目父级目录
     ├── spring-ultron-dependencies  依赖版本统一管理
     ├── ultron-core                 核心库(请求统一返回体、常用错误代码、自定义业务异常、Jackson序列化/反序列化配置、常用工具类等)
+    ├── ultron-crypto               对称及非对称加密解密工具，实现了:AES、DES、RSA、国密SM2、SM4等；以及各种秘钥生成工具
     ├── ultron-mybatis              mybatis plus自动化配置、分页工具等
     ├── ultron-redis                Redis自动化配置、操作客户端
     ├── ultron-boot                 Spring boot脚手架，servlet/reactive全局异常捕获、基于aop的注解API日志打印(支持配置文件配置日志开关，日志内容等)、WebClient http客户端封装
     ├── ultron-cloud                Spring cloud脚手架（待完善）
     ├── ultron-http                 基于OKhttp3 4.0.0版本封装的http客户端，使用起来倍儿爽
+    ├── ultron-security             Spring Security通用配置，支持jwt登录鉴权，RBAC权限控制
     ├── ultron-swagger              Swagger文档自动化配置(可在配置文件中开启/关闭)
 ```    
 
@@ -58,7 +60,7 @@
        <artifactId>ultron-core</artifactId>
     </dependency>
     
-    返回体使用示例：
+    统一返回体使用示例：
         @GetMapping("/test")
         public Result<Test>> test() {
             Test test = new Test();
@@ -71,7 +73,24 @@
             return ApiResult.throwFail(ResultCode.API_EXCEPTION);
         }
         
-3、mybatis plus自动化配置、分页工具等
+3、ultron-crypto 对称及非对称加密解密工具，实现了:AES、DES、RSA、国密SM2、SM4等；以及各种秘钥生成工具
+
+        <dependency>
+           <groupId>org.springultron</groupId>
+           <artifactId>ultron-mybatis</artifactId>
+        </dependency>
+    
+    部分加解密算法实现（如：国密SM2、SM4）需添加BC库依赖：
+    
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15on</artifactId>
+            <version>${bouncycastle.version}</version>
+        </dependency>
+    
+    使用示例见单元测试        
+        
+4、mybatis plus自动化配置、分页工具等
 
     <dependency>
        <groupId>org.springultron</groupId>
@@ -80,7 +99,7 @@
     
     分页工具使用示例：
     
-        Query query = new Query();
+        PageQuery query = new PageQuery();
         query.setCurrent(1);
         query.setSize(10);
         String[] asces = new String[] {"sort", "order"};
@@ -88,7 +107,7 @@
         IPage<T> page = PageUtils.getPage(query);
  
     
-4、Redis自动化配置、操作客户端
+5、Redis自动化配置、操作客户端
 
     <dependency>
        <groupId>org.springultron</groupId>
@@ -111,7 +130,7 @@
     
         @CachePut(value = "user#300", key = "#id")
     
-5、Spring boot脚手架，servlet/全局异常捕获、基于aop的注解API日志打印(支持配置文件配置日志开关，日志内容等)、WebClient http客户端封装
+6、Spring boot脚手架，servlet/全局异常捕获、基于aop的注解API日志打印(支持配置文件配置日志开关，日志内容等)、WebClient http客户端封装
 
     <dependency>
        <groupId>org.springultron</groupId>
@@ -134,7 +153,7 @@
             level: headers # 打印包括请求头 none/body
             
     WebClient http客户端使用示例：
-    需添加：
+    需添加依赖：
     
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -153,12 +172,12 @@
         
         ultron:
           async:
-            core-pool-size: 2         # 核心线程数，默认：2
-            max-pool-size: 100        # 线程池最大数量，默认：100  
-            queue-capacity: 10000     # 线程池队列容量，默认：10000
+            core-pool-size: 3         # 核心线程数，默认：3
+            max-pool-size: 300        # 线程池最大数量，默认：300  
+            queue-capacity: 30000     # 线程池队列容量，默认：30000
             keep-alive-seconds: 300   # 空闲线程存活时间，默认：300秒
     
-6、Spring cloud脚手架(基于alibaba-cloud 2.1.0)
+7、Spring cloud脚手架(基于alibaba-cloud 2.2.0)
 
     <dependency>
        <groupId>org.springultron</groupId>
@@ -170,7 +189,7 @@
         @Autowire
         private WebClient lbWebClient;           
 
-7、Swagger 接口文档（基于swagger-bootstrap-ui 1.9.6）
+8、Swagger 接口文档
 
     <dependency>
        <groupId>org.springultron</groupId>
@@ -186,11 +205,18 @@
           contact-user: brucewuu
           contact-email: xxx@xxx.com
           contact-url: xxx
+          
+9、Spring Security通用配置，支持jwt登录鉴权，RBAC权限控制
+
+    <dependency>
+        <groupId>org.springultron</groupId>
+        <artifactId>ultron-security</artifactId>
+    </dependency> 
                 
-8、基于OkHttp3 4.x版本使用示例
+10、基于OkHttp3 4.x版本使用示例
 
     <properties>
-        <okhttp3.version>4.2.2</okhttp3.version>
+        <okhttp3.version>4.4.0</okhttp3.version>
     </properties>
     
     <dependency>
@@ -198,8 +224,7 @@
         <artifactId>ultron-http</artifactId>
     </dependency>  
 
-    使用示例：
-    
+    使用示例(同步)：
        JSONObject result = HttpRequest.get("https://xxx")
                   .query("name1", "value1")
                   .query("name2", "value2")
@@ -211,11 +236,11 @@
                params.put("id", 108);
                params.put("name", "张三");
                params.put("age", 23);           
-       JSONObject result = HttpRequest.post("https://xxx")
+       Map<String, Object> result = HttpRequest.post("https://xxx")
                          .bodyJson(params)
                          .log()
                          .execute()
-                         .asObject(JSONObject.class);
+                         .asMap();
                          
     异步示例：
     
@@ -232,7 +257,7 @@
                  public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
      
                  })
-    
+
     
 ## 更新日志
 * 2.0版本基于Spring boot 2.2.x
