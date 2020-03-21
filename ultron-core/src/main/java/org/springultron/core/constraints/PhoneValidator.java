@@ -1,9 +1,10 @@
 package org.springultron.core.constraints;
 
+import org.springultron.core.utils.RegexUtils;
+
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.Optional;
-import java.util.regex.Pattern;
 
 /**
  * 手机号码校验规则
@@ -15,6 +16,6 @@ public class PhoneValidator implements ConstraintValidator<Phone, String> {
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        return Optional.ofNullable(value).map(v -> Pattern.compile("^1[23456789]\\d{9}$").matcher(v).matches()).orElse(Boolean.FALSE);
+        return Optional.ofNullable(value).map(RegexUtils::matchPhone).orElse(Boolean.FALSE);
     }
 }

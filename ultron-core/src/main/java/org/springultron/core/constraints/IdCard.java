@@ -20,7 +20,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target({FIELD, PARAMETER})
 @Retention(RUNTIME)
 public @interface IdCard {
-    String message() default "请输入有效的身份证号码";
+    String message() default "身份证号码不合法";
 
     Class<?>[] groups() default {};
 

@@ -20,7 +20,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target({FIELD, PARAMETER})
 @Retention(RUNTIME)
 public @interface Phone {
-    String message() default "请输入有效的手机号码";
+    String message() default "手机号码不合法";
 
     Class<?>[] groups() default {};
 
