@@ -97,7 +97,7 @@ public class HttpResponse {
         }
     }
 
-    public <T> List asList(final Class<T> valueType) {
+    public <T> List<T> asList(final Class<T> valueType) {
         try {
             return Optional.ofNullable(response.body()).map(body -> Jackson.parseArray(body.byteStream(), valueType)).orElseThrow(() -> new RuntimeException("response body is null"));
         } finally {
@@ -105,7 +105,7 @@ public class HttpResponse {
         }
     }
 
-    public <T> List asList(final TypeReference<? extends List<T>> valueTypeRef) {
+    public <T> List<T> asList(final TypeReference<? extends List<T>> valueTypeRef) {
         try {
             return Optional.ofNullable(response.body()).map(body -> Jackson.parseArray(body.byteStream(), valueTypeRef)).orElseThrow(() -> new RuntimeException("response body is null"));
         } finally {
