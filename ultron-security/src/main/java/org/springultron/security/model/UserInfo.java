@@ -37,39 +37,44 @@ public class UserInfo implements Serializable {
         return username;
     }
 
-    public void setUsername(String username) {
+    public UserInfo setUsername(String username) {
         this.username = username;
+        return this;
     }
 
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
+    public UserInfo setPassword(String password) {
         this.password = password;
+        return this;
     }
 
     public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public UserInfo setUserId(Long userId) {
         this.userId = userId;
+        return this;
     }
 
     public String getMobile() {
         return mobile;
     }
 
-    public void setMobile(String mobile) {
+    public UserInfo setMobile(String mobile) {
         this.mobile = mobile;
+        return this;
     }
 
     public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public UserInfo setStatus(Integer status) {
         this.status = status;
+        return this;
     }
 }

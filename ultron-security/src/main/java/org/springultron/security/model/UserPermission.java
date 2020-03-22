@@ -38,39 +38,44 @@ public class UserPermission implements Serializable {
         return pid;
     }
 
-    public void setPid(Long pid) {
+    public UserPermission setPid(Long pid) {
         this.pid = pid;
+        return this;
     }
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public UserPermission setId(Long id) {
         this.id = id;
+        return this;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public UserPermission setName(String name) {
         this.name = name;
+        return this;
     }
 
     public String getValue() {
         return value;
     }
 
-    public void setValue(String value) {
+    public UserPermission setValue(String value) {
         this.value = value;
+        return this;
     }
 
     public Integer getType() {
         return type;
     }
 
-    public void setType(Integer type) {
+    public UserPermission setType(Integer type) {
         this.type = type;
+        return this;
     }
 }

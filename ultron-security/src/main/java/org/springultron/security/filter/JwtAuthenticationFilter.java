@@ -31,8 +31,8 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private static final String AUTHENTICATION_PREFIX = "Bearer ";
 
-    private SimpleAuthenticationEntryPoint authenticationEntryPoint;
-    private JwtProcessor jwtProcessor;
+    private final SimpleAuthenticationEntryPoint authenticationEntryPoint;
+    private final JwtProcessor jwtProcessor;
 
     public JwtAuthenticationFilter(JwtProcessor jwtProcessor) {
         this.authenticationEntryPoint = new SimpleAuthenticationEntryPoint();
@@ -41,6 +41,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
+        System.out.println("---doFilterInternal----");
         // 如果已经通过认证
         if (SecurityContextHolder.getContext().getAuthentication() != null) {
             chain.doFilter(request, response);
@@ -49,6 +50,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String jwt = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (StringUtils.isNotEmpty(jwt) && jwt.startsWith(AUTHENTICATION_PREFIX)) {
             jwt = jwt.substring(AUTHENTICATION_PREFIX.length());
+            System.out.println("---jwt：" + jwt);
             try {
                 final String username = jwtProcessor.obtainUsername(jwt);
                 UserDetails userDetails = jwtProcessor.getUserByUsername(username);
@@ -58,6 +60,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 // 放入安全上下文中
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                // 执行过滤器链
+                chain.doFilter(request, response);
             } catch (ExpiredJwtException e) {
                 authenticationEntryPoint.commence(request, response, new CredentialsExpiredException("token is expired"));
             } catch (JwtException e) {
@@ -65,7 +69,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             } catch (AuthenticationException e) {
                 authenticationEntryPoint.commence(request, response, e);
             }
+        } else {
+            // 执行过滤器链
+            chain.doFilter(request, response);
         }
-        chain.doFilter(request, response);
     }
 }

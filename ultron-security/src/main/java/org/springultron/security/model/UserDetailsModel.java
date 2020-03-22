@@ -14,7 +14,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * 用户详情基类
+ * 用户详情基类 {@link UserDetails}
  *
  * @author brucewuu
  * @date 2020/3/18 10:45
@@ -112,9 +112,10 @@ public class UserDetailsModel implements UserDetails, CredentialsContainer {
     }
 
     private static class AuthorityComparator implements Comparator<GrantedAuthority>, Serializable {
-        private static final long serialVersionUID = 520L;
+        private static final long serialVersionUID = 521L;
 
-        private AuthorityComparator() {}
+        private AuthorityComparator() {
+        }
 
         @Override
         public int compare(GrantedAuthority g1, GrantedAuthority g2) {

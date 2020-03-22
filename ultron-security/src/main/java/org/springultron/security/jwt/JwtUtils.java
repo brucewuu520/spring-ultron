@@ -1,9 +1,10 @@
 package org.springultron.security.jwt;
 
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.lang.Nullable;
-import org.springframework.util.Base64Utils;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
@@ -41,7 +42,7 @@ public final class JwtUtils {
      */
     public static String generateSecret(SignatureAlgorithm algorithm) {
         SecretKey secretKey = Keys.secretKeyFor(algorithm);
-        return Base64Utils.encodeToString(secretKey.getEncoded());
+        return DatatypeConverter.printBase64Binary(secretKey.getEncoded());
     }
 
     /**
@@ -52,6 +53,62 @@ public final class JwtUtils {
     @Nullable
     private static Date generateExpirationDate(Long expiration) {
         return Optional.ofNullable(expiration).map(time -> new Date(System.currentTimeMillis() + time * 1000)).orElse(null);
+    }
+
+    /**
+     * 根据username生成JWT（默认不过期）
+     * 支持 SHA-256 SHA-384 SHA-512算法
+     * 默认使用HS512算法
+     *
+     * @param username 用户名
+     * @param secret   签名秘钥
+     */
+    public static String generateToken(String username, String secret) {
+        return generateToken(username, secret, SignatureAlgorithm.HS512);
+    }
+
+    /**
+     * 根据username生成JWT
+     * 支持 SHA-256 SHA-384 SHA-512算法
+     * 默认使用HS512算法
+     *
+     * @param username   用户名
+     * @param secret     签名秘钥
+     * @param expiration 有效期时长(单位:秒)
+     */
+    public static String generateToken(String username, String secret, Long expiration) {
+        return generateToken(username, secret, expiration, SignatureAlgorithm.HS512);
+    }
+
+    /**
+     * 根据username生成JWT
+     * 支持 SHA-256 SHA-384 SHA-512算法
+     * 默认使用HS512算法
+     *
+     * @param username   用户名
+     * @param secret     签名秘钥
+     * @param expiration 有效期时长(单位:秒)
+     * @param algorithm  算法
+     */
+    public static String generateToken(String username, String secret, Long expiration, SignatureAlgorithm algorithm) {
+        byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(secret);
+        Key signKey = new SecretKeySpec(apiKeySecretBytes, algorithm.getJcaName());
+        return Jwts.builder().setAudience(username).setIssuedAt(new Date()).setExpiration(generateExpirationDate(expiration)).signWith(signKey, algorithm).compact();
+    }
+
+    /**
+     * 根据username生成JWT（默认不过期）
+     * 支持 SHA-256 SHA-384 SHA-512算法
+     * 默认使用HS512算法
+     *
+     * @param username  用户名
+     * @param secret    签名秘钥
+     * @param algorithm 签名算法
+     */
+    public static String generateToken(String username, String secret, SignatureAlgorithm algorithm) {
+        byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(secret);
+        Key signKey = new SecretKeySpec(apiKeySecretBytes, algorithm.getJcaName());
+        return Jwts.builder().setAudience(username).setIssuedAt(new Date()).signWith(signKey, algorithm).compact();
     }
 
     /**
@@ -70,16 +127,13 @@ public final class JwtUtils {
      * 生成JWT
      *
      * @param claims    jwt负载
-     * @param secret    签名秘钥
+     * @param secret    签名秘钥 base64
      * @param algorithm 签名算法,支持 SHA-256 SHA-384 SHA-512算法
      */
     public static String generateToken(Claims claims, String secret, SignatureAlgorithm algorithm) {
         byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(secret);
         Key signKey = new SecretKeySpec(apiKeySecretBytes, algorithm.getJcaName());
-        return Jwts.builder()
-                .setClaims(claims)
-                .signWith(signKey, algorithm)
-                .compact();
+        return Jwts.builder().setClaims(claims).signWith(signKey, algorithm).compact();
     }
 
     /**

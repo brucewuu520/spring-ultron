@@ -3,8 +3,9 @@ package org.springultron.security.handler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springultron.security.jwt.JwtProcessor;
+import org.springultron.security.model.UserDetailsModel;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,10 +20,19 @@ import javax.servlet.http.HttpServletResponse;
 public class SimpleLogoutHandler implements LogoutHandler {
     private static Logger log = LoggerFactory.getLogger(SimpleLogoutHandler.class);
 
+    private final JwtProcessor jwtProcessor;
+
+    public SimpleLogoutHandler(JwtProcessor jwtProcessor) {
+        this.jwtProcessor = jwtProcessor;
+    }
+
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        String username = userDetails.getUsername();
-        log.info("username: {}  is offline now", username);
+        log.info("logout authentication: {}", authentication);
+        if (authentication != null) {
+            UserDetailsModel userDetails = (UserDetailsModel) authentication.getPrincipal();
+            log.info("username: {}  is offline now", userDetails.getUsername());
+            jwtProcessor.logout(userDetails.getUserInfo());
+        }
     }
 }

@@ -49,14 +49,14 @@ public class BaseSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // session 生成策略用无状态策略,不创建会话
                 .and()
-                .exceptionHandling().authenticationEntryPoint(new SimpleAuthenticationEntryPoint()).accessDeniedHandler(new SimpleAccessDeniedHandler())
-                .and()
                 // jwt 必须配置于 UsernamePasswordAuthenticationFilter 之前
                 .addFilterBefore(new JwtAuthenticationFilter(jwtProcessor), UsernamePasswordAuthenticationFilter.class)
                 // 登录成功后返回jwt token 失败后返回错误信息
                 .formLogin().loginProcessingUrl("process").successHandler(new SimpleAuthenticationSuccessHandler(jwtProcessor)).failureHandler(new SimpleAuthenticationFailureHandler())
                 .and()
-                .logout().addLogoutHandler(new SimpleLogoutHandler()).logoutSuccessHandler(new SimpleLogoutSuccessHandler());
+                .logout().addLogoutHandler(new SimpleLogoutHandler(jwtProcessor)).logoutSuccessHandler(new SimpleLogoutSuccessHandler())
+                .and()
+                .exceptionHandling().authenticationEntryPoint(new SimpleAuthenticationEntryPoint()).accessDeniedHandler(new SimpleAccessDeniedHandler());
     }
 
     @Override
@@ -64,7 +64,6 @@ public class BaseSecurityConfig extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(userDetailsService()).passwordEncoder(passwordEncoder());
     }
 
-    @Bean
     @Override
     protected UserDetailsService userDetailsService() {
         return username -> jwtProcessor.getUserByUsername(username);
