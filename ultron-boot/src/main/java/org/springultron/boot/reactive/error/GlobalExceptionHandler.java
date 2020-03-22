@@ -54,10 +54,4 @@ public class GlobalExceptionHandler {
         // 发送：未知异常异常事件
         return Mono.just(ApiResult.failed(ResultCode.ASSERTION_ERROR.getCode(), e.getMessage()));
     }
-
-    @ExceptionHandler(Throwable.class)
-    public Mono<ApiResult<Object>> handleThrowable(Throwable e) {
-        log.error("系统异常", e);
-        return Mono.just(ApiResult.failed(e.getMessage()));
-    }
 }

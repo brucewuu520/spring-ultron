@@ -53,10 +53,4 @@ public class GlobalExceptionHandler {
         // 发送：未知异常异常事件
         return ApiResult.failed(ResultCode.ASSERTION_ERROR.getCode(), e.getMessage());
     }
-
-    @ExceptionHandler(Throwable.class)
-    public ApiResult<Object> handleThrowable(Throwable e) {
-        log.error("系统异常", e);
-        return ApiResult.failed(e.getMessage());
-    }
 }
