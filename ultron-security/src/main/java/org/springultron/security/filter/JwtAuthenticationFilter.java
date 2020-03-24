@@ -41,7 +41,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
-        System.out.println("---doFilterInternal----");
         // 如果已经通过认证
         if (SecurityContextHolder.getContext().getAuthentication() != null) {
             chain.doFilter(request, response);
@@ -50,7 +49,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String jwt = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (StringUtils.isNotEmpty(jwt) && jwt.startsWith(AUTHENTICATION_PREFIX)) {
             jwt = jwt.substring(AUTHENTICATION_PREFIX.length());
-            System.out.println("---jwt：" + jwt);
             try {
                 final String username = jwtProcessor.obtainUsername(jwt);
                 UserDetails userDetails = jwtProcessor.getUserByUsername(username);

@@ -3,9 +3,9 @@ package org.springultron.security.handler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springultron.security.jwt.JwtProcessor;
-import org.springultron.security.model.UserDetailsModel;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -30,9 +30,9 @@ public class SimpleLogoutHandler implements LogoutHandler {
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         log.info("logout authentication: {}", authentication);
         if (authentication != null) {
-            UserDetailsModel userDetails = (UserDetailsModel) authentication.getPrincipal();
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             log.info("username: {}  is offline now", userDetails.getUsername());
-            jwtProcessor.logout(userDetails.getUserInfo());
+            jwtProcessor.logout(userDetails.getUsername());
         }
     }
 }

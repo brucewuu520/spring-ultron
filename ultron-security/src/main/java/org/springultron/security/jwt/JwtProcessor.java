@@ -3,7 +3,6 @@ package org.springultron.security.jwt;
 import io.jsonwebtoken.JwtException;
 import org.springframework.lang.Nullable;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springultron.security.model.UserInfo;
 
 /**
  * jwt解析处理器
@@ -41,7 +40,7 @@ public interface JwtProcessor {
     /**
      * 用户退出登录
      *
-     * @param userInfo 用户信息
+     * @param username 用户名
      */
-    void logout(UserInfo userInfo);
+    void logout(String username);
 }
