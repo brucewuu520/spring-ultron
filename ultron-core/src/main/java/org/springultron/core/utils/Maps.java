@@ -2,8 +2,7 @@ package org.springultron.core.utils;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Map Utils
@@ -52,6 +51,54 @@ public class Maps {
     }
 
     /**
+     * map转签名字符串
+     * 按照key的ASCII码排序；key=value&key=value&key=value
+     *
+     * @param map 集合
+     * @return StringBuilder
+     */
+    public static StringBuilder sortSignValue(Map<String, ?> map) {
+        List<String> keyList = new ArrayList<>(map.keySet());
+        Collections.sort(keyList);
+        StringBuilder builder = new StringBuilder();
+        for (String key : keyList) {
+            if (builder.length() > 0) {
+                builder.append("&").append(key).append("=").append(map.get(key));
+            } else {
+                builder.append(key).append("=").append(map.get(key));
+            }
+        }
+        return builder;
+    }
+
+    /**
+     * queryString 转map
+     * key=value&key=value&key=value专为键值对形式
+     *
+     * @param queryString key=value&key=value&key=value字符串
+     * @return Map
+     */
+    @SuppressWarnings("ConstantConditions")
+    public static Map<String, Object> queryStringToMap(String queryString) {
+        if (StringUtils.isEmpty(queryString)) {
+            return Collections.emptyMap();
+        }
+        String[] params = StringUtils.split(queryString, "&");
+        if (ArrayUtils.isEmpty(params)) {
+            return Collections.emptyMap();
+        }
+        Map<String, Object> hashMap = new HashMap<>();
+        for (String param : params) {
+            String[] kvArray = StringUtils.split(param, "=");
+            int length = ArrayUtils.getLength(kvArray);
+            if (length > 0) {
+                hashMap.put(kvArray[0], length > 1 ? kvArray[1] : null);
+            }
+        }
+        return hashMap;
+    }
+
+    /**
      * Gets a String from a Map in a null-safe manner.
      * <p>
      * The String is obtained via <code>toString</code>.
@@ -60,7 +107,7 @@ public class Maps {
      * @param key the key to look up
      * @return the value in the Map as a String, <code>null</code> if null map input
      */
-    public static String getString(final Map map, final Object key) {
+    public static String getString(final Map<?, ?> map, final Object key) {
         if (map != null) {
             Object answer = map.get(key);
             if (answer != null) {
@@ -79,7 +126,7 @@ public class Maps {
      * @param key the key to look up
      * @return the value in the Map as a Short, <code>null</code> if null map input
      */
-    public static Short getShort(final Map map, final Object key) {
+    public static Short getShort(final Map<?, ?> map, final Object key) {
         Number answer = getNumber(map, key);
         if (answer == null) {
             return null;
@@ -98,7 +145,7 @@ public class Maps {
      * @param key the key to look up
      * @return the value in the Map as a Integer, <code>null</code> if null map input
      */
-    public static Integer getInteger(final Map map, final Object key) {
+    public static Integer getInteger(final Map<?, ?> map, final Object key) {
         Number answer = getNumber(map, key);
         if (answer == null) {
             return null;
@@ -117,7 +164,7 @@ public class Maps {
      * @param key the key to look up
      * @return the value in the Map as a Long, <code>null</code> if null map input
      */
-    public static Long getLong(final Map map, final Object key) {
+    public static Long getLong(final Map<?, ?> map, final Object key) {
         Number answer = getNumber(map, key);
         if (answer == null) {
             return null;
@@ -136,7 +183,7 @@ public class Maps {
      * @param key the key to look up
      * @return the value in the Map as a Float, <code>null</code> if null map input
      */
-    public static Float getFloat(final Map map, final Object key) {
+    public static Float getFloat(final Map<?, ?> map, final Object key) {
         Number answer = getNumber(map, key);
         if (answer == null) {
             return null;
@@ -155,7 +202,7 @@ public class Maps {
      * @param key the key to look up
      * @return the value in the Map as a Double, <code>null</code> if null map input
      */
-    public static Double getDouble(final Map map, final Object key) {
+    public static Double getDouble(final Map<?, ?> map, final Object key) {
         Number answer = getNumber(map, key);
         if (answer == null) {
             return null;
@@ -175,11 +222,11 @@ public class Maps {
      * @param key the key to look up
      * @return the value in the Map as a Map, <code>null</code> if null map input
      */
-    public static Map getMap(final Map map, final Object key) {
+    public static Map<?, ?> getMap(final Map<?, ?> map, final Object key) {
         if (map != null) {
             Object answer = map.get(key);
             if (answer instanceof Map) {
-                return (Map) answer;
+                return (Map<?, ?>) answer;
             }
         }
         return null;
@@ -199,14 +246,14 @@ public class Maps {
      * @param key the key to look up
      * @return the value in the Map as a Boolean, <code>null</code> if null map input
      */
-    public static Boolean getBoolean(final Map map, final Object key) {
+    public static Boolean getBoolean(final Map<?, ?> map, final Object key) {
         if (map != null) {
             Object answer = map.get(key);
             if (answer != null) {
                 if (answer instanceof Boolean) {
                     return (Boolean) answer;
                 } else if (answer instanceof String) {
-                    return new Boolean((String) answer);
+                    return Boolean.valueOf((String) answer);
                 } else if (answer instanceof Number) {
                     Number n = (Number) answer;
                     return (n.intValue() != 0) ? Boolean.TRUE : Boolean.FALSE;
@@ -229,7 +276,7 @@ public class Maps {
      * @param key the key to look up
      * @return the value in the Map as a Number, <code>null</code> if null map input
      */
-    public static Number getNumber(final Map map, final Object key) {
+    public static Number getNumber(final Map<?, ?> map, final Object key) {
         if (map != null) {
             Object answer = map.get(key);
             if (answer != null) {
@@ -258,7 +305,7 @@ public class Maps {
      * @param key the key to look up
      * @return the value in the Map as a short, <code>0</code> if null map input
      */
-    public static short getShortValue(final Map map, final Object key) {
+    public static short getShortValue(final Map<?, ?> map, final Object key) {
         Short shortObject = getShort(map, key);
         if (shortObject == null) {
             return 0;
@@ -275,7 +322,7 @@ public class Maps {
      * @param key the key to look up
      * @return the value in the Map as an int, <code>0</code> if null map input
      */
-    public static int getIntValue(final Map map, final Object key) {
+    public static int getIntValue(final Map<?, ?> map, final Object key) {
         Integer integerObject = getInteger(map, key);
         if (integerObject == null) {
             return 0;
@@ -292,7 +339,7 @@ public class Maps {
      * @param key the key to look up
      * @return the value in the Map as a long, <code>0L</code> if null map input
      */
-    public static long getLongValue(final Map map, final Object key) {
+    public static long getLongValue(final Map<?, ?> map, final Object key) {
         Long longObject = getLong(map, key);
         if (longObject == null) {
             return 0L;
@@ -309,7 +356,7 @@ public class Maps {
      * @param key the key to look up
      * @return the value in the Map as a float, <code>0.0F</code> if null map input
      */
-    public static float getFloatValue(final Map map, final Object key) {
+    public static float getFloatValue(final Map<?, ?> map, final Object key) {
         Float floatObject = getFloat(map, key);
         if (floatObject == null) {
             return 0f;
@@ -326,7 +373,7 @@ public class Maps {
      * @param key the key to look up
      * @return the value in the Map as a double, <code>0.0</code> if null map input
      */
-    public static double getDoubleValue(final Map map, final Object key) {
+    public static double getDoubleValue(final Map<?, ?> map, final Object key) {
         Double doubleObject = getDouble(map, key);
         if (doubleObject == null) {
             return 0d;
@@ -348,7 +395,7 @@ public class Maps {
      * @param key the key to look up
      * @return the value in the Map as a Boolean, <code>false</code> if null map input
      */
-    public static boolean getBooleanValue(final Map map, final Object key) {
+    public static boolean getBooleanValue(final Map<?, ?> map, final Object key) {
         Boolean booleanObject = getBoolean(map, key);
         if (booleanObject == null) {
             return false;
