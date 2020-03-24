@@ -44,7 +44,7 @@
         <!-- cloud dependencies start-->
         <spring-cloud.version>Hoxton.SR3</spring-cloud.version>
         <alibaba-cloud.version>2.2.0.RELEASE</alibaba-cloud.version>
-        <fastjson.version>1.2.66</fastjson.version>
+        <fastjson.version>1.2.67</fastjson.version>
         <guava.version>22.0</guava.version>
         <!-- cloud dependencies end-->
 
