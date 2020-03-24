@@ -6,9 +6,11 @@ import org.springframework.util.ResourceUtils;
 import org.springframework.web.util.UriUtils;
 import org.springultron.core.pool.StringPool;
 
-import java.io.File;
+import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * 文件操作工具
@@ -62,5 +64,35 @@ public class FileUtils extends FileCopyUtils {
             return new File(file).getParentFile().getAbsolutePath();
         }
         return file;
+    }
+
+    /**
+     * 获得输入流
+     *
+     * @param path {@link Path}
+     * @return 输入流
+     */
+    public static BufferedInputStream getInputStream(Path path) throws IOException {
+        return new BufferedInputStream(Files.newInputStream(path));
+    }
+
+    /**
+     * 获得输入流
+     *
+     * @param file 文件
+     * @return 输入流
+     */
+    public static BufferedInputStream getInputStream(File file) throws IOException {
+        return new BufferedInputStream(new FileInputStream(file));
+    }
+
+    /**
+     * 获得输入流
+     *
+     * @param path 文件绝对路径
+     * @return 输入流
+     */
+    public static BufferedInputStream getInputStream(String path) throws IOException {
+        return new BufferedInputStream(new FileInputStream(new File(path)));
     }
 }
