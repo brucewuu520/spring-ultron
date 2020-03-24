@@ -2,16 +2,20 @@ package org.springultron.http;
 
 import okhttp3.*;
 import okhttp3.logging.HttpLoggingInterceptor;
+import org.springultron.core.exception.Exceptions;
 import org.springultron.core.utils.Jackson;
+import org.springultron.http.ssl.DisableValidationTrustManager;
+import org.springultron.http.ssl.TrustAllHostNames;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.X509TrustManager;
+import javax.net.ssl.*;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.ProxySelector;
 import java.net.URL;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.time.Duration;
 import java.util.Objects;
 
@@ -38,6 +42,7 @@ public class HttpRequest {
     private Proxy proxy;
     private ProxySelector proxySelector;
     private Authenticator proxyAuthenticator;
+    private Boolean disableSslValidation;
     private HostnameVerifier hostnameVerifier;
     private SSLSocketFactory sslSocketFactory;
     private X509TrustManager trustManager;
@@ -47,70 +52,70 @@ public class HttpRequest {
     private static volatile HttpLoggingInterceptor globalLoggingInterceptor;
     private HttpLoggingInterceptor.Level level;
 
-    private HttpRequest(final Request.Builder requestBuilder, final HttpUrl.Builder urlBuilder, final String method) {
-        this.requestBuilder = requestBuilder;
+    private HttpRequest(final HttpUrl.Builder urlBuilder, final String method) {
+        this.requestBuilder = new Request.Builder();
         this.urlBuilder = urlBuilder;
         this.method = method;
     }
 
     public static HttpRequest get(final String url) {
-        return new HttpRequest(new Request.Builder(), HttpUrl.get(url).newBuilder(), "GET");
+        return new HttpRequest(HttpUrl.get(url).newBuilder(), "GET");
     }
 
     public static HttpRequest get(final URL url) {
-        return new HttpRequest(new Request.Builder(), Objects.requireNonNull(HttpUrl.get(url)).newBuilder(), "GET");
+        return new HttpRequest(Objects.requireNonNull(HttpUrl.get(url)).newBuilder(), "GET");
     }
 
     public static HttpRequest get(final HttpUrl.Builder urlBuilder) {
-        return new HttpRequest(new Request.Builder(), urlBuilder, "GET");
+        return new HttpRequest(urlBuilder, "GET");
     }
 
     public static HttpRequest post(final String url) {
-        return new HttpRequest(new Request.Builder(), HttpUrl.get(url).newBuilder(), "POST");
+        return new HttpRequest(HttpUrl.get(url).newBuilder(), "POST");
     }
 
     public static HttpRequest post(final URL url) {
-        return new HttpRequest(new Request.Builder(), Objects.requireNonNull(HttpUrl.get(url)).newBuilder(), "POST");
+        return new HttpRequest(Objects.requireNonNull(HttpUrl.get(url)).newBuilder(), "POST");
     }
 
     public static HttpRequest post(final HttpUrl.Builder urlBuilder) {
-        return new HttpRequest(new Request.Builder(), urlBuilder, "POST");
+        return new HttpRequest(urlBuilder, "POST");
     }
 
     public static HttpRequest patch(final String url) {
-        return new HttpRequest(new Request.Builder(), HttpUrl.get(url).newBuilder(), "PATCH");
+        return new HttpRequest(HttpUrl.get(url).newBuilder(), "PATCH");
     }
 
     public static HttpRequest patch(final URL url) {
-        return new HttpRequest(new Request.Builder(), Objects.requireNonNull(HttpUrl.get(url)).newBuilder(), "PATCH");
+        return new HttpRequest(Objects.requireNonNull(HttpUrl.get(url)).newBuilder(), "PATCH");
     }
 
     public static HttpRequest patch(final HttpUrl.Builder urlBuilder) {
-        return new HttpRequest(new Request.Builder(), urlBuilder, "PATCH");
+        return new HttpRequest(urlBuilder, "PATCH");
     }
 
     public static HttpRequest put(final String url) {
-        return new HttpRequest(new Request.Builder(), HttpUrl.get(url).newBuilder(), "PUT");
+        return new HttpRequest(HttpUrl.get(url).newBuilder(), "PUT");
     }
 
     public static HttpRequest put(final URL url) {
-        return new HttpRequest(new Request.Builder(), Objects.requireNonNull(HttpUrl.get(url)).newBuilder(), "PUT");
+        return new HttpRequest(Objects.requireNonNull(HttpUrl.get(url)).newBuilder(), "PUT");
     }
 
     public static HttpRequest put(final HttpUrl.Builder urlBuilder) {
-        return new HttpRequest(new Request.Builder(), urlBuilder, "PUT");
+        return new HttpRequest(urlBuilder, "PUT");
     }
 
     public static HttpRequest delete(final String url) {
-        return new HttpRequest(new Request.Builder(), HttpUrl.get(url).newBuilder(), "DELETE");
+        return new HttpRequest(HttpUrl.get(url).newBuilder(), "DELETE");
     }
 
     public static HttpRequest delete(final URL url) {
-        return new HttpRequest(new Request.Builder(), Objects.requireNonNull(HttpUrl.get(url)).newBuilder(), "DELETE");
+        return new HttpRequest(Objects.requireNonNull(HttpUrl.get(url)).newBuilder(), "DELETE");
     }
 
     public static HttpRequest delete(final HttpUrl.Builder urlBuilder) {
-        return new HttpRequest(new Request.Builder(), urlBuilder, "DELETE");
+        return new HttpRequest(urlBuilder, "DELETE");
     }
 
     public HttpRequest headers(final Headers headers) {
@@ -130,6 +135,11 @@ public class HttpRequest {
 
     public HttpRequest removeHeader(final String name) {
         this.requestBuilder.removeHeader(name);
+        return this;
+    }
+
+    public HttpRequest addCookie(final Cookie cookie) {
+        this.requestBuilder.addHeader("Cookie", cookie.toString());
         return this;
     }
 
@@ -205,9 +215,17 @@ public class HttpRequest {
         return this;
     }
 
-    public HttpRequest proxy(final InetSocketAddress address) {
-        this.proxy = new Proxy(Proxy.Type.HTTP, address);
+    public HttpRequest proxy(Proxy proxy) {
+        this.proxy = proxy;
         return this;
+    }
+
+    public HttpRequest proxy(final InetSocketAddress address) {
+        return proxy(Proxy.Type.HTTP, address);
+    }
+
+    public HttpRequest proxy(final Proxy.Type type, final InetSocketAddress address) {
+        return proxy(new Proxy(type, address));
     }
 
     public HttpRequest proxySelector(final ProxySelector proxySelector) {
@@ -228,6 +246,14 @@ public class HttpRequest {
     public HttpRequest sslSocketFactory(SSLSocketFactory sslSocketFactory, X509TrustManager trustManager) {
         this.sslSocketFactory = sslSocketFactory;
         this.trustManager = trustManager;
+        return this;
+    }
+
+    /**
+     * 关闭 ssl 校验
+     */
+    public HttpRequest disableSslValidation() {
+        this.disableSslValidation = Boolean.TRUE;
         return this;
     }
 
@@ -297,6 +323,9 @@ public class HttpRequest {
         if (null != sslSocketFactory && null != trustManager) {
             builder.sslSocketFactory(sslSocketFactory, trustManager);
         }
+        if (Boolean.TRUE.equals(disableSslValidation)) {
+            disableSslValidation(builder);
+        }
         if (null != level && !HttpLoggingInterceptor.Level.NONE.equals(level)) {
             HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(Slf4jLogger.LOGGER);
             loggingInterceptor.level(level);
@@ -338,5 +367,35 @@ public class HttpRequest {
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(Slf4jLogger.LOGGER);
         loggingInterceptor.level(level);
         HttpRequest.globalLoggingInterceptor = loggingInterceptor;
+    }
+
+    /**
+     * SECURE_RANDOM
+     */
+    private static volatile SecureRandom SECURE_RANDOM;
+
+    private static SecureRandom getSecureRandom() {
+        if (SECURE_RANDOM == null) {
+            synchronized (HttpRequest.class) {
+                if (SECURE_RANDOM == null) {
+                    SECURE_RANDOM = new SecureRandom();
+                }
+            }
+        }
+        return SECURE_RANDOM;
+    }
+
+    private static void disableSslValidation(OkHttpClient.Builder builder) {
+        try {
+            X509TrustManager disabledTrustManager = DisableValidationTrustManager.INSTANCE;
+            TrustManager[] trustManagers = new TrustManager[]{disabledTrustManager};
+            SSLContext sslContext = SSLContext.getInstance("SSL");
+            sslContext.init(null, trustManagers, HttpRequest.getSecureRandom());
+            SSLSocketFactory disabledSslSocketFactory = sslContext.getSocketFactory();
+            builder.sslSocketFactory(disabledSslSocketFactory, disabledTrustManager);
+            builder.hostnameVerifier(TrustAllHostNames.INSTANCE);
+        } catch (NoSuchAlgorithmException | KeyManagementException e) {
+            throw Exceptions.unchecked(e);
+        }
     }
 }
