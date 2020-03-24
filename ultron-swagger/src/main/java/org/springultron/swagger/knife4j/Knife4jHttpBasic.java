@@ -1,6 +1,8 @@
 package org.springultron.swagger.knife4j;
 
 /**
+ * Swagger在线接口文档http basic认证登录信息
+ *
  * @author brucewuu
  * @date 2020/1/6 11:43
  */

@@ -8,7 +8,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @author brucewuu
  * @date 2020/1/6 11:43
  */
-@ConfigurationProperties(prefix = "knife4j")
+@ConfigurationProperties(prefix = "swagger.knife4j")
 public class Knife4jProperties {
     /**
      * http basic配置
