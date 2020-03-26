@@ -24,7 +24,7 @@ import org.springultron.core.jackson.UltronJavaTimeModule;
  * Redis配置
  * <p>
  * 序列化策略：
- * 默认使用Jackson序列化Redis value，当没有依赖Jackson时默认使用jdk序列化
+ * 默认使用Jackson序列化Redis value，当没有依赖Jackson时使用jdk序列化
  * 用户可自定义注入redisSerializer 或 redisTemplate Bean来实现自定义配置
  * </p>
  *
