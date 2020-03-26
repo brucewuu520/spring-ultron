@@ -10,6 +10,12 @@
       "type": "org.springultron.swagger.SwaggerProperties$Authorization",
       "sourceType": "org.springultron.swagger.SwaggerProperties",
       "sourceMethod": "getAuthorization()"
+    },
+    {
+      "name": "swagger.knife4j.basic",
+      "type": "org.springultron.swagger.knife4j.Knife4jHttpBasic",
+      "sourceType": "org.springultron.swagger.knife4j.Knife4jProperties",
+      "sourceMethod": "getBasic()"
     }
   ],
   "properties": [
@@ -86,30 +92,30 @@
       "defaultValue": "^.*$"
     },
     {
+      "description": "Whether to Enable the Generation Environment.",
+      "name": "swagger.knife4j.production",
+      "type": "java.lang.Boolean",
+      "defaultValue": false
+    },
+    {
       "description": "Enable HTTP Basic Auth.",
-      "name": "knife4j.basic.enable",
+      "name": "swagger.knife4j.basic.enable",
       "type": "java.lang.Boolean",
       "defaultValue": false
     },
     {
       "description": "HTTP Basic Auth UserName.",
-      "name": "knife4j.basic.username",
+      "name": "swagger.knife4j.basic.username",
       "type": "java.lang.String"
     },
     {
       "description": "HTTP Basic Auth PassWord.",
-      "name": "knife4j.basic.password",
+      "name": "swagger.knife4j.basic.password",
       "type": "java.lang.String"
     },
     {
-      "description": "Whether to Enable the Generation Environment.",
-      "name": "knife4j.production",
-      "type": "java.lang.Boolean",
-      "defaultValue": false
-    },
-    {
       "description": "markdown files path.",
-      "name": "knife4j.markdowns",
+      "name": "swagger.knife4j.markdowns",
       "type": "java.lang.String"
     }
   ],
