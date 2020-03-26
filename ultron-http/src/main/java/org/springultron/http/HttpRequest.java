@@ -3,7 +3,7 @@ package org.springultron.http;
 import okhttp3.*;
 import okhttp3.logging.HttpLoggingInterceptor;
 import org.springultron.core.exception.Exceptions;
-import org.springultron.core.utils.Jackson;
+import org.springultron.core.jackson.Jackson;
 import org.springultron.http.ssl.DisableValidationTrustManager;
 import org.springultron.http.ssl.TrustAllHostNames;
 

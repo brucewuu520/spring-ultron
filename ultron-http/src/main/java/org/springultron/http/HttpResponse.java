@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import org.springultron.core.exception.Exceptions;
-import org.springultron.core.utils.Jackson;
+import org.springultron.core.jackson.Jackson;
 
 import java.io.IOException;
 import java.io.InputStream;
