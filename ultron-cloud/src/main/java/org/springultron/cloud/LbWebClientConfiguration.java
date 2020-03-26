@@ -12,7 +12,7 @@ import org.springframework.web.reactive.function.client.WebClient;
  * 负载均衡的WebClient(反应式、懒加载)
  * 使用方法：
  * <p>
- * 1、添加依赖：spring-cloud-starter-loadbalancer
+ * 1、添加依赖：spring-boot-starter-webflux、spring-cloud-starter-loadbalancer
  * 2、然后排除spring-cloud-netflix-ribbon依赖或者配置spring.cloud.loadbalancer.ribbon.enabled=false
  * netflix-ribbon已经停止维护，建议排除此依赖并依赖spring-cloud-starter-loadbalancer
  * </p>
@@ -32,7 +32,7 @@ public class LbWebClientConfiguration {
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Bean("lbWebClient")
     @ConditionalOnMissingBean(name = {"lbWebClient"})
-    public WebClient lbWebClientBuilder(WebClient.Builder webClientBuilder, ReactorLoadBalancerExchangeFilterFunction lbFunction) {
+    public WebClient lbWebClient(WebClient.Builder webClientBuilder, ReactorLoadBalancerExchangeFilterFunction lbFunction) {
         return webClientBuilder.filter(lbFunction).build();
     }
 }
