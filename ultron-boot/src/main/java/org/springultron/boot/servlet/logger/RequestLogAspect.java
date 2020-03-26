@@ -18,7 +18,7 @@ import org.springultron.boot.enums.LogLevel;
 import org.springultron.boot.props.UltronLogProperties;
 import org.springultron.core.pool.StringPool;
 import org.springultron.core.utils.IpUtils;
-import org.springultron.core.utils.Jackson;
+import org.springultron.core.jackson.Jackson;
 import org.springultron.core.utils.WebUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -135,12 +135,12 @@ public class RequestLogAspect {
         String targetName = joinPoint.getTarget().getClass().getName();
         String methodName = joinPoint.getSignature().getName();
         Object[] arguments = joinPoint.getArgs();
-        Class targetClass = Class.forName(targetName);
+        Class<?> targetClass = Class.forName(targetName);
         Method[] methods = targetClass.getMethods();
         StringBuilder description = new StringBuilder();
         for (Method method : methods) {
             if (method.getName().equals(methodName)) {
-                Class[] classes = method.getParameterTypes();
+                Class<?>[] classes = method.getParameterTypes();
                 if (classes.length == arguments.length) {
                     description.append(method.getAnnotation(ApiLog.class).description());
                     break;

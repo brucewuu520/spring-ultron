@@ -2,6 +2,8 @@ package org.springultron.boot.props;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import java.time.Duration;
+
 /**
  * spring boot异步任务线程池配置
  *
@@ -25,11 +27,11 @@ public class UltronTaskProperties {
     /**
      * 空闲线程存活时间，默认：300秒
      */
-    private int keepAliveSeconds = 300;
+    private Duration keepAlive = Duration.ofSeconds(300L);
     /**
      * 线程名称前缀
      */
-    private String threadNamePrefix = "ultron-task-";
+    private String threadNamePrefix = "ultron";
 
     public int getCorePoolSize() {
         return corePoolSize;
@@ -55,12 +57,12 @@ public class UltronTaskProperties {
         this.queueCapacity = queueCapacity;
     }
 
-    public int getKeepAliveSeconds() {
-        return keepAliveSeconds;
+    public Duration getKeepAlive() {
+        return keepAlive;
     }
 
-    public void setKeepAliveSeconds(int keepAliveSeconds) {
-        this.keepAliveSeconds = keepAliveSeconds;
+    public void setKeepAlive(Duration keepAlive) {
+        this.keepAlive = keepAlive;
     }
 
     public String getThreadNamePrefix() {

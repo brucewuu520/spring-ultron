@@ -1,21 +1,17 @@
 package org.springultron.boot.config;
 
-import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
-import org.springframework.aop.interceptor.SimpleAsyncUncaughtExceptionHandler;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.task.TaskExecutionAutoConfiguration;
+import org.springframework.boot.task.TaskExecutorBuilder;
+import org.springframework.boot.task.TaskSchedulerBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.lang.Nullable;
-import org.springframework.scheduling.TaskScheduler;
-import org.springframework.scheduling.annotation.AsyncConfigurerSupport;
-import org.springframework.scheduling.annotation.SchedulingConfigurer;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
+import org.springframework.core.task.TaskDecorator;
 import org.springultron.boot.props.UltronTaskProperties;
 
-import java.util.concurrent.Executor;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 
 /**
@@ -28,44 +24,52 @@ import java.util.concurrent.ThreadPoolExecutor;
  * @date 2019/11/11 14:52
  */
 @Configuration(proxyBeanMethods = false)
-public class UltronTaskAutoConfiguration extends AsyncConfigurerSupport {
+@AutoConfigureBefore({TaskExecutionAutoConfiguration.class})
+public class UltronTaskAutoConfiguration {
 
     private final UltronTaskProperties properties;
 
-    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
+    @Autowired
     public UltronTaskAutoConfiguration(UltronTaskProperties properties) {
         this.properties = properties;
     }
 
-    @Override
-    public Executor getAsyncExecutor() {
-        ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
-        taskExecutor.setCorePoolSize(properties.getCorePoolSize());
-        taskExecutor.setMaxPoolSize(properties.getMaxPoolSize());
-        taskExecutor.setQueueCapacity(properties.getQueueCapacity());
-        taskExecutor.setKeepAliveSeconds(properties.getKeepAliveSeconds());
-        taskExecutor.setThreadNamePrefix(properties.getThreadNamePrefix());
-        taskExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
-//        taskExecutor.afterPropertiesSet(); // 该方法Spring会自动调用
-        return taskExecutor;
-    }
-
-    @Nullable
-    @Override
-    public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
-        return new SimpleAsyncUncaughtExceptionHandler();
-    }
-
-    @ConditionalOnMissingBean({SchedulingConfigurer.class, TaskScheduler.class, ScheduledExecutorService.class})
     @Bean
-    public SchedulingConfigurer schedulingConfigurer() {
-        return scheduledTaskRegistrar -> {
-            ThreadPoolTaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
-            taskScheduler.setPoolSize(properties.getCorePoolSize());
-            taskScheduler.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
-            taskScheduler.setThreadNamePrefix("ultron-scheduling-");
-//            taskScheduler.afterPropertiesSet(); // 该方法Spring会自动调用
-            scheduledTaskRegistrar.setTaskScheduler(taskScheduler);
-        };
+    @ConditionalOnMissingBean
+    public TaskExecutorBuilder taskExecutorBuilder(ObjectProvider<TaskDecorator> taskDecorator) {
+        TaskExecutorBuilder builder = new TaskExecutorBuilder();
+        builder = builder.corePoolSize(properties.getCorePoolSize());
+        builder = builder.maxPoolSize(properties.getMaxPoolSize());
+        builder = builder.queueCapacity(properties.getQueueCapacity());
+        builder = builder.keepAlive(properties.getKeepAlive());
+        builder = builder.threadNamePrefix(properties.getThreadNamePrefix() + "-task-");
+        builder = builder.taskDecorator(taskDecorator.getIfUnique());
+        builder = builder.customizers(customizer -> customizer.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy()));
+        return builder;
     }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public TaskSchedulerBuilder taskSchedulerBuilder() {
+        TaskSchedulerBuilder builder = new TaskSchedulerBuilder();
+        builder = builder.poolSize(properties.getCorePoolSize());
+        builder = builder.threadNamePrefix(properties.getThreadNamePrefix() + "-scheduling-");
+        builder = builder.customizers(customizer -> customizer.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy()));
+        return builder;
+    }
+
+//    @ConditionalOnBean(name = {"org.springframework.context.annotation.internalScheduledAnnotationProcessor"})
+//    @ConditionalOnMissingBean({SchedulingConfigurer.class, TaskScheduler.class, ScheduledExecutorService.class})
+//    @Bean
+//    public SchedulingConfigurer schedulingConfigurer() {
+//        System.err.println("---schedulingConfigurer---");
+//        return scheduledTaskRegistrar -> {
+//            ThreadPoolTaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
+//            taskScheduler.setPoolSize(properties.getCorePoolSize());
+//            taskScheduler.setThreadNamePrefix(properties.getThreadNamePrefix() + "-scheduling-");
+//            taskScheduler.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
+//            taskScheduler.initialize();
+//            scheduledTaskRegistrar.setTaskScheduler(taskScheduler);
+//        };
+//    }
 }
