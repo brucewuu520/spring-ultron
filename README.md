@@ -1,8 +1,12 @@
 ## 前言
-在基于Spring boot/cloud的微服务项目中，要创建若干module，每个module都要依赖Redis、mybatis和一些基础工具类等等，本项目就是为了简化Spring boot的配置，在自己项目中提炼出来的公共服务配置和工具，简化大型项目的开发依赖
+在基于Spring boot/cloud的微服务项目中，要创建若干module，每个module都要依赖Redis、mybatis和一些基础工具类等等，本项目就是为了简化Spring boot的配置，在自己项目中提炼出来的公共服务配置和工具，简化大型项目的开发依赖;
+无论是基于Spring boot的单体应用架构还是基于Spring Cloud的微服务应用架构，均提供模块化支持。
+
 
 ### Ultron
-本项目命名SpringUltron，灵感来自复仇者联盟2:奥创纪元，奥创是一个强大的人工智能机器人，希望本项目越来越强大，基于更多的自动化配置和抽象，能在项目开发中节约更多的时间
+本项目命名SpringUltron，灵感来自复仇者联盟2:奥创纪元，奥创是一个强大的人工智能机器人，希望本项目越来越强大，基于更多的自动化配置和抽象，能在项目开发中节约更多的时间；
+按功能拆分了N多模块，可以按需依赖，减少打包代码
+
 
 [![996.icu](https://img.shields.io/badge/link-996.icu-red.svg)](https://996.icu)
 [![License](https://img.shields.io/badge/apache-2.0-blue.svg?style=flat)](http://www.apache.org/licenses/ "Feel free to contribute.")
@@ -16,10 +20,10 @@
     ├── ultron-mybatis              mybatis plus自动化配置、分页工具等
     ├── ultron-redis                Redis自动化配置、操作客户端
     ├── ultron-boot                 Spring boot脚手架，servlet/reactive全局异常捕获、基于aop的注解API日志打印(支持配置文件配置日志开关，日志内容等)、WebClient http客户端封装
-    ├── ultron-cloud                Spring cloud脚手架（待完善）
-    ├── ultron-http                 基于OKhttp3 4.0.0版本封装的http客户端，使用起来倍儿爽
+    ├── ultron-cloud                Spring cloud脚手架（基于Spring Cloud Alibaba）
+    ├── ultron-http                 基于OKhttp3 4.0.0版本封装的http客户端，Fluent语法风格，使用非常简便
     ├── ultron-security             Spring Security通用配置，支持jwt登录鉴权，RBAC权限控制
-    ├── ultron-swagger              Swagger文档自动化配置(可在配置文件中开启/关闭)
+    ├── ultron-swagger              Swagger文档自动化配置(可在配置文件中开启/关闭，支持http basic认证)
 ```    
 
 ## 使用步骤
@@ -72,6 +76,10 @@
         public Result<Test>> test() {
             return ApiResult.throwFail(ResultCode.API_EXCEPTION);
         }
+    自定义错误状态码枚举类实现IResultCode接口，即可使用 ApiResult.fail(IResultCode)返回错误信息
+    
+    Jackson配置序列化和反序列化支持java8 Time
+    
         
 3、ultron-crypto 对称及非对称加密解密工具，实现了:AES、DES、RSA、国密SM2、SM4等；以及各种秘钥生成工具
 
@@ -177,14 +185,16 @@
             queue-capacity: 30000     # 线程池队列容量，默认：30000
             keep-alive-seconds: 300   # 空闲线程存活时间，默认：300秒
     
-7、Spring cloud脚手架(基于alibaba-cloud 2.2.0)
+7、Spring cloud脚手架(基于Spring cloud alibaba 2.2.0)
 
     <dependency>
        <groupId>org.springultron</groupId>
        <artifactId>ultron-cloud</artifactId>
     </dependency>
     
-    负载均衡的http客户端使用（比RestTemplate性能要好得多）:
+    默认集成了sentinel熔断限流，支持传统servlet和reactive，统一配置熔断/限流的异常返回值
+    
+    负载均衡的http客户端使用（基于ReactorLoadBalancerExchangeFilterFunction的反应式负载均衡器，性能比RestTemplate要好得多）:
     
         @Autowire
         private WebClient lbWebClient;           
