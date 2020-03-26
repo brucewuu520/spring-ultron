@@ -185,7 +185,7 @@
             queue-capacity: 30000     # 线程池队列容量，默认：30000
             keep-alive-seconds: 300   # 空闲线程存活时间，默认：300秒
     
-7、Spring cloud脚手架(基于Spring cloud alibaba 2.2.0)
+7、Spring cloud脚手架(基于Spring cloud Hoxton、Spring cloud alibaba 2.2.0)
 
     <dependency>
        <groupId>org.springultron</groupId>
@@ -195,6 +195,11 @@
     默认集成了sentinel熔断限流，支持传统servlet和reactive，统一配置熔断/限流的异常返回值
     
     负载均衡的http客户端使用（基于ReactorLoadBalancerExchangeFilterFunction的反应式负载均衡器，性能比RestTemplate要好得多）:
+    添加依赖:
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
+        </dependency>
     
         @Autowire
         private WebClient lbWebClient;           
@@ -215,6 +220,16 @@
           contact-user: brucewuu
           contact-email: xxx@xxx.com
           contact-url: xxx
+          authorization:
+            enabled: true
+            name: BearerToken
+            header-name: Authorization
+          knife4j:
+            production: false
+            basic:
+              enable: true
+              username: admin
+              password: 123456
           
 9、Spring Security通用配置，支持jwt登录鉴权，RBAC权限控制
 
