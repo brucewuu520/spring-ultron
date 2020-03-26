@@ -31,14 +31,14 @@ public class Knife4jAutoConfiguration {
         return new MarkdownFiles(knife4jProperties.getMarkdowns() == null ? "" : knife4jProperties.getMarkdowns());
     }
 
-    @ConditionalOnProperty(value = "swagger.knife4j.basic.enable", havingValue = "true")
+    @ConditionalOnProperty(value = "swagger.knife4j.basic.enable")
     @Bean
     public SecurityBasicAuthFilter securityBasicAuthFilter(Knife4jProperties knife4jProperties) {
         final Knife4jHttpBasic httpBasic = knife4jProperties.getBasic();
         return new SecurityBasicAuthFilter(httpBasic.isEnable(), httpBasic.getUsername(), httpBasic.getPassword());
     }
 
-    @ConditionalOnProperty(value = "swagger.knife4j.production", havingValue = "true")
+    @ConditionalOnProperty(value = "swagger.knife4j.production")
     @Bean
     public ProductionSecurityFilter productionSecurityFilter() {
         return new ProductionSecurityFilter(true);

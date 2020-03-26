@@ -28,7 +28,7 @@ import java.util.Optional;
  * @date 2019-06-27 19:52
  */
 @Configuration(proxyBeanMethods = false)
-@ConditionalOnProperty(value = "swagger.enable", havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(value = "swagger.enable", matchIfMissing = true)
 @EnableConfigurationProperties(SwaggerProperties.class)
 @EnableKnife4j
 @EnableSwagger2
