@@ -1,5 +1,7 @@
 package org.springultron.core.utils;
 
+import org.springultron.core.io.FastStringWriter;
+
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -41,7 +43,7 @@ public class IoUtils {
     }
 
     public static String toString(final InputStream input, final Charset encoding) throws IOException {
-        try (final StringBuilderWriter sw = new StringBuilderWriter()) {
+        try (final FastStringWriter sw = new FastStringWriter()) {
             copy(input, sw, encoding);
             return sw.toString();
         }

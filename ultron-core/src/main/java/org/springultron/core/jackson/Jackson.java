@@ -1,4 +1,4 @@
-package org.springultron.core.utils;
+package org.springultron.core.jackson;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -13,7 +13,8 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.type.CollectionLikeType;
 import com.fasterxml.jackson.databind.type.MapType;
 import org.springultron.core.exception.Exceptions;
-import org.springultron.core.jackson.UltronJavaTimeModule;
+import org.springultron.core.utils.BeanUtils;
+import org.springultron.core.utils.DateUtils;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -16,8 +16,8 @@
 
 package org.springultron.core.exception;
 
+import org.springultron.core.io.FastStringWriter;
 import org.springultron.core.pool.StringPool;
-import org.springultron.core.utils.StringBuilderWriter;
 
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
@@ -116,9 +116,8 @@ public class Exceptions {
      * @return {String}
      */
     public static String getStackTraceString(Throwable e) {
-        StringBuilderWriter stringWriter = new StringBuilderWriter(200);
+        FastStringWriter stringWriter = new FastStringWriter(512);
         e.printStackTrace(new PrintWriter(stringWriter));
         return stringWriter.toString();
     }
-
 }
