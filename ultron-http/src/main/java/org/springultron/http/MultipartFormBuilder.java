@@ -5,6 +5,9 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import org.springframework.lang.Nullable;
 
+import java.io.File;
+import java.util.Map;
+
 /**
  * Multipart 表单构造器
  *
@@ -24,16 +27,28 @@ public class MultipartFormBuilder {
         this.formBuilder = new MultipartBody.Builder();
     }
 
-    public MultipartFormBuilder add(final String name, final String value) {
-        this.formBuilder.addFormDataPart(name, value);
+    public MultipartFormBuilder add(final String name, final Object value) {
+        this.formBuilder.addFormDataPart(name, HttpRequest.parseValue(value));
         return this;
     }
 
-//    public MultipartFormBuilder add(final String name, @Nullable final String filename, final File file) {
-//        final RequestBody fileBody = RequestBody.create(file, null);
-//        this.formBuilder.addFormDataPart(name, filename, fileBody);
-//        return this;
-//    }
+    public MultipartFormBuilder add(final String name, final File file) {
+        String fileName = file.getName();
+        return add(name, fileName, file);
+    }
+
+    public MultipartFormBuilder addMap(final Map<String, Object> formMap) {
+        if (formMap != null && !formMap.isEmpty()) {
+            formMap.forEach(this::add);
+        }
+        return this;
+    }
+
+    public MultipartFormBuilder add(final String name, @Nullable final String filename, final File file) {
+        final RequestBody fileBody = RequestBody.create(file, null);
+        this.formBuilder.addFormDataPart(name, filename, fileBody);
+        return this;
+    }
 
     public MultipartFormBuilder add(final String name, @Nullable final String filename, final RequestBody fileBody) {
         this.formBuilder.addFormDataPart(name, filename, fileBody);

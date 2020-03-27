@@ -2,6 +2,8 @@ package org.springultron.http;
 
 import okhttp3.FormBody;
 
+import java.util.Map;
+
 /**
  * form表单构造器
  *
@@ -21,13 +23,20 @@ public class FormBuilder {
         this.formBuilder = new FormBody.Builder();
     }
 
-    public FormBuilder add(final String name, final String value) {
-        this.formBuilder.add(name, value);
+    public FormBuilder add(final String name, final Object value) {
+        this.formBuilder.add(name, HttpRequest.parseValue(value));
         return this;
     }
 
-    public FormBuilder addEncoded(final String name, final String value) {
-        this.formBuilder.addEncoded(name, value);
+    public FormBuilder addEncoded(final String name, final Object value) {
+        this.formBuilder.addEncoded(name, HttpRequest.parseValue(value));
+        return this;
+    }
+
+    public FormBuilder addMap(final Map<String, Object> formMap) {
+        if (formMap != null && !formMap.isEmpty()) {
+            formMap.forEach(this::add);
+        }
         return this;
     }
 

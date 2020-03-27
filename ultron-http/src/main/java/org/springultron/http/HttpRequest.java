@@ -17,6 +17,7 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.time.Duration;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -143,13 +144,30 @@ public class HttpRequest {
         return this;
     }
 
-    public HttpRequest query(final String name, final String value) {
-        this.urlBuilder.addQueryParameter(name, value);
+    public HttpRequest query(String query) {
+        this.urlBuilder.query(query);
         return this;
     }
 
-    public HttpRequest queryEncoded(final String name, final String value) {
-        this.urlBuilder.addEncodedQueryParameter(name, value);
+    public HttpRequest queryEncoded(String query) {
+        this.urlBuilder.encodedQuery(query);
+        return this;
+    }
+
+    public HttpRequest query(final String name, final Object value) {
+        this.urlBuilder.addQueryParameter(name, value == null ? null : String.valueOf(value));
+        return this;
+    }
+
+    public HttpRequest queryEncoded(final String name, final Object value) {
+        this.urlBuilder.addEncodedQueryParameter(name, value == null ? null : String.valueOf(value));
+        return this;
+    }
+
+    public HttpRequest queryMap(Map<String, Object> queryMap) {
+        if (queryMap != null && !queryMap.isEmpty()) {
+            queryMap.forEach(this::query);
+        }
         return this;
     }
 
@@ -282,6 +300,11 @@ public class HttpRequest {
         return this;
     }
 
+    @Override
+    public String toString() {
+        return requestBuilder.toString();
+    }
+
     private Call newCall(final OkHttpClient httpClient) {
         OkHttpClient.Builder builder = httpClient.newBuilder();
         if (null != connectTimeout) {
@@ -367,6 +390,16 @@ public class HttpRequest {
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(Slf4jLogger.LOGGER);
         loggingInterceptor.level(level);
         HttpRequest.globalLoggingInterceptor = loggingInterceptor;
+    }
+
+    static String parseValue(Object value) {
+        if (value == null) {
+            return "";
+        }
+        if (value instanceof String) {
+            return (String) value;
+        }
+        return String.valueOf(value);
     }
 
     /**
