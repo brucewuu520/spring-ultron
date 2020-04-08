@@ -1,6 +1,9 @@
 package org.springultron.http;
 
+import okhttp3.Authenticator;
 import okhttp3.*;
+import okhttp3.internal.Util;
+import okhttp3.internal.http.HttpMethod;
 import okhttp3.logging.HttpLoggingInterceptor;
 import org.springultron.core.exception.Exceptions;
 import org.springultron.core.jackson.Jackson;
@@ -8,11 +11,7 @@ import org.springultron.http.ssl.DisableValidationTrustManager;
 import org.springultron.http.ssl.TrustAllHostNames;
 
 import javax.net.ssl.*;
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.Proxy;
-import java.net.ProxySelector;
-import java.net.URL;
+import java.net.*;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -27,7 +26,7 @@ import java.util.Objects;
  * @date 2019-06-29 22:15
  */
 public class HttpRequest {
-    private static final MediaType MEDIA_TYPE_JSON = MediaType.parse("application/json;charset=utf-8");
+    private static final MediaType MEDIA_TYPE_JSON = MediaType.get("application/json; charset=utf-8");
 
     private static volatile OkHttpClient httpClient = new OkHttpClient();
 
@@ -63,6 +62,10 @@ public class HttpRequest {
         return new HttpRequest(HttpUrl.get(url).newBuilder(), "GET");
     }
 
+    public static HttpRequest get(final URI uri) {
+        return new HttpRequest(Objects.requireNonNull(HttpUrl.get(uri)).newBuilder(), "GET");
+    }
+
     public static HttpRequest get(final URL url) {
         return new HttpRequest(Objects.requireNonNull(HttpUrl.get(url)).newBuilder(), "GET");
     }
@@ -73,6 +76,10 @@ public class HttpRequest {
 
     public static HttpRequest post(final String url) {
         return new HttpRequest(HttpUrl.get(url).newBuilder(), "POST");
+    }
+
+    public static HttpRequest post(final URI uri) {
+        return new HttpRequest(Objects.requireNonNull(HttpUrl.get(uri)).newBuilder(), "POST");
     }
 
     public static HttpRequest post(final URL url) {
@@ -87,6 +94,10 @@ public class HttpRequest {
         return new HttpRequest(HttpUrl.get(url).newBuilder(), "PATCH");
     }
 
+    public static HttpRequest patch(final URI uri) {
+        return new HttpRequest(Objects.requireNonNull(HttpUrl.get(uri)).newBuilder(), "PATCH");
+    }
+
     public static HttpRequest patch(final URL url) {
         return new HttpRequest(Objects.requireNonNull(HttpUrl.get(url)).newBuilder(), "PATCH");
     }
@@ -99,6 +110,10 @@ public class HttpRequest {
         return new HttpRequest(HttpUrl.get(url).newBuilder(), "PUT");
     }
 
+    public static HttpRequest put(final URI uri) {
+        return new HttpRequest(Objects.requireNonNull(HttpUrl.get(uri)).newBuilder(), "PUT");
+    }
+
     public static HttpRequest put(final URL url) {
         return new HttpRequest(Objects.requireNonNull(HttpUrl.get(url)).newBuilder(), "PUT");
     }
@@ -109,6 +124,10 @@ public class HttpRequest {
 
     public static HttpRequest delete(final String url) {
         return new HttpRequest(HttpUrl.get(url).newBuilder(), "DELETE");
+    }
+
+    public static HttpRequest delete(final URI uri) {
+        return new HttpRequest(Objects.requireNonNull(HttpUrl.get(uri)).newBuilder(), "DELETE");
     }
 
     public static HttpRequest delete(final URL url) {
@@ -220,6 +239,11 @@ public class HttpRequest {
 
     public HttpRequest cookieManager(final CookieJar cookieJar) {
         this.cookieJar = cookieJar;
+        return this;
+    }
+
+    public HttpRequest basicAuth(String username, String password) {
+        this.authenticator = new BasicAuthenticator(username, password);
         return this;
     }
 
@@ -356,30 +380,29 @@ public class HttpRequest {
         } else if (null != globalLoggingInterceptor) {
             builder.addInterceptor(globalLoggingInterceptor);
         }
-        requestBuilder.url(urlBuilder.build()).method(method, requestBody);
+        requestBuilder.url(urlBuilder.build());
+        if (HttpMethod.requiresRequestBody(method) && requestBody == null) {
+            requestBuilder.method(method, Util.EMPTY_REQUEST);
+        } else {
+            requestBuilder.method(method, requestBody);
+        }
         return builder.build().newCall(requestBuilder.build());
     }
 
     /**
-     * 发起同步请求
+     * 同步请求
      *
      * @return 响应体
      */
-    public final HttpResponse execute() {
-        try {
-            return HttpResponse.of(newCall(httpClient).execute());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public final SyncCall execute() {
+        return new SyncCall(newCall(httpClient));
     }
 
     /**
-     * 发起异步请求
-     *
-     * @param callback 异步回调
+     * 异步请求
      */
-    public final void enqueue(final Callback callback) {
-        newCall(httpClient).enqueue(callback);
+    public final AsyncCall async() {
+        return new AsyncCall(newCall(httpClient));
     }
 
     public static void setHttpClient(OkHttpClient httpClient) {
