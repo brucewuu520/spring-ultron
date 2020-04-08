@@ -34,18 +34,17 @@
 
     <properties>
         <!-- boot dependencies start-->
-        <spring-boot.version>2.2.5.RELEASE</spring-boot.version>
+        <spring-boot.version>2.2.6.RELEASE</spring-boot.version>
         <mybatis-plus.version>3.3.1</mybatis-plus.version>
         <knife4j.version>2.0.2</knife4j.version>
-        <okhttp4.version>4.4.0</okhttp4.version>
+        <okhttp4.version>4.4.1</okhttp4.version>
         <jwt.version>0.11.1</jwt.version>
         <bouncycastle.version>1.64</bouncycastle.version>
         <!-- boot dependencies end-->
         <!-- cloud dependencies start-->
         <spring-cloud.version>Hoxton.SR3</spring-cloud.version>
         <alibaba-cloud.version>2.2.0.RELEASE</alibaba-cloud.version>
-        <fastjson.version>1.2.67</fastjson.version>
-        <guava.version>22.0</guava.version>
+        <guava.version>28.2-android</guava.version>
         <!-- cloud dependencies end-->
 
         <findbugs.version>3.0.2</findbugs.version>
@@ -64,6 +63,7 @@
         <module>ultron-core</module>
         <module>ultron-crypto</module>
         <module>ultron-http</module>
+        <module>ultron-mongodb</module>
         <module>ultron-mybatis</module>
         <module>ultron-redis</module>
         <module>ultron-security</module>
@@ -195,5 +195,4 @@
             </build>
         </profile>
     </profiles>
-
 </project>

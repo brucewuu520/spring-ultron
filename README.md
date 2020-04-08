@@ -66,26 +66,29 @@
     
     统一返回体使用示例：
         @GetMapping("/test")
-        public Result<Test>> test() {
+        public ApiResult<Test>> test() {
             Test test = new Test();
-            return Result.success(test); // or return Result.failed(ResultCode.PARAM_VALID_FAILED);
+            return ApiResult.success(test); // or return ApiResult.failed(ResultCode.PARAM_VALID_FAILED);
         }
         
     自定义异常使用：
         @GetMapping("/test")
-        public Result<Test>> test() {
-            return ApiResult.throwFail(ResultCode.API_EXCEPTION);
+        public ApiResult<Test>> test() {
+            if (true) {
+                ApiResult.throwFail(ResultCode.API_EXCEPTION);
+            }
+            return ApiResult.apiException(new ServiceException("操作异常"));
         }
     自定义错误状态码枚举类实现IResultCode接口，即可使用 ApiResult.fail(IResultCode)返回错误信息
     
     Jackson配置序列化和反序列化支持java8 Time
     
         
-3、ultron-crypto 对称及非对称加密解密工具，实现了:AES、DES、RSA、国密SM2、SM4等；以及各种秘钥生成工具
+3、ultron-crypto 对称及非对称加密/解密/签名/验签工具，实现了:AES、DES、RSA、国密SM2、SM4等；以及各种秘钥生成工具
 
         <dependency>
            <groupId>org.springultron</groupId>
-           <artifactId>ultron-mybatis</artifactId>
+           <artifactId>ultron-crypto</artifactId>
         </dependency>
     
     部分加解密算法实现（如：国密SM2、SM4）需添加BC库依赖：
@@ -133,6 +136,22 @@
         redisClient.set("key", obj, Duration.ofSeconds(120))
         
         ...
+    
+    Redis反应式客户端使用:
+        添加依赖:
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-webflux</artifactId>
+            </dependency>
+        
+        @Autowired
+        private ReactiveRedisClient reactiveRedisClient;
+     
+        Mono<Boolean> result = reactiveRedisClient.setString("key", "value", Duration.ofSeconds(120))
+        
+        Object obj = new Object();
+        Mono<Boolean> result = reactiveRedisClient.set("key", obj, Duration.ofSeconds(120))
+        
         
     Spring cache 扩展cache name 支持 # 号分隔 cache name 和 超时 ttl(单位秒)。使用示例：
     
@@ -148,10 +167,10 @@
     请求日志使用示例(不支持reactive运行环境):
         @ApiLog(description = "用户登录")
         @GetMapping("/login")
-        public Result<User>> login() {
+        public ApiResult<User>> login() {
             UserDTO userDTO = new UserDTO();
             ...
-            return Result.success(userDTO, "登录成功");
+            return ApiResult.success(userDTO, "登录成功");
         }
         
     请求日志配置（配置文件添加）:
