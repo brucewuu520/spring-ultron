@@ -14,7 +14,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * 用户详情基类 {@link UserDetails}
+ * 用户详情类 {@link UserDetails}
  *
  * @author brucewuu
  * @date 2020/3/18 10:45
@@ -26,7 +26,8 @@ public class UserDetailsModel implements UserDetails, CredentialsContainer {
     private final List<UserPermission> permissionList;
     private Set<GrantedAuthority> authorities;
 
-    public UserDetailsModel(@NonNull UserInfo userInfo, @Nullable List<UserPermission> permissionList) {
+    private UserDetailsModel(@NonNull UserInfo userInfo, @Nullable List<UserPermission> permissionList) {
+        Assert.notNull(userInfo, "userInfo cannot be null");
         this.userInfo = userInfo;
         this.permissionList = permissionList;
         if (Lists.isNotEmpty(permissionList)) {
@@ -41,6 +42,14 @@ public class UserDetailsModel implements UserDetails, CredentialsContainer {
                     })
                     .collect(Collectors.toList())));
         }
+    }
+
+    public static UserDetailsModel of(@NonNull UserInfo userInfo) {
+        return new UserDetailsModel(userInfo, null);
+    }
+
+    public static UserDetailsModel of(@NonNull UserInfo userInfo, List<UserPermission> permissionList) {
+        return new UserDetailsModel(userInfo, permissionList);
     }
 
     @Override
@@ -80,7 +89,7 @@ public class UserDetailsModel implements UserDetails, CredentialsContainer {
 
     @Override
     public void eraseCredentials() {
-        userInfo.setPassword(null);
+        userInfo.eraseCredentials();
     }
 
     public UserInfo getUserInfo() {

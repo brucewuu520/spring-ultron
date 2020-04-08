@@ -45,4 +45,5 @@ public class SecurityUtils {
             throw new CredentialsExpiredException("User credentials have expired");
         }
     }
+
 }
