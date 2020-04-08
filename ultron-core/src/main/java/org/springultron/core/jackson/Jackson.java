@@ -164,11 +164,7 @@ public class Jackson {
      * @return Map 集合
      */
     public static Map<String, Object> parseMap(String json) {
-        try {
-            return getInstance().readValue(json, getMapType(String.class, Object.class));
-        } catch (IOException e) {
-            throw Exceptions.unchecked(e);
-        }
+        return parseMap(json, String.class, Object.class);
     }
 
     /**
@@ -178,11 +174,7 @@ public class Jackson {
      * @return Map 集合
      */
     public static Map<String, Object> parseMap(byte[] bytes) {
-        try {
-            return getInstance().readValue(bytes, getMapType(String.class, Object.class));
-        } catch (IOException e) {
-            throw Exceptions.unchecked(e);
-        }
+        return parseMap(bytes, String.class, Object.class);
     }
 
     /**
@@ -192,8 +184,58 @@ public class Jackson {
      * @return Map 集合
      */
     public static Map<String, Object> parseMap(InputStream is) {
+        return parseMap(is, String.class, Object.class);
+    }
+
+    /**
+     * 将json反序列化成Map
+     *
+     * @param json       字符串
+     * @param keyClass   键类型
+     * @param valueClass 值类型
+     * @param <K>        键泛型
+     * @param <V>        值泛型
+     * @return Map 集合
+     */
+    public static <K, V> Map<K, V> parseMap(String json, Class<K> keyClass, Class<V> valueClass) {
         try {
-            return getInstance().readValue(is, getMapType(String.class, Object.class));
+            return getInstance().readValue(json, getMapType(keyClass, valueClass));
+        } catch (JsonProcessingException e) {
+            throw Exceptions.unchecked(e);
+        }
+    }
+
+    /**
+     * 将json反序列化成Map
+     *
+     * @param bytes      bytes
+     * @param keyClass   键类型
+     * @param valueClass 值类型
+     * @param <K>        键泛型
+     * @param <V>        值泛型
+     * @return Map 集合
+     */
+    public static <K, V> Map<K, V> parseMap(byte[] bytes, Class<K> keyClass, Class<V> valueClass) {
+        try {
+            return getInstance().readValue(bytes, getMapType(keyClass, valueClass));
+        } catch (IOException e) {
+            throw Exceptions.unchecked(e);
+        }
+    }
+
+    /**
+     * 将json反序列化成Map
+     *
+     * @param is         输入流
+     * @param keyClass   键类型
+     * @param valueClass 值类型
+     * @param <K>        键泛型
+     * @param <V>        值泛型
+     * @return Map 集合
+     */
+    public static <K, V> Map<K, V> parseMap(InputStream is, Class<K> keyClass, Class<V> valueClass) {
+        try {
+            return getInstance().readValue(is, getMapType(keyClass, valueClass));
         } catch (IOException e) {
             throw Exceptions.unchecked(e);
         }
@@ -207,7 +249,7 @@ public class Jackson {
      * @param <T>       泛型标记
      * @return List
      */
-    public static <T> List<T> parseArray(String json, Class<T> valueType) {
+    public static <T> List<T> parseList(String json, Class<T> valueType) {
         try {
             return getInstance().readValue(json, getListType(valueType));
         } catch (IOException e) {
@@ -223,7 +265,7 @@ public class Jackson {
      * @param <T>       泛型标记
      * @return List
      */
-    public static <T> List<T> parseArray(byte[] bytes, Class<T> valueType) {
+    public static <T> List<T> parseList(byte[] bytes, Class<T> valueType) {
         try {
             return getInstance().readValue(bytes, getListType(valueType));
         } catch (IOException e) {
@@ -239,7 +281,7 @@ public class Jackson {
      * @param <T>       泛型标记
      * @return List
      */
-    public static <T> List<T> parseArray(InputStream is, Class<T> valueType) {
+    public static <T> List<T> parseList(InputStream is, Class<T> valueType) {
         try {
             return getInstance().readValue(is, getListType(valueType));
         } catch (IOException e) {
@@ -255,7 +297,7 @@ public class Jackson {
      * @param <T>          泛型标记
      * @return List
      */
-    public static <T> List<T> parseArray(String json, TypeReference<? extends List<T>> valueTypeRef) {
+    public static <T> List<T> parseList(String json, TypeReference<? extends List<T>> valueTypeRef) {
         try {
             return getInstance().readValue(json, valueTypeRef);
         } catch (IOException e) {
@@ -271,7 +313,7 @@ public class Jackson {
      * @param <T>          泛型标记
      * @return List
      */
-    public static <T> List<T> parseArray(byte[] bytes, TypeReference<? extends List<T>> valueTypeRef) {
+    public static <T> List<T> parseList(byte[] bytes, TypeReference<? extends List<T>> valueTypeRef) {
         try {
             return getInstance().readValue(bytes, valueTypeRef);
         } catch (IOException e) {
@@ -287,7 +329,7 @@ public class Jackson {
      * @param <T>          泛型标记
      * @return List
      */
-    public static <T> List<T> parseArray(InputStream is, TypeReference<? extends List<T>> valueTypeRef) {
+    public static <T> List<T> parseList(InputStream is, TypeReference<? extends List<T>> valueTypeRef) {
         try {
             return getInstance().readValue(is, valueTypeRef);
         } catch (IOException e) {
@@ -307,7 +349,7 @@ public class Jackson {
      * @see BeanUtils#toBean(Map, Class)
      */
     @Deprecated
-    public static <T> T toPojo(Map fromValue, Class<T> valueType) {
+    public static <T> T toPojo(Map<?, ?> fromValue, Class<T> valueType) {
         return getInstance().convertValue(fromValue, valueType);
     }
 

@@ -4,7 +4,7 @@ import org.springultron.core.result.IResultCode;
 import org.springultron.core.result.ResultCode;
 
 /**
- * 自定义REST异常
+ * 自定义REST业务异常
  *
  * @author brucewuu
  * @date 2019-06-03 09:46
