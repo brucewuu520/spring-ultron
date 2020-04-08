@@ -1,10 +1,8 @@
 package org.springultron.boot.servlet.logger;
 
-import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,13 +14,12 @@ import org.springframework.core.annotation.Order;
 import org.springultron.boot.config.UltronAutoConfiguration;
 import org.springultron.boot.enums.LogLevel;
 import org.springultron.boot.props.UltronLogProperties;
+import org.springultron.core.jackson.Jackson;
 import org.springultron.core.pool.StringPool;
 import org.springultron.core.utils.IpUtils;
-import org.springultron.core.jackson.Jackson;
 import org.springultron.core.utils.WebUtils;
 
 import javax.servlet.http.HttpServletRequest;
-import java.lang.reflect.Method;
 import java.util.Enumeration;
 import java.util.concurrent.TimeUnit;
 
@@ -37,7 +34,7 @@ import java.util.concurrent.TimeUnit;
 @Configuration(proxyBeanMethods = false)
 @AutoConfigureAfter(UltronAutoConfiguration.class)
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
-@ConditionalOnProperty(value = LogLevel.ULTRON_LOG_ENABLE, havingValue = "false")
+@ConditionalOnProperty(value = LogLevel.ULTRON_LOG_ENABLE)
 public class RequestLogAspect {
     private static final Logger log = LoggerFactory.getLogger("RequestLogAspect");
 
@@ -50,16 +47,10 @@ public class RequestLogAspect {
     }
 
     /**
-     * 以自定义注解 @ApiLog 为切点
-     */
-    @Pointcut("@annotation(org.springultron.boot.servlet.logger.ApiLog)")
-    public void apiLog() {}
-
-    /**
      * 环绕
      */
-    @Around("apiLog()")
-    public Object doAround(ProceedingJoinPoint point) throws Throwable {
+    @Around("@annotation(apiLog)")
+    public Object doAround(ProceedingJoinPoint point, ApiLog apiLog) throws Throwable {
         if (LogLevel.NONE.equals(ultronLogProperties.getLevel())) {
             return point.proceed();
         }
@@ -74,8 +65,6 @@ public class RequestLogAspect {
         reqLog.append(StringPool.LINE_SEPARATOR);
         reqLog.append("================ Start ================");
         reqLog.append(StringPool.LINE_SEPARATOR);
-        // 获取 @ApiLog 注解的描述信息
-        String methodDescription = getAspectLogDescription(point);
         // 打印调用 controller 的全路径以及执行方法
         reqLog.append("Class Method   : ")
                 .append(point.getSignature().getDeclaringTypeName())
@@ -86,7 +75,7 @@ public class RequestLogAspect {
         reqLog.append("URL            : ").append(request.getRequestURL());
         reqLog.append(StringPool.LINE_SEPARATOR);
         // 打印描述信息
-        reqLog.append("Description    : ").append(methodDescription);
+        reqLog.append("Description    : ").append(apiLog.description());
         reqLog.append(StringPool.LINE_SEPARATOR);
         // 打印 Http method
         reqLog.append("HTTP Method    : ").append(request.getMethod());
@@ -122,31 +111,5 @@ public class RequestLogAspect {
             reqLog.append(StringPool.LINE_SEPARATOR);
             log.info(reqLog.toString());
         }
-    }
-
-    /**
-     * 获取切面注解的描述
-     *
-     * @param joinPoint 切点
-     * @return 描述信息
-     * @throws ClassNotFoundException 抛出异常
-     */
-    private static String getAspectLogDescription(JoinPoint joinPoint) throws ClassNotFoundException {
-        String targetName = joinPoint.getTarget().getClass().getName();
-        String methodName = joinPoint.getSignature().getName();
-        Object[] arguments = joinPoint.getArgs();
-        Class<?> targetClass = Class.forName(targetName);
-        Method[] methods = targetClass.getMethods();
-        StringBuilder description = new StringBuilder();
-        for (Method method : methods) {
-            if (method.getName().equals(methodName)) {
-                Class<?>[] classes = method.getParameterTypes();
-                if (classes.length == arguments.length) {
-                    description.append(method.getAnnotation(ApiLog.class).description());
-                    break;
-                }
-            }
-        }
-        return description.toString();
     }
 }
