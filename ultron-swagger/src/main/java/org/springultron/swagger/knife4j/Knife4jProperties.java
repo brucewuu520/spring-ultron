@@ -1,6 +1,7 @@
 package org.springultron.swagger.knife4j;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 /**
  * Knife4j增强配置
@@ -13,6 +14,7 @@ public class Knife4jProperties {
     /**
      * http basic配置
      */
+    @NestedConfigurationProperty
     private Knife4jHttpBasic basic;
     /**
      * markdown路径
