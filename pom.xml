@@ -3,196 +3,30 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.springultron</groupId>
-    <artifactId>spring-ultron</artifactId>
-    <version>2.0.0</version>
-    <name>spring-ultron-build</name>
-    <description>Spring Boot/Cloud multi module common library</description>
+    <artifactId>spring-ultron-build</artifactId>
+    <name>Spring Ultron Build</name>
+    <description>Spring Ultron Build</description>
+    <version>${revision}</version>
     <packaging>pom</packaging>
 
-    <licenses>
-        <license>
-            <name>Apache License, Version 2.0</name>
-            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
-
-    <developers>
-        <developer>
-            <name>bruce.wuu</name>
-            <email>402432291@qq.com</email>
-            <url>https://github.com/brucewuu520</url>
-        </developer>
-    </developers>
-
-    <scm>
-        <url>https://github.com/brucewuu520/spring-ultron</url>
-        <connection>scm:git:git://github.com/brucewuu520/spring-ultron.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com/brucewuu520/spring-ultron.git</developerConnection>
-        <tag>HEAD</tag>
-    </scm>
-
     <properties>
-        <!-- boot dependencies start-->
-        <spring-boot.version>2.2.6.RELEASE</spring-boot.version>
-        <mybatis-plus.version>3.3.1</mybatis-plus.version>
-        <knife4j.version>2.0.2</knife4j.version>
-        <okhttp4.version>4.4.1</okhttp4.version>
-        <jwt.version>0.11.1</jwt.version>
-        <bouncycastle.version>1.64</bouncycastle.version>
-        <!-- boot dependencies end-->
-        <!-- cloud dependencies start-->
-        <spring-cloud.version>Hoxton.SR3</spring-cloud.version>
-        <alibaba-cloud.version>2.2.0.RELEASE</alibaba-cloud.version>
-        <guava.version>28.2-android</guava.version>
-        <!-- cloud dependencies end-->
-
-        <findbugs.version>3.0.2</findbugs.version>
-
-        <!-- Maven Plugin Versions -->
-        <java.version>1.8</java.version>
-        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
-        <maven-source-plugin.version>3.2.0</maven-source-plugin.version>
-        <maven-javadoc-plugin.version>3.1.1</maven-javadoc-plugin.version>
+        <revision>2.2.0</revision>
+        <main.basedir>${basedir}</main.basedir>
     </properties>
-
-    <modules>
-        <module>spring-ultron-dependencies</module>
-        <module>ultron-boot</module>
-        <module>ultron-cloud</module>
-        <module>ultron-core</module>
-        <module>ultron-crypto</module>
-        <module>ultron-http</module>
-        <module>ultron-mongodb</module>
-        <module>ultron-mybatis</module>
-        <module>ultron-redis</module>
-        <module>ultron-security</module>
-        <module>ultron-swagger</module>
-    </modules>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>${spring-boot.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
-    <dependencies>
-        <!-- https://mvnrepository.com/artifact/com.google.code.findbugs/jsr305 -->
-        <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>jsr305</artifactId>
-            <version>${findbugs.version}</version>
-            <scope>provided</scope>
-        </dependency>
-    </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven-compiler-plugin.version}</version>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                    <encoding>UTF-8</encoding>
-                    <parameters>true</parameters>
-                    <showWarnings>true</showWarnings>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>${maven-source-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>jar-no-fork</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>${maven-javadoc-plugin.version}</version>
-                <configuration>
-                    <charset>UTF-8</charset>
-                    <encoding>UTF-8</encoding>
-                    <docencoding>UTF-8</docencoding>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
 
     <profiles>
         <profile>
-            <id>disable-javadoc-Xdoclint</id>
+            <id>default</id>
             <activation>
-                <!--当jdk环境版本为1.8以上时，此profile被激活-->
-                <jdk>[1.8,)</jdk>
+                <property>
+                    <name>!disable-spring-ultron-default-profile</name>
+                </property>
             </activation>
-            <properties>
-                <!-- Turn off JDK 8's lint checks: -->
-                <additionalJOption>-Xdoclint:none</additionalJOption>
-            </properties>
-        </profile>
-        <profile>
-            <id>release</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-source-plugin</artifactId>
-                        <version>${maven-source-plugin.version}</version>
-                        <executions>
-                            <execution>
-                                <id>attach-sources</id>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>jar-no-fork</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>${maven-javadoc-plugin.version}</version>
-                        <configuration>
-                            <charset>UTF-8</charset>
-                            <encoding>UTF-8</encoding>
-                            <docencoding>UTF-8</docencoding>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <id>attach-javadocs</id>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>jar</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
+            <modules>
+                <module>spring-ultron-dependencies</module>
+                <module>spring-ultron-projects</module>
+            </modules>
         </profile>
     </profiles>
+
 </project>

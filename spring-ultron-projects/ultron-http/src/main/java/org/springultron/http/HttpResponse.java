@@ -4,11 +4,11 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import okhttp3.*;
 import okhttp3.internal.Util;
+import org.springframework.lang.Nullable;
 import org.springultron.core.exception.Exceptions;
 import org.springultron.core.jackson.Jackson;
 import org.springultron.core.utils.IoUtils;
 
-import javax.annotation.Nullable;
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;

@@ -3,22 +3,76 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>spring-ultron-dependencies</artifactId>
-    <name>spring-ultron-dependencies</name>
+    <name>Spring Ultron Dependencies</name>
     <description>Spring Ultron Dependencies</description>
     <packaging>pom</packaging>
 
     <parent>
-        <artifactId>spring-ultron</artifactId>
         <groupId>org.springultron</groupId>
-        <version>2.0.0</version>
+        <artifactId>spring-ultron-build</artifactId>
+        <version>${revision}</version>
     </parent>
 
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>bruce.wuu</name>
+            <email>402432291@qq.com</email>
+            <url>https://github.com/brucewuu520</url>
+        </developer>
+    </developers>
+
+    <scm>
+        <url>https://github.com/brucewuu520/spring-ultron</url>
+        <connection>scm:git:git://github.com/brucewuu520/spring-ultron.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/brucewuu520/spring-ultron.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
     <properties>
-        <okhttp3.version>${okhttp4.version}</okhttp3.version>
+        <main.basedir>${basedir}/..</main.basedir>
+        <!-- boot dependencies version start-->
+        <spring-boot.version>2.2.6.RELEASE</spring-boot.version>
+        <mybatis-plus.version>3.3.1</mybatis-plus.version>
+        <knife4j.version>2.0.2</knife4j.version>
+        <okhttp3.version>4.4.1</okhttp3.version>
+        <jwt.version>0.11.1</jwt.version>
+        <bouncycastle.version>1.64</bouncycastle.version>
+        <!-- boot dependencies version end-->
+        <!-- cloud dependencies version start-->
+        <spring-cloud.version>Hoxton.SR3</spring-cloud.version>
+        <alibaba-cloud.version>2.2.0.RELEASE</alibaba-cloud.version>
+        <guava.version>28.2-android</guava.version>
+        <!-- cloud dependencies version end-->
+        <findbugs.version>3.0.2</findbugs.version>
+        <!-- maven dependencies version start -->
+        <maven-flatten-plugin.version>1.1.0</maven-flatten-plugin.version>
+        <maven-xml-plugin.version>1.0.2</maven-xml-plugin.version>
+        <maven-helper-plugin.version>3.1.0</maven-helper-plugin.version>
+        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+        <maven-enforcer-plugin.version>3.0.0-M3</maven-enforcer-plugin.version>
+        <maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
+        <maven-source-plugin.version>3.2.0</maven-source-plugin.version>
+        <maven-javadoc-plugin.version>3.1.1</maven-javadoc-plugin.version>
+        <!-- maven dependencies version end -->
     </properties>
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
@@ -36,54 +90,201 @@
             <dependency>
                 <groupId>org.springultron</groupId>
                 <artifactId>ultron-boot</artifactId>
-                <version>${project.parent.version}</version>
+                <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>org.springultron</groupId>
                 <artifactId>ultron-cloud</artifactId>
-                <version>${project.parent.version}</version>
+                <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>org.springultron</groupId>
                 <artifactId>ultron-core</artifactId>
-                <version>${project.parent.version}</version>
+                <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>org.springultron</groupId>
                 <artifactId>ultron-crypto</artifactId>
-                <version>${project.parent.version}</version>
+                <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>org.springultron</groupId>
                 <artifactId>ultron-http</artifactId>
-                <version>${project.parent.version}</version>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springultron</groupId>
+                <artifactId>ultron-mongodb</artifactId>
+                <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>org.springultron</groupId>
                 <artifactId>ultron-mybatis</artifactId>
-                <version>${project.parent.version}</version>
+                <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>org.springultron</groupId>
                 <artifactId>ultron-redis</artifactId>
-                <version>${project.parent.version}</version>
+                <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>org.springultron</groupId>
                 <artifactId>ultron-security</artifactId>
-                <version>${project.parent.version}</version>
+                <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>org.springultron</groupId>
                 <artifactId>ultron-swagger</artifactId>
-                <version>${project.parent.version}</version>
+                <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
                 <version>${guava.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.google.code.findbugs</groupId>
+                <artifactId>jsr305</artifactId>
+                <version>${findbugs.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <version>${maven-flatten-plugin.version}</version>
+                <inherited>false</inherited>
+                <executions>
+                    <execution>
+                        <!-- Create an effective POM (with versions expanded) for the CLI and
+                            documentation -->
+                        <id>flatten-effective-pom</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                        <configuration>
+                            <updatePomFile>false</updatePomFile>
+                            <outputDirectory>${project.build.directory}/effective-pom</outputDirectory>
+                            <flattenedPomFilename>spring-ultron-dependencies.xml</flattenedPomFilename>
+                            <flattenMode>oss</flattenMode>
+                            <pomElements>
+                                <dependencyManagement>expand</dependencyManagement>
+                                <pluginManagement>expand</pluginManagement>
+                                <properties>remove</properties>
+                                <repositories>remove</repositories>
+                            </pomElements>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <!-- Flatten and simplify our own POM for install/deploy -->
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                        <configuration>
+                            <updatePomFile>true</updatePomFile>
+                            <flattenMode>bom</flattenMode>
+                            <pomElements>
+                                <pluginManagement>keep</pluginManagement>
+                                <properties>keep</properties>
+                                <repositories>remove</repositories>
+                            </pomElements>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>flatten-clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>xml-maven-plugin</artifactId>
+                <version>${maven-xml-plugin.version}</version>
+                <inherited>false</inherited>
+                <executions>
+                    <execution>
+                        <!-- Cleanup the effective POM -->
+                        <id>post-process-effective-pom</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>transform</goal>
+                        </goals>
+                        <configuration>
+                            <transformationSets>
+                                <transformationSet>
+                                    <dir>${project.build.directory}/effective-pom</dir>
+                                    <outputDir>${project.build.directory}/effective-pom</outputDir>
+                                    <stylesheet>src/main/xslt/post-process-flattened-pom.xsl</stylesheet>
+                                    <outputProperties>
+                                        <outputProperty>
+                                            <name>indent</name>
+                                            <value>yes</value>
+                                        </outputProperty>
+                                    </outputProperties>
+                                </transformationSet>
+                            </transformationSets>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <!-- Cleanup the flattened project POM -->
+                        <id>post-process-flattened-pom</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>transform</goal>
+                        </goals>
+                        <configuration>
+                            <transformationSets>
+                                <transformationSet>
+                                    <dir>${project.basedir}</dir>
+                                    <outputDir>${project.basedir}</outputDir>
+                                    <includes>.flattened-pom.xml</includes>
+                                    <stylesheet>src/main/xslt/post-process-flattened-pom.xsl</stylesheet>
+                                    <outputProperties>
+                                        <outputProperty>
+                                            <name>indent</name>
+                                            <value>yes</value>
+                                        </outputProperty>
+                                    </outputProperties>
+                                </transformationSet>
+                            </transformationSets>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>${maven-helper-plugin.version}</version>
+                <inherited>false</inherited>
+                <executions>
+                    <execution>
+                        <!-- Attach effective POM -->
+                        <id>attach-artifacts</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>attach-artifact</goal>
+                        </goals>
+                        <configuration>
+                            <artifacts>
+                                <artifact>
+                                    <file>${project.build.directory}/effective-pom/spring-ultron-dependencies.xml</file>
+                                    <type>effective-pom</type>
+                                </artifact>
+                            </artifacts>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

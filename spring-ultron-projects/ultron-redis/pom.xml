@@ -3,15 +3,19 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>ultron-redis</artifactId>
-    <name>ultron-redis</name>
+    <name>Spring Ultron Redis</name>
     <description>redis/redis cache auto configuration</description>
     <packaging>jar</packaging>
 
     <parent>
         <groupId>org.springultron</groupId>
-        <artifactId>spring-ultron</artifactId>
-        <version>2.0.0</version>
+        <artifactId>spring-ultron-projects</artifactId>
+        <version>${revision}</version>
     </parent>
+
+    <properties>
+        <main.basedir>${basedir}/../..</main.basedir>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -31,7 +35,7 @@
         <dependency>
             <groupId>org.springultron</groupId>
             <artifactId>ultron-core</artifactId>
-            <version>${project.parent.version}</version>
+            <version>${revision}</version>
         </dependency>
     </dependencies>
 

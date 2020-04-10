@@ -1,6 +1,8 @@
 HELP.md
-target/
+target
 !.mvn/
+MANIFEST.MF
+.flattened-pom.xml
 
 ### STS ###
 .apt_generated

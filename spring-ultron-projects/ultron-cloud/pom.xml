@@ -3,34 +3,19 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>ultron-cloud</artifactId>
-    <name>ultron-cloud</name>
+    <name>Spring Ultron Cloud</name>
     <description>Spring Cloud common library use spring-cloud-alibaba default</description>
     <packaging>jar</packaging>
 
     <parent>
         <groupId>org.springultron</groupId>
-        <artifactId>spring-ultron</artifactId>
-        <version>2.0.0</version>
+        <artifactId>spring-ultron-projects</artifactId>
+        <version>${revision}</version>
     </parent>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-dependencies</artifactId>
-                <version>${spring-cloud.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.alibaba.cloud</groupId>
-                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
-                <version>${alibaba-cloud.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+    <properties>
+        <main.basedir>${basedir}/../..</main.basedir>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -54,7 +39,8 @@
         <dependency>
             <groupId>org.springultron</groupId>
             <artifactId>ultron-boot</artifactId>
-            <version>${project.parent.version}</version>
+            <scope>compile</scope>
+            <version>${revision}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
