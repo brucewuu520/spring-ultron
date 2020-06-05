@@ -39,17 +39,20 @@
     <properties>
         <main.basedir>${basedir}/..</main.basedir>
         <!-- boot dependencies version start-->
-        <spring-boot.version>2.2.6.RELEASE</spring-boot.version>
-        <mybatis-plus.version>3.3.1</mybatis-plus.version>
-        <knife4j.version>2.0.2</knife4j.version>
+        <spring-boot.version>2.2.7.RELEASE</spring-boot.version>
+        <mybatis-plus.version>3.3.2</mybatis-plus.version>
+        <knife4j.version>2.0.3</knife4j.version>
         <okhttp3.version>4.4.1</okhttp3.version>
         <jwt.version>0.11.1</jwt.version>
-        <bouncycastle.version>1.64</bouncycastle.version>
+        <bouncycastle.version>1.65</bouncycastle.version>
+        <redisson.version>3.12.5</redisson.version>
+        <zxing.version>3.4.0</zxing.version>
         <!-- boot dependencies version end-->
         <!-- cloud dependencies version start-->
-        <spring-cloud.version>Hoxton.SR3</spring-cloud.version>
-        <alibaba-cloud.version>2.2.0.RELEASE</alibaba-cloud.version>
+        <spring-cloud.version>Hoxton.SR4</spring-cloud.version>
+        <alibaba-cloud.version>2.2.1.RELEASE</alibaba-cloud.version>
         <guava.version>28.2-android</guava.version>
+        <fastjson.version>1.2.69</fastjson.version>
         <!-- cloud dependencies version end-->
         <findbugs.version>3.0.2</findbugs.version>
         <!-- maven dependencies version start -->
@@ -124,7 +127,17 @@
             </dependency>
             <dependency>
                 <groupId>org.springultron</groupId>
+                <artifactId>ultron-qrcode</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springultron</groupId>
                 <artifactId>ultron-redis</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springultron</groupId>
+                <artifactId>ultron-redis-lock</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
@@ -141,6 +154,11 @@
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
                 <version>${guava.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastjson.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.google.code.findbugs</groupId>

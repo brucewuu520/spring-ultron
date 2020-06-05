@@ -6,7 +6,10 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springultron.swagger.knife4j.EnableKnife4j;
+import org.springultron.swagger.knife4j.Knife4jAutoConfiguration;
+import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -32,6 +35,7 @@ import java.util.Optional;
 @EnableConfigurationProperties(SwaggerProperties.class)
 @EnableKnife4j
 @EnableSwagger2
+@Import({Knife4jAutoConfiguration.class, BeanValidatorPluginsConfiguration.class})
 public class SwaggerConfiguration {
 
     private final SwaggerProperties swaggerProperties;

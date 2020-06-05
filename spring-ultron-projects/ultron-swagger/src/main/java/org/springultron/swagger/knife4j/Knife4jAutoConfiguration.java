@@ -21,7 +21,7 @@ import org.springframework.context.annotation.Configuration;
         "com.github.xiaoymin.knife4j.spring.plugin",
         "com.github.xiaoymin.knife4j.spring.web"
 })
-class Knife4jAutoConfiguration {
+public class Knife4jAutoConfiguration {
     /**
      * 初始化自定义Markdown特性
      *
@@ -29,20 +29,20 @@ class Knife4jAutoConfiguration {
      * @return markdownFiles
      */
     @Bean(initMethod = "init")
-    MarkdownFiles markdownFiles(Knife4jProperties knife4jProperties) {
+    public MarkdownFiles markdownFiles(Knife4jProperties knife4jProperties) {
         return new MarkdownFiles(knife4jProperties.getMarkdowns() == null ? "" : knife4jProperties.getMarkdowns());
     }
 
     @ConditionalOnProperty(value = "swagger.knife4j.basic.enable")
     @Bean
-    SecurityBasicAuthFilter securityBasicAuthFilter(Knife4jProperties knife4jProperties) {
+    public SecurityBasicAuthFilter securityBasicAuthFilter(Knife4jProperties knife4jProperties) {
         final Knife4jHttpBasic httpBasic = knife4jProperties.getBasic();
         return new SecurityBasicAuthFilter(httpBasic.isEnable(), httpBasic.getUsername(), httpBasic.getPassword());
     }
 
     @ConditionalOnProperty(value = "swagger.knife4j.production")
     @Bean
-    ProductionSecurityFilter productionSecurityFilter() {
+    public ProductionSecurityFilter productionSecurityFilter() {
         return new ProductionSecurityFilter(true);
     }
 }
