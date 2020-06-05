@@ -1,15 +1,18 @@
 package org.springultron.dao;
 
+import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.baomidou.mybatisplus.core.parser.ISqlParser;
 import com.baomidou.mybatisplus.extension.parsers.BlockAttackSqlParser;
+import com.baomidou.mybatisplus.extension.plugins.OptimisticLockerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.SqlExplainInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.pagination.optimize.JsqlParserCountOptimize;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import java.util.ArrayList;
@@ -24,7 +27,7 @@ import java.util.List;
 @MapperScan("com.*.*.mapper")
 @EnableTransactionManagement
 @Configuration(proxyBeanMethods = false)
-@Import({UltronMetaObjectHandler.class})
+@EnableConfigurationProperties(MybatisPlusAutoFillProperties.class)
 public class MybatisPlusConfiguration {
     /**
      * 分页插件
@@ -47,5 +50,24 @@ public class MybatisPlusConfiguration {
         sqlParserList.add(new BlockAttackSqlParser());
         sqlExplainInterceptor.setSqlParserList(sqlParserList);
         return sqlExplainInterceptor;
+    }
+
+    /**
+     * 日期字段自动填充
+     */
+    @Bean
+    @ConditionalOnMissingBean
+    @ConditionalOnProperty(value = "ultron.mybatis-plus.auto-fill.enable", matchIfMissing = true)
+    public MetaObjectHandler metaObjectHandler(MybatisPlusAutoFillProperties properties) {
+        return new UltronMetaObjectHandler(properties);
+    }
+
+    /**
+     * 乐观锁
+     */
+    @Bean
+    @ConditionalOnMissingBean
+    public OptimisticLockerInterceptor optimisticLockerInterceptor() {
+        return new OptimisticLockerInterceptor();
     }
 }

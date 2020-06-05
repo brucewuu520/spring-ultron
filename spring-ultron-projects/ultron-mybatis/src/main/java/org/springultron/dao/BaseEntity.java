@@ -22,11 +22,12 @@ public abstract class BaseEntity {
     /**
      * 数据创建时间
      */
+    @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createAt;
     /**
      * 数据修改时间
      */
-    @TableField(fill = FieldFill.UPDATE)
+    @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateAt;
 
     public Long getId() {

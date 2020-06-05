@@ -41,6 +41,18 @@ public class PageQuery implements Serializable {
     @ApiModelProperty(value = "是否查询总数,默认只第1页时查询", position = 4)
     private Boolean isSearchCount;
 
+    @ApiModelProperty(value = "当前最后一行的ID", position = 5)
+    private Long currentId;
+
+    @ApiModelProperty(value = "查询关键词", position = 6)
+    private String keywords;
+
+    @ApiModelProperty(value = "筛选状态", position = 7)
+    private Integer status;
+
+    @ApiModelProperty(value = "筛选类型/类别ID", position = 7)
+    private Integer typeId;
+
     public Integer getCurrent() {
         return current;
     }
@@ -79,5 +91,37 @@ public class PageQuery implements Serializable {
 
     public void setSearchCount(Boolean searchCount) {
         isSearchCount = searchCount;
+    }
+
+    public Long getCurrentId() {
+        return currentId;
+    }
+
+    public void setCurrentId(Long currentId) {
+        this.currentId = currentId;
+    }
+
+    public String getKeywords() {
+        return keywords;
+    }
+
+    public void setKeywords(String keywords) {
+        this.keywords = keywords;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public Integer getTypeId() {
+        return typeId;
+    }
+
+    public void setTypeId(Integer typeId) {
+        this.typeId = typeId;
     }
 }

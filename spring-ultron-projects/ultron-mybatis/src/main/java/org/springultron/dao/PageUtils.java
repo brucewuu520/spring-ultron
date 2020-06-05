@@ -1,6 +1,5 @@
 package org.springultron.dao;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
@@ -21,8 +20,9 @@ public class PageUtils {
      * @param query 查询条件
      * @return 分页对象
      */
-    public static <T> IPage<T> getPage(PageQuery query) {
+    public static <T> Page<T> getPage(PageQuery query) {
         Page<T> page = new Page<>(null == query.getCurrent() ? 1 : query.getCurrent(), null == query.getSize() ? 10 : query.getSize());
+
         if (query.getSearchCount() == null) {
             if (query.getCurrent() != null && query.getCurrent() > 1) {
                 page.setSearchCount(false);
@@ -30,6 +30,7 @@ public class PageUtils {
         } else {
             page.setSearchCount(query.getSearchCount());
         }
+
         if (null != query.getAscs()) {
             final int length = query.getAscs().length;
             if (length == 1) {
@@ -38,6 +39,7 @@ public class PageUtils {
                 page.addOrder(OrderItem.ascs(query.getAscs()));
             }
         }
+
         if (null != query.getDescs()) {
             final int length = query.getDescs().length;
             if (length == 1) {
@@ -46,6 +48,7 @@ public class PageUtils {
                 page.addOrder(OrderItem.descs(query.getDescs()));
             }
         }
+
         return page;
     }
 }
