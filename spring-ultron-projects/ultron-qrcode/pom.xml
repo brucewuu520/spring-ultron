@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>ultron-qrcode</artifactId>
+    <name>Spring Ultron QRCode</name>
+    <description>QRCode recognition and generate utils</description>
+
+    <parent>
+        <groupId>org.springultron</groupId>
+        <artifactId>spring-ultron-projects</artifactId>
+        <version>${revision}</version>
+    </parent>
+
+    <properties>
+        <main.basedir>${basedir}/../..</main.basedir>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.google.zxing</groupId>
+            <artifactId>core</artifactId>
+            <version>${zxing.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.zxing</groupId>
+            <artifactId>javase</artifactId>
+            <version>${zxing.version}</version>
+        </dependency>
+    </dependencies>
+
+</project>
