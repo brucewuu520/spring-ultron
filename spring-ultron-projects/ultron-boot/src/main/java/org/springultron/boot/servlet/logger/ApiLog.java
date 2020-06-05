@@ -11,9 +11,9 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * @author brucewuu
  * @date 2019-06-17 17:54
  */
-@Documented
 @Target({METHOD})
 @Retention(RUNTIME)
+@Documented
 public @interface ApiLog {
     /**
      * 日志描述信息

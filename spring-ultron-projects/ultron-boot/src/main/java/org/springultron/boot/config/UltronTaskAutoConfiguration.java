@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.task.TaskExecutionAutoConfiguration;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.task.TaskExecutorBuilder;
 import org.springframework.boot.task.TaskSchedulerBuilder;
 import org.springframework.context.annotation.Bean;
@@ -25,6 +26,7 @@ import java.util.concurrent.ThreadPoolExecutor;
  */
 @Configuration(proxyBeanMethods = false)
 @AutoConfigureBefore({TaskExecutionAutoConfiguration.class})
+@EnableConfigurationProperties(UltronTaskProperties.class)
 public class UltronTaskAutoConfiguration {
 
     private final UltronTaskProperties properties;

@@ -1,5 +1,4 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  org.springultron.boot.config.UltronAutoConfiguration,\
   org.springultron.boot.config.UltronTaskAutoConfiguration,\
   org.springultron.boot.servlet.config.UltronUploadConfiguration,\
   org.springultron.boot.servlet.logger.RequestLogAspect,\

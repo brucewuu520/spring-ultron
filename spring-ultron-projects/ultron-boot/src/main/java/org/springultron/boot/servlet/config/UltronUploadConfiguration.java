@@ -1,12 +1,11 @@
 package org.springultron.boot.servlet.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springultron.boot.config.UltronAutoConfiguration;
 import org.springultron.boot.props.UltronUploadProperties;
 
 /**
@@ -16,13 +15,12 @@ import org.springultron.boot.props.UltronUploadProperties;
  * @date 2019/10/8 09:58
  */
 @Configuration(proxyBeanMethods = false)
-@AutoConfigureAfter(UltronAutoConfiguration.class)
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
+@EnableConfigurationProperties(UltronUploadProperties.class)
 public class UltronUploadConfiguration implements WebMvcConfigurer {
 
     private final UltronUploadProperties properties;
 
-    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     public UltronUploadConfiguration(UltronUploadProperties properties) {
         this.properties = properties;

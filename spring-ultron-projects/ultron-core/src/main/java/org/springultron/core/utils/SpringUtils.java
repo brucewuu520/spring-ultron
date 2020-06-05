@@ -1,4 +1,4 @@
-package org.springultron.boot.config;
+package org.springultron.core.utils;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.DisposableBean;
@@ -7,7 +7,6 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
-import org.springultron.core.utils.StringUtils;
 
 /**
  * Spring 工具类

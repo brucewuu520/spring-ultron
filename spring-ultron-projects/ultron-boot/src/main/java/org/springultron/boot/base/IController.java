@@ -4,7 +4,6 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.util.UriUtils;
 import org.springultron.boot.props.UltronUploadProperties;
 import org.springultron.core.result.ApiResult;
 import org.springultron.core.result.IResultCode;
@@ -38,7 +37,7 @@ public interface IController {
      * 返回成功
      *
      * @param <T> 泛型标记
-     * @return {@link ApiResult<T>}
+     * @return ApiResult
      */
     default <T> ApiResult<T> success() {
         return ApiResult.success();
@@ -49,7 +48,7 @@ public interface IController {
      *
      * @param data 数据
      * @param <T>  泛型标记
-     * @return {@link ApiResult}
+     * @return ApiResult
      */
     default <T> ApiResult<T> success(T data) {
         return ApiResult.success(data);
@@ -60,7 +59,7 @@ public interface IController {
      *
      * @param message 消息
      * @param <T>     泛型标记
-     * @return {@link ApiResult<T>}
+     * @return ApiResult
      */
     default <T> ApiResult<T> success(String message) {
         return ApiResult.success(message);
@@ -72,7 +71,7 @@ public interface IController {
      * @param data    数据
      * @param message 消息
      * @param <T>     泛型标记
-     * @return {@link ApiResult<T>}
+     * @return ApiResult
      */
     default <T> ApiResult<T> success(T data, String message) {
         return ApiResult.success(data, message);
@@ -82,7 +81,7 @@ public interface IController {
      * 返回失败
      *
      * @param <T> 泛型标记
-     * @return {@link ApiResult<T>}
+     * @return ApiResult
      */
     default <T> ApiResult<T> fail() {
         return ApiResult.failed();
@@ -93,7 +92,7 @@ public interface IController {
      *
      * @param message 异常信息
      * @param <T>     泛型标记
-     * @return {@link ApiResult<T>}
+     * @return ApiResult
      */
     default <T> ApiResult<T> fail(String message) {
         return ApiResult.failed(message);
@@ -104,7 +103,7 @@ public interface IController {
      *
      * @param resultCode 异常枚举
      * @param <T>        泛型标记
-     * @return {@link ApiResult<T>}
+     * @return ApiResult
      */
     default <T> ApiResult<T> fail(IResultCode resultCode) {
         return ApiResult.failed(resultCode);
@@ -116,7 +115,7 @@ public interface IController {
      * @param code    异常状态码
      * @param message 异常信息
      * @param <T>     泛型标记
-     * @return {@link ApiResult<T>}
+     * @return ApiResult
      */
     default <T> ApiResult<T> fail(int code, String message) {
         return ApiResult.failed(code, message);
@@ -127,7 +126,7 @@ public interface IController {
      *
      * @param status 状态
      * @param <T>    泛型标记
-     * @return {@link ApiResult<T>}
+     * @return ApiResult
      */
     default <T> ApiResult<T> status(boolean status) {
         return ApiResult.status(status);
@@ -139,7 +138,7 @@ public interface IController {
      * @param status  状态
      * @param message 异常信息
      * @param <T>     泛型标记
-     * @return {@link ApiResult<T>}
+     * @return ApiResult
      */
     default <T> ApiResult<T> status(boolean status, String message) {
         return ApiResult.status(status, message);
@@ -151,7 +150,7 @@ public interface IController {
      * @param status    状态
      * @param errorCode 异常枚举
      * @param <T>       泛型标记
-     * @return {@link ApiResult<T>}
+     * @return ApiResult
      */
     default <T> ApiResult<T> status(boolean status, IResultCode errorCode) {
         return ApiResult.status(status, errorCode);
@@ -162,9 +161,9 @@ public interface IController {
      *
      * @param file       文件
      * @param properties 文件上传路径配置
-     * @return 上传结果
+     * @return ApiResult
      */
-    default ApiResult uploadImage(MultipartFile file, UltronUploadProperties properties) {
+    default ApiResult<Object> uploadImage(MultipartFile file, UltronUploadProperties properties) {
         if (file.isEmpty()) {
             return ApiResult.failed("图片不能为空");
         }
@@ -191,7 +190,7 @@ public interface IController {
             }
             file.transferTo(destFile);
             HashMap<String, String> hashMap = Maps.newHashMap(1);
-            hashMap.put("url",destFilePath);
+            hashMap.put("url", destFilePath);
             return ApiResult.success(hashMap);
         } catch (IOException e) {
             e.printStackTrace();
@@ -231,7 +230,6 @@ public interface IController {
     default ResponseEntity<Resource> download(Resource resource, String fileName) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        String encodeFileName = UriUtils.encode(fileName, StandardCharsets.UTF_8);
         httpHeaders.setContentDisposition(ContentDisposition.builder("attachment").name(fileName).filename(fileName, StandardCharsets.UTF_8).build());
         return new ResponseEntity<>(resource, httpHeaders, HttpStatus.OK);
     }

@@ -6,12 +6,11 @@ import org.aspectj.lang.annotation.Aspect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
-import org.springultron.boot.config.UltronAutoConfiguration;
 import org.springultron.boot.enums.LogLevel;
 import org.springultron.boot.props.UltronLogProperties;
 import org.springultron.core.jackson.Jackson;
@@ -32,15 +31,14 @@ import java.util.concurrent.TimeUnit;
 @Order
 @Aspect
 @Configuration(proxyBeanMethods = false)
-@AutoConfigureAfter(UltronAutoConfiguration.class)
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 @ConditionalOnProperty(value = LogLevel.ULTRON_LOG_ENABLE)
+@EnableConfigurationProperties(UltronLogProperties.class)
 public class RequestLogAspect {
     private static final Logger log = LoggerFactory.getLogger("RequestLogAspect");
 
     private final UltronLogProperties ultronLogProperties;
 
-    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     public RequestLogAspect(UltronLogProperties ultronLogProperties) {
         this.ultronLogProperties = ultronLogProperties;
