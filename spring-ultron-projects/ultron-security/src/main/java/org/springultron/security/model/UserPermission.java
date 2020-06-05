@@ -9,8 +9,7 @@ import java.io.Serializable;
  * @date 2019/10/23 18:35
  */
 public class UserPermission implements Serializable {
-    private static final long serialVersionUID = 9527;
-
+    private static final long serialVersionUID = 521;
     /**
      * 父级ID
      */

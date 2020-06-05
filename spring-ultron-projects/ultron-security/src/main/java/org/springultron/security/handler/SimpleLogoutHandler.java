@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
  * @date 2020/1/10 10:43
  */
 public class SimpleLogoutHandler implements LogoutHandler {
-    private static Logger log = LoggerFactory.getLogger(SimpleLogoutHandler.class);
+    private static final Logger log = LoggerFactory.getLogger(SimpleLogoutHandler.class);
 
     private final JwtProcessor jwtProcessor;
 

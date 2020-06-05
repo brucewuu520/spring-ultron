@@ -34,19 +34,19 @@ public class UserInfo implements Serializable {
     /**
      * 自定义参数（非必需）
      */
-    private final Map<String, Object> extra;
+    private final Map<String, Object> extras;
     /**
      * 状态（非必需）
      * 0:禁用 1:启用
      */
     private final Integer status;
 
-    UserInfo(String username, String password, Long userId, String mobile, Map<String, Object> extra, Integer status) {
+    UserInfo(String username, String password, Long userId, String mobile, Map<String, Object> extras, Integer status) {
         this.username = username;
         this.password = password;
         this.userId = userId;
         this.mobile = mobile;
-        this.extra = extra;
+        this.extras = extras;
         this.status = status;
     }
 
@@ -66,15 +66,15 @@ public class UserInfo implements Serializable {
         return mobile;
     }
 
-    public Map<String, Object> getExtra() {
-        return extra;
+    public Map<String, Object> getExtras() {
+        return extras;
     }
 
     public Object getExtra(String key) {
-        if (extra == null) {
+        if (extras == null) {
             return null;
         }
-        return extra.get(key);
+        return extras.get(key);
     }
 
     public Integer getStatus() {
@@ -104,8 +104,8 @@ public class UserInfo implements Serializable {
         sb.append("UserId: ").append(this.userId).append("; ");
         sb.append("Mobile: ").append(this.mobile).append("; ");
         sb.append("Status: ").append(this.status).append("; ");
-        if (this.extra != null && !this.extra.isEmpty()) {
-            for (Map.Entry<String, Object> entry : this.extra.entrySet()) {
+        if (this.extras != null && !this.extras.isEmpty()) {
+            for (Map.Entry<String, Object> entry : this.extras.entrySet()) {
                 sb.append(entry.getKey()).append(entry.getValue()).append("; ");
             }
         }
@@ -125,7 +125,7 @@ public class UserInfo implements Serializable {
         private String password;
         private Long userId;
         private String mobile;
-        private Map<String, Object> extra;
+        private Map<String, Object> extras;
         private Integer status;
         private Function<String, String> passwordEncoder;
 
@@ -163,16 +163,16 @@ public class UserInfo implements Serializable {
             return this;
         }
 
-        public UserInfoBuilder extra(Map<String, Object> extra) {
-            this.extra = extra;
+        public UserInfoBuilder extras(Map<String, Object> extras) {
+            this.extras = extras;
             return this;
         }
 
         public UserInfoBuilder putExtra(String key, Object value) {
-            if (this.extra == null) {
-                this.extra = new HashMap<>();
+            if (this.extras == null) {
+                this.extras = new HashMap<>();
             }
-            this.extra.put(key, value);
+            this.extras.put(key, value);
             return this;
         }
 
@@ -183,7 +183,7 @@ public class UserInfo implements Serializable {
 
         public UserInfo build() {
             String encodedPassword = this.passwordEncoder.apply(this.password);
-            return new UserInfo(username, password, userId, mobile, extra, status);
+            return new UserInfo(username, password, userId, mobile, extras, status);
         }
     }
 }
