@@ -19,6 +19,7 @@
         ├── ultron-core                 核心库(请求统一返回体、常用错误代码、自定义业务异常、Jackson序列化/反序列化配置、常用工具类等)
         ├── ultron-crypto               对称及非对称加密解密工具，实现了:AES、DES、RSA、国密SM2、SM4等；以及各种秘钥生成工具
         ├── ultron-mybatis              mybatis plus自动化配置、分页工具等
+        ├── ultron-qrcode               二维码生成、美化、识别
         ├── ultron-redis                Redis自动化配置、操作客户端；基于Redis的Spring Cache配置
         ├── ultron-redis-lock           基于Redis的分布式锁
         ├── ultron-boot                 Spring boot脚手架，servlet/reactive全局异常捕获、基于aop的注解API日志打印(支持配置文件配置日志开关，日志内容等)、WebClient http客户端封装
