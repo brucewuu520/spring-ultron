@@ -29,7 +29,9 @@
         <module>ultron-http</module>
         <module>ultron-mongodb</module>
         <module>ultron-mybatis</module>
+        <module>ultron-qrcode</module>
         <module>ultron-redis</module>
+        <module>ultron-redis-lock</module>
         <module>ultron-security</module>
         <module>ultron-swagger</module>
     </modules>
@@ -117,10 +119,8 @@
                                         <exclude>javax.*:*:*</exclude>
                                     </excludes>
                                     <includes>
-                                        <include>javax.batch:*:*</include>
+                                        <include>javax.servlet:*:*</include>
                                         <include>javax.cache:*:*</include>
-                                        <include>javax.inject:*:*</include>
-                                        <include>javax.money:*:*</include>
                                     </includes>
                                     <searchTransitive>true</searchTransitive>
                                 </bannedDependencies>
@@ -161,6 +161,7 @@
                         </manifest>
                         <manifestEntries>
                             <Implementation-Title>${project.name}</Implementation-Title>
+                            <!--suppress UnresolvedMavenProperty -->
                             <Automatic-Module-Name>${modulename}</Automatic-Module-Name>
                             <Implementation-Version>${project.version}</Implementation-Version>
                             <Built-By>Brucewuu</Built-By>

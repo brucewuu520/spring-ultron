@@ -2,8 +2,10 @@ package org.springultron.core.utils;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalQuery;
+import java.time.temporal.TemporalUnit;
 import java.util.Date;
 
 /**
@@ -243,13 +245,25 @@ public class DateUtils {
     }
 
     /**
+     * 计算两个日期（年月日）间隔的天数
+     *
+     * @param startDate 开始日期
+     * @param endDate   结束日期
+     * @return long
+     */
+    public static long between(LocalDate startDate, LocalDate endDate) {
+        return startDate.until(endDate, ChronoUnit.DAYS);
+    }
+
+    /**
      * 计算两个日期（年月日）间隔
      *
      * @param startDate 开始日期
      * @param endDate   结束日期
-     * @return Period
+     * @param unit      单位 {@link ChronoUnit}
+     * @return long
      */
-    public static Period between(LocalDate startDate, LocalDate endDate) {
-        return Period.between(startDate, endDate);
+    public static long between(LocalDate startDate, LocalDate endDate, TemporalUnit unit) {
+        return startDate.until(endDate, unit);
     }
 }

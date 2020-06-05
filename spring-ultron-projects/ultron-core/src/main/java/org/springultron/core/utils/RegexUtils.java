@@ -57,6 +57,17 @@ public class RegexUtils {
     }
 
     /**
+     * 验证密码是否合法
+     * 以字母开头，长度在6~18之间，只能包含字母、数字和下划线
+     *
+     * @param password 密码
+     * @return {boolean}
+     */
+    public static boolean matchPassword(String password) {
+        return isMatch(password, "^[a-zA-Z]\\w{5,17}$");
+    }
+
+    /**
      * 给定内容是否匹配正则
      *
      * @param content 内容
@@ -72,8 +83,8 @@ public class RegexUtils {
     /**
      * 编译传入正则表达式和字符串去匹配,忽略大小写
      *
-     * @param content  内容
-     * @param regex 正则
+     * @param content 内容
+     * @param regex   正则
      * @return {boolean}
      */
     public static boolean isMatch(CharSequence content, String regex) {

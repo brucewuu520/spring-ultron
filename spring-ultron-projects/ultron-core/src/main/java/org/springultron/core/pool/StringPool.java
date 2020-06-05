@@ -18,6 +18,7 @@ public class StringPool {
     public static final String SLASH = "/";
     public static final String DOT = ".";
     public static final String AMP = "&";
+    public static final String COLON = ":";
     /**
      * 换行符
      */

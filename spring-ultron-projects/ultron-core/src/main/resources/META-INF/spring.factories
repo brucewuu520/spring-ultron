@@ -1,1 +1,3 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=org.springultron.core.jackson.JacksonConfiguration
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  org.springultron.core.config.UltronAutoConfiguration,\
+  org.springultron.core.jackson.JacksonConfiguration

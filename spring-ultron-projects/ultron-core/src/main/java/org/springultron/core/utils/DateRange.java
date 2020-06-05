@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -47,5 +48,9 @@ public class DateRange implements Iterable<LocalDate> {
 
     public List<LocalDate> toList() {
         return stream().collect(Collectors.toList());
+    }
+
+    public void consumer(Consumer<Stream<LocalDate>> consumer) {
+        consumer.accept(stream());
     }
 }
