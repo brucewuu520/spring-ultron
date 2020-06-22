@@ -12,10 +12,20 @@ import org.springultron.security.model.UserDetailsModel;
 import java.util.Optional;
 
 /**
+ * SecurityUtils
+ *
  * @author brucewuu
  * @date 2020/1/9 15:51
  */
 public class SecurityUtils {
+
+    /**
+     * 判断是否是匿名用户
+     */
+    public static boolean isAnonymousUser() {
+        return Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
+                .map(authentication -> "anonymousUser".equals(authentication.getName())).orElse(Boolean.TRUE);
+    }
 
     /**
      * 获取登录用户信息

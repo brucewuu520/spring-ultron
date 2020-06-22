@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.time.LocalDateTime;
 
@@ -17,16 +18,19 @@ public abstract class BaseEntity {
     /**
      * 数据库ID主键
      */
+    @ApiModelProperty(value = "ID")
     @TableId(type = IdType.AUTO)
     private Long id;
     /**
      * 数据创建时间
      */
+    @ApiModelProperty(value = "创建时间", position = 98)
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createAt;
     /**
      * 数据修改时间
      */
+    @ApiModelProperty(value = "更新时间", position = 99)
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateAt;
 

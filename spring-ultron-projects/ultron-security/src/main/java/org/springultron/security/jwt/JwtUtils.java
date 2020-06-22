@@ -10,6 +10,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 import java.security.Key;
+import java.time.Duration;
 import java.util.Date;
 import java.util.Optional;
 
@@ -48,11 +49,11 @@ public final class JwtUtils {
     /**
      * 生成token的过期时间
      *
-     * @param expiration 有效期时长(单位:秒)
+     * @param expiration 有效期时长
      */
     @Nullable
-    private static Date generateExpirationDate(Long expiration) {
-        return Optional.ofNullable(expiration).map(time -> new Date(System.currentTimeMillis() + time * 1000)).orElse(null);
+    private static Date generateExpirationDate(Duration expiration) {
+        return Optional.ofNullable(expiration).map(e -> new Date(System.currentTimeMillis() + e.toMillis())).orElse(null);
     }
 
     /**
@@ -76,7 +77,7 @@ public final class JwtUtils {
      * @param secret     签名秘钥
      * @param expiration 有效期时长(单位:秒)
      */
-    public static String generateToken(String username, String secret, Long expiration) {
+    public static String generateToken(String username, String secret, Duration expiration) {
         return generateToken(username, secret, expiration, SignatureAlgorithm.HS512);
     }
 
@@ -90,7 +91,7 @@ public final class JwtUtils {
      * @param expiration 有效期时长(单位:秒)
      * @param algorithm  算法
      */
-    public static String generateToken(String username, String secret, Long expiration, SignatureAlgorithm algorithm) {
+    public static String generateToken(String username, String secret, Duration expiration, SignatureAlgorithm algorithm) {
         byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(secret);
         Key signKey = new SecretKeySpec(apiKeySecretBytes, algorithm.getJcaName());
         return Jwts.builder().setAudience(username).setIssuedAt(new Date()).setExpiration(generateExpirationDate(expiration)).signWith(signKey, algorithm).compact();

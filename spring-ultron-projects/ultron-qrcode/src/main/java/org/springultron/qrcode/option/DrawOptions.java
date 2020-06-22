@@ -16,33 +16,37 @@ public class DrawOptions {
     /**
      * 背景颜色
      */
-    private final Color bgColor;
+    private Color bgColor;
     /**
      * 绘制前置颜色
      */
-    private final Color preColor;
+    private Color preColor;
     /**
      * 绘制样式
      */
-    private final DrawStyle drawStyle;
+    private DrawStyle drawStyle;
     /**
      * 绘制的背景图片
      */
-    private final BufferedImage bgImage;
+    private BufferedImage bgImage;
     /**
      * true 时表示支持对相邻的着色点进行合并处理 （即用一个大图来绘制相邻的两个着色点）
      * 说明： 三角形样式关闭该选项，因为留白过多，对识别有影响
      */
-    private final boolean enableScale;
+    private boolean enableScale;
     /**
      * 透明度填充，如绘制二维码的图片中存在透明区域，
      * 若这个参数为true，则会用bgColor填充透明的区域；若为false，则透明区域依旧是透明的
      */
-    private final boolean transparencyFill;
+    private boolean transparencyFill;
     /**
      * 渲染图
      */
     private final Map<DotSize, BufferedImage> imageMap;
+
+    public static DrawOptions.Builder builder() {
+        return new DrawOptions.Builder();
+    }
 
     private DrawOptions(Color bgColor, Color preColor, DrawStyle drawStyle, BufferedImage bgImage, boolean enableScale, boolean transparencyFill, Map<DotSize, BufferedImage> imageMap) {
         this.bgColor = bgColor;
@@ -54,32 +58,52 @@ public class DrawOptions {
         this.imageMap = imageMap;
     }
 
-    public static DrawOptions.Builder builder() {
-        return new DrawOptions.Builder();
-    }
-
     public Color getBgColor() {
         return bgColor;
+    }
+
+    public void setBgColor(Color bgColor) {
+        this.bgColor = bgColor;
     }
 
     public Color getPreColor() {
         return preColor;
     }
 
+    public void setPreColor(Color preColor) {
+        this.preColor = preColor;
+    }
+
     public DrawStyle getDrawStyle() {
         return drawStyle;
+    }
+
+    public void setDrawStyle(DrawStyle drawStyle) {
+        this.drawStyle = drawStyle;
     }
 
     public BufferedImage getBgImage() {
         return bgImage;
     }
 
+    public void setBgImage(BufferedImage bgImage) {
+        this.bgImage = bgImage;
+    }
+
     public boolean isEnableScale() {
         return enableScale;
     }
 
+    public void setEnableScale(boolean enableScale) {
+        this.enableScale = enableScale;
+    }
+
     public boolean isTransparencyFill() {
         return transparencyFill;
+    }
+
+    public void setTransparencyFill(boolean transparencyFill) {
+        this.transparencyFill = transparencyFill;
     }
 
     public Map<DotSize, BufferedImage> getImageMap() {
@@ -98,6 +122,10 @@ public class DrawOptions {
         private boolean enableScale;
         private boolean transparencyFill;
         private Map<DotSize, BufferedImage> imageMap;
+
+        public Builder() {
+            this.imageMap = new HashMap<>(3);
+        }
 
         public Builder bgColor(Color bgColor) {
             this.bgColor = bgColor;
@@ -129,15 +157,7 @@ public class DrawOptions {
             return this;
         }
 
-        public Builder imageMap(Map<DotSize, BufferedImage> imageMap) {
-            this.imageMap = imageMap;
-            return this;
-        }
-
         public Builder drawImage(int row, int col, BufferedImage image) {
-            if (imageMap == null) {
-                imageMap = new HashMap<>(3);
-            }
             imageMap.put(new DotSize(row, col), image);
             return this;
         }

@@ -10,7 +10,7 @@ import java.util.Map;
  * @author brucewuu
  * @date 2020/6/4 19:28
  */
-public class QRCodeOptions {
+public class QrCodeOptions {
     /**
      * 塞入二维码的内容
      */

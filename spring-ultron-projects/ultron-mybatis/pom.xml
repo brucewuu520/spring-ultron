@@ -35,6 +35,12 @@
             <optional>true</optional>
         </dependency>
         <dependency>
+            <groupId>org.springultron</groupId>
+            <artifactId>ultron-core</artifactId>
+            <scope>compile</scope>
+            <version>${revision}</version>
+        </dependency>
+        <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
             <version>${mybatis-plus.version}</version>

@@ -10,7 +10,7 @@ import com.google.zxing.qrcode.encoder.Encoder;
 import com.google.zxing.qrcode.encoder.QRCode;
 import org.springultron.qrcode.option.BgImageOptions;
 import org.springultron.qrcode.option.BitMatrixEx;
-import org.springultron.qrcode.option.QRCodeOptions;
+import org.springultron.qrcode.option.QrCodeOptions;
 import org.springultron.qrcode.tuple.ImmutablePair;
 
 import java.awt.*;
@@ -25,7 +25,7 @@ import java.util.Map;
  * @author brucewuu
  * @date 2020/6/4 18:14
  */
-public class QRCodeEncoder {
+public class QrCodeEncoder {
 
     private static final int QUIET_ZONE_SIZE = 4;
 
@@ -35,7 +35,7 @@ public class QRCodeEncoder {
      * 源码参考 {@link QRCodeWriter#encode(String, BarcodeFormat, int, int, Map)}
      * </p>
      */
-    public static BitMatrixEx encode(QRCodeOptions qrCodeOptions) throws WriterException {
+    public static BitMatrixEx encode(QrCodeOptions qrCodeOptions) throws WriterException {
         ErrorCorrectionLevel errorCorrectionLevel = ErrorCorrectionLevel.L;
         int quietZone = 1;
         if (qrCodeOptions.getHints() != null) {
@@ -153,10 +153,10 @@ public class QRCodeEncoder {
      * @param bitMatrix     矩阵
      * @return 返回 BufferImage 对象: 适用于对二维码进行再次处理的场景
      */
-    public static BufferedImage toBufferedImage(QRCodeOptions qrCodeOptions, BitMatrixEx bitMatrix) {
+    public static BufferedImage toBufferedImage(QrCodeOptions qrCodeOptions, BitMatrixEx bitMatrix) {
         final int qrCodeWidth = bitMatrix.getWidth();
         final int qrCodeHeight = bitMatrix.getHeight();
-        BufferedImage qrCode = QRCodeRenderHelper.drawQrInfo(qrCodeOptions, bitMatrix);
+        BufferedImage qrCode = QrCodeRenderHelper.drawQrInfo(qrCodeOptions, bitMatrix);
 
         // 若二维码的实际宽高和预期的宽高不一致, 则缩放
         int realQrCodeWidth = qrCodeOptions.getWidth();
@@ -177,29 +177,29 @@ public class QRCodeEncoder {
         if (qrCodeOptions.getBgImageOptions() != null) {
             if (qrCodeOptions.getBgImageOptions().getBgImageStyle() == BgImageOptions.BgImageStyle.FILL && qrCodeOptions.getLogoOptions() != null) {
                 // 此种模式，先绘制logo
-                QRCodeRenderHelper.drawLogo(qrCode, qrCodeOptions.getLogoOptions());
+                QrCodeRenderHelper.drawLogo(qrCode, qrCodeOptions.getLogoOptions());
                 logoAlreadyDraw = true;
             }
 
-            qrCode = QRCodeRenderHelper.drawBackground(qrCode, qrCodeOptions.getBgImageOptions());
+            qrCode = QrCodeRenderHelper.drawBackground(qrCode, qrCodeOptions.getBgImageOptions());
         }
 
         // 插入logo
         if (qrCodeOptions.getLogoOptions() != null && !logoAlreadyDraw) {
-            QRCodeRenderHelper.drawLogo(qrCode, qrCodeOptions.getLogoOptions());
+            QrCodeRenderHelper.drawLogo(qrCode, qrCodeOptions.getLogoOptions());
         }
 
         return qrCode;
     }
 
-    public static List<ImmutablePair<BufferedImage, Integer>> toGifImages(QRCodeOptions qrCodeOptions, BitMatrixEx bitMatrix) {
+    public static List<ImmutablePair<BufferedImage, Integer>> toGifImages(QrCodeOptions qrCodeOptions, BitMatrixEx bitMatrix) {
         if (qrCodeOptions.getBgImageOptions() == null || qrCodeOptions.getBgImageOptions().getGifDecoder().getFrameCount() <= 0) {
             throw new IllegalArgumentException("animated background image should not be null!");
         }
 
         int qrCodeWidth = bitMatrix.getWidth();
         int qrCodeHeight = bitMatrix.getHeight();
-        BufferedImage qrCode = QRCodeRenderHelper.drawQrInfo(qrCodeOptions, bitMatrix);
+        BufferedImage qrCode = QrCodeRenderHelper.drawQrInfo(qrCodeOptions, bitMatrix);
 
         // 若二维码的实际宽高和预期的宽高不一致, 则缩放
         int realQrCodeWidth = qrCodeOptions.getWidth();
@@ -213,18 +213,18 @@ public class QRCodeEncoder {
         boolean logoAlreadyDraw = false;
         if (qrCodeOptions.getBgImageOptions().getBgImageStyle() == BgImageOptions.BgImageStyle.FILL && qrCodeOptions.getLogoOptions() != null) {
             // 此种模式，先绘制logo
-            QRCodeRenderHelper.drawLogo(qrCode, qrCodeOptions.getLogoOptions());
+            QrCodeRenderHelper.drawLogo(qrCode, qrCodeOptions.getLogoOptions());
             logoAlreadyDraw = true;
         }
 
         // 绘制动态背景图
-        List<ImmutablePair<BufferedImage, Integer>> bgList = QRCodeRenderHelper.drawGifBackground(qrCode, qrCodeOptions.getBgImageOptions());
+        List<ImmutablePair<BufferedImage, Integer>> bgList = QrCodeRenderHelper.drawGifBackground(qrCode, qrCodeOptions.getBgImageOptions());
 
         // 插入logo
         if (qrCodeOptions.getLogoOptions() != null && !logoAlreadyDraw) {
             List<ImmutablePair<BufferedImage, Integer>> result = new ArrayList<>(bgList.size());
             for (ImmutablePair<BufferedImage, Integer> pair : bgList) {
-                result.add(ImmutablePair.of(QRCodeRenderHelper.drawLogo(pair.getLeft(), qrCodeOptions.getLogoOptions()), pair.getRight()));
+                result.add(ImmutablePair.of(QrCodeRenderHelper.drawLogo(pair.getLeft(), qrCodeOptions.getLogoOptions()), pair.getRight()));
             }
             return result;
         } else {

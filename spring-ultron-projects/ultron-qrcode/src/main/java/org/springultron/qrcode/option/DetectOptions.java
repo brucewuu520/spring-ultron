@@ -13,11 +13,11 @@ public class DetectOptions {
     /**
      * 外部颜色
      */
-    private final Color outColor;
+    private Color outColor;
     /**
      * 内部颜色
      */
-    private final Color inColor;
+    private Color inColor;
     /**
      * 默认探测图形，优先级高于颜色的定制（即存在图片时，用图片绘制探测图形）
      */
@@ -61,8 +61,16 @@ public class DetectOptions {
         }
     }
 
+    public void setOutColor(Color outColor) {
+        this.outColor = outColor;
+    }
+
     public Color getOutColor() {
         return outColor;
+    }
+
+    public void setInColor(Color inColor) {
+        this.inColor = inColor;
     }
 
     public Color getInColor() {

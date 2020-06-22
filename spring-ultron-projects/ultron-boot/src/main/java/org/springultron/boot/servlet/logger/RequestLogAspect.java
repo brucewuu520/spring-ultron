@@ -92,7 +92,13 @@ public class RequestLogAspect {
         reqLog.append("IP             : ").append(IpUtils.getIP(request));
         reqLog.append(StringPool.LINE_SEPARATOR);
         // 打印请求入参
-        reqLog.append("Request Args   : ").append(Jackson.toJson(point.getArgs()));
+        if (point.getArgs().length > 0) {
+            Object args = point.getArgs()[0];
+            reqLog.append("Request Args   : ").append(Jackson.toJson(args));
+        } else {
+            reqLog.append("Request Args   : ");
+        }
+
         reqLog.append(StringPool.LINE_SEPARATOR);
         try {
             // 执行请求获取返回值

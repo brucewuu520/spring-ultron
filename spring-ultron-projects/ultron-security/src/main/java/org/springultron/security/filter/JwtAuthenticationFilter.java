@@ -12,8 +12,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springultron.core.utils.StringUtils;
+import org.springultron.security.UserDetailsProcessor;
 import org.springultron.security.handler.SimpleAuthenticationEntryPoint;
-import org.springultron.security.jwt.JwtProcessor;
 import org.springultron.security.util.SecurityUtils;
 
 import javax.servlet.FilterChain;
@@ -32,11 +32,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private static final String AUTHENTICATION_PREFIX = "Bearer ";
 
     private final SimpleAuthenticationEntryPoint authenticationEntryPoint;
-    private final JwtProcessor jwtProcessor;
+    private final UserDetailsProcessor userDetailsProcessor;
 
-    public JwtAuthenticationFilter(JwtProcessor jwtProcessor) {
+    public JwtAuthenticationFilter(UserDetailsProcessor userDetailsProcessor) {
         this.authenticationEntryPoint = new SimpleAuthenticationEntryPoint();
-        this.jwtProcessor = jwtProcessor;
+        this.userDetailsProcessor = userDetailsProcessor;
     }
 
     @Override
@@ -50,8 +50,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (StringUtils.isNotEmpty(jwt) && jwt.startsWith(AUTHENTICATION_PREFIX)) {
             jwt = jwt.substring(AUTHENTICATION_PREFIX.length());
             try {
-                final String username = jwtProcessor.obtainUsername(jwt);
-                UserDetails userDetails = jwtProcessor.getUserByUsername(username);
+                final String username = userDetailsProcessor.obtainUsername(jwt);
+                UserDetails userDetails = userDetailsProcessor.loadUserByUsername(username);
                 SecurityUtils.checkUserDetails(userDetails);
                 // 构建用户认证token
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());

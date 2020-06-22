@@ -44,13 +44,13 @@ public class PageQuery implements Serializable {
     @ApiModelProperty(value = "当前最后一行的ID", position = 5)
     private Long currentId;
 
-    @ApiModelProperty(value = "查询关键词", position = 6)
-    private String keywords;
+    @ApiModelProperty(value = "查询关键字", position = 6)
+    private String keyword;
 
     @ApiModelProperty(value = "筛选状态", position = 7)
     private Integer status;
 
-    @ApiModelProperty(value = "筛选类型/类别ID", position = 7)
+    @ApiModelProperty(value = "筛选类型/类别ID", position = 8)
     private Integer typeId;
 
     public Integer getCurrent() {
@@ -101,12 +101,12 @@ public class PageQuery implements Serializable {
         this.currentId = currentId;
     }
 
-    public String getKeywords() {
-        return keywords;
+    public String getKeyword() {
+        return keyword;
     }
 
-    public void setKeywords(String keywords) {
-        this.keywords = keywords;
+    public void setKeyword(String keyword) {
+        this.keyword = keyword;
     }
 
     public Integer getStatus() {

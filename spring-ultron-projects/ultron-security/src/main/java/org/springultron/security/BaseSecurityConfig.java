@@ -13,19 +13,28 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springultron.security.filter.JwtAuthenticationFilter;
+import org.springultron.security.filter.LoginFilter;
 import org.springultron.security.handler.*;
-import org.springultron.security.jwt.JwtProcessor;
 
 /**
- * security 配置基类
+ * Spring Security 配置基类
+ * <p>
+ * 默认支持前后端分离
+ * 前后端分离返回json
+ * 支持有状态的session认证和无状态的JWT认证
+ * </p>
  *
  * @author brucewuu
  * @date 2020/1/6 19:26
  */
-public class BaseSecurityConfig extends WebSecurityConfigurerAdapter {
+public abstract class BaseSecurityConfig extends WebSecurityConfigurerAdapter {
+    /**
+     * 是否使用JWT无状态登录
+     */
+    protected abstract boolean useJwt();
 
     @Autowired
-    private JwtProcessor jwtProcessor;
+    private UserDetailsProcessor userDetailsProcessor;
 
     @Override
     public void configure(WebSecurity web) throws Exception {
@@ -44,29 +53,36 @@ public class BaseSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable() // 由于使用的是JWT，这里不需要csrf
-                .cors()
+        http.csrf().disable()
+                .exceptionHandling()
+                .authenticationEntryPoint(new SimpleAuthenticationEntryPoint())
+                .accessDeniedHandler(new SimpleAccessDeniedHandler())
                 .and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // session 生成策略用无状态策略,不创建会话
-                .and()
-                .exceptionHandling().authenticationEntryPoint(new SimpleAuthenticationEntryPoint()).accessDeniedHandler(new SimpleAccessDeniedHandler())
-                .and()
-                // jwt 必须配置于 UsernamePasswordAuthenticationFilter 之前
-                .addFilterBefore(new JwtAuthenticationFilter(jwtProcessor), UsernamePasswordAuthenticationFilter.class)
-                // 登录成功后返回jwt token 失败后返回错误信息
-                .formLogin().loginProcessingUrl("process").successHandler(new SimpleAuthenticationSuccessHandler(jwtProcessor)).failureHandler(new SimpleAuthenticationFailureHandler())
-                .and()
-                .logout().addLogoutHandler(new SimpleLogoutHandler(jwtProcessor)).logoutSuccessHandler(new SimpleLogoutSuccessHandler());
+                .logout()
+                .addLogoutHandler(new SimpleLogoutHandler(userDetailsProcessor))
+                .logoutSuccessHandler(new SimpleLogoutSuccessHandler());
+        if (useJwt()) {
+            // jwt 必须配置于 UsernamePasswordAuthenticationFilter 之前
+            http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // session 生成策略用无状态策略,不创建会话
+                    .and()
+                    .addFilterBefore(new JwtAuthenticationFilter(userDetailsProcessor), UsernamePasswordAuthenticationFilter.class);
+        } else {
+            http.formLogin()
+                    .and()
+                    .addFilterAt(new LoginFilter(authenticationManagerBean()), UsernamePasswordAuthenticationFilter.class)
+                    .rememberMe()
+                    .alwaysRemember(true);
+        }
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService()).passwordEncoder(passwordEncoder());
+        auth.userDetailsService(userDetailsService());
     }
 
     @Override
     protected UserDetailsService userDetailsService() {
-        return username -> jwtProcessor.getUserByUsername(username);
+        return username -> userDetailsProcessor.loadUserByUsername(username);
     }
 
     @Bean

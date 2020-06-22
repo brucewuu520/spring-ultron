@@ -6,6 +6,6 @@ package org.springultron.qrcode.decode;
  * @author brucewuu
  * @date 2020/6/4 18:15
  */
-public class QRCodeDecoder {
+public class QrCodeDecoder {
 
 }

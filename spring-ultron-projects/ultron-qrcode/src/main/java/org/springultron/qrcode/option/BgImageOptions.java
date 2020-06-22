@@ -14,11 +14,11 @@ public class BgImageOptions {
     /**
      * 背景图宽
      */
-    private Integer width;
+    private final Integer width;
     /**
      * 背景图高
      */
-    private Integer height;
+    private final Integer height;
     /**
      * 背景图
      */
@@ -47,6 +47,21 @@ public class BgImageOptions {
      */
     private int startY;
 
+    public static BgImageOptions.Builder builder() {
+        return new BgImageOptions.Builder();
+    }
+
+    private BgImageOptions(Integer width, Integer height, BufferedImage bgImage, GifDecoder gifDecoder, BgImageStyle bgImageStyle, float opacity, int startX, int startY) {
+        this.width = width;
+        this.height = height;
+        this.bgImage = bgImage;
+        this.gifDecoder = gifDecoder;
+        this.bgImageStyle = bgImageStyle;
+        this.opacity = opacity;
+        this.startX = startX;
+        this.startY = startY;
+    }
+
     public int getWidth() {
         if (bgImageStyle == BgImageStyle.FILL && width == 0) {
             if (bgImage != null) {
@@ -73,24 +88,103 @@ public class BgImageOptions {
         return bgImage;
     }
 
+    public void setBgImage(BufferedImage bgImage) {
+        this.bgImage = bgImage;
+    }
+
     public GifDecoder getGifDecoder() {
         return gifDecoder;
+    }
+
+    public void setGifDecoder(GifDecoder gifDecoder) {
+        this.gifDecoder = gifDecoder;
     }
 
     public BgImageStyle getBgImageStyle() {
         return bgImageStyle;
     }
 
+    public void setBgImageStyle(BgImageStyle bgImageStyle) {
+        this.bgImageStyle = bgImageStyle;
+    }
+
     public float getOpacity() {
         return opacity;
+    }
+
+    public void setOpacity(float opacity) {
+        this.opacity = opacity;
     }
 
     public int getStartX() {
         return startX;
     }
 
+    public void setStartX(int startX) {
+        this.startX = startX;
+    }
+
     public int getStartY() {
         return startY;
+    }
+
+    public void setStartY(int startY) {
+        this.startY = startY;
+    }
+
+    public static class Builder {
+        private Integer width;
+        private Integer height;
+        private BufferedImage bgImage;
+        private GifDecoder gifDecoder;
+        private BgImageStyle bgImageStyle;
+        private float opacity;
+        private int startX;
+        private int startY;
+
+        public Builder width(Integer width) {
+            this.width = width;
+            return this;
+        }
+
+        public Builder height(Integer height) {
+            this.height = height;
+            return this;
+        }
+
+        public Builder bgImage(BufferedImage bgImage) {
+            this.bgImage = bgImage;
+            return this;
+        }
+
+        public Builder gifDecoder(GifDecoder gifDecoder) {
+            this.gifDecoder = gifDecoder;
+            return this;
+        }
+
+        public Builder bgImageStyle(BgImageStyle bgImageStyle) {
+            this.bgImageStyle = bgImageStyle;
+            return this;
+        }
+
+        public Builder opacity(float opacity) {
+            this.opacity = opacity;
+            return this;
+        }
+
+        public Builder startX(int startX) {
+            this.startX = startX;
+            return this;
+        }
+
+        public Builder startY(int startY) {
+            this.startY = startY;
+            return this;
+        }
+
+        public BgImageOptions build() {
+            return new BgImageOptions(width, height, bgImage, gifDecoder, bgImageStyle, opacity, startX, startY);
+        }
     }
 
     /**

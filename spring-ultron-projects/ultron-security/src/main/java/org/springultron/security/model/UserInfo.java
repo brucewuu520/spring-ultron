@@ -24,6 +24,10 @@ public class UserInfo implements Serializable {
      */
     private String password;
     /**
+     * 用户是否被禁用
+     */
+    private final Boolean enabled;
+    /**
      * 用户ID（必需）
      */
     private final Long userId;
@@ -35,19 +39,14 @@ public class UserInfo implements Serializable {
      * 自定义参数（非必需）
      */
     private final Map<String, Object> extras;
-    /**
-     * 状态（非必需）
-     * 0:禁用 1:启用
-     */
-    private final Integer status;
 
-    UserInfo(String username, String password, Long userId, String mobile, Map<String, Object> extras, Integer status) {
+    private UserInfo(String username, String password, Boolean enabled, Long userId, String mobile, Map<String, Object> extras) {
         this.username = username;
         this.password = password;
+        this.enabled = enabled;
         this.userId = userId;
         this.mobile = mobile;
         this.extras = extras;
-        this.status = status;
     }
 
     public String getUsername() {
@@ -56,6 +55,10 @@ public class UserInfo implements Serializable {
 
     public String getPassword() {
         return password;
+    }
+
+    public Boolean getEnabled() {
+        return enabled;
     }
 
     public Long getUserId() {
@@ -75,10 +78,6 @@ public class UserInfo implements Serializable {
             return null;
         }
         return extras.get(key);
-    }
-
-    public Integer getStatus() {
-        return status;
     }
 
     public void eraseCredentials() {
@@ -101,9 +100,9 @@ public class UserInfo implements Serializable {
         sb.append(super.toString()).append(": ");
         sb.append("Username: ").append(this.username).append("; ");
         sb.append("Password: [PROTECTED]; ");
+        sb.append("Enable: ").append(this.enabled).append("; ");
         sb.append("UserId: ").append(this.userId).append("; ");
         sb.append("Mobile: ").append(this.mobile).append("; ");
-        sb.append("Status: ").append(this.status).append("; ");
         if (this.extras != null && !this.extras.isEmpty()) {
             for (Map.Entry<String, Object> entry : this.extras.entrySet()) {
                 sb.append(entry.getKey()).append(entry.getValue()).append("; ");
@@ -123,10 +122,10 @@ public class UserInfo implements Serializable {
     public static class UserInfoBuilder {
         private String username;
         private String password;
+        private Boolean enabled;
         private Long userId;
         private String mobile;
         private Map<String, Object> extras;
-        private Integer status;
         private Function<String, String> passwordEncoder;
 
         private UserInfoBuilder() {
@@ -148,6 +147,11 @@ public class UserInfo implements Serializable {
         public UserInfoBuilder passwordEncoder(Function<String, String> encoder) {
             Assert.notNull(encoder, "encoder cannot be null");
             this.passwordEncoder = encoder;
+            return this;
+        }
+
+        public UserInfoBuilder enable(Boolean enabled) {
+            this.enabled = enabled;
             return this;
         }
 
@@ -176,14 +180,9 @@ public class UserInfo implements Serializable {
             return this;
         }
 
-        public UserInfoBuilder status(Integer status) {
-            this.status = status;
-            return this;
-        }
-
         public UserInfo build() {
             String encodedPassword = this.passwordEncoder.apply(this.password);
-            return new UserInfo(username, password, userId, mobile, extras, status);
+            return new UserInfo(username, encodedPassword, enabled, userId, mobile, extras);
         }
     }
 }

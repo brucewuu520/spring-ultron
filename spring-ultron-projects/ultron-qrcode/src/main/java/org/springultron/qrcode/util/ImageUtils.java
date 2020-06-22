@@ -1,8 +1,13 @@
 package org.springultron.qrcode.util;
 
+import org.springultron.qrcode.gif.GifDecoder;
+
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * 图片处理操作工具类
@@ -64,6 +69,39 @@ public final class ImageUtils {
         g2.dispose();
 
         return output;
+    }
+
+    /**
+     * 根据路径获取图片
+     *
+     * @param path 本地路径/网络路径
+     * @return 图片
+     * @throws IOException IO异常
+     */
+    public static BufferedImage getImageByPath(String path) throws IOException {
+        if (null == path || "".equals(path)) {
+            return null;
+        }
+
+        InputStream stream = FileReadUtils.getStreamByFileName(path);
+        return ImageIO.read(stream);
+    }
+
+    /**
+     * 根据路径获取gif图片
+     *
+     * @param path 本地路径/网络路径
+     * @return 图片
+     * @throws IOException IO异常
+     */
+    public static GifDecoder getGifByPath(String path) throws IOException {
+        if (null == path || "".equals(path)) {
+            return null;
+        }
+
+        GifDecoder decoder = new GifDecoder();
+        decoder.read(FileReadUtils.getStreamByFileName(path));
+        return decoder;
     }
 
 }

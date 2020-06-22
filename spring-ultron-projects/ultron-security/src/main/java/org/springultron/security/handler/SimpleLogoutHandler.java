@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
-import org.springultron.security.jwt.JwtProcessor;
+import org.springultron.security.UserDetailsProcessor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,10 +20,10 @@ import javax.servlet.http.HttpServletResponse;
 public class SimpleLogoutHandler implements LogoutHandler {
     private static final Logger log = LoggerFactory.getLogger(SimpleLogoutHandler.class);
 
-    private final JwtProcessor jwtProcessor;
+    private final UserDetailsProcessor userDetailsProcessor;
 
-    public SimpleLogoutHandler(JwtProcessor jwtProcessor) {
-        this.jwtProcessor = jwtProcessor;
+    public SimpleLogoutHandler(UserDetailsProcessor userDetailsProcessor) {
+        this.userDetailsProcessor = userDetailsProcessor;
     }
 
     @Override
@@ -32,7 +32,7 @@ public class SimpleLogoutHandler implements LogoutHandler {
         if (authentication != null) {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             log.info("username: {}  is offline now", userDetails.getUsername());
-            jwtProcessor.logout(userDetails.getUsername());
+            userDetailsProcessor.logout(userDetails.getUsername());
         }
     }
 }

@@ -84,7 +84,7 @@ public class UserDetailsModel implements UserDetails, CredentialsContainer {
 
     @Override
     public boolean isEnabled() {
-        return Optional.ofNullable(userInfo.getStatus()).map(status -> status == 1).orElse(Boolean.FALSE);
+        return userInfo.getEnabled();
     }
 
     @Override

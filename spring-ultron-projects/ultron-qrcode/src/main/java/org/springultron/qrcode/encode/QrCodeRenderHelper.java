@@ -16,7 +16,7 @@ import java.util.List;
  * 二维码渲染辅助类
  * 主要用于绘制背景，logo，定位点，二维码信息
  */
-public class QRCodeRenderHelper {
+public class QrCodeRenderHelper {
 
     /**
      * 绘制logo图片
@@ -174,7 +174,7 @@ public class QRCodeRenderHelper {
      * @param bitMatrix     矩阵信息
      * @return BufferedImage
      */
-    public static BufferedImage drawQrInfo(QRCodeOptions qrCodeOptions, BitMatrixEx bitMatrix) {
+    public static BufferedImage drawQrInfo(QrCodeOptions qrCodeOptions, BitMatrixEx bitMatrix) {
         int qrWidth = bitMatrix.getWidth();
         int qrHeight = bitMatrix.getHeight();
         int infoSize = bitMatrix.getMultiple();
@@ -310,7 +310,7 @@ public class QRCodeRenderHelper {
      * @param detectOutColor   探测图形外边圈的颜色
      * @param detectInnerColor 探测图形内部圈的颜色
      */
-    private static void drawDetectImg(QRCodeOptions qrCodeOptions, Graphics2D g2, BitMatrixEx bitMatrix,
+    private static void drawDetectImg(QrCodeOptions qrCodeOptions, Graphics2D g2, BitMatrixEx bitMatrix,
                                       int matrixW, int matrixH, int leftPadding, int topPadding, int infoSize,
                                       int detectCornerSize, int x, int y, Color detectOutColor, Color detectInnerColor,
                                       DetectOptions.DetectLocation detectLocation) {
@@ -340,7 +340,7 @@ public class QRCodeRenderHelper {
         g2.fillRect(leftPadding + x * infoSize, topPadding + y * infoSize, infoSize, infoSize);
     }
 
-    private static void drawQrDotBgImg(QRCodeOptions qrCodeOptions, Graphics2D g2, int leftPadding, int topPadding, int infoSize, int x, int y) {
+    private static void drawQrDotBgImg(QrCodeOptions qrCodeOptions, Graphics2D g2, int leftPadding, int topPadding, int infoSize, int x, int y) {
         if (qrCodeOptions.getDrawOptions().getBgImage() == null) {
             return;
         }
@@ -362,7 +362,7 @@ public class QRCodeRenderHelper {
      * @param x             目标点x坐标
      * @param y             目标点y坐标
      */
-    private static void drawQrDotImg(QRCodeOptions qrCodeOptions, DrawOptions.DrawStyle drawStyle,
+    private static void drawQrDotImg(QrCodeOptions qrCodeOptions, DrawOptions.DrawStyle drawStyle,
                                      Graphics2D g2, BitMatrixEx bitMatrix, int leftPadding, int topPadding,
                                      int infoSize, int x, int y) {
         if (drawStyle != DrawOptions.DrawStyle.IMAGE) {
@@ -385,7 +385,7 @@ public class QRCodeRenderHelper {
      * @param x             目标点x坐标
      * @param y             目标点y坐标
      */
-    private static void drawGeometricFigure(QRCodeOptions qrCodeOptions, DrawOptions.DrawStyle drawStyle, Graphics2D g2, BitMatrixEx bitMatrix, int leftPadding, int topPadding, int infoSize, int x, int y) {
+    private static void drawGeometricFigure(QrCodeOptions qrCodeOptions, DrawOptions.DrawStyle drawStyle, Graphics2D g2, BitMatrixEx bitMatrix, int leftPadding, int topPadding, int infoSize, int x, int y) {
         if (!qrCodeOptions.getDrawOptions().isEnableScale()) {
             // 用几何图形进行填充时，如果不支持多个像素点渲染一个几何图形时，直接返回即可
             drawStyle.draw(g2, leftPadding + x * infoSize, topPadding + y * infoSize, infoSize, infoSize, qrCodeOptions.getDrawOptions().getImage(1, 1));
@@ -429,7 +429,7 @@ public class QRCodeRenderHelper {
      * @param x             目标点x坐标
      * @param y             目标点y坐标
      */
-    private static void drawSpecialImg(QRCodeOptions qrCodeOptions, DrawOptions.DrawStyle drawStyle, Graphics2D g2, BitMatrixEx bitMatrix, int leftPadding, int topPadding, int infoSize, int x, int y) {
+    private static void drawSpecialImg(QrCodeOptions qrCodeOptions, DrawOptions.DrawStyle drawStyle, Graphics2D g2, BitMatrixEx bitMatrix, int leftPadding, int topPadding, int infoSize, int x, int y) {
         // 针对图片扩展的方式，支持更加灵活的填充方式
         int maxRow = getMaxRow(bitMatrix.getByteMatrix(), x, y);
         int maxCol = getMaxCol(bitMatrix.getByteMatrix(), x, y);
