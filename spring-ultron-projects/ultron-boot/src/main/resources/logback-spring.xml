@@ -12,25 +12,24 @@
     <springProperty scop="context" name="logging.file.maxHistory" source="logging.file.max-history" defaultValue="360" />
     <springProperty scop="context" name="logging.file.totalSizeCap" source="logging.file.total-size-cap" defaultValue="100GB" />
     <springProperty scop="context" name="logging.file.cleanHistoryOnStart" source="logging.file.clean-history-on-start" defaultValue="false" />
+    <!-- 彩色日志格式 -->
+    <property name="CONSOLE_LOG_PATTERN" value="${CONSOLE_LOG_PATTERN:-%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
+    <!-- 彩色日志依赖的渲染类 -->
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
+    <conversionRule conversionWord="wex" converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter"/>
+    <conversionRule conversionWord="wEx" converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter"/>
 
     <!-- Console log output -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <charset>${logging.charset}</charset>
-            <pattern>${logging.pattern}</pattern>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
         </encoder>
     </appender>
-    <!-- 获取比info级别高(包括info级别)但除error级别的日志-->
+    <!-- 获取比info级别高(包括info级别)日志-->
     <appender name="INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${logging.file.path}/info.log</file>
         <!-- 追加到文件结尾 -->
         <append>true</append>
-        <!-- 过滤掉error级别日志-->
-        <filter class="ch.qos.logback.classic.filter.LevelFilter">
-            <level>ERROR</level>
-            <onMatch>DENY</onMatch>
-            <onMismatch>ACCEPT</onMismatch>
-        </filter>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>${logging.file.path}/info/%d{yyyy-MM,aux}/info.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
             <!-- 每个日志文件最大：maxFileSize，保存多少天：maxHistory，但日志文件最多：totalSizeCap-->
