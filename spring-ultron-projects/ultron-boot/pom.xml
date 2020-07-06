@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>ultron-boot</artifactId>
     <name>Spring Ultron Boot</name>
-    <description>Spring boot scaffold</description>
+    <description>Spring Boot Scaffold</description>
     <packaging>jar</packaging>
 
     <parent>
