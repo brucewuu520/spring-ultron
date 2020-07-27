@@ -12,18 +12,28 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 @ConfigurationProperties(prefix = "swagger.knife4j")
 public class Knife4jProperties {
     /**
+     * 是否是生产环境
+     */
+    private boolean production;
+
+    /**
      * http basic配置
      */
     @NestedConfigurationProperty
     private Knife4jHttpBasic basic;
+
     /**
      * markdown路径
      */
     private String markdowns;
-    /**
-     * 是否是生产环境
-     */
-    private boolean production;
+
+    public boolean isProduction() {
+        return production;
+    }
+
+    public void setProduction(boolean production) {
+        this.production = production;
+    }
 
     public Knife4jHttpBasic getBasic() {
         return basic;
@@ -41,11 +51,4 @@ public class Knife4jProperties {
         this.markdowns = markdowns;
     }
 
-    public boolean isProduction() {
-        return production;
-    }
-
-    public void setProduction(boolean production) {
-        this.production = production;
-    }
 }

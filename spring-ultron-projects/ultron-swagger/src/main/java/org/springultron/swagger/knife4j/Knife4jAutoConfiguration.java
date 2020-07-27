@@ -22,6 +22,7 @@ import org.springframework.context.annotation.Configuration;
         "com.github.xiaoymin.knife4j.spring.web"
 })
 public class Knife4jAutoConfiguration {
+
     /**
      * 初始化自定义Markdown特性
      *
