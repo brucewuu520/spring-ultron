@@ -5,7 +5,6 @@
     <artifactId>ultron-cloud</artifactId>
     <name>Spring Ultron Cloud</name>
     <description>Spring Cloud common library use spring-cloud-alibaba default</description>
-    <packaging>jar</packaging>
 
     <parent>
         <groupId>org.springultron</groupId>
