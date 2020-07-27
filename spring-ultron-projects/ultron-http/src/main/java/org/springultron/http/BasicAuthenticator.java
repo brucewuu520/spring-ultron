@@ -1,8 +1,8 @@
 package org.springultron.http;
 
 import okhttp3.*;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -24,7 +24,7 @@ public class BasicAuthenticator implements Authenticator {
 
     @Nullable
     @Override
-    public Request authenticate(@Nullable Route route, @NotNull Response response) throws IOException {
+    public Request authenticate(@Nullable Route route, @NonNull Response response) throws IOException {
         String credentials = Credentials.basic(username, password, StandardCharsets.UTF_8);
         return response.request().newBuilder().header("Authorization", credentials).build();
     }

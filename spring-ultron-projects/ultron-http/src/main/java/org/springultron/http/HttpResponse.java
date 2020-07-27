@@ -192,6 +192,11 @@ public class HttpResponse implements ResponseSpec, Closeable {
     }
 
     @Override
+    public Request rawRequest() {
+        return response.request();
+    }
+
+    @Override
     public Response rawResponse() {
         return response;
     }

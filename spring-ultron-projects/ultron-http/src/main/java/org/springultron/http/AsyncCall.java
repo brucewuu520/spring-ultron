@@ -4,7 +4,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Request;
 import okhttp3.Response;
-import org.jetbrains.annotations.NotNull;
+import org.springframework.lang.NonNull;
 
 import java.io.IOException;
 import java.util.function.BiConsumer;
@@ -24,7 +24,7 @@ public class AsyncCall {
     private Consumer<ResponseSpec> successConsumer;
     private BiConsumer<Request, IOException> failConsumer;
 
-    public AsyncCall(Call call) {
+    AsyncCall(Call call) {
         this.call = call;
         this.callbackConsumer = DEFAULT_CONSUMER;
         this.successConsumer = DEFAULT_CONSUMER;
@@ -49,12 +49,12 @@ public class AsyncCall {
     public final void execute() {
         call.enqueue(new Callback() {
             @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 failConsumer.accept(call.request(), e);
             }
 
             @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 try (HttpResponse httpResponse = HttpResponse.of(response)) {
                     callbackConsumer.accept(httpResponse);
                     if (response.isSuccessful()) {

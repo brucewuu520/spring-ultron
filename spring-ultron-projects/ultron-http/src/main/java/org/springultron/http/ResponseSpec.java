@@ -207,6 +207,13 @@ public interface ResponseSpec {
     long contentLength();
 
     /**
+     * Returns rawRequest.
+     *
+     * @return Request
+     */
+    Request rawRequest();
+
+    /**
      * Return rawResponse.
      *
      * @return Response

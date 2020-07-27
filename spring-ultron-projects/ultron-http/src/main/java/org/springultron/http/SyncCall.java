@@ -26,7 +26,7 @@ public class SyncCall {
     private final Call call;
     private BiConsumer<Request, IOException> failConsumer = (r, e) -> {};
 
-    public SyncCall(Call call) {
+    SyncCall(Call call) {
         this.call = call;
     }
 

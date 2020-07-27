@@ -45,7 +45,7 @@ public class MultipartFormBuilder {
     }
 
     public MultipartFormBuilder add(final String name, @Nullable final String filename, final File file) {
-        final RequestBody fileBody = RequestBody.create(file, null);
+        final RequestBody fileBody = RequestBody.create(null, file);
         this.formBuilder.addFormDataPart(name, filename, fileBody);
         return this;
     }

@@ -214,7 +214,7 @@ public class HttpRequest {
     }
 
     public HttpRequest bodyJson(final String json) {
-        this.requestBody = RequestBody.create(json, MEDIA_TYPE_JSON);
+        this.requestBody = RequestBody.create(MEDIA_TYPE_JSON, json);
         return this;
     }
 
@@ -375,7 +375,7 @@ public class HttpRequest {
         }
         if (null != level && !HttpLoggingInterceptor.Level.NONE.equals(level)) {
             HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(Slf4jLogger.LOGGER);
-            loggingInterceptor.level(level);
+            loggingInterceptor.setLevel(level);
             builder.addInterceptor(loggingInterceptor);
         } else if (null != globalLoggingInterceptor) {
             builder.addInterceptor(globalLoggingInterceptor);
@@ -411,7 +411,7 @@ public class HttpRequest {
 
     public static void setGlobalLog(HttpLoggingInterceptor.Level level) {
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(Slf4jLogger.LOGGER);
-        loggingInterceptor.level(level);
+        loggingInterceptor.setLevel(level);
         HttpRequest.globalLoggingInterceptor = loggingInterceptor;
     }
 
