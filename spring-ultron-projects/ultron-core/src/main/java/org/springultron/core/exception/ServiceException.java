@@ -1,7 +1,7 @@
 package org.springultron.core.exception;
 
-import org.springultron.core.result.IResultCode;
-import org.springultron.core.result.ResultCode;
+import org.springultron.core.result.IResultStatus;
+import org.springultron.core.result.ResultStatus;
 
 /**
  * 自定义REST业务异常
@@ -15,7 +15,7 @@ public class ServiceException extends RuntimeException {
     /**
      * 异常码
      */
-    private int code = ResultCode.API_EXCEPTION.getCode();
+    private int code = ResultStatus.API_EXCEPTION.getCode();
 
     public ServiceException() {
     }
@@ -43,7 +43,7 @@ public class ServiceException extends RuntimeException {
         this.code = code;
     }
 
-    public ServiceException(IResultCode resultCode) {
+    public ServiceException(IResultStatus resultCode) {
         super(resultCode.getMessage());
         this.code = resultCode.getCode();
     }

@@ -5,7 +5,6 @@
     <artifactId>ultron-core</artifactId>
     <name>Spring Ultron Core</name>
     <description>Spring Boot common core,jackson auto configuration,utils and so on</description>
-    <packaging>jar</packaging>
 
     <parent>
         <groupId>org.springultron</groupId>
