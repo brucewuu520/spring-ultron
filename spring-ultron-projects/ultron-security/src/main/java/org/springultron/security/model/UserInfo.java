@@ -24,7 +24,7 @@ public class UserInfo implements Serializable {
      */
     private String password;
     /**
-     * 用户是否被禁用
+     * 用户是否可用
      */
     private final Boolean enabled;
     /**
