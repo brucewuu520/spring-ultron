@@ -6,7 +6,7 @@ import org.springframework.http.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springultron.boot.props.UltronUploadProperties;
 import org.springultron.core.result.ApiResult;
-import org.springultron.core.result.IResultCode;
+import org.springultron.core.result.IResultStatus;
 import org.springultron.core.utils.IdUtils;
 import org.springultron.core.utils.Maps;
 
@@ -105,7 +105,7 @@ public interface IController {
      * @param <T>        泛型标记
      * @return ApiResult
      */
-    default <T> ApiResult<T> fail(IResultCode resultCode) {
+    default <T> ApiResult<T> fail(IResultStatus resultCode) {
         return ApiResult.failed(resultCode);
     }
 
@@ -152,7 +152,7 @@ public interface IController {
      * @param <T>       泛型标记
      * @return ApiResult
      */
-    default <T> ApiResult<T> status(boolean status, IResultCode errorCode) {
+    default <T> ApiResult<T> status(boolean status, IResultStatus errorCode) {
         return ApiResult.status(status, errorCode);
     }
 
