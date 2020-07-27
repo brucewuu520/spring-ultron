@@ -5,7 +5,6 @@
     <artifactId>ultron-redis</artifactId>
     <name>Spring Ultron Redis</name>
     <description>redis/redis cache auto configuration</description>
-    <packaging>jar</packaging>
 
     <parent>
         <groupId>org.springultron</groupId>

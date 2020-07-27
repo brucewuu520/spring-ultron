@@ -1,5 +1,6 @@
 package org.springultron.redis;
 
+import org.springframework.boot.convert.DurationStyle;
 import org.springframework.data.redis.cache.RedisCache;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
@@ -9,11 +10,12 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.StringUtils;
 
 import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.Map;
 
 /**
  * Redis Cache扩展扩展cache name
- * 支持 # 号分隔 cache name 和 超时 ttl(单位秒)。
+ * 支持 # 号分隔 cache name 和 超时 ttl(默认单位秒)。
  *
  * @author brucewuu
  * @date 2019/11/10 18:05
@@ -26,22 +28,19 @@ public class RedisAutoCacheManager extends RedisCacheManager {
 
     @NonNull
     @Override
-    protected RedisCache createRedisCache(String name, @Nullable RedisCacheConfiguration cacheConfig) {
+    protected RedisCache createRedisCache(@NonNull String name, @Nullable RedisCacheConfiguration cacheConfig) {
         if (!StringUtils.isEmpty(name) && name.contains("#")) {
             String[] array = name.split("#");
             if (array.length > 1) {
                 name = array[0];
-                long cacheAge = 0;
-                try {
-                    cacheAge = Long.parseLong(array[1]);
-                } catch (final NumberFormatException ignored) {
-                }
-                Duration ttl = Duration.ofSeconds(cacheAge);
+                // 转换时间，支持时间单位例如：300ms，默认单位秒
+                Duration ttl = DurationStyle.detectAndParse(array[1], ChronoUnit.SECONDS);
                 if (cacheConfig != null && cacheConfig.getTtl().compareTo(ttl) != 0) {
                     cacheConfig = cacheConfig.entryTtl(ttl);
                 }
             }
         }
+
         return super.createRedisCache(name, cacheConfig);
     }
 }
