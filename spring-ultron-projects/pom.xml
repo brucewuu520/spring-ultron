@@ -29,6 +29,7 @@
         <module>ultron-http</module>
         <module>ultron-mongodb</module>
         <module>ultron-mybatis</module>
+        <module>ultron-openfeign</module>
         <module>ultron-qrcode</module>
         <module>ultron-redis</module>
         <module>ultron-redis-lock</module>

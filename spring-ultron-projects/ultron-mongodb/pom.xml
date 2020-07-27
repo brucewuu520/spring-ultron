@@ -5,7 +5,6 @@
     <artifactId>ultron-mongodb</artifactId>
     <name>Spring Ultron MongoDB</name>
     <description>mongodb auto configuration</description>
-    <packaging>jar</packaging>
 
     <parent>
         <groupId>org.springultron</groupId>
