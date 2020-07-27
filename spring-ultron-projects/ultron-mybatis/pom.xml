@@ -5,7 +5,6 @@
     <artifactId>ultron-mybatis</artifactId>
     <name>Spring Ultron MyBatis</name>
     <description>database orm utils use mybatis plus</description>
-    <packaging>jar</packaging>
 
     <parent>
         <groupId>org.springultron</groupId>

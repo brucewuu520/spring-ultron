@@ -3,8 +3,6 @@ package org.springultron.dao;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import java.io.Serializable;
-
 /**
  * 分页查询条件
  *
@@ -12,39 +10,27 @@ import java.io.Serializable;
  * @date 2019-06-07 22:09
  */
 @ApiModel(description = "分页查询条件")
-public class PageQuery implements Serializable {
-    private static final long serialVersionUID = -8776470243161254413L;
-    /**
-     * 当前页
-     */
+public class PageQuery {
+
     @ApiModelProperty(value = "当前页", notes = "默认值:1", example = "1")
     private Integer current;
-    /**
-     * 每页多少条数据
-     */
+
     @ApiModelProperty(value = "每页多少条数据", notes = "默认值:10", example = "10", position = 1)
     private Integer size;
-    /**
-     * 升序字段
-     */
+
     @ApiModelProperty(value = "升序字段", position = 2)
     private String[] ascs;
-    /**
-     * 降序字段
-     */
+
     @ApiModelProperty(value = "降序字段", position = 3)
     private String[] descs;
-    /**
-     * 是否查询总数
-     * 默认只第1页时查询
-     */
+
     @ApiModelProperty(value = "是否查询总数,默认只第1页时查询", position = 4)
     private Boolean isSearchCount;
 
     @ApiModelProperty(value = "当前最后一行的ID", position = 5)
     private Long currentId;
 
-    @ApiModelProperty(value = "查询关键字", position = 6)
+    @ApiModelProperty(value = "搜索关键字", position = 6)
     private String keyword;
 
     @ApiModelProperty(value = "筛选状态", position = 7)

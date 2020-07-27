@@ -21,12 +21,14 @@ public abstract class BaseEntity {
     @ApiModelProperty(value = "ID")
     @TableId(type = IdType.AUTO)
     private Long id;
+
     /**
      * 数据创建时间
      */
     @ApiModelProperty(value = "创建时间", position = 98)
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createAt;
+
     /**
      * 数据修改时间
      */
