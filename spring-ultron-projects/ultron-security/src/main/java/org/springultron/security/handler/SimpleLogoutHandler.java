@@ -32,7 +32,9 @@ public class SimpleLogoutHandler implements LogoutHandler {
         if (authentication != null) {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             log.info("username: {}  is offline now", userDetails.getUsername());
-            userDetailsProcessor.logout(userDetails.getUsername());
+            if (userDetailsProcessor != null) {
+                userDetailsProcessor.logout(userDetails.getUsername());
+            }
         }
     }
 }

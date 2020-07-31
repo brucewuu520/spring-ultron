@@ -36,16 +36,21 @@ public class UserInfo implements Serializable {
      */
     private final String mobile;
     /**
+     * 昵称（非必需）
+     */
+    private String nickName;
+    /**
      * 自定义参数（非必需）
      */
     private final Map<String, Object> extras;
 
-    private UserInfo(String username, String password, Boolean enabled, Long userId, String mobile, Map<String, Object> extras) {
+    private UserInfo(String username, String password, Boolean enabled, Long userId, String mobile, String nickName, Map<String, Object> extras) {
         this.username = username;
         this.password = password;
         this.enabled = enabled;
         this.userId = userId;
         this.mobile = mobile;
+        this.nickName = nickName;
         this.extras = extras;
     }
 
@@ -67,6 +72,10 @@ public class UserInfo implements Serializable {
 
     public String getMobile() {
         return mobile;
+    }
+
+    public String getNickName() {
+        return nickName;
     }
 
     public Map<String, Object> getExtras() {
@@ -125,6 +134,7 @@ public class UserInfo implements Serializable {
         private Boolean enabled;
         private Long userId;
         private String mobile;
+        private String nickName;
         private Map<String, Object> extras;
         private Function<String, String> passwordEncoder;
 
@@ -167,6 +177,11 @@ public class UserInfo implements Serializable {
             return this;
         }
 
+        public UserInfoBuilder nickName(String nickName) {
+            this.nickName = nickName;
+            return this;
+        }
+
         public UserInfoBuilder extras(Map<String, Object> extras) {
             this.extras = extras;
             return this;
@@ -182,7 +197,7 @@ public class UserInfo implements Serializable {
 
         public UserInfo build() {
             String encodedPassword = this.passwordEncoder.apply(this.password);
-            return new UserInfo(username, encodedPassword, enabled, userId, mobile, extras);
+            return new UserInfo(username, encodedPassword, enabled, userId, mobile, nickName, extras);
         }
     }
 }

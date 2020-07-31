@@ -35,6 +35,7 @@ public interface UserDetailsProcessor {
      * @param username 用户名
      * @return {@link UserDetailsModel}
      */
+    @Nullable
     UserDetails loadUserByUsername(String username);
 
     /**
