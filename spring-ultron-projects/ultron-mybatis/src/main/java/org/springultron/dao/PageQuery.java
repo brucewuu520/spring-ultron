@@ -24,8 +24,8 @@ public class PageQuery {
     @ApiModelProperty(value = "降序字段", position = 3)
     private String[] descs;
 
-    @ApiModelProperty(value = "是否查询总数,默认只第1页时查询", position = 4)
-    private Boolean isSearchCount;
+    @ApiModelProperty(value = "是否查询总数", position = 4)
+    private boolean searchCount = true;
 
     @ApiModelProperty(value = "当前最后一行的ID", position = 5)
     private Long currentId;
@@ -71,12 +71,12 @@ public class PageQuery {
         this.descs = descs;
     }
 
-    public Boolean getSearchCount() {
-        return isSearchCount;
+    public boolean isSearchCount() {
+        return searchCount;
     }
 
-    public void setSearchCount(Boolean searchCount) {
-        isSearchCount = searchCount;
+    public void setSearchCount(boolean searchCount) {
+        this.searchCount = searchCount;
     }
 
     public Long getCurrentId() {

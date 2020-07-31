@@ -21,15 +21,7 @@ public class PageUtils {
      * @return 分页对象
      */
     public static <T> Page<T> getPage(PageQuery query) {
-        Page<T> page = new Page<>(null == query.getCurrent() ? 1 : query.getCurrent(), null == query.getSize() ? 10 : query.getSize());
-
-        if (query.getSearchCount() == null) {
-            if (query.getCurrent() != null && query.getCurrent() > 1) {
-                page.setSearchCount(false);
-            }
-        } else {
-            page.setSearchCount(query.getSearchCount());
-        }
+        Page<T> page = new Page<>(null == query.getCurrent() ? 1 : query.getCurrent(), null == query.getSize() ? 10 : query.getSize(), query.isSearchCount());
 
         if (null != query.getAscs()) {
             final int length = query.getAscs().length;
