@@ -38,6 +38,13 @@ public abstract class BaseSecurityConfig extends WebSecurityConfigurerAdapter {
      */
     protected abstract boolean useJwt();
 
+    /**
+     * formLogin登录地址
+     */
+    protected String loginProcessingUrl() {
+        return "/login";
+    }
+
     @Autowired(required = false)
     private UserDetailsProcessor userDetailsProcessor;
 
@@ -73,8 +80,9 @@ public abstract class BaseSecurityConfig extends WebSecurityConfigurerAdapter {
                     .addFilterBefore(new JwtAuthenticationFilter(userDetailsProcessor), UsernamePasswordAuthenticationFilter.class);
         } else {
             http.formLogin()
+                    .loginProcessingUrl(loginProcessingUrl())
                     .and()
-                    .addFilterBefore(new LoginFilter(authenticationManagerBean()), UsernamePasswordAuthenticationFilter.class)
+                    .addFilterBefore(new LoginFilter(loginProcessingUrl(), authenticationManagerBean()), UsernamePasswordAuthenticationFilter.class)
                     .rememberMe()
                     .alwaysRemember(true);
         }

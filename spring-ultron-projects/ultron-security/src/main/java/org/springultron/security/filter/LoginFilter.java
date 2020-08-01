@@ -25,8 +25,8 @@ import java.io.IOException;
  */
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
-    public LoginFilter(AuthenticationManager authenticationManager) {
-        setFilterProcessesUrl("/admin/login");
+    public LoginFilter(String loginProcessingUrl, AuthenticationManager authenticationManager) {
+        setFilterProcessesUrl(loginProcessingUrl);
         setAuthenticationManager(authenticationManager);
         setAuthenticationSuccessHandler(new SimpleAuthenticationSuccessHandler());
         setAuthenticationFailureHandler(new SimpleAuthenticationFailureHandler());
