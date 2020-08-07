@@ -2,11 +2,15 @@ package org.springultron.boot.error;
 
 import org.hibernate.validator.internal.engine.path.PathImpl;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springultron.core.result.ApiResult;
+import org.springultron.core.result.FieldErrorDTO;
 import org.springultron.core.result.ResultStatus;
+import org.springultron.core.utils.Lists;
+import org.springultron.core.utils.StringUtils;
 
 import javax.validation.ConstraintViolation;
-import java.util.Optional;
+import java.util.ArrayList;
 import java.util.Set;
 
 /**
@@ -24,10 +28,16 @@ public abstract class BaseExceptionHandler {
      * @return ApiResult
      */
     protected ApiResult<Object> handleError(BindingResult result) {
-        return Optional.ofNullable(result.getFieldError())
-                .map(error -> String.format("%s:%s", error.getField(), error.getDefaultMessage()))
-                .map(message -> ApiResult.failed(ResultStatus.PARAM_BIND_FAILED.getCode(), message))
-                .orElseGet(() -> ApiResult.failed(ResultStatus.PARAM_BIND_FAILED));
+        FieldError fieldError = result.getFieldError();
+        if (fieldError != null) {
+            ApiResult<Object> apiResult = ApiResult.failed(ResultStatus.PARAM_BIND_FAILED.getCode(), fieldError.getDefaultMessage());
+            ArrayList<FieldErrorDTO> fieldErrorDTOS = Lists.newArrayList(1);
+            fieldErrorDTOS.add(FieldErrorDTO.of(fieldError.getField(), fieldError.getDefaultMessage()));
+            apiResult.setFieldErrors(fieldErrorDTOS);
+            return apiResult;
+        } else {
+            return ApiResult.failed(ResultStatus.PARAM_BIND_FAILED);
+        }
     }
 
     /**
@@ -37,9 +47,18 @@ public abstract class BaseExceptionHandler {
      * @return ApiResult
      */
     protected ApiResult<Object> handleError(Set<ConstraintViolation<?>> violations) {
-        ConstraintViolation<?> violation = violations.iterator().next();
-        String path = ((PathImpl) violation.getPropertyPath()).getLeafNode().getName();
-        String message = String.format("%s:%s", path, violation.getMessage());
-        return ApiResult.failed(ResultStatus.PARAM_VALID_FAILED.getCode(), message);
+        ArrayList<FieldErrorDTO> fieldErrorDTOS = Lists.newArrayList(violations.size());
+        String message = null;
+        while (violations.iterator().hasNext()) {
+            ConstraintViolation<?> violation = violations.iterator().next();
+            String path = ((PathImpl) violation.getPropertyPath()).getLeafNode().getName();
+            fieldErrorDTOS.add(FieldErrorDTO.of(path, violation.getMessage()));
+            if (StringUtils.isEmpty(message)) {
+                message = violation.getMessage();
+            }
+        }
+        ApiResult<Object> apiResult = ApiResult.failed(ResultStatus.PARAM_VALID_FAILED.getCode(), message);
+        apiResult.setFieldErrors(fieldErrorDTOS);
+        return apiResult;
     }
 }
