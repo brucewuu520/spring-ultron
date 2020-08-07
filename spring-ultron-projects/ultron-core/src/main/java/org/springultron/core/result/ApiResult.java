@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import org.springultron.core.exception.ServiceException;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -23,7 +24,10 @@ public class ApiResult<T> implements Serializable {
     @ApiModelProperty(value = "消息", required = true, example = "success", position = 1)
     private String message;
 
-    @ApiModelProperty(value = "返回数据", position = 2)
+    @ApiModelProperty(value = "字段校验异常信息", position = 2)
+    private List<FieldErrorDTO> fieldErrors;
+
+    @ApiModelProperty(value = "返回数据", position = 3)
     private T data;
 
     public ApiResult() { }
@@ -53,6 +57,14 @@ public class ApiResult<T> implements Serializable {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public List<FieldErrorDTO> getFieldErrors() {
+        return fieldErrors;
+    }
+
+    public void setFieldErrors(List<FieldErrorDTO> fieldErrors) {
+        this.fieldErrors = fieldErrors;
     }
 
     public T getData() {
