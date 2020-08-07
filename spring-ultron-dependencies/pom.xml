@@ -48,7 +48,7 @@
         <zxing.version>3.4.0</zxing.version>
         <!-- boot dependencies version end-->
         <!-- cloud dependencies version start-->
-        <spring-cloud.version>Hoxton.SR6</spring-cloud.version>
+        <spring-cloud.version>Hoxton.SR7</spring-cloud.version>
         <alibaba-cloud.version>2.2.1.RELEASE</alibaba-cloud.version>
         <guava.version>28.2-android</guava.version>
         <fastjson.version>1.2.72</fastjson.version>
