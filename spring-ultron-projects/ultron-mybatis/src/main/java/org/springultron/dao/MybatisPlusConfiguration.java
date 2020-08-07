@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.SqlExplainInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.pagination.optimize.JsqlParserCountOptimize;
 import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -17,7 +18,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springultron.core.jackson.Jackson;
 
-import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,10 +31,10 @@ import java.util.List;
 @EnableTransactionManagement
 @Configuration(proxyBeanMethods = false)
 @EnableConfigurationProperties(MybatisPlusAutoFillProperties.class)
-public class MybatisPlusConfiguration {
+public class MybatisPlusConfiguration implements InitializingBean {
 
-    @PostConstruct
-    public void init() {
+    @Override
+    public void afterPropertiesSet() throws Exception {
         JacksonTypeHandler.setObjectMapper(Jackson.getInstance());
     }
 
@@ -79,4 +79,5 @@ public class MybatisPlusConfiguration {
     public OptimisticLockerInterceptor optimisticLockerInterceptor() {
         return new OptimisticLockerInterceptor();
     }
+
 }
