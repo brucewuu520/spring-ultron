@@ -266,4 +266,28 @@ public class DateUtils {
     public static long between(LocalDate startDate, LocalDate endDate, TemporalUnit unit) {
         return startDate.until(endDate, unit);
     }
+
+    /**
+     * 友好的显示时间
+     *
+     * @param dateTime 时间
+     */
+    public static String friendlyTime(LocalDateTime dateTime) {
+        final long days = between(dateTime.toLocalDate(), LocalDate.now());
+        final LocalTime localTime = dateTime.toLocalTime();
+        if (days == 0) { // 今天
+             Duration duration = between(LocalTime.now(), localTime);
+             long minutes = duration.toMinutes();
+             if (minutes <= 1) {
+                 return "刚刚";
+             }
+             if (minutes < 60) {
+                 return minutes + "分钟前";
+             }
+             return "今天" + formatTime(localTime, "HH:mm");
+        } else if (days == 1) {
+            return "昨天" + formatTime(localTime, "HH:mm");
+        }
+        return formatDateTime(dateTime, "yyyy-MM-dd HH:mm");
+    }
 }

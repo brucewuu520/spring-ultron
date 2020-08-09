@@ -12,7 +12,7 @@ public class PatternPool {
     /**
      * 手机号码
      */
-    public static final Pattern MOBILE = Pattern.compile("(?:0|86|\\+86)?1[3456789]\\d{9}");
+    public static final Pattern MOBILE = Pattern.compile("(?:0|86|\\+86)?1[23456789]\\d{9}");
     /**
      * 邮箱地址
      */
