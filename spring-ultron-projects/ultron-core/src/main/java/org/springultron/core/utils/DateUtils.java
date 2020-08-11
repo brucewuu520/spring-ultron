@@ -276,7 +276,7 @@ public class DateUtils {
         final long days = between(dateTime.toLocalDate(), LocalDate.now());
         final LocalTime localTime = dateTime.toLocalTime();
         if (days == 0) { // 今天
-             Duration duration = between(LocalTime.now(), localTime);
+             Duration duration = between(localTime, LocalTime.now());
              long minutes = duration.toMinutes();
              if (minutes <= 1) {
                  return "刚刚";
