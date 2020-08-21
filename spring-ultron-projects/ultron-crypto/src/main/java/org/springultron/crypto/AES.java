@@ -120,8 +120,8 @@ public final class AES {
                 cipher.init(Cipher.ENCRYPT_MODE, keySpec);
                 return cipher.doFinal(data);
             } else {
-                IvParameterSpec iv = new IvParameterSpec(key, 0, 16);
-                cipher.init(Cipher.ENCRYPT_MODE, keySpec, iv);
+                IvParameterSpec ivParameterSpec = new IvParameterSpec(key, 0, 16);
+                cipher.init(Cipher.ENCRYPT_MODE, keySpec, ivParameterSpec);
                 return cipher.doFinal(Pkcs7Encoder.encode(data));
             }
         } catch (Exception e) {
@@ -192,6 +192,23 @@ public final class AES {
     }
 
     /**
+     * 解密（兼容微信AES算法解密）
+     *
+     * @param algorithms 算法
+     * @param data       待解密字符串 base64
+     * @param key        秘钥
+     * @param iv         加密算法的初始向量
+     * @return 解密后文本
+     */
+    public static String decrypt(AesAlgorithms algorithms, String data, String key, String iv) {
+        byte[] dataBytes = SecureUtils.decode(data);
+        byte[] keyBytes = SecureUtils.decode(key);
+        byte[] ivBytes = SecureUtils.decode(iv);
+        byte[] decryptBytes = decrypt(algorithms, dataBytes, keyBytes, ivBytes);
+        return new String(decryptBytes, StandardCharsets.UTF_8);
+    }
+
+    /**
      * 解密
      *
      * @param algorithms 算法
@@ -210,8 +227,34 @@ public final class AES {
                 cipher.init(Cipher.DECRYPT_MODE, keySpec);
                 return cipher.doFinal(data);
             } else {
-                IvParameterSpec iv = new IvParameterSpec(Arrays.copyOfRange(key, 0, 16));
-                cipher.init(Cipher.DECRYPT_MODE, keySpec, iv);
+                IvParameterSpec ivParameterSpec = new IvParameterSpec(Arrays.copyOfRange(key, 0, 16));
+                cipher.init(Cipher.DECRYPT_MODE, keySpec, ivParameterSpec);
+                return Pkcs7Encoder.decode(cipher.doFinal(data));
+            }
+        } catch (Exception e) {
+            throw new CryptoException(e);
+        }
+    }
+
+    /**
+     * 解密（兼容微信AES算法解密）
+     *
+     * @param algorithms 算法
+     * @param data       待解密文本字节数组
+     * @param key        秘钥字节数组
+     * @param iv         加密算法的初始向量数组
+     * @return 解密后的字节数组
+     */
+    public static byte[] decrypt(AesAlgorithms algorithms, byte[] data, byte[] key, byte[] iv) {
+        try {
+            final Cipher cipher = SecureUtils.createCipher(algorithms.getValue());
+            SecretKeySpec keySpec = new SecretKeySpec(key, KEY_ALGORITHM);
+            if (algorithms == AesAlgorithms.AES_ECB_PKCS5) {
+                cipher.init(Cipher.DECRYPT_MODE, keySpec);
+                return cipher.doFinal(data);
+            } else {
+                IvParameterSpec ivParameterSpec = new IvParameterSpec(iv);
+                cipher.init(Cipher.DECRYPT_MODE, keySpec, ivParameterSpec);
                 return Pkcs7Encoder.decode(cipher.doFinal(data));
             }
         } catch (Exception e) {
@@ -229,6 +272,9 @@ public final class AES {
             int count = src.length;
             // 计算需要填充的位数
             int amountToPad = BLOCK_SIZE - (count % BLOCK_SIZE);
+            if (amountToPad == 0) {
+                amountToPad = BLOCK_SIZE;
+            }
             // 获得补位所用的字符
             byte pad = (byte) (amountToPad & 0xFF);
             byte[] pads = new byte[amountToPad];
@@ -253,16 +299,5 @@ public final class AES {
             return decrypted;
         }
     }
-
-//    public static void main(String[] args) {
-//        String key = generateKeyBase64(256);
-//        String key = RandomUtils.random(32);
-//        System.err.println("秘钥：" + key);
-//        String str = "{春天里那个百花香，:我和妹妹把手牵:}";
-//        AesAlgorithms aesAlgorithms = AesAlgorithms.AES_ECB_PKCS5;
-//        str = encryptHex(aesAlgorithms, str, key);
-//        System.err.println("加密后：" + str);
-//        System.err.println("解密后：" + decrypt(aesAlgorithms, str, key));
-//    }
 
 }
