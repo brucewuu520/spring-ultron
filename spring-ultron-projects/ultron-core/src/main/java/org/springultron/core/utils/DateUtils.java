@@ -55,6 +55,9 @@ public class DateUtils {
      * @return LocalDateTime
      */
     public static LocalDateTime parseDateTime(String dateTime) {
+        if (StringUtils.isEmpty(dateTime)) {
+            return null;
+        }
         return LocalDateTime.parse(dateTime, DATE_TIME_FORMATTER);
     }
 
@@ -66,6 +69,9 @@ public class DateUtils {
      * @return LocalDateTime
      */
     public static LocalDateTime parseDateTime(String dateTime, String pattern) {
+        if (StringUtils.isEmpty(dateTime)) {
+            return null;
+        }
         return LocalDateTime.parse(dateTime, DateTimeFormatter.ofPattern(pattern));
     }
 
@@ -106,6 +112,9 @@ public class DateUtils {
      * @return LocalDate
      */
     public static LocalDate parseDate(String date) {
+        if (StringUtils.isEmpty(date)) {
+            return null;
+        }
         return LocalDate.parse(date, DATE_FORMATTER);
     }
 
@@ -117,6 +126,9 @@ public class DateUtils {
      * @return LocalDate
      */
     public static LocalDate parseDate(String date, String pattern) {
+        if (StringUtils.isEmpty(date)) {
+            return null;
+        }
         return LocalDate.parse(date, DateTimeFormatter.ofPattern(pattern));
     }
 
@@ -159,6 +171,9 @@ public class DateUtils {
      * @return LocalTime
      */
     public static LocalTime parseTime(String time, String pattern) {
+        if (StringUtils.isEmpty(time)) {
+            return null;
+        }
         return LocalTime.parse(time, DateTimeFormatter.ofPattern(pattern));
     }
 
@@ -170,6 +185,9 @@ public class DateUtils {
      * @return 时间
      */
     public static <T> T parse(String dateStr, String pattern, TemporalQuery<T> query) {
+        if (StringUtils.isEmpty(dateStr)) {
+            return null;
+        }
         return DateTimeFormatter.ofPattern(pattern).parse(dateStr, query);
     }
 
