@@ -470,4 +470,88 @@ public class Jackson {
             return super.copy();
         }
     }
+
+    public static String getString(JsonNode node, String key) {
+        if (node.hasNonNull(key)) {
+            return node.get(key).asText();
+        }
+        return null;
+    }
+
+    public static String getString(JsonNode node, String key, String defaultValue) {
+        if (node.hasNonNull(key)) {
+            return node.get(key).asText();
+        }
+        return defaultValue;
+    }
+
+    public static Integer getInteger(JsonNode node, String key) {
+        if (node.hasNonNull(key)) {
+            return node.get(key).asInt();
+        }
+        return null;
+    }
+
+    public static Integer getInteger(JsonNode node, String key, int defaultValue) {
+        if (node.hasNonNull(key)) {
+            return node.get(key).asInt();
+        }
+        return defaultValue;
+    }
+
+    public static Long getLong(JsonNode node, String key) {
+        if (node.hasNonNull(key)) {
+            return node.get(key).asLong();
+        }
+        return null;
+    }
+
+    public static Long getLong(JsonNode node, String key, long defaultValue) {
+        if (node.hasNonNull(key)) {
+            return node.get(key).asLong();
+        }
+        return defaultValue;
+    }
+
+    public static Float getFloat(JsonNode node, String key) {
+        if (node.hasNonNull(key)) {
+            return node.get(key).floatValue();
+        }
+        return null;
+    }
+
+    public static Float getFloat(JsonNode node, String key, float defaultValue) {
+        if (node.hasNonNull(key)) {
+            return node.get(key).floatValue();
+        }
+        return defaultValue;
+    }
+
+    public static Boolean getBoolean(JsonNode node, String key) {
+        if (node.hasNonNull(key)) {
+            return node.get(key).asBoolean();
+        }
+        return null;
+    }
+
+    public static Boolean getBoolean(JsonNode node, String key, boolean defaultValue) {
+        if (node.hasNonNull(key)) {
+            return node.get(key).asBoolean();
+        }
+        return defaultValue;
+    }
+
+    public static Double getDouble(JsonNode node, String key) {
+        if (node.hasNonNull(key)) {
+            return node.get(key).asDouble();
+        }
+        return null;
+    }
+
+    public static Double getDouble(JsonNode node, String key, double defaultValue) {
+        if (node.hasNonNull(key)) {
+            return node.get(key).asDouble();
+        }
+        return defaultValue;
+    }
 }
