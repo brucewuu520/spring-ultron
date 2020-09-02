@@ -14,7 +14,7 @@ public class RSATests {
 
     @Test
     public void generateKeyTest() {
-        KeyPair keyPair = RSA.generateKeyPair(2048);
+        KeyPair keyPair = RSA.generateKeyPair(1024);
         Assert.assertNotNull(keyPair);
         String publicKey = RSA.getPublicKey(keyPair);
         System.out.println("publicKey：" + publicKey);
@@ -52,7 +52,7 @@ public class RSATests {
         KeyPair keyPair = RSA.generateKeyPair(2048);
         Assert.assertNotNull(keyPair);
 
-        RsaAlgorithms algorithms = RsaAlgorithms.RSA_SHA256;
+        RsaAlgorithms algorithms = RsaAlgorithms.RSA_MGF1_SHA256;
         final String data = "{春天里那个百花香，:我和妹妹把手牵:}";
         byte[] dateBytes = data.getBytes(StandardCharsets.UTF_8);
         byte[] signBytes = RSA.sign(algorithms, dateBytes, keyPair.getPrivate());

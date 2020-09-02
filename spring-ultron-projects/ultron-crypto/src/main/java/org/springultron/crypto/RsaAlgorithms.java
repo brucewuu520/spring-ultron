@@ -16,7 +16,8 @@ public enum RsaAlgorithms {
     RSA_SHA1("SHA1WithRSA", "签名算法：RSA-SSA-PKCS-v1_5 using SHA-1"),
     RSA_SHA256("SHA256withRSA", "签名算法：RSA-SSA-PKCS-v1_5 using SHA-256"),
     RSA_SHA384("SHA384withRSA", "签名算法：RSA-SSA-PKCS-v1_5 using SHA-384"),
-    RSA_SHA512("SHA512withRSA", "签名算法：RSA-SSA-PKCS-v1_5 using SHA-512");
+    RSA_SHA512("SHA512withRSA", "签名算法：RSA-SSA-PKCS-v1_5 using SHA-512"),
+    RSA_MGF1_SHA256("SHA256withRSAandMGF1", "签名算法：此算法具有更高的安全级别，采用“SHA256withRSAandMGF1”算法，则会使得每次采用同一个私钥签名同一段文字，所得的签名值都是不同的");
 
     private final String value;
     private final String description;

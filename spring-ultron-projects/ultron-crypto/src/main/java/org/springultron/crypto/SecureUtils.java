@@ -425,6 +425,23 @@ public class SecureUtils {
     }
 
     /**
+     * 创建{@link Signature}
+     *
+     * @param algorithm 算法
+     * @return {@link Signature}
+     */
+    public static Signature createSignature(final String algorithm) {
+        Provider provider = GlobalBouncyCastleProvider.INSTANCE.getProvider();
+        Signature signature;
+        try {
+            signature = (provider == null) ? Signature.getInstance(algorithm) : Signature.getInstance(algorithm, provider);
+        } catch (NoSuchAlgorithmException e) {
+            throw new CryptoException(e);
+        }
+        return signature;
+    }
+
+    /**
      * 创建{@link MessageDigest}
      *
      * @param algorithm 算法

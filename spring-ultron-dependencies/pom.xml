@@ -43,12 +43,12 @@
         <mybatis-plus.version>3.3.2</mybatis-plus.version>
         <knife4j.version>2.0.4</knife4j.version>
         <jwt.version>0.11.2</jwt.version>
-        <bouncycastle.version>1.65.01</bouncycastle.version>
+        <bouncycastle.version>1.66</bouncycastle.version>
         <redisson.version>3.13.2</redisson.version>
         <zxing.version>3.4.0</zxing.version>
         <!-- boot dependencies version end-->
         <!-- cloud dependencies version start-->
-        <spring-cloud.version>Hoxton.SR7</spring-cloud.version>
+        <spring-cloud.version>Hoxton.SR8</spring-cloud.version>
         <alibaba-cloud.version>2.2.1.RELEASE</alibaba-cloud.version>
         <guava.version>28.2-android</guava.version>
         <fastjson.version>1.2.72</fastjson.version>

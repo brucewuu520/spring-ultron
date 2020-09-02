@@ -122,11 +122,11 @@ public final class RSA {
      */
     public static byte[] sign(RsaAlgorithms algorithms, byte[] data, PrivateKey privateKey) {
         try {
-            Signature signature = Signature.getInstance(algorithms.getValue());
+            Signature signature = SecureUtils.createSignature(algorithms.getValue());
             signature.initSign(privateKey);
             signature.update(data);
             return signature.sign();
-        } catch (NoSuchAlgorithmException | InvalidKeyException | SignatureException e) {
+        } catch (SignatureException | InvalidKeyException e) {
             throw new CryptoException(e);
         }
     }
@@ -155,11 +155,11 @@ public final class RSA {
      */
     public static boolean verify(RsaAlgorithms algorithms, byte[] data, PublicKey publicKey, byte[] sign) {
         try {
-            Signature signature = Signature.getInstance(algorithms.getValue());
+            Signature signature = SecureUtils.createSignature(algorithms.getValue());
             signature.initVerify(publicKey);
             signature.update(data);
             return signature.verify(sign);
-        } catch (NoSuchAlgorithmException | SignatureException | InvalidKeyException e) {
+        } catch (SignatureException | InvalidKeyException e) {
             throw new CryptoException(e);
         }
     }
