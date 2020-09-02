@@ -453,7 +453,6 @@ public class Jackson {
             // 允许序列化空的POJO类
             super.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
             super.setDefaultPropertyInclusion(JsonInclude.Include.NON_NULL);
-//            super.setSerializationInclusion(JsonInclude.Include.NON_NULL);
             // 允许单引号（非标准）
             super.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
             // 忽略无法转换的对象
