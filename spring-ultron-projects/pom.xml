@@ -35,6 +35,7 @@
         <module>ultron-redis-lock</module>
         <module>ultron-security</module>
         <module>ultron-swagger</module>
+        <module>ultron-oss</module>
     </modules>
 
     <dependencies>
