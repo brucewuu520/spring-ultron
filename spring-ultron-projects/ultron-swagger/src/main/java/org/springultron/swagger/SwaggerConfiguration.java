@@ -35,7 +35,7 @@ import java.util.Optional;
 @EnableConfigurationProperties(SwaggerProperties.class)
 @EnableKnife4j
 @EnableSwagger2
-@Import({Knife4jAutoConfiguration.class, BeanValidatorPluginsConfiguration.class})
+@Import({BeanValidatorPluginsConfiguration.class})
 public class SwaggerConfiguration {
 
     private final SwaggerProperties swaggerProperties;
