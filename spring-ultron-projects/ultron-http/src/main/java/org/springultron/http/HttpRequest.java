@@ -10,8 +10,10 @@ import org.springultron.core.jackson.Jackson;
 import org.springultron.http.ssl.DisableValidationTrustManager;
 import org.springultron.http.ssl.TrustAllHostNames;
 
+import javax.annotation.Nullable;
 import javax.net.ssl.*;
 import java.net.*;
+import java.nio.charset.Charset;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -199,6 +201,10 @@ public class HttpRequest {
         return FormBuilder.of(this);
     }
 
+    public FormBuilder formBuilder(@Nullable Charset charset) {
+        return FormBuilder.of(this, charset);
+    }
+
     public HttpRequest multipartForm(final MultipartBody multipartBody) {
         this.requestBody = multipartBody;
         return this;
@@ -213,13 +219,13 @@ public class HttpRequest {
         return this;
     }
 
-    public HttpRequest bodyJson(final String json) {
-        this.requestBody = RequestBody.create(MEDIA_TYPE_JSON, json);
+    public HttpRequest bodyValue(final String jsonValue) {
+        this.requestBody = RequestBody.create(MEDIA_TYPE_JSON, jsonValue);
         return this;
     }
 
-    public HttpRequest bodyJson(final Object jsonObject) {
-        return bodyJson(Jackson.toJson(jsonObject));
+    public HttpRequest bodyValue(final Object bodyValue) {
+        return bodyValue(Jackson.toJson(bodyValue));
     }
 
     public HttpRequest cacheControl(final CacheControl cacheControl) {
