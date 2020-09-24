@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.type.CollectionLikeType;
 import com.fasterxml.jackson.databind.type.MapType;
+import org.springframework.lang.Nullable;
 import org.springultron.core.exception.Exceptions;
 import org.springultron.core.utils.BeanUtils;
 import org.springultron.core.utils.DateUtils;
@@ -31,6 +32,19 @@ import java.util.*;
 public class Jackson {
 
     private Jackson() {
+    }
+
+    /**
+     * 判断是否可以序列化
+     *
+     * @param value 对象
+     * @return 是否可以序列化
+     */
+    public static boolean canSerialize(@Nullable Object value) {
+        if (value == null) {
+            return true;
+        }
+        return getInstance().canSerialize(value.getClass());
     }
 
     /**
