@@ -12,6 +12,7 @@ public enum RsaAlgorithms {
     RSA_ECB_PKCS1("RSA/ECB/PKCS1Padding", "RSA加密算法，此算法补位方式为RSA/ECB/PKCS1Padding"),
     RSA_ECB_NONE("RSA/ECB/NoPadding", "RSA加密算法，此算法补位方式为RSA/ECB/NoPadding（需依赖BC库）"),
     RSA_NONE("RSA/None/NoPadding", "RSA加密算法，此算法补位方式为RSA/None/NoPadding（需依赖BC库）"),
+    RSA_NONE_PKCS1("RSA/None/PKCS1Padding", "RSA加密算法，此算法补位方式为RSA/None/PKCS1Padding（需依赖BC库）"),
     RSA_MD5("MD5withRSA", "签名算法：RSA-SSA-PKCS-v1_5 using MD5"),
     RSA_SHA1("SHA1WithRSA", "签名算法：RSA-SSA-PKCS-v1_5 using SHA-1"),
     RSA_SHA256("SHA256withRSA", "签名算法：RSA-SSA-PKCS-v1_5 using SHA-256"),
