@@ -39,19 +39,18 @@
     <properties>
         <main.basedir>${basedir}/..</main.basedir>
         <!-- boot dependencies version start-->
-        <spring-boot.version>2.3.3.RELEASE</spring-boot.version>
-        <mybatis-plus.version>3.3.2</mybatis-plus.version>
-        <knife4j.version>2.0.4</knife4j.version>
+        <spring-boot.version>2.3.4.RELEASE</spring-boot.version>
+        <mybatis-plus.version>3.4.0</mybatis-plus.version>
+        <knife4j.version>2.0.5</knife4j.version>
         <jwt.version>0.11.2</jwt.version>
         <bouncycastle.version>1.66</bouncycastle.version>
-        <redisson.version>3.13.2</redisson.version>
+        <redisson.version>3.13.4</redisson.version>
         <zxing.version>3.4.0</zxing.version>
         <!-- boot dependencies version end-->
         <!-- cloud dependencies version start-->
         <spring-cloud.version>Hoxton.SR8</spring-cloud.version>
-        <alibaba-cloud.version>2.2.1.RELEASE</alibaba-cloud.version>
-        <guava.version>28.2-android</guava.version>
-        <fastjson.version>1.2.72</fastjson.version>
+        <alibaba-cloud.version>2.2.3.RELEASE</alibaba-cloud.version>
+        <guava.version>29.0-jre</guava.version>
         <!-- cloud dependencies version end-->
         <findbugs.version>3.0.2</findbugs.version>
         <!-- maven dependencies version start -->
@@ -158,11 +157,6 @@
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
                 <version>${guava.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.alibaba</groupId>
-                <artifactId>fastjson</artifactId>
-                <version>${fastjson.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.google.code.findbugs</groupId>
