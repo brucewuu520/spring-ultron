@@ -13,10 +13,13 @@ import io.swagger.annotations.ApiModelProperty;
 public class FieldErrorDTO {
 
     @ApiModelProperty(value = "字段", position = 1)
-    private final String field;
+    private String field;
 
     @ApiModelProperty(value = "错误信息", position = 2)
-    private final String error;
+    private String error;
+
+    public FieldErrorDTO() {
+    }
 
     public static FieldErrorDTO of(String field, String error) {
         return new FieldErrorDTO(field, error);
@@ -31,7 +34,15 @@ public class FieldErrorDTO {
         return field;
     }
 
+    public void setField(String field) {
+        this.field = field;
+    }
+
     public String getError() {
         return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
     }
 }
