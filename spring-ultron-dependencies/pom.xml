@@ -46,11 +46,13 @@
         <bouncycastle.version>1.66</bouncycastle.version>
         <redisson.version>3.13.5</redisson.version>
         <zxing.version>3.4.0</zxing.version>
+        <okhttp3.version>4.9.0</okhttp3.version>
         <!-- boot dependencies version end-->
         <!-- cloud dependencies version start-->
         <spring-cloud.version>Hoxton.SR8</spring-cloud.version>
         <alibaba-cloud.version>2.2.3.RELEASE</alibaba-cloud.version>
         <guava.version>29.0-jre</guava.version>
+        <feign-okhttp.version>11.0</feign-okhttp.version>
         <!-- cloud dependencies version end-->
         <findbugs.version>3.0.2</findbugs.version>
         <!-- maven dependencies version start -->
@@ -152,6 +154,16 @@
                 <groupId>org.springultron</groupId>
                 <artifactId>ultron-swagger</artifactId>
                 <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.squareup.okhttp3</groupId>
+                <artifactId>okhttp</artifactId>
+                <version>${okhttp3.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.squareup.okhttp3</groupId>
+                <artifactId>logging-interceptor</artifactId>
+                <version>${okhttp3.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.google.guava</groupId>
