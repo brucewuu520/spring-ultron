@@ -44,7 +44,7 @@
         <knife4j.version>2.0.5</knife4j.version>
         <jwt.version>0.11.2</jwt.version>
         <bouncycastle.version>1.66</bouncycastle.version>
-        <redisson.version>3.13.4</redisson.version>
+        <redisson.version>3.13.5</redisson.version>
         <zxing.version>3.4.0</zxing.version>
         <!-- boot dependencies version end-->
         <!-- cloud dependencies version start-->
