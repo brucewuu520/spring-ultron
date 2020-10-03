@@ -12,9 +12,9 @@ import org.springframework.cglib.proxy.Enhancer;
  */
 public class UltronFallbackFactory<T> implements FallbackFactory<T> {
 
-    private final Target target;
+    private final Target<T> target;
 
-    public UltronFallbackFactory(Target target) {
+    public UltronFallbackFactory(Target<T> target) {
         this.target = target;
     }
 
