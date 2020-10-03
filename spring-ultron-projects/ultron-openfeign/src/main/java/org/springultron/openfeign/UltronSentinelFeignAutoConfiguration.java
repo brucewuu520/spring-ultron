@@ -25,6 +25,6 @@ public class UltronSentinelFeignAutoConfiguration {
     @ConditionalOnMissingBean
     @ConditionalOnProperty(name = {"feign.sentinel.enabled"})
     public Feign.Builder feignSentinelBuilder() {
-        return SentinelFeign.builder();
+        return UltronSentinelFeign.builder();
     }
 }
