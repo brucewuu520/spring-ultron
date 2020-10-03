@@ -18,8 +18,7 @@ public class FieldErrorDTO {
     @ApiModelProperty(value = "错误信息", position = 2)
     private String error;
 
-    public FieldErrorDTO() {
-    }
+    public FieldErrorDTO() {}
 
     public static FieldErrorDTO of(String field, String error) {
         return new FieldErrorDTO(field, error);

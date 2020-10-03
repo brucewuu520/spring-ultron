@@ -6,6 +6,7 @@ package org.springultron.core.function;
  * @author brucewuu
  * @date 2020/4/28 11:05
  */
+@FunctionalInterface
 public interface CheckedSupplier<T> {
     /**
      * Gets a result.

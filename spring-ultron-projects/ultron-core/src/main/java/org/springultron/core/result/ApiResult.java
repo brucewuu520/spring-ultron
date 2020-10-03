@@ -30,7 +30,7 @@ public class ApiResult<T> implements Serializable {
     @ApiModelProperty(value = "返回数据", position = 3)
     private T data;
 
-    public ApiResult() { }
+    public ApiResult() {}
 
     private ApiResult(int code, String message) {
         this.code = code;

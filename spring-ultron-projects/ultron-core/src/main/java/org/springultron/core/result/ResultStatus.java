@@ -58,11 +58,11 @@ public enum ResultStatus implements IResultStatus {
     /**
      * 参数绑定失败
      */
-    PARAM_BIND_FAILED(10406, "Param Bind Fail"),
+    PARAM_BIND_FAILED(10408, "Param Bind Fail"),
     /**
      * 参数校验失败
      */
-    PARAM_VALID_FAILED(10407, "Param Verify Fail"),
+    PARAM_VALID_FAILED(10409, "Param Verify Fail"),
     /**
      * 请求体太大
      */
@@ -78,7 +78,11 @@ public enum ResultStatus implements IResultStatus {
     /**
      * 断言失败
      */
-    ASSERTION_ERROR(10445, "Assert Fail");
+    ASSERTION_ERROR(10445, "Assert Fail"),
+    /**
+     * 服务间调用失败
+     */
+    CALL_ERROR(10500, "server call error");
 
     private final int code;
     private final String message;
