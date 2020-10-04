@@ -30,7 +30,8 @@ public class ApiResult<T> implements Serializable {
     @ApiModelProperty(value = "返回数据", position = 3)
     private T data;
 
-    public ApiResult() {}
+    public ApiResult() {
+    }
 
     private ApiResult(int code, String message) {
         this.code = code;
@@ -151,6 +152,17 @@ public class ApiResult<T> implements Serializable {
      * @param message 消息描述
      * @param <T>     泛型标记
      */
+    public static <T> ApiResult<T> failed(IResultStatus code, String message) {
+        return new ApiResult<>(code.getCode(), message);
+    }
+
+    /**
+     * 失败返回信息
+     *
+     * @param code    状态码
+     * @param message 消息描述
+     * @param <T>     泛型标记
+     */
     public static <T> ApiResult<T> failed(int code, String message) {
         return new ApiResult<>(code, message);
     }
@@ -238,7 +250,7 @@ public class ApiResult<T> implements Serializable {
      * @param resultCode IResultCode
      */
     public static void throwFail(IResultStatus resultCode) {
-        throw new ServiceException(resultCode.getMessage(), resultCode.getCode());
+        throw new ServiceException(resultCode);
     }
 
     /**
@@ -247,7 +259,7 @@ public class ApiResult<T> implements Serializable {
      * @param message 异常信息
      */
     public static void throwFail(String message) {
-        throw new ServiceException(message, ResultStatus.FAILED.getCode());
+        throw new ServiceException(ResultStatus.FAILED, message);
     }
 
     /**
@@ -257,7 +269,7 @@ public class ApiResult<T> implements Serializable {
      * @param <T> 泛型标记
      */
     public static <T> ApiResult<T> apiException(ServiceException e) {
-        return new ApiResult<>(e.getCode(), e.getMessage());
+        return e.getResult();
     }
 
     /**
