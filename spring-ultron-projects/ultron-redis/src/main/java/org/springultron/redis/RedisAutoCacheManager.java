@@ -40,7 +40,6 @@ public class RedisAutoCacheManager extends RedisCacheManager {
                 }
             }
         }
-
         return super.createRedisCache(name, cacheConfig);
     }
 }
