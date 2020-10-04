@@ -37,9 +37,10 @@ public class SwaggerRouter {
     @Bean
     public RouterFunction<ServerResponse> routerFunction() {
         return RouterFunctions.route()
-                .GET("/swagger-resources", swaggerHandler::swaggerResources)
-                .GET("/swagger-resources/configuration/ui", swaggerHandler::uiConfiguration)
-                .GET("/swagger-resources/configuration/security", swaggerHandler::securityConfiguration)
+                .path("/swagger-resources", builder -> builder
+                        .GET("", swaggerHandler::swaggerResources)
+                        .GET("/swagger-resources/configuration/ui", swaggerHandler::uiConfiguration)
+                        .GET("/swagger-resources/configuration/security", swaggerHandler::securityConfiguration))
                 .build();
     }
 }

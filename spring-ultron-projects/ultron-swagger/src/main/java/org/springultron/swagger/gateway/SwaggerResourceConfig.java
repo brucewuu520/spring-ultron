@@ -42,13 +42,11 @@ public class SwaggerResourceConfig implements SwaggerResourcesProvider {
         List<String> routes = new ArrayList<>();
         routeLocator.getRoutes().subscribe(route -> routes.add(route.getId()));
         gatewayProperties.getRoutes().stream().filter(routeDefinition -> routes.contains(routeDefinition.getId()))
-                .forEach(route -> {
-                    route.getPredicates().stream()
-                            .filter(predicateDefinition -> ("Path").equalsIgnoreCase(predicateDefinition.getName()))
-                            .forEach(predicateDefinition -> resources.add(swaggerResource(route.getId(),
-                                    predicateDefinition.getArgs().get(NameUtils.GENERATED_NAME_PREFIX + "0")
-                                            .replace("**", "v2/api-docs"))));
-                });
+                .forEach(route -> route.getPredicates().stream()
+                        .filter(predicateDefinition -> ("Path").equalsIgnoreCase(predicateDefinition.getName()))
+                        .forEach(predicateDefinition -> resources.add(swaggerResource(route.getId(),
+                                predicateDefinition.getArgs().get(NameUtils.GENERATED_NAME_PREFIX + "0")
+                                        .replace("**", "v2/api-docs")))));
         return resources;
     }
 
