@@ -48,7 +48,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(value = ServiceException.class)
     public ApiResult<Object> handleApiException(ServiceException e) {
-        log.error("自定义业务异常: {}", e.getMessage());
+        log.error("自定义业务异常", e);
         publishEvent(e);
         return ApiResult.apiException(e);
     }
@@ -61,14 +61,14 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(value = CryptoException.class)
     public ApiResult<Object> handleCryptoException(CryptoException e) {
-        log.error("加解密异常: {}", e.getMessage());
+        log.error("加解密异常", e);
         publishEvent(e);
         return ApiResult.failed(ResultStatus.SIGN_FAILED);
     }
 
     @ExceptionHandler(AssertionError.class)
     public ApiResult<Object> handleAssertionError(AssertionError e) {
-        log.error("断言异常: {}", e.getMessage());
+        log.error("断言异常", e);
         publishEvent(e);
         // 发送：未知异常异常事件
         return ApiResult.failed(ResultStatus.ASSERTION_ERROR.getCode(), e.getMessage());

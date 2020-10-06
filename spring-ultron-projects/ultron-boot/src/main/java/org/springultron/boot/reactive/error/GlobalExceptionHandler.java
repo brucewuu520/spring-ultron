@@ -50,7 +50,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(value = ServiceException.class)
     public Mono<ApiResult<Object>> handleApiException(ServiceException e) {
-        log.error("自定义业务异常: {}", e.getMessage());
+        log.error("自定义业务异常", e);
 
         // 发送：未知异常异常事件
         return ReactiveRequestContextHolder.getRequest()
@@ -66,7 +66,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(value = CryptoException.class)
     public Mono<ApiResult<Object>> handleCryptoException(CryptoException e) {
-        log.error("加解密异常: {}", e.getMessage());
+        log.error("加解密异常", e);
         // 发送：未知异常异常事件
         return ReactiveRequestContextHolder.getRequest()
                 .doOnSuccess(r -> publishEvent(r, e))
@@ -75,7 +75,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(AssertionError.class)
     public Mono<ApiResult<Object>> handleAssertionError(AssertionError e) {
-        log.error("断言异常: {}", e.getMessage());
+        log.error("断言异常", e);
         // 发送：未知异常异常事件
         return ReactiveRequestContextHolder.getRequest()
                 .doOnSuccess(r -> publishEvent(r, e))

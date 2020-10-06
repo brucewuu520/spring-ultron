@@ -269,7 +269,7 @@ public class ApiResult<T> implements Serializable {
      * @param <T> 泛型标记
      */
     public static <T> ApiResult<T> apiException(ServiceException e) {
-        return e.getResult();
+        return e.getResult() == null ? ApiResult.failed() : e.getResult();
     }
 
     /**
