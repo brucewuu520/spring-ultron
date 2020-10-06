@@ -22,7 +22,7 @@ public enum  DBObjectToJsonNodeConverter implements Converter<BasicBSONObject, J
 
     @Nullable
     @Override
-    public JsonNode convert(BasicBSONObject source) {
-        return Jackson.getInstance().valueToTree(source);
+    public JsonNode convert(@Nullable BasicBSONObject source) {
+        return null == source ? null : Jackson.getInstance().valueToTree(source);
     }
 }
