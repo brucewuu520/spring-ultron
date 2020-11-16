@@ -1,6 +1,5 @@
 package org.springultron.lock.config;
 
-import jodd.util.StringPool;
 import jodd.util.StringUtil;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -48,22 +47,22 @@ public class RedisLockAspect {
     @Around("@annotation(redisLock)")
     public Object aroundRedisLock(ProceedingJoinPoint point, RedisLock redisLock) throws Throwable {
         String lockName = redisLock.key();
-        log.info("--lockName: {}", lockName);
+        log.debug("--lockName: {}", lockName);
         Assert.hasText(lockName, "@RedisLock key must have length; it must not be null or empty");
         // el 表达式
         String lockParams = redisLock.params();
-        log.info("--lockParam: {}", lockParams);
+        log.debug("--lockParam: {}", lockParams);
         // 表达式不为空
         String lockKey;
         if (StringUtil.isNotBlank(lockParams)) {
             String evalAsText = evalLockParam(point, lockParams);
-            lockKey = lockName + StringPool.COLON + evalAsText;
+            lockKey = lockName + "::" + evalAsText;
         } else {
             lockKey = lockName;
         }
-        log.info("--lockKey: {}", lockKey);
+        log.debug("--lockKey: {}", lockKey);
         LockType lockType = redisLock.type();
-        log.info("--lockType: {}", lockType);
+        log.debug("--lockType: {}", lockType);
         long waitTime = redisLock.waitTime();
         long leaseTime = redisLock.leaseTime();
         TimeUnit timeUnit = redisLock.timeUnit();
