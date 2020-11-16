@@ -6,7 +6,7 @@ package org.springultron.core.result;
  * @author brucewuu
  * @date 2019-05-22 16:24
  */
-public interface IResultStatus {
+public interface IResultCode {
     int getCode();
 
     String getMessage();
