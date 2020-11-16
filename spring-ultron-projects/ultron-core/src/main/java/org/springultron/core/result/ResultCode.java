@@ -1,12 +1,12 @@
 package org.springultron.core.result;
 
 /**
- * 请求返回状态
+ * 请求返回状态码
  *
  * @author brucewuu
  * @date 2019-05-22 16:27
  */
-public enum ResultStatus implements IResultStatus {
+public enum ResultCode implements IResultCode {
     /**
      * 请求成功
      */
@@ -14,7 +14,7 @@ public enum ResultStatus implements IResultStatus {
     /**
      * 请求失败
      */
-    FAILED(500, "Fail"),
+    FAIL(500, "Fail"),
     /**
      * 错误的请求
      */
@@ -87,7 +87,7 @@ public enum ResultStatus implements IResultStatus {
     private final int code;
     private final String message;
 
-    ResultStatus(int code, String message) {
+    ResultCode(int code, String message) {
         this.code = code;
         this.message = message;
     }
