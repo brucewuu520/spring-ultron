@@ -1,8 +1,8 @@
 package org.springultron.openfeign;
 
-import com.alibaba.cloud.sentinel.feign.SentinelFeign;
 import com.alibaba.cloud.sentinel.feign.SentinelFeignAutoConfiguration;
 import feign.Feign;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -21,7 +21,7 @@ import org.springframework.context.annotation.Scope;
 public class UltronSentinelFeignAutoConfiguration {
 
     @Bean
-    @Scope("prototype")
+    @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     @ConditionalOnMissingBean
     @ConditionalOnProperty(name = {"feign.sentinel.enabled"})
     public Feign.Builder feignSentinelBuilder() {

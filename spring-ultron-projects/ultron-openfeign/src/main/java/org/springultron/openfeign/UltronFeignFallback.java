@@ -8,7 +8,7 @@ import org.springframework.cglib.proxy.MethodInterceptor;
 import org.springframework.cglib.proxy.MethodProxy;
 import org.springultron.core.jackson.Jackson;
 import org.springultron.core.result.ApiResult;
-import org.springultron.core.result.ResultStatus;
+import org.springultron.core.result.ResultCode;
 
 import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
@@ -54,13 +54,13 @@ public class UltronFeignFallback<T> implements MethodInterceptor {
         }
         // 非 FeignException，直接返回【100009】请求被拒绝
         if (!(cause instanceof FeignException)) {
-            return ApiResult.failed(ResultStatus.REQUEST_REJECT.getCode(), errorMessage);
+            return ApiResult.fail(ResultCode.REQUEST_REJECT.getCode(), errorMessage);
         }
         FeignException exception = (FeignException) cause;
         Optional<ByteBuffer> byteBuffer = exception.responseBody();
         // 如果返回的数据为空
         if (!byteBuffer.isPresent()) {
-            return ApiResult.failed(ResultStatus.REQUEST_REJECT.getCode(), errorMessage);
+            return ApiResult.fail(ResultCode.REQUEST_REJECT.getCode(), errorMessage);
         }
         // 转换成 jsonNode 读取，因为直接转换，可能 对方放回的并 不是 ApiResult 的格式。
         JsonNode resultNode = Jackson.readTree(byteBuffer.get().array());
@@ -69,7 +69,7 @@ public class UltronFeignFallback<T> implements MethodInterceptor {
             return Jackson.getInstance().convertValue(resultNode, ApiResult.class);
         }
 
-        return ApiResult.failed(resultNode.toString());
+        return ApiResult.fail(resultNode.toString());
     }
 
     @Override
@@ -83,7 +83,7 @@ public class UltronFeignFallback<T> implements MethodInterceptor {
             return true;
         }
 
-        if (null == obj || !this.getClass().equals(obj.getClass())) {
+        if (null == obj || this.getClass() != obj.getClass()) {
             return false;
         }
 

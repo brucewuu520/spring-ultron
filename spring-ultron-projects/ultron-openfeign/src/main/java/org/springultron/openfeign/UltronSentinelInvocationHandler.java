@@ -10,7 +10,7 @@ import com.alibaba.csp.sentinel.slots.block.BlockException;
 import feign.*;
 import feign.hystrix.FallbackFactory;
 import org.springultron.core.result.ApiResult;
-import org.springultron.core.result.ResultStatus;
+import org.springultron.core.result.ResultCode;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -90,7 +90,7 @@ public class UltronSentinelInvocationHandler implements InvocationHandler {
                             // 若是R类型 执行自动降级返回R
                             if (ApiResult.class == method.getReturnType()) {
                                 System.err.println("feign 服务间调用异常: " + ex.getLocalizedMessage());
-                                return ApiResult.failed(ResultStatus.CALL_ERROR.getCode(), ex.getLocalizedMessage());
+                                return ApiResult.fail(ResultCode.CALL_ERROR.getCode(), ex.getLocalizedMessage());
                             } else {
                                 throw ex;
                             }
