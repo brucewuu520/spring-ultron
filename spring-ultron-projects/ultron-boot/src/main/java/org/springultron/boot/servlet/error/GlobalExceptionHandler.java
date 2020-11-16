@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springultron.boot.error.UltronErrorEvent;
 import org.springultron.core.exception.CryptoException;
 import org.springultron.core.exception.Exceptions;
-import org.springultron.core.exception.ServiceException;
+import org.springultron.core.exception.ApiException;
 import org.springultron.core.result.ApiResult;
-import org.springultron.core.result.ResultStatus;
+import org.springultron.core.result.ResultCode;
 import org.springultron.core.utils.ObjectUtils;
 import org.springultron.core.utils.StringUtils;
 import org.springultron.core.utils.WebUtils;
@@ -46,8 +46,8 @@ public class GlobalExceptionHandler {
      * @param e 业务异常
      * @return REST 返回异常结果
      */
-    @ExceptionHandler(value = ServiceException.class)
-    public ApiResult<Object> handleApiException(ServiceException e) {
+    @ExceptionHandler(value = ApiException.class)
+    public ApiResult<Object> handleApiException(ApiException e) {
         log.error("自定义业务异常", e);
         publishEvent(e);
         return ApiResult.apiException(e);
@@ -63,7 +63,7 @@ public class GlobalExceptionHandler {
     public ApiResult<Object> handleCryptoException(CryptoException e) {
         log.error("加解密异常", e);
         publishEvent(e);
-        return ApiResult.failed(ResultStatus.SIGN_FAILED);
+        return ApiResult.fail(ResultCode.SIGN_FAILED);
     }
 
     @ExceptionHandler(AssertionError.class)
@@ -71,7 +71,7 @@ public class GlobalExceptionHandler {
         log.error("断言异常", e);
         publishEvent(e);
         // 发送：未知异常异常事件
-        return ApiResult.failed(ResultStatus.ASSERTION_ERROR.getCode(), e.getMessage());
+        return ApiResult.fail(ResultCode.ASSERTION_ERROR.getCode(), e.getMessage());
     }
 
     /**

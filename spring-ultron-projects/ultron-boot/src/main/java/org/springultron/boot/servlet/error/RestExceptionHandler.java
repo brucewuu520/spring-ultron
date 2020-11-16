@@ -21,7 +21,7 @@ import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springultron.boot.error.BaseExceptionHandler;
 import org.springultron.core.result.ApiResult;
-import org.springultron.core.result.ResultStatus;
+import org.springultron.core.result.ResultCode;
 
 import javax.validation.ConstraintViolationException;
 import javax.validation.ValidationException;
@@ -71,7 +71,7 @@ public class RestExceptionHandler extends BaseExceptionHandler {
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ApiResult<Object> handleError(MissingServletRequestParameterException e) {
         log.error("缺少必要的请求参数", e);
-        return ApiResult.failed(ResultStatus.PARAM_MISS.getCode(), String.format("缺少必要的请求参数: %s", e.getParameterName()));
+        return ApiResult.fail(ResultCode.PARAM_MISS.getCode(), String.format("缺少必要的请求参数: %s", e.getParameterName()));
     }
 
     /**
@@ -83,7 +83,7 @@ public class RestExceptionHandler extends BaseExceptionHandler {
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ApiResult<Object> handleError(MethodArgumentTypeMismatchException e) {
         log.error("请求参数格式错误", e);
-        return ApiResult.failed(ResultStatus.PARAM_TYPE_ERROR.getCode(), String.format("请求参数格式错误: %s", e.getName()));
+        return ApiResult.fail(ResultCode.PARAM_TYPE_ERROR.getCode(), String.format("请求参数格式错误: %s", e.getName()));
     }
 
     /**
@@ -95,7 +95,7 @@ public class RestExceptionHandler extends BaseExceptionHandler {
     @ExceptionHandler(ValidationException.class)
     public ApiResult<Object> handleError(ValidationException e) {
         log.error("参数校验异常", e);
-        return ApiResult.failed(ResultStatus.PARAM_VALID_FAILED.getCode(), e.getCause().getMessage());
+        return ApiResult.fail(ResultCode.PARAM_VALID_FAILED.getCode(), e.getCause().getMessage());
     }
 
     /**
@@ -119,7 +119,7 @@ public class RestExceptionHandler extends BaseExceptionHandler {
     @ExceptionHandler(NoHandlerFoundException.class)
     public ApiResult<Object> handleError(NoHandlerFoundException e) {
         log.error("404没找到请求", e);
-        return ApiResult.failed(ResultStatus.NOT_FOUND);
+        return ApiResult.fail(ResultCode.NOT_FOUND);
     }
 
     /**
@@ -131,7 +131,7 @@ public class RestExceptionHandler extends BaseExceptionHandler {
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ApiResult<Object> handleError(HttpRequestMethodNotSupportedException e) {
         log.error("不支持当前请求方法", e);
-        return ApiResult.failed(ResultStatus.METHOD_NO_ALLOWED);
+        return ApiResult.fail(ResultCode.METHOD_NO_ALLOWED);
     }
 
     /**
@@ -143,7 +143,7 @@ public class RestExceptionHandler extends BaseExceptionHandler {
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
     public ApiResult<Object> handleError(HttpMediaTypeNotSupportedException e) {
         log.error("不支持当前媒体类型", e);
-        return ApiResult.failed(ResultStatus.BAD_REQUEST.getCode(), "不支持当前媒体类型");
+        return ApiResult.fail(ResultCode.BAD_REQUEST.getCode(), "不支持当前媒体类型");
     }
 
     /**
@@ -155,14 +155,14 @@ public class RestExceptionHandler extends BaseExceptionHandler {
     @ExceptionHandler(HttpMediaTypeNotAcceptableException.class)
     public ApiResult<Object> handleError(HttpMediaTypeNotAcceptableException e) {
         log.error("不接受的媒体类型", e);
-        return ApiResult.failed(ResultStatus.BAD_REQUEST.getCode(), "不接受的媒体类型");
+        return ApiResult.fail(ResultCode.BAD_REQUEST.getCode(), "不接受的媒体类型");
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiResult<Object> handleError(HttpMessageNotReadableException e) {
         log.error("消息不能读取", e);
-        return ApiResult.failed(ResultStatus.MSG_NOT_READABLE.getCode(), e.getMessage());
+        return ApiResult.fail(ResultCode.MSG_NOT_READABLE.getCode(), e.getMessage());
     }
 
     /**
@@ -174,6 +174,6 @@ public class RestExceptionHandler extends BaseExceptionHandler {
     @ExceptionHandler(MultipartException.class)
     public ApiResult<Object> handleError(MultipartException e) {
         log.error("文件太大", e);
-        return ApiResult.failed(ResultStatus.PAYLOAD_TOO_LARGE);
+        return ApiResult.fail(ResultCode.PAYLOAD_TOO_LARGE);
     }
 }

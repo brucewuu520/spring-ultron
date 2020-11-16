@@ -6,7 +6,7 @@ import org.springframework.http.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springultron.boot.props.UltronUploadProperties;
 import org.springultron.core.result.ApiResult;
-import org.springultron.core.result.IResultStatus;
+import org.springultron.core.result.IResultCode;
 import org.springultron.core.utils.IdUtils;
 import org.springultron.core.utils.Maps;
 
@@ -17,7 +17,7 @@ import java.time.LocalDate;
 import java.util.HashMap;
 
 /**
- * Controller 基础方法
+ * Controller常用方法
  *
  * @author brucewuu
  * @date 2019/10/8 15:35
@@ -84,7 +84,7 @@ public interface IController {
      * @return ApiResult
      */
     default <T> ApiResult<T> fail() {
-        return ApiResult.failed();
+        return ApiResult.fail();
     }
 
     /**
@@ -95,7 +95,7 @@ public interface IController {
      * @return ApiResult
      */
     default <T> ApiResult<T> fail(String message) {
-        return ApiResult.failed(message);
+        return ApiResult.fail(message);
     }
 
     /**
@@ -105,8 +105,8 @@ public interface IController {
      * @param <T>        泛型标记
      * @return ApiResult
      */
-    default <T> ApiResult<T> fail(IResultStatus resultCode) {
-        return ApiResult.failed(resultCode);
+    default <T> ApiResult<T> fail(IResultCode resultCode) {
+        return ApiResult.fail(resultCode);
     }
 
     /**
@@ -118,7 +118,7 @@ public interface IController {
      * @return ApiResult
      */
     default <T> ApiResult<T> fail(int code, String message) {
-        return ApiResult.failed(code, message);
+        return ApiResult.fail(code, message);
     }
 
     /**
@@ -152,7 +152,7 @@ public interface IController {
      * @param <T>       泛型标记
      * @return ApiResult
      */
-    default <T> ApiResult<T> status(boolean status, IResultStatus errorCode) {
+    default <T> ApiResult<T> status(boolean status, IResultCode errorCode) {
         return ApiResult.status(status, errorCode);
     }
 
@@ -165,17 +165,17 @@ public interface IController {
      */
     default ApiResult<Object> uploadImage(MultipartFile file, UltronUploadProperties properties) {
         if (file.isEmpty()) {
-            return ApiResult.failed("图片不能为空");
+            return ApiResult.fail("图片不能为空");
         }
         String fileName = file.getOriginalFilename();
         if (null == fileName) {
-            return ApiResult.failed("图片名称不能为空");
+            return ApiResult.fail("图片名称不能为空");
         }
         // 后缀名
         String suffixName = fileName.substring(fileName.lastIndexOf("."));
         if (!".jpg".equals(suffixName) && !".png".equals(suffixName)
                 && !".jpeg".equals(suffixName) && !".gif".equals(suffixName)) {
-            return ApiResult.failed("不是图片文件");
+            return ApiResult.fail("不是图片文件");
         }
         fileName = IdUtils.randomUUID() + suffixName;
         LocalDate localDate = LocalDate.now();
@@ -185,7 +185,7 @@ public interface IController {
             File destFile = new File(properties.getSavePath() + destFilePath);
             if (!destFile.exists()) {
                 if (!destFile.mkdirs()) {
-                    return ApiResult.failed("图片创建失败");
+                    return ApiResult.fail("图片创建失败");
                 }
             }
             file.transferTo(destFile);
@@ -195,7 +195,7 @@ public interface IController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return ApiResult.failed("图片上传失败");
+        return ApiResult.fail("图片上传失败");
     }
 
     /**

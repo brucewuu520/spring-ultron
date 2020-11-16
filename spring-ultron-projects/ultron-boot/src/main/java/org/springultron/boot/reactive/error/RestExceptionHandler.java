@@ -15,7 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.server.ServerWebInputException;
 import org.springultron.boot.error.BaseExceptionHandler;
 import org.springultron.core.result.ApiResult;
-import org.springultron.core.result.ResultStatus;
+import org.springultron.core.result.ResultCode;
 import reactor.core.publisher.Mono;
 
 import javax.validation.ConstraintViolationException;
@@ -80,8 +80,8 @@ public class RestExceptionHandler extends BaseExceptionHandler {
     public Mono<ApiResult<Object>> handleError(ServerWebInputException e) {
         log.error("缺少必要的请求参数", e);
         return Mono.just(Optional.ofNullable(e.getMethodParameter())
-                .map(parameter -> ApiResult.failed(ResultStatus.PARAM_MISS.getCode(), String.format("缺少必要的请求参数: %s", parameter.getParameterName())))
-                .orElseGet(() -> ApiResult.failed(ResultStatus.PARAM_MISS.getCode(), "缺少必要的请求参数")));
+                .map(parameter -> ApiResult.fail(ResultCode.PARAM_MISS.getCode(), String.format("缺少必要的请求参数: %s", parameter.getParameterName())))
+                .orElseGet(() -> ApiResult.fail(ResultCode.PARAM_MISS.getCode(), "缺少必要的请求参数")));
     }
 
     /**
@@ -93,7 +93,7 @@ public class RestExceptionHandler extends BaseExceptionHandler {
     @ExceptionHandler(ValidationException.class)
     public Mono<ApiResult<Object>> handleError(ValidationException e) {
         log.error("参数校验异常", e);
-        return Mono.just(ApiResult.failed(ResultStatus.PARAM_VALID_FAILED.getCode(), e.getCause().getMessage()));
+        return Mono.just(ApiResult.fail(ResultCode.PARAM_VALID_FAILED.getCode(), e.getCause().getMessage()));
     }
 
     /**
@@ -117,7 +117,7 @@ public class RestExceptionHandler extends BaseExceptionHandler {
     @ExceptionHandler(ResponseStatusException.class)
     public Mono<ApiResult<Object>> handleError(ResponseStatusException e) {
         log.error("响应状态异常", e);
-        return Mono.just(ApiResult.failed(ResultStatus.BAD_REQUEST.getCode(), String.format("响应状态异常:%s", e.getReason())));
+        return Mono.just(ApiResult.fail(ResultCode.BAD_REQUEST.getCode(), String.format("响应状态异常:%s", e.getReason())));
     }
 
     /**
@@ -129,6 +129,6 @@ public class RestExceptionHandler extends BaseExceptionHandler {
     @ExceptionHandler(MultipartException.class)
     public Mono<ApiResult<Object>> handleError(MultipartException e) {
         log.error("文件太大", e);
-        return Mono.just(ApiResult.failed(ResultStatus.PAYLOAD_TOO_LARGE));
+        return Mono.just(ApiResult.fail(ResultCode.PAYLOAD_TOO_LARGE));
     }
 }
