@@ -2,7 +2,7 @@ package org.springultron.crypto;
 
 import org.springframework.util.Base64Utils;
 import org.springultron.core.exception.CryptoException;
-import org.springultron.core.utils.IoUtils;
+import org.springultron.core.io.IoUtils;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
