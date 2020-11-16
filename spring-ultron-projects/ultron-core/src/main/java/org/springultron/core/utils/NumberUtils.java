@@ -1,6 +1,7 @@
 package org.springultron.core.utils;
 
-import org.springframework.util.Assert;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -156,8 +157,21 @@ public class NumberUtils {
      * @param numberStr 数字字符串
      * @return {@link BigDecimal}
      */
+    @NonNull
     public static BigDecimal toBigDecimal(String numberStr) {
-        return (null == numberStr) ? BigDecimal.ZERO : new BigDecimal(numberStr);
+        return StringUtils.isEmpty(numberStr) ? BigDecimal.ZERO : new BigDecimal(numberStr);
+    }
+
+    /**
+     * 默认保留2位数小数
+     * 例如保留四位小数：123.456789 => 123.4567
+     *
+     * @param v 值
+     * @return 新值
+     */
+    @NonNull
+    public static BigDecimal round(Double v) {
+        return round(v == null ? null : v.toString(), 2, null);
     }
 
     /**
@@ -169,8 +183,8 @@ public class NumberUtils {
      * @param roundingMode 保留小数的模式 {@link RoundingMode}
      * @return 新值
      */
-    public static BigDecimal round(double v, int scale, RoundingMode roundingMode) {
-        return round(Double.toString(v), scale, roundingMode);
+    public static BigDecimal round(Double v, int scale, RoundingMode roundingMode) {
+        return round(v == null ? null : v.toString(), scale, roundingMode);
     }
 
     /**
@@ -182,8 +196,8 @@ public class NumberUtils {
      * @param roundingMode 保留小数的模式 {@link RoundingMode}，如果传入null则默认四舍五入
      * @return 新值
      */
+    @NonNull
     public static BigDecimal round(String numberStr, int scale, RoundingMode roundingMode) {
-        Assert.isTrue(null != numberStr && !"".equals(numberStr), "numberStr must not be null, empty, or blank");
         if (scale < 0) {
             scale = 0;
         }
@@ -191,17 +205,29 @@ public class NumberUtils {
     }
 
     /**
+     * 默认保留2位数小数
+     * 例如保留四位小数：123.456789 => 123.4567
+     *
+     * @param decimal 值
+     * @return 新值
+     */
+    public static BigDecimal round(BigDecimal decimal) {
+        return round(decimal, 2, null);
+    }
+
+    /**
      * 保留固定位数小数
      * 例如保留四位小数：123.456789 => 123.4567
      *
-     * @param number       数字值
+     * @param decimal      数字值
      * @param scale        保留小数位数，如果传入小于0，则默认0
      * @param roundingMode 保留小数的模式 {@link RoundingMode}，如果传入null则默认四舍五入
      * @return 新值
      */
-    public static BigDecimal round(BigDecimal number, int scale, RoundingMode roundingMode) {
-        if (null == number) {
-            number = BigDecimal.ZERO;
+    @NonNull
+    public static BigDecimal round(BigDecimal decimal, int scale, RoundingMode roundingMode) {
+        if (null == decimal) {
+            decimal = BigDecimal.ZERO;
         }
         if (scale < 0) {
             scale = 0;
@@ -210,7 +236,7 @@ public class NumberUtils {
             roundingMode = RoundingMode.HALF_UP;
         }
 
-        return number.setScale(scale, roundingMode);
+        return decimal.setScale(scale, roundingMode);
     }
 
     /**
@@ -251,11 +277,38 @@ public class NumberUtils {
      * 五前为奇要进一。
      * </pre>
      *
-     * @param value 需要科学计算的数据
-     * @param scale 保留的小数位
+     * @param decimal 需要科学计算的数据
+     * @param scale   保留的小数位
      * @return 结果
      */
-    public static BigDecimal roundHalfEven(BigDecimal value, int scale) {
-        return round(value, scale, RoundingMode.HALF_EVEN);
+    public static BigDecimal roundHalfEven(BigDecimal decimal, int scale) {
+        return round(decimal, scale, RoundingMode.HALF_EVEN);
+    }
+
+    /**
+     * 转为字符串(防止返回可续计数法表达式)
+     *
+     * @param decimal 要转字符串的小数
+     * @return String
+     */
+    @Nullable
+    public static String toPlainString(BigDecimal decimal) {
+        if (decimal == null) {
+            return null;
+        }
+        return decimal.toPlainString();
+    }
+
+    /**
+     * 去除小数点后的0（如: 输入1.000返回1）
+     *
+     * @param decimal 目标数(可为null)
+     */
+    @Nullable
+    public static BigDecimal stripTrailingZeros(BigDecimal decimal) {
+        if (decimal == null) {
+            return null;
+        }
+        return decimal.stripTrailingZeros();
     }
 }
