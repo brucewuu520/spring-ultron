@@ -61,7 +61,7 @@ public class RequestLogAspect {
      */
     @Around("@annotation(apiLog)")
     public Object doAround(ProceedingJoinPoint point, ApiLog apiLog) throws Throwable {
-        if (LogLevel.NONE == ultronLogProperties.getLevel()) {
+        if (LogLevel.NONE == ultronLogProperties.getLevel() || LogLevel.NONE == apiLog.level()) {
             return point.proceed();
         }
         // 开始打印请求日志
@@ -90,7 +90,7 @@ public class RequestLogAspect {
         // 打印 Http method
         reqLog.append("HTTP Method    : ").append(request.getMethod());
         reqLog.append(StringPool.LINE_SEPARATOR);
-        if (LogLevel.HEADERS == ultronLogProperties.getLevel()) {
+        if (LogLevel.HEADERS == ultronLogProperties.getLevel() || LogLevel.HEADERS == apiLog.level()) {
             // 打印请求头
             Enumeration<String> headers = request.getHeaderNames();
             while (headers.hasMoreElements()) {
@@ -101,7 +101,7 @@ public class RequestLogAspect {
             }
         }
         // 打印请求的 IP
-        reqLog.append("IP             : ").append(IpUtils.getIP(request));
+        reqLog.append("IP             : ").append(WebUtils.getRemoteIP(request));
         reqLog.append(StringPool.LINE_SEPARATOR);
         // 打印请求入参
         this.buildRequestArgs(point, reqLog);
