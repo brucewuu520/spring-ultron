@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.web.servlet.function.ServerResponse;
-import org.springultron.core.result.ResultStatus;
+import org.springultron.core.result.ResultCode;
 
 /**
  * Sentinel 配置类
@@ -23,9 +23,9 @@ public class SentinelConfiguration {
      */
     @Bean
     public BlockExceptionHandler blockExceptionHandler() {
-        return (request, response, e) -> ServerResponse.status(ResultStatus.FLOW_LIMITING.getCode())
+        return (request, response, e) -> ServerResponse.status(ResultCode.FLOW_LIMITING.getCode())
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(ResultStatus.FLOW_LIMITING.getMessage());
+                .body(ResultCode.FLOW_LIMITING.getMessage());
     }
 
 }

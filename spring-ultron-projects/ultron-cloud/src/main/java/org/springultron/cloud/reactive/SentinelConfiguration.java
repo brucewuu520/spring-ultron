@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.server.ServerResponse;
-import org.springultron.core.result.ResultStatus;
+import org.springultron.core.result.ResultCode;
 
 /**
  * Sentinel 配置类
@@ -25,9 +25,9 @@ public class SentinelConfiguration {
     @Bean
     public BlockRequestHandler blockRequestHandler() {
 
-        return (exchange, throwable) -> ServerResponse.status(ResultStatus.FLOW_LIMITING.getCode())
+        return (exchange, throwable) -> ServerResponse.status(ResultCode.FLOW_LIMITING.getCode())
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(BodyInserters.fromValue(ResultStatus.FLOW_LIMITING.getMessage()));
+                .bodyValue(BodyInserters.fromValue(ResultCode.FLOW_LIMITING.getMessage()));
     }
 
 }

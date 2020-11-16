@@ -38,32 +38,32 @@
 
     <properties>
         <main.basedir>${basedir}/..</main.basedir>
-        <!-- boot dependencies version start-->
-        <spring-boot.version>2.3.4.RELEASE</spring-boot.version>
-        <mybatis-plus.version>3.4.0</mybatis-plus.version>
-        <knife4j.version>2.0.5</knife4j.version>
-        <jwt.version>0.11.2</jwt.version>
-        <bouncycastle.version>1.66</bouncycastle.version>
-        <redisson.version>3.13.5</redisson.version>
-        <zxing.version>3.4.0</zxing.version>
-        <okhttp3.version>4.9.0</okhttp3.version>
-        <!-- boot dependencies version end-->
-        <!-- cloud dependencies version start-->
-        <spring-cloud.version>Hoxton.SR8</spring-cloud.version>
+        <!-- app dependencies version start-->
+        <spring-boot.version>2.3.6.RELEASE</spring-boot.version>
+        <spring-cloud.version>Hoxton.SR9</spring-cloud.version>
         <alibaba-cloud.version>2.2.3.RELEASE</alibaba-cloud.version>
-        <guava.version>29.0-jre</guava.version>
         <feign-okhttp.version>11.0</feign-okhttp.version>
-        <!-- cloud dependencies version end-->
+        <okhttp3.version>4.9.0</okhttp3.version>
+        <mybatis-plus.version>3.4.1</mybatis-plus.version>
+        <jwt.version>0.11.2</jwt.version>
+        <redisson.version>3.13.6</redisson.version>
+        <bouncycastle.version>1.67</bouncycastle.version>
+        <zxing.version>3.4.1</zxing.version>
+        <fastjson.version>1.2.75</fastjson.version>
+        <guava.version>30.0-jre</guava.version>
+        <knife4j.version>3.0.1</knife4j.version>
+        <swagger-annotations.version>1.5.22</swagger-annotations.version>
+        <!-- app dependencies version end-->
         <findbugs.version>3.0.2</findbugs.version>
         <!-- maven dependencies version start -->
-        <maven-flatten-plugin.version>1.1.0</maven-flatten-plugin.version>
+        <maven-flatten-plugin.version>1.2.5</maven-flatten-plugin.version>
         <maven-xml-plugin.version>1.0.2</maven-xml-plugin.version>
         <maven-helper-plugin.version>3.1.0</maven-helper-plugin.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <maven-enforcer-plugin.version>3.0.0-M3</maven-enforcer-plugin.version>
         <maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
         <maven-source-plugin.version>3.2.0</maven-source-plugin.version>
-        <maven-javadoc-plugin.version>3.1.1</maven-javadoc-plugin.version>
+        <maven-javadoc-plugin.version>3.2.0</maven-javadoc-plugin.version>
         <!-- maven dependencies version end -->
     </properties>
 
@@ -166,9 +166,24 @@
                 <version>${okhttp3.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcprov-jdk15on</artifactId>
+                <version>${bouncycastle.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastjson.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
                 <version>${guava.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-annotations</artifactId>
+                <version>${swagger-annotations.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.google.code.findbugs</groupId>
