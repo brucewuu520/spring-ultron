@@ -2,7 +2,7 @@ package org.springultron.boot.props;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
-import org.springultron.core.utils.FileUtils;
+import org.springultron.core.io.FileUtils;
 
 import javax.validation.constraints.NotNull;
 

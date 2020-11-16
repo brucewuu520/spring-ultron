@@ -1,11 +1,11 @@
-package org.springultron.boot.servlet.config;
+package org.springultron.boot.reactive.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.reactive.config.ResourceHandlerRegistry;
+import org.springframework.web.reactive.config.WebFluxConfigurer;
 import org.springultron.boot.props.UltronUploadProperties;
 
 /**
@@ -15,14 +15,14 @@ import org.springultron.boot.props.UltronUploadProperties;
  * @date 2019/10/8 09:58
  */
 @Configuration(proxyBeanMethods = false)
-@ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
+@ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.REACTIVE)
 @EnableConfigurationProperties(UltronUploadProperties.class)
-public class UltronUploadConfiguration implements WebMvcConfigurer {
+public class UltronUploadConfigurer implements WebFluxConfigurer {
 
     private final UltronUploadProperties properties;
 
     @Autowired
-    public UltronUploadConfiguration(UltronUploadProperties properties) {
+    public UltronUploadConfigurer(UltronUploadProperties properties) {
         this.properties = properties;
     }
 
@@ -30,7 +30,7 @@ public class UltronUploadConfiguration implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         String path = properties.getSavePath();
         String pattern = properties.getUploadPathPattern();
-        registry.addResourceHandler(properties.getUploadPathPattern())
+        registry.addResourceHandler(pattern)
                 .addResourceLocations("file:" + path + pattern.replace("*", ""));
     }
 }
