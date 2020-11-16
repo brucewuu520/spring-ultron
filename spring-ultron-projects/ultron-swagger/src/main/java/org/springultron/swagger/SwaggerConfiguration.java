@@ -1,24 +1,31 @@
 package org.springultron.swagger;
 
+import com.github.xiaoymin.knife4j.spring.extension.OpenApiExtensionResolver;
 import io.swagger.annotations.Api;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.data.rest.RepositoryRestMvcAutoConfiguration;
+import org.springframework.boot.autoconfigure.http.HttpMessageConvertersAutoConfiguration;
+import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
+import org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springultron.swagger.knife4j.EnableKnife4j;
-import org.springultron.swagger.knife4j.Knife4jAutoConfiguration;
 import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.oas.configuration.OpenApiDocumentationConfiguration;
 import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger.web.ApiKeyVehicle;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
+import springfox.documentation.swagger2.configuration.Swagger2DocumentationConfiguration;
 
 import java.util.Collections;
 import java.util.List;
@@ -31,25 +38,36 @@ import java.util.Optional;
  * @date 2019-06-27 19:52
  */
 @Configuration(proxyBeanMethods = false)
-@ConditionalOnProperty(value = "swagger.enable", matchIfMissing = true)
+@ConditionalOnProperty(name = "swagger.enable", havingValue = "true", matchIfMissing = true)
 @EnableConfigurationProperties(SwaggerProperties.class)
 @EnableKnife4j
-@EnableSwagger2
-@Import({BeanValidatorPluginsConfiguration.class})
+@Import({
+        OpenApiDocumentationConfiguration.class,
+        Swagger2DocumentationConfiguration.class,
+        BeanValidatorPluginsConfiguration.class
+})
+@AutoConfigureAfter({
+        WebMvcAutoConfiguration.class,
+        JacksonAutoConfiguration.class,
+        HttpMessageConvertersAutoConfiguration.class,
+        RepositoryRestMvcAutoConfiguration.class
+})
 public class SwaggerConfiguration {
 
     private final SwaggerProperties swaggerProperties;
+    private final ObjectProvider<OpenApiExtensionResolver> openApiExtensionResolver;
 
     @Autowired
-    public SwaggerConfiguration(SwaggerProperties swaggerProperties) {
+    public SwaggerConfiguration(SwaggerProperties swaggerProperties, ObjectProvider<OpenApiExtensionResolver> openApiExtensionResolver) {
         this.swaggerProperties = swaggerProperties;
+        this.openApiExtensionResolver = openApiExtensionResolver;
     }
 
     @Bean
     public Docket createRestApi() {
-        Docket docket = new Docket(DocumentationType.SWAGGER_2)
-                .useDefaultResponseMessages(false)
+        Docket docket = new Docket(DocumentationType.OAS_30)
                 .apiInfo(apiInfo())
+                .groupName(swaggerProperties.getGroupName())
                 .select()
                 .apis(RequestHandlerSelectors.withClassAnnotation(Api.class))
                 .paths(PathSelectors.any())
@@ -58,15 +76,17 @@ public class SwaggerConfiguration {
             docket.securitySchemes(Collections.singletonList(apiKey()));
             docket.securityContexts(Collections.singletonList(securityContext()));
         }
+        openApiExtensionResolver.ifAvailable(resolver -> docket.extensions(resolver.buildExtensions("MarkDown Docs")));
         return docket;
     }
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title(Optional.ofNullable(swaggerProperties.getTitle()).orElse("在线接口文档"))
-                .description(Optional.ofNullable(swaggerProperties.getDescription()).orElse("在线接口文档"))
+                .title(Optional.ofNullable(swaggerProperties.getTitle()).orElse("Api Documentation"))
+                .description(Optional.ofNullable(swaggerProperties.getDescription()).orElse("Api Documentation"))
                 .version(swaggerProperties.getVersion())
-                .contact(new Contact(swaggerProperties.getContactUser(), swaggerProperties.getContactUrl(), swaggerProperties.getContactEmail()))
+                .termsOfServiceUrl(swaggerProperties.getTermsOfServiceUrl())
+                .contact(Optional.ofNullable(swaggerProperties.getContact()).map(contact -> new Contact(contact.getName(), contact.getUrl(), contact.getEmail())).orElse(ApiInfo.DEFAULT_CONTACT))
                 .build();
     }
 
@@ -91,7 +111,7 @@ public class SwaggerConfiguration {
     private SecurityContext securityContext() {
         return SecurityContext.builder()
                 .securityReferences(defaultAuth())
-                .forPaths(PathSelectors.regex(swaggerProperties.getAuthorization().getAuthRegex()))
+                .operationSelector(operationContext -> operationContext.requestMappingPattern().matches(swaggerProperties.getAuthorization().getAuthRegex()))
                 .build();
     }
 

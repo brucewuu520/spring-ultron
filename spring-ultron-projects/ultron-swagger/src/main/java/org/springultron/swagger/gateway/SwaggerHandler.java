@@ -11,6 +11,7 @@ import springfox.documentation.swagger.web.SwaggerResourcesProvider;
 import springfox.documentation.swagger.web.UiConfiguration;
 
 /**
+ * Swagger Ui Config
  * @author brucewuu
  * @date 2020/10/1 下午3:48
  */

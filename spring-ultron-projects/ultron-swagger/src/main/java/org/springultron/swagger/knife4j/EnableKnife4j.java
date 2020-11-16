@@ -1,5 +1,6 @@
 package org.springultron.swagger.knife4j;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.*;
@@ -14,6 +15,7 @@ import java.lang.annotation.*;
 @Target({ElementType.TYPE})
 @Documented
 @Import({Knife4jAutoConfiguration.class})
+@ConditionalOnWebApplication
 public @interface EnableKnife4j {
 
 }
