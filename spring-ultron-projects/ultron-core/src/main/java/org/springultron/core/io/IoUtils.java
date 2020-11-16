@@ -1,6 +1,7 @@
-package org.springultron.core.utils;
+package org.springultron.core.io;
 
-import org.springultron.core.io.FastStringWriter;
+import org.springframework.lang.Nullable;
+import org.springultron.core.utils.Charsets;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -29,30 +30,71 @@ public class IoUtils {
     private static final int DEFAULT_BUFFER_SIZE = 1024 * 4;
 
     /**
+     * 关闭流
+     *
+     * @param closeable 被关闭对象
+     */
+    public static void closeQuietly(Closeable closeable) {
+        if (closeable == null) {
+            return;
+        }
+        if (closeable instanceof Flushable) {
+            try {
+                ((Flushable) closeable).flush();
+            } catch (IOException ignored) {
+                // ignore
+            }
+        }
+        try {
+            closeable.close();
+        } catch (IOException ignored) {
+            // ignore
+        }
+    }
+
+    /**
      * 输入流转String 默认UTF-8编码
      *
      * @param input 输入流
      * @throws IOException if an I/O error occurs
      */
-    public static String toString(final InputStream input) throws IOException {
-        return toString(input, StandardCharsets.UTF_8);
+    public static String readString(final InputStream input) throws IOException {
+        return readString(input, StandardCharsets.UTF_8);
     }
 
-    public static String toString(final InputStream input, final String encoding) throws IOException {
-        return toString(input, Charsets.toCharset(encoding));
+    public static String readString(final InputStream input, final String encoding) throws IOException {
+        return readString(input, Charsets.toCharset(encoding));
     }
 
-    public static String toString(final InputStream input, final Charset encoding) throws IOException {
+    public static String readString(final InputStream input, final Charset encoding) throws IOException {
         try (final FastStringWriter sw = new FastStringWriter()) {
             copy(input, sw, encoding);
             return sw.toString();
         }
     }
 
-    public static byte[] toByteArray(final InputStream input) throws IOException {
+    public static byte[] readByteArray(final InputStream input) throws IOException {
         try (final ByteArrayOutputStream output = new ByteArrayOutputStream()) {
             copy(input, output);
             return output.toByteArray();
+        }
+    }
+
+    /**
+     * Writes chars from a <code>String</code> to bytes on an
+     * <code>OutputStream</code> using the specified character encoding.
+     * <p>
+     * This method uses {@link String#getBytes(String)}.
+     * </p>
+     * @param data     the <code>String</code> to write, null ignored
+     * @param output   the <code>OutputStream</code> to write to
+     * @param encoding the encoding to use, null means platform default
+     * @throws NullPointerException if output is null
+     * @throws IOException          if an I/O error occurs
+     */
+    public static void write(@Nullable final String data, final OutputStream output, final Charset encoding) throws IOException {
+        if (data != null) {
+            output.write(data.getBytes(encoding));
         }
     }
 
@@ -229,19 +271,5 @@ public class IoUtils {
             count += n;
         }
         return count;
-    }
-
-    /**
-     * 关闭流
-     *
-     * @param closeable 被关闭对象
-     */
-    public static void closeQuietly(Closeable closeable) {
-        if (null != closeable) {
-            try {
-                closeable.close();
-            } catch (IOException ignored) {
-            }
-        }
     }
 }

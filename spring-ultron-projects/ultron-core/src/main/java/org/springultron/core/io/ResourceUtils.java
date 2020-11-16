@@ -1,4 +1,4 @@
-package org.springultron.core.utils;
+package org.springultron.core.io;
 
 import org.springframework.core.io.*;
 import org.springframework.util.Assert;
@@ -59,7 +59,7 @@ public class ResourceUtils extends org.springframework.util.ResourceUtils {
      */
     public static String readString(String resourceLocation) {
         try {
-            return IoUtils.toString(getResource(resourceLocation).getInputStream());
+            return IoUtils.readString(getResource(resourceLocation).getInputStream());
         } catch (IOException e) {
             e.printStackTrace();
             return StringPool.EMPTY;
