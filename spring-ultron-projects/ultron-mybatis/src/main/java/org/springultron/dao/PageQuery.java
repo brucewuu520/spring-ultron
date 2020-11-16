@@ -12,10 +12,10 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(description = "分页查询条件")
 public class PageQuery {
 
-    @ApiModelProperty(value = "当前页", notes = "默认值:1", example = "1")
+    @ApiModelProperty(value = "第几页", notes = "默认值:1", example = "1")
     private Integer current;
 
-    @ApiModelProperty(value = "每页多少条数据", notes = "默认值:10", example = "10", position = 1)
+    @ApiModelProperty(value = "数量(默认:10)", notes = "默认值:10", example = "10", position = 1)
     private Integer size;
 
     @ApiModelProperty(value = "升序字段", position = 2)

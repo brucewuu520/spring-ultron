@@ -4,29 +4,17 @@ import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.autoconfigure.ConfigurationCustomizer;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.baomidou.mybatisplus.core.handlers.MybatisEnumTypeHandler;
-import com.baomidou.mybatisplus.core.parser.ISqlParser;
-import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
-import com.baomidou.mybatisplus.extension.parsers.BlockAttackSqlParser;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
-import com.baomidou.mybatisplus.extension.plugins.OptimisticLockerInterceptor;
-import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
-import com.baomidou.mybatisplus.extension.plugins.SqlExplainInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.BlockAttackInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
-import com.baomidou.mybatisplus.extension.plugins.pagination.optimize.JsqlParserCountOptimize;
 import org.mybatis.spring.annotation.MapperScan;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springultron.core.jackson.Jackson;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * mybatis plus 自动化配置
@@ -38,12 +26,7 @@ import java.util.List;
 @EnableTransactionManagement
 @Configuration(proxyBeanMethods = false)
 @EnableConfigurationProperties(MybatisPlusAutoFillProperties.class)
-public class MybatisPlusConfiguration implements InitializingBean {
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        JacksonTypeHandler.setObjectMapper(Jackson.getInstance());
-    }
+public class MybatisPlusConfiguration {
 
     /**
      * 新的分页插件
@@ -62,6 +45,9 @@ public class MybatisPlusConfiguration implements InitializingBean {
         return interceptor;
     }
 
+    /**
+     * 自定义Configuration
+     */
     @Bean
     @ConditionalOnMissingBean(ConfigurationCustomizer.class)
     public ConfigurationCustomizer configurationCustomizer() {
@@ -69,6 +55,15 @@ public class MybatisPlusConfiguration implements InitializingBean {
             configuration.setUseDeprecatedExecutor(false);
             configuration.setDefaultEnumTypeHandler(MybatisEnumTypeHandler.class);
         };
+    }
+
+    /**
+     * 自定义SQL注入
+     */
+    @Bean
+    @ConditionalOnMissingBean(MySqlInjector.class)
+    public MySqlInjector sqlInjector() {
+        return new MySqlInjector();
     }
 
     /**
@@ -80,5 +75,4 @@ public class MybatisPlusConfiguration implements InitializingBean {
     public MetaObjectHandler metaObjectHandler(MybatisPlusAutoFillProperties properties) {
         return new UltronMetaObjectHandler(properties);
     }
-
 }

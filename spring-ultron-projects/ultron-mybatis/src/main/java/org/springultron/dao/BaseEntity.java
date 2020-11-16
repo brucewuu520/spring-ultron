@@ -9,7 +9,7 @@ import io.swagger.annotations.ApiModelProperty;
 import java.time.LocalDateTime;
 
 /**
- * 数据库操作实体基类
+ * 数据库实体基类
  *
  * @author brucewuu
  * @date 2019-05-28 10:55
