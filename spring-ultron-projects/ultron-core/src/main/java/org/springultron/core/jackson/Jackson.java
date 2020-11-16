@@ -484,87 +484,99 @@ public class Jackson {
         }
     }
 
-    public static String getString(JsonNode node, String key) {
-        if (node.hasNonNull(key)) {
-            return node.get(key).asText();
+    public static String getString(JsonNode node, String fieldName) {
+        JsonNode n = node.get(fieldName);
+        if (n == null || n.isNull()) {
+            return null;
         }
-        return null;
+        return n.asText();
     }
 
-    public static String getString(JsonNode node, String key, String defaultValue) {
-        if (node.hasNonNull(key)) {
-            return node.get(key).asText();
+    public static String getString(JsonNode node, String fieldName, String defaultValue) {
+        JsonNode n = node.get(fieldName);
+        if (n == null || n.isNull()) {
+            return defaultValue;
         }
-        return defaultValue;
+        return n.asText(defaultValue);
     }
 
-    public static Integer getInteger(JsonNode node, String key) {
-        if (node.hasNonNull(key)) {
-            return node.get(key).asInt();
+    public static Integer getInteger(JsonNode node, String fieldName) {
+        JsonNode n = node.get(fieldName);
+        if (n == null || n.isNull()) {
+            return null;
         }
-        return null;
+        return n.asInt();
     }
 
-    public static Integer getInteger(JsonNode node, String key, int defaultValue) {
-        if (node.hasNonNull(key)) {
-            return node.get(key).asInt();
+    public static int getIntValue(JsonNode node, String fieldName, int defaultValue) {
+        JsonNode n = node.get(fieldName);
+        if (n == null || n.isNull()) {
+            return defaultValue;
         }
-        return defaultValue;
+        return n.asInt(defaultValue);
     }
 
-    public static Long getLong(JsonNode node, String key) {
-        if (node.hasNonNull(key)) {
-            return node.get(key).asLong();
+    public static Long getLong(JsonNode node, String fieldName) {
+        JsonNode n = node.get(fieldName);
+        if (n == null || n.isNull()) {
+            return null;
         }
-        return null;
+        return n.asLong();
     }
 
-    public static Long getLong(JsonNode node, String key, long defaultValue) {
-        if (node.hasNonNull(key)) {
-            return node.get(key).asLong();
+    public static long getLongValue(JsonNode node, String fieldName, long defaultValue) {
+        JsonNode n = node.get(fieldName);
+        if (n == null || n.isNull()) {
+            return defaultValue;
         }
-        return defaultValue;
+        return n.asLong(defaultValue);
     }
 
-    public static Float getFloat(JsonNode node, String key) {
-        if (node.hasNonNull(key)) {
-            return node.get(key).floatValue();
+    public static Float getFloat(JsonNode node, String fieldName) {
+        JsonNode n = node.get(fieldName);
+        if (n == null || n.isNull()) {
+            return null;
         }
-        return null;
+        return n.floatValue();
     }
 
-    public static Float getFloat(JsonNode node, String key, float defaultValue) {
-        if (node.hasNonNull(key)) {
-            return node.get(key).floatValue();
+    public static float getFloatValue(JsonNode node, String fieldName, float defaultValue) {
+        JsonNode n = node.get(fieldName);
+        if (n == null || n.isNull()) {
+            return defaultValue;
         }
-        return defaultValue;
+        return n.floatValue();
     }
 
-    public static Boolean getBoolean(JsonNode node, String key) {
-        if (node.hasNonNull(key)) {
-            return node.get(key).asBoolean();
+    public static Boolean getBoolean(JsonNode node, String fieldName) {
+        JsonNode n = node.get(fieldName);
+        if (n == null || n.isNull()) {
+            return null;
         }
-        return null;
+        return n.asBoolean();
     }
 
-    public static Boolean getBoolean(JsonNode node, String key, boolean defaultValue) {
-        if (node.hasNonNull(key)) {
-            return node.get(key).asBoolean();
+    public static boolean getBooleanValue(JsonNode node, String fieldName, boolean defaultValue) {
+        JsonNode n = node.get(fieldName);
+        if (n == null || n.isNull()) {
+            return defaultValue;
         }
-        return defaultValue;
+        return n.asBoolean(defaultValue);
     }
 
-    public static Double getDouble(JsonNode node, String key) {
-        if (node.hasNonNull(key)) {
-            return node.get(key).asDouble();
+    public static Double getDouble(JsonNode node, String fieldName) {
+        JsonNode n = node.get(fieldName);
+        if (n == null || n.isNull()) {
+            return null;
         }
-        return null;
+        return n.asDouble();
     }
 
-    public static Double getDouble(JsonNode node, String key, double defaultValue) {
-        if (node.hasNonNull(key)) {
-            return node.get(key).asDouble();
+    public static double getDoubleValue(JsonNode node, String fieldName, double defaultValue) {
+        JsonNode n = node.get(fieldName);
+        if (n == null || n.isNull()) {
+            return defaultValue;
         }
-        return defaultValue;
+        return n.asDouble(defaultValue);
     }
 }
