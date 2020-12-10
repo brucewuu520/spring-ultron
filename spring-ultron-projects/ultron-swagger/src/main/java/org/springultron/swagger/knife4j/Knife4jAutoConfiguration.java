@@ -32,6 +32,7 @@ class Knife4jAutoConfiguration {
      */
     @Bean(initMethod = "start")
     @ConditionalOnMissingBean(OpenApiExtensionResolver.class)
+    @ConditionalOnProperty(value = "swagger.knife4j.enable-markdown")
     OpenApiExtensionResolver markdownResolver(Knife4jProperties knife4jProperties) {
         OpenApiExtendSetting setting = knife4jProperties.getSetting();
         if (setting == null) {
@@ -62,7 +63,7 @@ class Knife4jAutoConfiguration {
 
         @Bean
         @ConditionalOnMissingBean(ProductionSecurityFilter.class)
-        @ConditionalOnProperty(name = "swagger.knife4j.production")
+        @ConditionalOnProperty(value = "swagger.knife4j.production")
         ProductionSecurityFilter productionSecurityFilter() {
             return new ProductionSecurityFilter(true);
         }

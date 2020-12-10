@@ -34,6 +34,10 @@ public class Knife4jProperties {
     @NestedConfigurationProperty
     private OpenApiExtendSetting setting;
     /**
+     * 是否支持MarkDown扩展
+     */
+    private boolean enableMarkdown = false;
+    /**
      * MarkDown分组文档集合
      */
     @NestedConfigurationProperty
@@ -71,6 +75,14 @@ public class Knife4jProperties {
         this.setting = setting;
     }
 
+    public boolean isEnableMarkdown() {
+        return enableMarkdown;
+    }
+
+    public void setEnableMarkdown(boolean enableMarkdown) {
+        this.enableMarkdown = enableMarkdown;
+    }
+
     public List<MarkdownProperty> getDocuments() {
         return documents;
     }
@@ -82,7 +94,7 @@ public class Knife4jProperties {
     /**
      * 接口文档Http Basic认证登录配置
      * <p>
-     *  文档安全
+     * 文档安全
      * </p>
      */
     public static class Knife4jHttpBasic {

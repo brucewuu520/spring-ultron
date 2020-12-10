@@ -76,7 +76,7 @@ public class SwaggerConfiguration {
             docket.securitySchemes(Collections.singletonList(apiKey()));
             docket.securityContexts(Collections.singletonList(securityContext()));
         }
-        openApiExtensionResolver.ifAvailable(resolver -> docket.extensions(resolver.buildExtensions("md")));
+        openApiExtensionResolver.ifAvailable(resolver -> docket.extensions(resolver.buildExtensions("default")));
         return docket;
     }
 
