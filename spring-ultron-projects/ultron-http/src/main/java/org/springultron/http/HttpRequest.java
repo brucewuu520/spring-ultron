@@ -20,6 +20,7 @@ import java.security.SecureRandom;
 import java.time.Duration;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Predicate;
 
 /**
  * okhttp3 请求封装
@@ -51,6 +52,7 @@ public class HttpRequest {
     private Duration connectTimeout;
     private Duration readTimeout;
     private Duration writeTimeout;
+    private RetryPolicy retryPolicy;
     private static volatile HttpLoggingInterceptor globalLoggingInterceptor;
     private HttpLoggingInterceptor.Level level;
 
@@ -320,6 +322,26 @@ public class HttpRequest {
         return this;
     }
 
+    public HttpRequest retry() {
+        this.retryPolicy = RetryPolicy.INSTANCE;
+        return this;
+    }
+
+    public HttpRequest retryOn(Predicate<ResponseSpec> respPredicate) {
+        this.retryPolicy = new RetryPolicy(respPredicate);
+        return this;
+    }
+
+    public HttpRequest retry(int maxAttempts, long sleepMillis) {
+        this.retryPolicy = new RetryPolicy(maxAttempts, sleepMillis);
+        return this;
+    }
+
+    public HttpRequest retry(int maxAttempts, long sleepMillis, Predicate<ResponseSpec> respPredicate) {
+        this.retryPolicy = new RetryPolicy(maxAttempts, sleepMillis);
+        return this;
+    }
+
     public HttpRequest log() {
         this.level = HttpLoggingInterceptor.Level.BODY;
         return this;
@@ -360,6 +382,9 @@ public class HttpRequest {
         }
         if (null != interceptor) {
             builder.addInterceptor(interceptor);
+        }
+        if (null != retryPolicy) {
+            builder.addInterceptor(new RetryInterceptor(retryPolicy));
         }
         if (null != proxy) {
             builder.proxy(proxy);

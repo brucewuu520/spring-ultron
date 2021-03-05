@@ -82,7 +82,11 @@ public enum ResultCode implements IResultCode {
     /**
      * 服务间调用失败
      */
-    CALL_ERROR(10500, "server call error");
+    CALL_ERROR(10500, "server call error"),
+    /**
+     * 数据库的唯一约束条件异常
+     */
+    SQL_CONSTRAINT_ERROR(10600, "插入重复数据");
 
     private final int code;
     private final String message;

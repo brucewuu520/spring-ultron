@@ -59,7 +59,7 @@ public class ResourceUtils extends org.springframework.util.ResourceUtils {
      */
     public static String readString(String resourceLocation) {
         try {
-            return IoUtils.readString(getResource(resourceLocation).getInputStream());
+            return IOUtils.readString(getResource(resourceLocation).getInputStream());
         } catch (IOException e) {
             e.printStackTrace();
             return StringPool.EMPTY;

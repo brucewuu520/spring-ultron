@@ -181,7 +181,7 @@ public class FileUtils extends FileCopyUtils {
      */
     public static String readToString(final File file, final Charset encoding) {
         try (final InputStream in = Files.newInputStream(file.toPath())) {
-            return IoUtils.readString(in, encoding);
+            return IOUtils.readString(in, encoding);
         } catch (IOException e) {
             throw Exceptions.unchecked(e);
         }
@@ -196,7 +196,7 @@ public class FileUtils extends FileCopyUtils {
      */
     public static byte[] readToByteArray(final File file) {
         try (final InputStream in = Files.newInputStream(file.toPath())) {
-            return IoUtils.readByteArray(in);
+            return IOUtils.readByteArray(in);
         } catch (IOException e) {
             throw Exceptions.unchecked(e);
         }
@@ -246,7 +246,7 @@ public class FileUtils extends FileCopyUtils {
      */
     public static void writeToFile(final File file, final String data, final Charset encoding, final boolean append) {
         try (final FileOutputStream out = new FileOutputStream(file, append)) {
-            IoUtils.write(data, out, encoding);
+            IOUtils.write(data, out, encoding);
         } catch (IOException e) {
             throw Exceptions.unchecked(e);
         }

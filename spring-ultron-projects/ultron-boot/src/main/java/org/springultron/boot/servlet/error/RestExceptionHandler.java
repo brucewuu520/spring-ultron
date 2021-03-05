@@ -95,7 +95,8 @@ public class RestExceptionHandler extends BaseExceptionHandler {
     @ExceptionHandler(ValidationException.class)
     public ApiResult<Object> handleError(ValidationException e) {
         log.error("参数校验异常", e);
-        return ApiResult.fail(ResultCode.PARAM_VALID_FAILED.getCode(), e.getCause().getMessage());
+        Throwable cause = e.getCause();
+        return ApiResult.fail(ResultCode.PARAM_VALID_FAILED.getCode(), cause == null ? e.getMessage() : cause.getMessage());
     }
 
     /**

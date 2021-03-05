@@ -13,9 +13,9 @@ import java.nio.charset.StandardCharsets;
  * @author brucewuu
  * @date 2019-06-07 01:09
  */
-public class IoUtils {
+public class IOUtils {
 
-    private IoUtils() {
+    private IOUtils() {
     }
 
     /**
