@@ -1,5 +1,6 @@
 package org.springultron.core.utils;
 
+import org.springframework.lang.Nullable;
 import org.springultron.core.pool.StringPool;
 
 import java.nio.ByteBuffer;
@@ -19,6 +20,9 @@ public class StringUtils extends org.springframework.util.StringUtils {
     private StringUtils() {
     }
 
+    public static boolean isEmpty(@Nullable String str) {
+        return null == str || "".equals(str);
+    }
 
     public static boolean isNotEmpty(String str) {
         return !StringUtils.isEmpty(str);

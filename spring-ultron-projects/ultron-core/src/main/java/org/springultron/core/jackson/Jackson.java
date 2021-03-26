@@ -10,6 +10,8 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.type.CollectionLikeType;
 import com.fasterxml.jackson.databind.type.MapType;
 import org.springframework.lang.Nullable;
@@ -482,6 +484,24 @@ public class Jackson {
         public ObjectMapper copy() {
             return super.copy();
         }
+    }
+
+    /**
+     * 创建 ObjectNode
+     *
+     * @return ObjectNode
+     */
+    public static ObjectNode createObjectNode() {
+        return getInstance().createObjectNode();
+    }
+
+    /**
+     * 创建 ArrayNode
+     *
+     * @return ArrayNode
+     */
+    public static ArrayNode createArrayNode() {
+        return getInstance().createArrayNode();
     }
 
     public static String getString(JsonNode node, String fieldName) {
