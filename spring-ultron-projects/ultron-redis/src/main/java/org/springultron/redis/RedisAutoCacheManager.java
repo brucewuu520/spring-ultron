@@ -7,7 +7,7 @@ import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.cache.RedisCacheWriter;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
-import org.springframework.util.StringUtils;
+import org.springultron.core.utils.StringUtils;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
