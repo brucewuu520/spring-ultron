@@ -39,15 +39,15 @@
     <properties>
         <main.basedir>${basedir}/..</main.basedir>
         <!-- app dependencies version start-->
-        <spring-boot.version>2.3.9.RELEASE</spring-boot.version>
-        <spring-cloud.version>Hoxton.SR10</spring-cloud.version>
-        <alibaba-cloud.version>2.2.5.RELEASE</alibaba-cloud.version>
+        <spring-boot.version>2.4.4</spring-boot.version>
+        <spring-cloud.version>2020.0.2</spring-cloud.version>
+        <alibaba-cloud.version>2020.0.RC1</alibaba-cloud.version>
         <feign-okhttp.version>11.0</feign-okhttp.version>
         <okhttp3.version>4.9.0</okhttp3.version>
         <mybatis-plus.version>3.4.2</mybatis-plus.version>
         <jwt.version>0.11.2</jwt.version>
-        <redisson.version>3.14.0</redisson.version>
-        <bouncycastle.version>1.67</bouncycastle.version>
+        <redisson.version>3.15.1</redisson.version>
+        <bouncycastle.version>1.68</bouncycastle.version>
         <zxing.version>3.4.1</zxing.version>
         <fastjson.version>1.2.75</fastjson.version>
         <guava.version>30.0-jre</guava.version>
