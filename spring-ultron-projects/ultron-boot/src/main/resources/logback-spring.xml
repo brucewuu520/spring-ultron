@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="false" debug="false">
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
     <springProperty scop="context" name="spring.application.name" source="spring.application.name" defaultValue="ultron-server"/>
     <!-- 定义日志等级-->
     <springProperty scop="context" name="logging.level" source="logging.level" defaultValue="INFO"/>
@@ -8,10 +9,10 @@
     <!-- 定义日志字符集 -->
     <springProperty scop="context" name="logging.charset" source="logging.charset" defaultValue="UTF-8"/>
     <springProperty scop="context" name="logging.file.path" source="logging.file.path" defaultValue="logs/${spring.application.name}"/>
-    <springProperty scop="context" name="logging.file.maxSize" source="logging.file.max-size" defaultValue="10MB"/>
-    <springProperty scop="context" name="logging.file.maxHistory" source="logging.file.max-history" defaultValue="100"/>
-    <springProperty scop="context" name="logging.file.totalSizeCap" source="logging.file.total-size-cap" defaultValue="50GB"/>
-    <springProperty scop="context" name="logging.file.cleanHistoryOnStart" source="logging.file.clean-history-on-start" defaultValue="false"/>
+    <springProperty scop="context" name="logging.file.maxSize" source="logging.logback.rollingpolicy.max-file-size" defaultValue="10MB"/>
+    <springProperty scop="context" name="logging.file.maxHistory" source="logging.logback.rollingpolicy.max-history" defaultValue="100"/>
+    <springProperty scop="context" name="logging.file.totalSizeCap" source="logging.logback.rollingpolicy.total-size-cap" defaultValue="50GB"/>
+    <springProperty scop="context" name="logging.file.cleanHistoryOnStart" source="logging.logback.rollingpolicy.clean-history-on-start" defaultValue="false"/>
     <!-- 彩色日志依赖的渲染类 -->
     <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
     <conversionRule conversionWord="wex" converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter"/>
@@ -82,6 +83,17 @@
         <appender-ref ref="ERROR"/>
     </root>
 
+    <!-- 减少部分debug日志 -->
+    <logger name="org.springframework.context" level="WARN"/>
+    <logger name="org.springframework.beans" level="WARN"/>
+    <logger name="springfox.bean.validators" level="ERROR"/>
+    <logger name="springfox.documentation" level="ERROR"/>
     <!-- 减少nacos日志 -->
     <logger name="com.alibaba.nacos" level="ERROR"/>
+
+    <shutdownHook class="ch.qos.logback.core.hook.DelayingShutdownHook"/>
+    <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
+        <resetJUL>true</resetJUL>
+    </contextListener>
+
 </configuration>
