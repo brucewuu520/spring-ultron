@@ -26,6 +26,19 @@
                 <module>spring-ultron-dependencies</module>
                 <module>spring-ultron-projects</module>
             </modules>
+        </profile>
+        <!-- Release Repository -->
+        <profile>
+            <id>release</id>
+            <activation>
+                <property>
+                    <name>!disable-spring-ultron-default-profile</name>
+                </property>
+            </activation>
+            <modules>
+                <module>spring-ultron-dependencies</module>
+                <module>spring-ultron-projects</module>
+            </modules>
             <build>
                 <plugins>
                     <plugin>
