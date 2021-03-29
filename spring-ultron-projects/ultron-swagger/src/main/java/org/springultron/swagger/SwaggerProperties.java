@@ -1,7 +1,6 @@
 package org.springultron.swagger;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 /**
  * Swagger文档自定义配置
@@ -38,12 +37,10 @@ public class SwaggerProperties {
     /**
      * 开发者信息
      */
-    @NestedConfigurationProperty
     private Contact contact;
     /**
      * 全局统一鉴权配置
      **/
-    @NestedConfigurationProperty
     private Authorization authorization = new Authorization();
 
     public boolean isEnable() {

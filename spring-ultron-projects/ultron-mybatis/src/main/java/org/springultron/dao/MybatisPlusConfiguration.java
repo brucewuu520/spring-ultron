@@ -1,6 +1,5 @@
 package org.springultron.dao;
 
-import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.autoconfigure.ConfigurationCustomizer;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
@@ -24,7 +23,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @MapperScan("com.*.*.mapper")
 @EnableTransactionManagement
 @Configuration(proxyBeanMethods = false)
-@EnableConfigurationProperties(MybatisPlusAutoFillProperties.class)
+@EnableConfigurationProperties(UltronMybatisPlusProperties.class)
 public class MybatisPlusConfiguration {
 
     /**
@@ -33,10 +32,10 @@ public class MybatisPlusConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean(MybatisPlusInterceptor.class)
-    public MybatisPlusInterceptor mybatisPlusInterceptor() {
+    public MybatisPlusInterceptor mybatisPlusInterceptor(UltronMybatisPlusProperties properties) {
         MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
         // 分页插件，默认MYSQL
-        interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL));
+        interceptor.addInnerInterceptor(new PaginationInnerInterceptor(properties.getDbType()));
         // 乐观锁插件
         interceptor.addInnerInterceptor(new OptimisticLockerInnerInterceptor());
         // 防止全表更新与删除插件
@@ -68,7 +67,7 @@ public class MybatisPlusConfiguration {
     @Bean
     @ConditionalOnMissingBean(MetaObjectHandler.class)
     @ConditionalOnProperty(value = "ultron.mybatis-plus.auto-fill.enable", matchIfMissing = true)
-    public MetaObjectHandler metaObjectHandler(MybatisPlusAutoFillProperties properties) {
+    public MetaObjectHandler metaObjectHandler(UltronMybatisPlusProperties properties) {
         return new UltronMetaObjectHandler(properties);
     }
 }
