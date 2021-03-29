@@ -1,6 +1,7 @@
 package org.springultron.core.convert;
 
 import org.springframework.context.annotation.Lazy;
+import org.springframework.lang.NonNull;
 
 import java.io.Serializable;
 import java.util.Iterator;
@@ -8,6 +9,8 @@ import java.util.Objects;
 import java.util.function.Function;
 
 /**
+ * Converter
+ *
  * @author brucewuu
  * @date 2019-05-27 15:07
  */
@@ -34,18 +37,23 @@ public abstract class Converter<A, B> implements Function<A, B> {
     public Iterable<B> convertAll(final Iterable<? extends A> fromIterable) {
         Objects.requireNonNull(fromIterable, "fromIterable can not be null");
         return new Iterable<B>() {
+            @NonNull
+            @Override
             public Iterator<B> iterator() {
                 return new Iterator<B>() {
                     private final Iterator<? extends A> fromIterator = fromIterable.iterator();
 
+                    @Override
                     public boolean hasNext() {
                         return this.fromIterator.hasNext();
                     }
 
+                    @Override
                     public B next() {
                         return Converter.this.convert(this.fromIterator.next());
                     }
 
+                    @Override
                     public void remove() {
                         this.fromIterator.remove();
                     }
@@ -93,6 +101,7 @@ public abstract class Converter<A, B> implements Function<A, B> {
             return this.original.correctedDoForward(a);
         }
 
+        @Override
         public Converter<A, B> reverse() {
             return this.original;
         }
@@ -100,7 +109,7 @@ public abstract class Converter<A, B> implements Function<A, B> {
         @Override
         public boolean equals(Object object) {
             if (object instanceof Converter.ReverseConverter) {
-                Converter.ReverseConverter<?, ?> that = (Converter.ReverseConverter)object;
+                Converter.ReverseConverter<?, ?> that = (Converter.ReverseConverter) object;
                 return this.original.equals(that.original);
             } else {
                 return false;
