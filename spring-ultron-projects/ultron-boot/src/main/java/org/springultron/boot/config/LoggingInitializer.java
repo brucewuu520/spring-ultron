@@ -8,7 +8,7 @@ import org.springframework.lang.NonNull;
 
 /**
  * APP初始化配置
- * 通过环境变量的形式注入 logging.file 自动维护 Spring Boot Admin Logger Viewer
+ * 通过环境变量的形式注入 logging.file.name 自动维护 Spring Boot Admin Logger Viewer
  *
  * @author brucewuu
  * @date 2020/6/24 14:39
