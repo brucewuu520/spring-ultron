@@ -3,7 +3,7 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>ultron-redis-lock</artifactId>
-    <name>Spring Ultron Redis Lock</name>
+    <name>Spring Ultron RedisLock</name>
     <description>Redis lock use Redisson</description>
 
     <parent>
