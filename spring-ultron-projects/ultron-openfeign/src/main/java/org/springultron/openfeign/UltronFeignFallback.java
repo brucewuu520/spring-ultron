@@ -52,7 +52,7 @@ public class UltronFeignFallback<T> implements MethodInterceptor {
         if (ApiResult.class != returnType) {
             return null;
         }
-        // 非 FeignException，直接返回【100009】请求被拒绝
+        // 非 FeignException，直接返回【428】请求被拒绝
         if (!(cause instanceof FeignException)) {
             return ApiResult.fail(ResultCode.REQUEST_REJECT.getCode(), errorMessage);
         }
@@ -82,13 +82,10 @@ public class UltronFeignFallback<T> implements MethodInterceptor {
         if (this == obj) {
             return true;
         }
-
         if (null == obj || this.getClass() != obj.getClass()) {
             return false;
         }
-
         UltronFeignFallback<?> that = (UltronFeignFallback<?>) obj;
-
         return this.targetType.equals(that.targetType);
     }
 }
