@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * 自定义登录过滤器（ session认证模式下的登录过滤器）
+ * 自定义登录过滤器（session认证模式下的登录过滤器）
  *
  * @author brucewuu
  * @date 2020/6/14 16:27
@@ -48,8 +48,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
                 throw new UsernameNotFoundException("username and password is empty");
             }
 
-            String username = jsonNode.get(getUsernameParameter()).asText();
-            String password = jsonNode.get(getPasswordParameter()).asText();
+            String username = Jackson.getString(jsonNode, getUsernameParameter());
+            String password = Jackson.getString(jsonNode, getPasswordParameter());
             if (username == null) {
                 username = "";
             }

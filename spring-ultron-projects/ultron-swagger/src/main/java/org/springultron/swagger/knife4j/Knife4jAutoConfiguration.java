@@ -52,10 +52,10 @@ class Knife4jAutoConfiguration {
         SecurityBasicAuthFilter securityBasicAuthFilter(Knife4jProperties knife4jProperties) {
             final Knife4jProperties.Knife4jHttpBasic httpBasic = knife4jProperties.getBasic();
             String defUsername = "admin", defPass = "123321";
-            if (!StringUtils.isEmpty(httpBasic.getUsername())) {
+            if (StringUtils.hasText(httpBasic.getUsername())) {
                 defUsername = httpBasic.getUsername();
             }
-            if (!StringUtils.isEmpty(httpBasic.getPassword())) {
+            if (StringUtils.hasText(httpBasic.getPassword())) {
                 defPass = httpBasic.getPassword();
             }
             return new SecurityBasicAuthFilter(true, defUsername, defPass);

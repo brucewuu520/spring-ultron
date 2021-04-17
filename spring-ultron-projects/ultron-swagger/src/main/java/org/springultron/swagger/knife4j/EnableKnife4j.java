@@ -11,11 +11,11 @@ import java.lang.annotation.*;
  * @author brucewuu
  * @date 2020/1/6 11:40
  */
-@Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
+@Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Import({Knife4jAutoConfiguration.class})
 @ConditionalOnWebApplication
+@Import({Knife4jAutoConfiguration.class})
 public @interface EnableKnife4j {
 
 }
