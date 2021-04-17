@@ -54,19 +54,57 @@ public class WebUtils extends org.springframework.web.util.WebUtils {
     }
 
     /**
-     * ResponseBody返回json
+     * http响应返回（json）
+     *
+     * @param response   HttpServletResponse
+     * @param jsonObject ResponseBody对象
+     */
+    public static void renderJson(HttpServletResponse response, Object jsonObject) {
+        if (jsonObject == null) {
+            renderJson(response, null);
+        } else {
+            renderJson(response, Jackson.toJson(jsonObject));
+        }
+    }
+
+    /**
+     * http响应返回（json）
      *
      * @param response HttpServletResponse
-     * @param result   ResponseBody对象
+     * @param json     json字符串
      */
-    public static void renderJson(HttpServletResponse response, Object result) {
+    public static void renderJson(HttpServletResponse response, String json) {
+        renderText(response, json, MediaType.APPLICATION_JSON_VALUE);
+    }
+
+    /**
+     * http响应返回
+     *
+     * @param response HttpServletResponse
+     * @param text     文本
+     */
+    public static void renderText(HttpServletResponse response, String text) {
+        renderText(response, text, MediaType.TEXT_PLAIN_VALUE);
+    }
+
+    /**
+     * http响应返回
+     *
+     * @param response    HttpServletResponse
+     * @param text        返回文本
+     * @param contentType Content-Type
+     */
+    public static void renderText(HttpServletResponse response, String text, String contentType) {
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setContentType(contentType);
         try (PrintWriter writer = response.getWriter()) {
-            writer.write(Jackson.toJson(result));
-            writer.flush();
+            if (text == null) {
+                writer.write("null");
+            } else {
+                writer.write(text);
+            }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 

@@ -2,7 +2,6 @@ package org.springultron.core.utils;
 
 import java.net.InetAddress;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
@@ -27,7 +26,7 @@ public final class IdUtils {
      */
     public static String randomUUID() {
         ThreadLocalRandom random = ThreadLocalRandom.current();
-        return new UUID(random.nextLong(), random.nextLong()).toString().replaceAll("-", "");
+        return new UUID(random.nextLong(), random.nextLong()).toString().replace("-", "");
     }
 
     private static final DateTimeFormatter DT_FORMATTER = DateTimeFormatter.ofPattern("yyMMddHHmmssSS");

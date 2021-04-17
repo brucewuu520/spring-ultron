@@ -48,6 +48,10 @@ public enum ResultCode implements IResultCode {
      */
     REQUEST_REJECT(428, "Request Reject"),
     /**
+     * 请求限流
+     */
+    TOO_MANY_REQUESTS(429, "Too Many Requests"),
+    /**
      * 请求参数缺失
      */
     PARAM_MISS(10406, "Param Miss"),
@@ -71,10 +75,6 @@ public enum ResultCode implements IResultCode {
      * 操作失败
      */
     API_EXCEPTION(10417, "Operation Fail"),
-    /**
-     * 限流
-     */
-    FLOW_LIMITING(10444, "Flow Limiting"),
     /**
      * 断言失败
      */

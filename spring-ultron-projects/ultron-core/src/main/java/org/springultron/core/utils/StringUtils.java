@@ -20,8 +20,8 @@ public class StringUtils extends org.springframework.util.StringUtils {
     private StringUtils() {
     }
 
-    public static boolean isEmpty(@Nullable String str) {
-        return null == str || "".equals(str);
+    public static boolean isEmpty(@Nullable CharSequence str) {
+        return null == str || "".contentEquals(str);
     }
 
     public static boolean isNotEmpty(String str) {
