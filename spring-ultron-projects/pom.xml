@@ -27,15 +27,19 @@
         <module>ultron-core</module>
         <module>ultron-crypto</module>
         <module>ultron-http</module>
+        <module>ultron-logging</module>
         <module>ultron-mongodb</module>
         <module>ultron-mybatis</module>
-        <module>ultron-openfeign</module>
-        <module>ultron-qrcode</module>
         <module>ultron-redis</module>
         <module>ultron-redis-lock</module>
+        <module>ultron-openfeign</module>
+        <module>ultron-caffeine</module>
         <module>ultron-security</module>
+        <module>ultron-captcha</module>
+        <module>ultron-qrcode</module>
         <module>ultron-swagger</module>
         <module>ultron-wechat</module>
+        <module>ultron-xxl-job</module>
     </modules>
 
     <dependencies>
