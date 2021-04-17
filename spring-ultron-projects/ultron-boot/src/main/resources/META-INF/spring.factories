@@ -1,4 +1,3 @@
-org.springframework.context.ApplicationContextInitializer=org.springultron.boot.config.LoggingInitializer
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   org.springultron.boot.config.UltronTaskAutoConfiguration,\
   org.springultron.boot.servlet.config.UltronUploadConfigurer,\
