@@ -4,6 +4,10 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.data.redis.core.ReactiveRedisTemplate;
+import org.springframework.data.redis.core.ReactiveStringRedisTemplate;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springultron.redis.ReactiveRedisClient;
 import org.springultron.redis.RedisClient;
 
@@ -21,17 +25,17 @@ public class RedisClientAutoConfiguration {
      * 阻塞式Redis操作客户端
      */
     @Bean
-    public RedisClient redisClient() {
-        return new RedisClient();
+    public RedisClient redisClient(StringRedisTemplate stringRedisTemplate, RedisTemplate<String, Object> redisTemplate) {
+        return new RedisClient(stringRedisTemplate, redisTemplate);
     }
 
     /**
      * 反应式Redis操作客户端
      */
     @Bean
-    @ConditionalOnBean(name = {"reactiveRedisTemplate", "reactiveStringRedisTemplate"})
-    public ReactiveRedisClient reactiveRedisClient() {
-        return new ReactiveRedisClient();
+    @ConditionalOnBean(name = {"reactiveStringRedisTemplate", "reactiveRedisTemplate"})
+    public ReactiveRedisClient reactiveRedisClient(ReactiveStringRedisTemplate reactiveStringRedisTemplate, ReactiveRedisTemplate<String, Object> reactiveRedisTemplate) {
+        return new ReactiveRedisClient(reactiveStringRedisTemplate, reactiveRedisTemplate);
     }
 
 }

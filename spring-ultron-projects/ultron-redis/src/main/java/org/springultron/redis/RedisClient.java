@@ -1,6 +1,5 @@
 package org.springultron.redis;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.TimeoutUtils;
@@ -16,14 +15,14 @@ import java.util.concurrent.TimeUnit;
  * @author brucewuu
  * @date 2019-05-31 14:26
  */
-@SuppressWarnings("SpringJavaAutowiredMembersInspection")
 public class RedisClient {
+    private final StringRedisTemplate stringRedisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
 
-    @Autowired
-    private StringRedisTemplate stringRedisTemplate;
-
-    @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
+    public RedisClient(StringRedisTemplate stringRedisTemplate, RedisTemplate<String, Object> redisTemplate) {
+        this.stringRedisTemplate = stringRedisTemplate;
+        this.redisTemplate = redisTemplate;
+    }
 
     public StringRedisTemplate getStringRedisTemplate() {
         return stringRedisTemplate;
