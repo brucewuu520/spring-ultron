@@ -29,10 +29,11 @@ public class RedisAutoCacheManager extends RedisCacheManager {
     @NonNull
     @Override
     protected RedisCache createRedisCache(@NonNull String name, @Nullable RedisCacheConfiguration cacheConfig) {
-        if (!StringUtils.isEmpty(name) && name.contains("#")) {
+        String cacheName = name;
+        if (StringUtils.isNotEmpty(name) && name.contains("#")) {
             String[] array = name.split("#");
             if (array.length > 1) {
-                name = array[0].trim();
+                cacheName = array[0].trim();
                 // 转换时间，支持时间单位例如：300ms，默认单位秒
                 Duration ttl = DurationStyle.detectAndParse(array[1].trim(), ChronoUnit.SECONDS);
                 if (cacheConfig != null && cacheConfig.getTtl().compareTo(ttl) != 0) {
@@ -40,6 +41,6 @@ public class RedisAutoCacheManager extends RedisCacheManager {
                 }
             }
         }
-        return super.createRedisCache(name, cacheConfig);
+        return super.createRedisCache(cacheName, cacheConfig);
     }
 }
