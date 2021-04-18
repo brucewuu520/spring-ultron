@@ -1,8 +1,6 @@
 package org.springultron.job;
 
 import com.xxl.job.core.executor.impl.XxlJobSpringExecutor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -21,12 +19,11 @@ import org.springframework.util.StringUtils;
 @ConditionalOnProperty(prefix = "xxl.job", value = "enabled", havingValue = "true", matchIfMissing = true)
 @EnableConfigurationProperties(XxlJobProperties.class)
 public class XxlJobAutoConfiguration {
-    private final Logger log = LoggerFactory.getLogger(XxlJobAutoConfiguration.class);
 
     @Bean
     @ConditionalOnMissingBean
     public XxlJobSpringExecutor xxlJobExecutor(XxlJobProperties properties, Environment environment) {
-        log.info(">>>>>>>>>>> xxl-job config init.");
+        System.out.println(">>>>>>>>>>> xxl-job config init.");
         XxlJobSpringExecutor xxlJobExecutor = new XxlJobSpringExecutor();
         XxlJobProperties.XxlJobAdminProps admin = properties.getAdmin();
         xxlJobExecutor.setAdminAddresses(admin.getAddress());
