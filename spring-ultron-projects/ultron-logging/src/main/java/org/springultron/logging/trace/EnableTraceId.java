@@ -1,6 +1,5 @@
 package org.springultron.logging.trace;
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.*;
@@ -19,8 +18,7 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@ConditionalOnWebApplication
-@Import(TraceIdAutoConfiguration.class)
+@Import({TraceIdAutoConfiguration.class})
 public @interface EnableTraceId {
 
 }
