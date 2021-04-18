@@ -44,7 +44,7 @@ class Knife4jAutoConfiguration {
     @Configuration(proxyBeanMethods = false)
     @EnableConfigurationProperties({Knife4jProperties.class})
     @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
-    static class SecurityFilterConfiguration{
+    static class SecurityFilterConfiguration {
 
         @Bean
         @ConditionalOnMissingBean(SecurityBasicAuthFilter.class)
