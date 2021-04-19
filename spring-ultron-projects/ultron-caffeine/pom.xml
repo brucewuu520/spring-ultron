@@ -8,8 +8,8 @@
     <description>Caffeine cache usage config</description>
 
     <parent>
-        <groupId>org.springultron</groupId>
         <artifactId>spring-ultron-projects</artifactId>
+        <groupId>org.springultron</groupId>
         <version>${revision}</version>
     </parent>
 
@@ -21,7 +21,6 @@
         <dependency>
             <groupId>com.github.ben-manes.caffeine</groupId>
             <artifactId>caffeine</artifactId>
-            <version>${caffeine.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
