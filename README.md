@@ -369,7 +369,7 @@
 				cache-names: my_cache
 				type: caffeine
 				caffeine:
-					spec: maximumSize=1024,refreshAfterWrite=60s
+					spec: maximumSize=1024,expireAfterWrite=60s
 	
 		@Cacheable(value = "FIVE_SECOND", key = "#id")
 		public String findUserById(Serializable id) {
