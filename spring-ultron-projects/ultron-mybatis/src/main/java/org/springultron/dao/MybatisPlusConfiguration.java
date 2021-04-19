@@ -47,7 +47,6 @@ public class MybatisPlusConfiguration {
      * 自定义Configuration
      */
     @Bean
-    @ConditionalOnMissingBean(ConfigurationCustomizer.class)
     public ConfigurationCustomizer configurationCustomizer() {
         return configuration -> configuration.setUseDeprecatedExecutor(false);
     }
@@ -66,7 +65,7 @@ public class MybatisPlusConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean(MetaObjectHandler.class)
-    @ConditionalOnProperty(value = "ultron.mybatis-plus.auto-fill.enable", matchIfMissing = true)
+    @ConditionalOnProperty(value = "ultron.mybatis-plus.auto-fill.enable")
     public MetaObjectHandler metaObjectHandler(UltronMybatisPlusProperties properties) {
         return new UltronMetaObjectHandler(properties);
     }

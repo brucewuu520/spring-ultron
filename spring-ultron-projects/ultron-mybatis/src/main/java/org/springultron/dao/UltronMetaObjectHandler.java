@@ -17,7 +17,7 @@ public class UltronMetaObjectHandler implements MetaObjectHandler {
     private final UltronMybatisPlusProperties.AutoFill autoFill;
 
     public UltronMetaObjectHandler(UltronMybatisPlusProperties properties) {
-        this.autoFill = properties.getAutoFill() == null ? new UltronMybatisPlusProperties.AutoFill() : properties.getAutoFill();
+        this.autoFill = properties.getAutoFill();
     }
 
     @Override

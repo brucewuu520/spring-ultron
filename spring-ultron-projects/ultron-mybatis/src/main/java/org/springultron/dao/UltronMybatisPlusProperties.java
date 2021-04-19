@@ -17,7 +17,7 @@ public class UltronMybatisPlusProperties {
      */
     private DbType dbType = DbType.MYSQL;
 
-    private AutoFill autoFill;
+    private AutoFill autoFill = new AutoFill();
 
     public DbType getDbType() {
         return dbType;
@@ -35,6 +35,9 @@ public class UltronMybatisPlusProperties {
         this.autoFill = autoFill;
     }
 
+    /**
+     * 自动填充配置
+     */
     public static class AutoFill {
         /**
          * 是否开启自动填充，默认开启
