@@ -16,17 +16,23 @@
 *├── spring-ultron                  项目父级目录
     ├── spring-ultron-dependencies  依赖版本统一管理
     ├── spring-ultron-projects      核心模块工程
+        ├── ultron-boot                 Spring boot脚手架，servlet/reactive全局异常捕获、基于aop的注解API日志打印(支持配置文件配置日志开关，日志内容等)、WebClient http客户端封装
+        ├── ultron-cloud                Spring cloud脚手架（基于Spring Cloud Alibaba）
         ├── ultron-core                 核心库(请求统一返回体、常用错误代码、自定义业务异常、Jackson序列化/反序列化配置、常用工具类等)
+        ├── ultron-logging              logback 的日志扩展；支持输出到ELK；链路追踪
         ├── ultron-crypto               对称及非对称加密解密工具，实现了:AES、DES、RSA、国密SM2、SM4等；以及各种秘钥生成工具
         ├── ultron-mybatis              mybatis plus自动化配置、分页工具等
         ├── ultron-qrcode               二维码生成、美化、识别
         ├── ultron-redis                Redis自动化配置、操作客户端；基于Redis的Spring Cache配置
         ├── ultron-redis-lock           基于Redis的分布式锁
-        ├── ultron-boot                 Spring boot脚手架，servlet/reactive全局异常捕获、基于aop的注解API日志打印(支持配置文件配置日志开关，日志内容等)、WebClient http客户端封装
-        ├── ultron-cloud                Spring cloud脚手架（基于Spring Cloud Alibaba）
-        ├── ultron-http                 基于OKhttp3 4.0.0版本封装的http客户端，Fluent语法风格，使用非常简便
+        ├── ultron-caffeine             基于Caffeine的Spring Cache配置(默认定义了四个不同过期时间的缓存空间)     
+        ├── ultron-captcha              图形验证码生成和校验
+        ├── ultron-http                 基于OKhttp3封装的http客户端，Fluent语法风格，使用非常简便
+        ├── ultron-openfeign            openfeign集成sentinel限流，熔断降级
         ├── ultron-security             Spring Security通用配置，支持jwt登录鉴权，RBAC权限控制
         ├── ultron-swagger              Swagger文档自动化配置(可在配置文件中开启/关闭，支持http basic认证)
+        ├── ultron-xxl-job              xxl-job集成
+        ├── ultron-wechat               微信开发工具包
 ```    
 
 ## 使用步骤
@@ -71,7 +77,7 @@
         @GetMapping("/test")
         public ApiResult<Test>> test() {
             Test test = new Test();
-            return ApiResult.success(test); // or return ApiResult.failed(ResultCode.PARAM_VALID_FAILED);
+            return ApiResult.success(test); // or return ApiResult.fail(ResultCode.PARAM_VALID_FAILED);
         }
         
     自定义异常使用：
@@ -156,10 +162,14 @@
         Mono<Boolean> result = reactiveRedisClient.set("key", obj, Duration.ofSeconds(120))
         
         
-    Spring cache 扩展cache name 支持 # 号分隔 cache name 和 超时 ttl(单位秒)。使用示例：
+    Spring cache 扩展cache name 支持 # 号分隔 cache name 和 超时 ttl(默认单位秒)。使用示例：
     
-        @CachePut(value = "user#300", key = "#id")
-    
+		@Cacheable(value = "user_cache#30m", key = "#id")
+		public String findUserById(Serializable id) {
+			log.info("selectById");
+			return "selectById:" + id;
+		}
+        
 6、Spring boot脚手架，servlet/全局异常捕获、基于aop的注解API日志打印(支持配置文件配置日志开关，日志内容等)、WebClient http客户端封装
 
     <dependency>
@@ -260,11 +270,7 @@
         <artifactId>ultron-security</artifactId>
     </dependency> 
                 
-10、基于OkHttp3 4.x版本使用示例
-
-    <properties>
-        <okhttp3.version>4.4.0</okhttp3.version>
-    </properties>
+10、ultron-http 使用示例
     
     <dependency>
         <groupId>org.springultron</groupId>
@@ -284,7 +290,7 @@
                params.put("name", "张三");
                params.put("age", 23);           
        Map<String, Object> result = HttpRequest.post("https://xxx")
-                         .bodyJson(params)
+                         .bodyValue(params)
                          .log()
                          .execute()
                          .asMap();
@@ -294,17 +300,176 @@
        HttpRequest.get("https://xxx")
              .query("name1", "value1")
              .query("name2", "value2")
-             .enqueue(new Callback() {
-                 @Override
-                 public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                     
-                 }
-     
-                 @Override
-                 public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-     
-                 })
+             .async()
+             .success(responseSpec -> {
+                 JSONObject result = responseSpec.asObject(JSONObject.class);
+             })
+             .fail(((request, e) -> {
+                    log.error("请求失败", e);
+             }))
+             .execute()
 
+11、ultron-logging 使用示例
+若开启logstash必须添加下面依赖:
+
+	<dependency>
+            <groupId>net.logstash.logback</groupId>
+            <artifactId>logstash-logback-encoder</artifactId>
+	</dependency>
+
+	ultron:
+		logging:
+			close-console: true -关闭控制台日志输出
+			close-file: false - 关闭文件日志输出
+			logstash:
+				enabled: true -开启logstash
+				destinations: localhost:4560,localhost:4561
+开启链路追踪：
+启动类上配置 @EnableTraceId 注解，配置文件添加如下配置：
+
+	logging.pattern.console="%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr([%X{traceId}]){yellow} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n"
+	
+	logging.pattern.file="%d{yyyy-MM-dd HH:mm:ss.SSS} ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } --- [%t] [%X{traceId}] %-40.40logger{39} : %m%n"
+	
+
+12、图形验证码使用
+
+	<dependency>
+		<groupId>org.springultron</groupId>
+		<artifactId>ultron-captcha</artifactId>
+	</dependency>	
+	
+	@Autowired
+	private CaptchaService captchaService
+	
+	String code = captchaService.generateBase64(uuid)
+	
+	boolean checkResult = captchaService.validate(uuid,userInputCaptcha)
+	
+	自定义缓存：
+		继承CaptchaCache实现自己的缓存实现，注入CaptchaCache bean覆盖默认的bean
+		
+	
+13、ultron-caffeine 缓存使用
+
+	<dependency>
+		<groupId>org.springultron</groupId>
+		<artifactId>ultron-caffeine</artifactId>
+	</dependency>
+
+	添加注解：@EnableCaching开启缓存
+	ultron-caffeine默认配置了四个不同过期时间的缓存空间:
+		1、cacheNames=FIVE_SECOND（过期时间5分钟）
+		2、cacheNames=THIRTY_SECOND（过期时间30分钟）
+		3、cacheNames=TWO_HOUR（过期时间2小时）
+		4、cacheNames=A_WEEK（过期时间7天）
+	同时也可以配置Spring cache的缓存配置：
+		spring:
+			cache:
+				cache-names: my_cache
+				type: caffeine
+				caffeine:
+					spec: maximumSize=1024,refreshAfterWrite=60s
+	
+		@Cacheable(value = "FIVE_SECOND", key = "#id")
+		public String findUserById(Serializable id) {
+			log.info("selectById");
+			return "selectById:" + id;
+		}
+		
+		@Autowired
+		private CacheManager cacheManager;
+		
+		public String findUserById(Serializable id) {
+			log.info("selectById");
+			String value = cacheManager.getCache(CaffeineCacheEnum.FIVE_SECOND.getName()).get(id, String.class);
+			return "selectById:" + id;
+		}
+		
+14、微信开发工具包
+
+	<dependency>
+		<groupId>org.springultron</groupId>
+		<artifactId>ultron-wechat</artifactId>
+	</dependency>
+	
+	公众号配置：
+		wechat:
+			wx-conf:
+				app-id: xxx
+				app-secret: xxx
+				token: xxx
+				encoding-aes-key: xxx
+				encrypt-message: true
+				
+	小程序配置：
+		wechat:
+			wxa-conf:
+				app-id: xxx
+				app-secret: xxx
+				token: xxx
+				encoding-aes-key: xxx
+				encrypt-message: true
+	
+	公众号：
+		@Autowired
+		private WxApiService wxApiService;
+		
+		消息接收：
+		@RestController
+		@RequestMapping("/wechat")
+		public class WechatMessageController extends WxMsgControllerAdapter {
+			@Override
+			protected void processTextMsg(InTextMsg textMsg) {
+				log.info(Jackson.toJson(textMsg));
+				renderOutTextMsg(textMsg, "欢迎关注");
+			}
+			
+			@Override
+			protected void processFollowEvent(InFollowEvent followEvent) {
+				renderDefault();
+			}
+			
+			@Override
+			protected void processMenuEvent(InMenuEvent menuEvent) {
+				renderDefault();
+			}
+		
+		}
+		
+		小程序：
+		@Autowired
+		private WxaApiService wxaApiService;
+	
+		消息接收：
+		@RestController
+		public class MessageController extends WxaMsgController {
+			@Override
+			protected void processTextMsg(WxaTextMsg textMsg) {
+			
+			}
+			
+			@Override
+			protected void processImageMsg(WxaImageMsg imageMsg) {
+			
+			}
+			
+			@Override
+			protected void processMiniProgramPageMsg(WxaMiniProgramPageMsg miniProgramPageMsg) {
+			
+			}
+			
+			@Override
+			protected void processUserEnterSessionMsg(WxaUserEnterSessionMsg userEnterSessionMsg) {
+			
+			}
+			
+			@Override
+			protected void processUnknownMsg(WxaUnknownMsg unknownMsg) {
+			
+			}
+		}
+	
     
 ## 更新日志
 * 2.0版本基于Spring boot 2.2.x
