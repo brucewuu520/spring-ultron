@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplicat
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
@@ -25,6 +26,7 @@ public class SentinelConfiguration {
     public BlockRequestHandler blockRequestHandler() {
         // Return 429 (Too Many Requests) by default.
         return (exchange, throwable) -> ServerResponse.status(HttpStatus.TOO_MANY_REQUESTS)
+                .contentType(MediaType.APPLICATION_JSON)
                 .body(BodyInserters.fromValue(HttpStatus.TOO_MANY_REQUESTS.getReasonPhrase()));
     }
 }

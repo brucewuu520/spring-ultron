@@ -24,7 +24,7 @@ public class SentinelConfiguration {
         return (request, response, e) -> {
             // Return 429 (Too Many Requests) by default.
             response.setStatus(HttpStatus.TOO_MANY_REQUESTS.value());
-            response.getWriter().print(HttpStatus.TOO_MANY_REQUESTS.getReasonPhrase());
+            response.getWriter().write(HttpStatus.TOO_MANY_REQUESTS.getReasonPhrase());
         };
     }
 }
