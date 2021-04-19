@@ -5,12 +5,12 @@ import okhttp3.*;
 import okhttp3.internal.Util;
 import okhttp3.internal.http.HttpMethod;
 import okhttp3.logging.HttpLoggingInterceptor;
+import org.springframework.lang.Nullable;
 import org.springultron.core.exception.Exceptions;
 import org.springultron.core.jackson.Jackson;
 import org.springultron.http.ssl.DisableValidationTrustManager;
 import org.springultron.http.ssl.TrustAllHostNames;
 
-import javax.annotation.Nullable;
 import javax.net.ssl.*;
 import java.net.*;
 import java.nio.charset.Charset;
@@ -222,7 +222,7 @@ public class HttpRequest {
     }
 
     public HttpRequest bodyValue(final String jsonValue) {
-        this.requestBody = RequestBody.create(jsonValue, MEDIA_TYPE_JSON);
+        this.requestBody = RequestBody.create(MEDIA_TYPE_JSON, jsonValue);
         return this;
     }
 
