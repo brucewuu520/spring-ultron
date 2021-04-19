@@ -30,6 +30,7 @@ public class RedisAutoCacheManager extends RedisCacheManager {
     @Override
     protected RedisCache createRedisCache(@NonNull String name, @Nullable RedisCacheConfiguration cacheConfig) {
         String cacheName = name;
+        System.err.println("--createRedisCache: " + cacheName);
         if (StringUtils.isNotEmpty(name) && name.contains("#")) {
             String[] array = name.split("#");
             if (array.length > 1) {
@@ -41,6 +42,7 @@ public class RedisAutoCacheManager extends RedisCacheManager {
                 }
             }
         }
+        System.err.println("--createRedisCache22: " + cacheName);
         return super.createRedisCache(cacheName, cacheConfig);
     }
 }
