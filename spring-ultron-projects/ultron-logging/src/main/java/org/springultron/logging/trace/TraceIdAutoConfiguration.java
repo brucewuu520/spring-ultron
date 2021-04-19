@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * 请求链路日志追踪自动化配置
+ * 链路追踪自动化配置
  *
  * @author brucewuu
  * @date 2021/4/18 下午6:37

@@ -6,7 +6,7 @@ import org.springframework.util.StringUtils;
 import java.util.UUID;
 
 /**
- * 请求链路日志追踪
+ * 链路追踪context
  *
  * @author brucewuu
  * @date 2021/4/17 下午4:44

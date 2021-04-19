@@ -7,7 +7,7 @@ import org.springframework.web.filter.AbstractRequestLoggingFilter;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * 请求链路日志追踪
+ * 链路追踪日志过滤器配置
  *
  * @author brucewuu
  * @date 2021/4/17 下午4:53
