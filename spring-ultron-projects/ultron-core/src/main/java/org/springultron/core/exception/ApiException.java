@@ -1,6 +1,5 @@
 package org.springultron.core.exception;
 
-import org.springframework.lang.Nullable;
 import org.springultron.core.result.ApiResult;
 import org.springultron.core.result.IResultCode;
 
@@ -13,7 +12,6 @@ import org.springultron.core.result.IResultCode;
 public class ApiException extends RuntimeException {
     private static final long serialVersionUID = 250919198459751841L;
 
-    @Nullable
     private final ApiResult<?> result;
 
     public ApiException(ApiResult<?> result) {
@@ -21,18 +19,23 @@ public class ApiException extends RuntimeException {
         this.result = result;
     }
 
-    public ApiException(IResultCode resultStatus) {
-        this(resultStatus, resultStatus.getMessage());
+    public ApiException(IResultCode resultCode) {
+        this(resultCode, resultCode.getMessage());
     }
 
-    public ApiException(IResultCode resultStatus, String message) {
+    public ApiException(IResultCode resultCode, String message) {
         super(message);
-        this.result = ApiResult.fail(resultStatus, message);
+        this.result = ApiResult.fail(resultCode, message);
+    }
+
+    public ApiException(int resultCode, String message) {
+        super(message);
+        this.result = ApiResult.fail(resultCode, message);
     }
 
     public ApiException(String message) {
         super(message);
-        this.result = null;
+        this.result = ApiResult.fail(message);
     }
 
     public ApiException(Throwable cause) {
@@ -42,17 +45,17 @@ public class ApiException extends RuntimeException {
     public ApiException(String message, Throwable cause) {
         super(message, cause);
         doFillInStackTrace();
-        this.result = null;
+        this.result = ApiResult.fail(message);
     }
 
-    @Nullable
-    @SuppressWarnings("unchecked")
     public <T> ApiResult<T> getResult() {
+        //noinspection unchecked
         return (ApiResult<T>) result;
     }
 
     /**
      * 提高性能
+     *
      * @return Throwable
      */
     @Override
@@ -60,7 +63,6 @@ public class ApiException extends RuntimeException {
         return this;
     }
 
-    @SuppressWarnings("UnusedReturnValue")
     public Throwable doFillInStackTrace() {
         return super.fillInStackTrace();
     }
