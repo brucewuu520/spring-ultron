@@ -29,7 +29,8 @@ public class WxUserInfo implements Serializable {
     private String unionId;
 
     @ApiModelProperty(value = "用户的昵称", position = 4)
-    private String nickname;
+    @JsonAlias(value = "nickname")
+    private String nickName;
 
     @ApiModelProperty(value = "用户头像，最后一个数值代表正方形头像大小（有0、46、64、96、132数值可选，0代表640*640正方形头像），用户没有头像时该项为空。若用户更换头像，原有头像URL将失效", position = 5)
     @JsonAlias(value = "headimgurl")
@@ -47,7 +48,7 @@ public class WxUserInfo implements Serializable {
     @ApiModelProperty(value = "用户所在城市", position = 9)
     private String city;
 
-    @ApiModelProperty(value = "用户的语言，简体中文为zh_CN", position = 10)
+    @ApiModelProperty(value = "用户的语言(英文:en 简体中文:zh_CN 繁体中文:zh_TW)", position = 10)
     private String language;
 
     @ApiModelProperty(value = "用户关注时间，为时间戳。如果用户曾多次关注，则取最后关注时间", position = 11)
@@ -111,12 +112,12 @@ public class WxUserInfo implements Serializable {
         this.unionId = unionId;
     }
 
-    public String getNickname() {
-        return nickname;
+    public String getNickName() {
+        return nickName;
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
     }
 
     public String getHeadImgUrl() {

@@ -2,6 +2,7 @@ package org.springultron.wechat.msg.wxa;
 
 /**
  * 图片消息
+ * 用户在客服会话中发送图片消息时将产生如下数据包
  *
  * @author brucewuu
  * @date 2021/4/16 下午6:22

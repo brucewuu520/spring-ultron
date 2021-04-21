@@ -125,6 +125,20 @@ public abstract class WxMsgController {
     protected abstract void processMassEvent(InMassEvent massEvent);
 
     /**
+     * 处理接收到的用户操作订阅通知弹窗推送事件
+     *
+     * @param subscribeMsgPopupEvent 用户操作订阅通知弹窗推送事件
+     */
+    protected abstract void processSubscribeMsgPopupEvent(InSubscribeMsgPopupEvent subscribeMsgPopupEvent);
+
+    /**
+     * 处理接收到的订阅通知发送结果推送事件
+     *
+     * @param subscribeMsgPopupEvent 订阅通知发送结果推送事件
+     */
+    protected abstract void processSubscribeMsgSentEvent(InSubscribeMsgSentEvent subscribeMsgPopupEvent);
+
+    /**
      * 处理接收到的未知事件
      *
      * @param unknownEvent 未知事件
@@ -179,6 +193,10 @@ public abstract class WxMsgController {
                 processMenuEvent((InMenuEvent) msg);
             } else if (msg instanceof InMassEvent) {
                 processMassEvent((InMassEvent) msg);
+            } else if (msg instanceof InSubscribeMsgPopupEvent) {
+                processSubscribeMsgPopupEvent((InSubscribeMsgPopupEvent) msg);
+            } else if (msg instanceof InSubscribeMsgSentEvent) {
+                processSubscribeMsgSentEvent((InSubscribeMsgSentEvent) msg);
             } else if (msg instanceof InUnknownEvent) {
                 InUnknownEvent unknownEvent = (InUnknownEvent) msg;
                 processUnknownEvent(unknownEvent);

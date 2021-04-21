@@ -76,6 +76,25 @@ public class MsgModel {
     @XPath("//ThumbMediaId")
     private String thumbMediaId;
 
+    // 校验图片/音频是否含有违法违规内容异步检测结果
+    @XPath("//isrisky")
+    private int isrisky;
+
+    @JsonProperty("extra_info_json")
+    @XPath("//extra_info_json")
+    private String extraInfoJson;
+
+    @XPath("//appid")
+    private String appid;
+
+    @JsonProperty("trace_id")
+    @XPath("//trace_id")
+    private String traceId;
+
+    @JsonProperty("status_code")
+    @XPath("//status_code")
+    private int statusCode;
+
     public String getToUserName() {
         return toUserName;
     }
@@ -194,6 +213,46 @@ public class MsgModel {
 
     public void setThumbMediaId(String thumbMediaId) {
         this.thumbMediaId = thumbMediaId;
+    }
+
+    public int getIsrisky() {
+        return isrisky;
+    }
+
+    public void setIsrisky(int isrisky) {
+        this.isrisky = isrisky;
+    }
+
+    public String getExtraInfoJson() {
+        return extraInfoJson;
+    }
+
+    public void setExtraInfoJson(String extraInfoJson) {
+        this.extraInfoJson = extraInfoJson;
+    }
+
+    public String getAppid() {
+        return appid;
+    }
+
+    public void setAppid(String appid) {
+        this.appid = appid;
+    }
+
+    public String getTraceId() {
+        return traceId;
+    }
+
+    public void setTraceId(String traceId) {
+        this.traceId = traceId;
+    }
+
+    public int getStatusCode() {
+        return statusCode;
+    }
+
+    public void setStatusCode(int statusCode) {
+        this.statusCode = statusCode;
     }
 
     @Override

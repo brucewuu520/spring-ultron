@@ -1,9 +1,14 @@
 package org.springultron.wechat.msg.wx;
 
+import org.springultron.core.utils.Lists;
 import org.springultron.core.utils.StringUtils;
 import org.springultron.wechat.msg.XmlHelper;
 import org.springultron.wechat.msg.wx.in.*;
 import org.springultron.wechat.msg.wx.in.event.*;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import java.util.List;
 
 /**
  * 接收消息解析
@@ -256,6 +261,43 @@ public class InMsgParser {
             InMenuEvent e = new InMenuEvent(toUserName, fromUserName, createTime, event);
             e.setEventKey(eventKey);
             e.setMenuId(xmlHelper.getString("//MenuId"));
+            return e;
+        }
+
+        if ("subscribe_msg_popup_event".equals(event)) {
+            // 用户操作订阅通知弹窗推送事件
+            InSubscribeMsgPopupEvent e = new InSubscribeMsgPopupEvent(toUserName, fromUserName, createTime, event);
+            NodeList nodeList = xmlHelper.getNodeList("//SubscribeMsgPopupEvent");
+            final int length = nodeList == null ? 0 : nodeList.getLength();
+            if (length == 0) {
+                return e;
+            }
+            List<InSubscribeMsgPopupEvent.Item> items = Lists.newArrayList(length);
+            for (int i = 0; i < length; i++) {
+                Node node = nodeList.item(i);
+                InSubscribeMsgPopupEvent.Item item = new InSubscribeMsgPopupEvent.Item();
+                item.setTemplateId(xmlHelper.getString(node, "//TemplateId"));
+                item.setStatus(xmlHelper.getString(node, "//SubscribeStatusString"));
+                item.setPopupScene(xmlHelper.getString(node, "//PopupScene"));
+                items.add(item);
+            }
+            e.setItems(items);
+            return e;
+        }
+
+        if ("subscribe_msg_sent_event".equals(event)) {
+            // 订阅通知发送结果推送事件
+            InSubscribeMsgSentEvent e = new InSubscribeMsgSentEvent(toUserName, fromUserName, createTime, event);
+            NodeList nodeList = xmlHelper.getNodeList("//SubscribeMsgSentEvent");
+            final int length = nodeList == null ? 0 : nodeList.getLength();
+            if (length == 0) {
+                return e;
+            }
+            Node node = nodeList.item(length - 1);
+            e.setMsgId(xmlHelper.getString(node, "//MsgID"));
+            e.setTemplateId(xmlHelper.getString(node, "//TemplateId"));
+            e.setErrorCode(xmlHelper.getString(node, "//ErrorCode"));
+            e.setErrorMsg(xmlHelper.getString(node, "//ErrorStatus"));
             return e;
         }
 

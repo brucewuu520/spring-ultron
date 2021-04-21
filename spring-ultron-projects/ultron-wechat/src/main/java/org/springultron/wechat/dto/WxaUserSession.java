@@ -16,7 +16,7 @@ import java.io.Serializable;
 public class WxaUserSession implements Serializable {
     private static final long serialVersionUID = 7842513978217539511L;
 
-    @ApiModelProperty(value = "用户唯一标识", required = true, position = 1)
+    @ApiModelProperty(value = "用户的标识，对当前小程序唯一", required = true, position = 1)
     @JsonAlias(value = "openid")
     private String openId;
 

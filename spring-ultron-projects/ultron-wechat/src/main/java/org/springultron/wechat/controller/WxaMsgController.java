@@ -39,6 +39,7 @@ public abstract class WxaMsgController {
 
     /**
      * 处理接收到的文本消息
+     * 用户在客服会话中发送文本消息时将产生如下数据包
      *
      * @param textMsg 文本消息
      */
@@ -46,6 +47,7 @@ public abstract class WxaMsgController {
 
     /**
      * 处理接收到的图片消息
+     * 用户在客服会话中发送图片消息时将产生如下数据包
      *
      * @param imageMsg 图片消息
      */
@@ -53,6 +55,7 @@ public abstract class WxaMsgController {
 
     /**
      * 处理接收到小程序卡片消息
+     * 用户在客服会话中发送小程序卡片消息时将产生如下数据包
      *
      * @param miniProgramPageMsg 小程序卡片消息
      */
@@ -60,10 +63,18 @@ public abstract class WxaMsgController {
 
     /**
      * 处理接收到的进入会话事件
+     * 用户在小程序“客服会话按钮”进入客服会话时将产生如下数据包
      *
-     * @param userEnterSessionMsg 进入会话事件
+     * @param userEnterSessionEvent 进入会话事件
      */
-    protected abstract void processUserEnterSessionMsg(WxaUserEnterSessionMsg userEnterSessionMsg);
+    protected abstract void processUserEnterSessionMsg(WxaUserEnterSessionEvent userEnterSessionEvent);
+
+    /**
+     * 校验图片/音频是否含有违法违规内容异步检测结果
+     *
+     * @param mediaCheckEvent 异步检测结果事件
+     */
+    protected abstract void processMediaCheckEvent(WxaMediaCheckEvent mediaCheckEvent);
 
     /**
      * 处理未知消息
@@ -95,8 +106,10 @@ public abstract class WxaMsgController {
                 processImageMsg((WxaImageMsg) wxaMsg);
             } else if (wxaMsg instanceof WxaMiniProgramPageMsg) {
                 processMiniProgramPageMsg((WxaMiniProgramPageMsg) wxaMsg);
-            } else if (wxaMsg instanceof WxaUserEnterSessionMsg) {
-                processUserEnterSessionMsg((WxaUserEnterSessionMsg) wxaMsg);
+            } else if (wxaMsg instanceof WxaUserEnterSessionEvent) {
+                processUserEnterSessionMsg((WxaUserEnterSessionEvent) wxaMsg);
+            } else if (wxaMsg instanceof WxaMediaCheckEvent) {
+                processMediaCheckEvent((WxaMediaCheckEvent) wxaMsg);
             } else if (wxaMsg instanceof WxaUnknownMsg) {
                 WxaUnknownMsg unknownMsg = (WxaUnknownMsg) wxaMsg;
                 unknownMsg.setMsgStr(msgStr);

@@ -8,15 +8,15 @@ package org.springultron.wechat.msg.wxa;
  */
 public abstract class WxaMsg {
     /**
-     * 开发者微信号
+     * 小程序的原始ID
      */
     protected String toUserName;
     /**
-     * 发送方帐号（一个OpenID）
+     * 发送者的openid
      */
     protected String fromUserName;
     /**
-     * 消息创建时间 （整型）
+     * 消息创建时间（整型）
      */
     protected Integer createTime;
     /**

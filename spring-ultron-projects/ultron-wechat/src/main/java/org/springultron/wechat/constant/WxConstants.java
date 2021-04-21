@@ -123,6 +123,56 @@ public interface WxConstants {
     String TRY_MATCH_CONDITIONAL_MENU = HOST + "/cgi-bin/menu/trymatch";
 
     /**
+     * 新增临时素材
+     */
+    String UPLOAD_MEDIA = HOST + "/cgi-bin/media/upload";
+
+    /**
+     * 获取临时素材
+     */
+    String GET_MEDIA = HOST + "/cgi-bin/media/get";
+
+    /**
+     * 获取高清语音素材
+     */
+    String GET_JS_SDK_MEDIA = HOST + "/cgi-bin/media/get/jssdk";
+
+    /**
+     * 新增永久图文素材
+     */
+    String ADD_NEWS = HOST + "/cgi-bin/material/add_news";
+
+    /**
+     * 修改永久图文素材
+     */
+    String UPDATE_NEWS = HOST + "/cgi-bin/material/update_news";
+
+    /**
+     * 新增其他类型永久素材
+     */
+    String ADD_MATERIAL = HOST + "/cgi-bin/material/add_material";
+
+    /**
+     * 获取永久素材
+     */
+    String GET_MATERIAL = HOST + "/cgi-bin/material/get_material";
+
+    /**
+     * 删除永久素材
+     */
+    String DELETE_MATERIAL = HOST + "/cgi-bin/material/del_material";
+
+    /**
+     * 获取素材总数
+     */
+    String GET_MATERIAL_COUNT = HOST + "/cgi-bin/material/get_materialcount";
+
+    /**
+     * 批量获取素材列表
+     */
+    String BATCH_GET_MATERIAL = HOST + "/cgi-bin/material/batchget_material";
+
+    /**
      * 上传图文消息内的图片获取URL【订阅号与服务号认证后均可用】
      */
     String MEDIA_UPLOAD_IMG = HOST + "/cgi-bin/media/uploadimg";
@@ -162,4 +212,13 @@ public interface WxConstants {
      */
     String MASS_GET_STATUS = HOST + "/cgi-bin/message/mass/get";
 
+    /**
+     * 发送订阅通知
+     */
+    String SEND_SUBSCRIBE_MSG = "/cgi-bin/message/subscribe/bizsend";
+
+    /**
+     * 语义理解
+     */
+    String SEMANTIC_URL = HOST + "/semantic/semproxy/search";
 }

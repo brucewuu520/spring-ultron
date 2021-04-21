@@ -2,11 +2,16 @@ package org.springultron.wechat.service;
 
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
+import org.springultron.core.jackson.Jackson;
 import org.springultron.wechat.dto.*;
+import org.springultron.wechat.enums.OCR_TYPE;
 import org.springultron.wechat.params.WxQrCodeParams;
+import org.springultron.wechat.params.WxTemplate;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 公众号常用接口服务
@@ -222,16 +227,158 @@ public interface WxApiService {
     String tryMatchConditionalMenu(String userId);
     // <================= 公众号菜单配置 end =================>
 
+    // <================= 素材管理 start =================>
+
+    /**
+     * 上传临时素材
+     *
+     * @param mediaType 素材格式
+     * @param file      文件
+     * @return media_id 媒体文件上传后，获取标识
+     */
+    String uploadMedia(MediaFile.MediaType mediaType, File file);
+
+    /**
+     * 获取临时素材
+     *
+     * @param mediaId 媒体文件ID
+     * @return {@link MediaFile}
+     */
+    MediaFile getMedia(String mediaId);
+
+    /**
+     * 获取高清语音素材
+     *
+     * @param mediaId 媒体文件ID，即uploadVoice接口返回的serverID
+     * @return {@link MediaFile}
+     */
+    MediaFile getJsSdkMedia(String mediaId);
+
+    /**
+     * 新增永久图文素材
+     *
+     * @param newsList 图文消息列表
+     * @return 图文消息素材的media_id
+     */
+    default String addNews(List<MaterialNews> newsList) {
+        Map<String, Object> reqBody = new HashMap<>(1);
+        reqBody.put("articles", newsList);
+
+        return addNews(Jackson.toJson(reqBody));
+    }
+
+    /**
+     * 新增永久图文素材
+     *
+     * @param articlesJson 图文消息json
+     * @return 图文消息素材的media_id
+     */
+    String addNews(String articlesJson);
+
+    /**
+     * 修改永久图文素材
+     *
+     * @param mediaId 要修改的图文消息的id
+     * @param index   要更新的文章在图文消息中的位置（多图文消息时，此字段才有意义），第一篇为0
+     * @param news    图文消息
+     * @return 是否修改成功
+     */
+    default boolean updateNews(String mediaId, int index, MaterialNews news) {
+        Map<String, Object> reqBody = new HashMap<>(3);
+        reqBody.put("media_id", mediaId);
+        reqBody.put("index", index);
+        reqBody.put("articles", news);
+
+        return updateNews(Jackson.toJson(reqBody));
+    }
+
+    /**
+     * 修改永久图文素材
+     *
+     * @param articlesJson 图文消息json
+     * @return 是否修改成功
+     */
+    boolean updateNews(String articlesJson);
+
+    /**
+     * 新增永久视频素材
+     *
+     * @param title        视频素材的标题
+     * @param introduction 视频素材的描述
+     * @param file         视频文件
+     * @return {"media_id":MEDIA_ID,"url":URL}
+     */
+    String addVideoMaterial(String title, String introduction, File file);
+
+    /**
+     * 新增其他类型永久素材
+     *
+     * @param mediaType 文件类型
+     * @param file      素材文件
+     * @return {"media_id":MEDIA_ID,"url":URL}
+     */
+    String addMaterial(MediaFile.MediaType mediaType, File file);
+
+    /**
+     * 获取永久素材
+     *
+     * @param mediaId 要获取的素材的media_id
+     * @return 素材内容json
+     */
+    String getMaterial(String mediaId);
+
+    /**
+     * 删除永久素材
+     *
+     * @param mediaId 要删除的素材的media_id
+     * @return 是否删除成功
+     */
+    boolean deleteMaterial(String mediaId);
+
+    /**
+     * 获取素材总数
+     *
+     * @return {"voice_count":语音总数量,"video_count":视频总数量,"image_count":图片总数量,"news_count":图文总数量}
+     */
+    String getMaterialCount();
+
+    /**
+     * 批量获取素材列表
+     *
+     * @param mediaType 素材类型
+     * @param offset    从全部素材的该偏移位置开始返回，0表示从第一个素材 返回
+     * @param count     返回素材的数量，取值在1到20之间
+     * @return 素材json
+     */
+    String batchGetMaterial(MediaFile.MediaType mediaType, int offset, int count);
+    // <================= 素材管理 end =================>
+
     // <================= 群发接口和原创接口校验 start =================>
 
     /**
      * 上传图文消息内的图片获取URL【订阅号与服务号认证后均可用】
+     * <p>
+     * 本接口所上传的图片不占用公众号的素材库中图片数量的5000个的限制
+     * 图片仅支持jpg/png格式，大小必须在1MB以下
+     * </p>
      *
-     * @param filename 文件名
-     * @param file     图片文件
+     * @param file 图片文件
      * @return 图片URL
      */
-    String uploadImg(String filename, File file);
+    String uploadImg(File file);
+
+    /**
+     * 上传图文消息素材【订阅号与服务号认证后均可用】
+     *
+     * @param news 图文消息
+     * @return media_id
+     */
+    default String uploadNews(MaterialNews news) {
+        Map<String, Object> reqBody = new HashMap<>(1);
+        reqBody.put("articles", news);
+
+        return uploadNews(Jackson.toJson(reqBody));
+    }
 
     /**
      * 上传图文消息素材【订阅号与服务号认证后均可用】
@@ -306,6 +453,49 @@ public interface WxApiService {
      * @return msg_status（消息发送后的状态，SEND_SUCCESS表示发送成功，SENDING表示发送中，SEND_FAIL表示发送失败，DELETE表示已删除）
      */
     String massGetStatus(String msgId);
-
     // <================= 群发接口和原创接口校验 end =================>
+
+    /**
+     * 发送订阅通知
+     *
+     * @param wxTemplate 消息模板
+     * @return 是否发送成功
+     */
+    default boolean sendSubscribeMsg(WxTemplate wxTemplate) {
+        return sendSubscribeMsg(wxTemplate.toString());
+    }
+
+    /**
+     * 发送订阅通知
+     *
+     * @param msgJson 消息json
+     * @return 是否发送成功
+     */
+    boolean sendSubscribeMsg(String msgJson);
+
+    /**
+     * OCR 识别
+     *
+     * @param type   识别类型
+     * @param imgUrl 图片地址
+     * @return 识别结果
+     */
+    String ocrByUrl(OCR_TYPE type, String imgUrl);
+
+    /**
+     * OCR 识别
+     *
+     * @param type 识别类型
+     * @param file 图片文件
+     * @return 识别结果
+     */
+    String ocrByFile(OCR_TYPE type, File file);
+
+    /**
+     * 发送语义理解请求
+     *
+     * @param json 请求参数json（参考微信文档）
+     * @return 语义理解结果
+     */
+    String semanticSearch(String json);
 }

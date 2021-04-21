@@ -1,10 +1,7 @@
 package org.springultron.wechat.controller;
 
 import org.springultron.wechat.msg.wx.in.*;
-import org.springultron.wechat.msg.wx.in.event.InLocationEvent;
-import org.springultron.wechat.msg.wx.in.event.InMassEvent;
-import org.springultron.wechat.msg.wx.in.event.InQrCodeEvent;
-import org.springultron.wechat.msg.wx.in.event.InUnknownEvent;
+import org.springultron.wechat.msg.wx.in.event.*;
 
 /**
  * 公众号消息接收适配器
@@ -104,6 +101,26 @@ public abstract class WxMsgControllerAdapter extends WxMsgController {
      */
     @Override
     protected void processMassEvent(InMassEvent massEvent) {
+        renderDefault();
+    }
+
+    /**
+     * 处理接收到的用户操作订阅通知弹窗推送事件
+     *
+     * @param subscribeMsgPopupEvent 用户操作订阅通知弹窗推送事件
+     */
+    @Override
+    protected void processSubscribeMsgPopupEvent(InSubscribeMsgPopupEvent subscribeMsgPopupEvent) {
+        renderDefault();
+    }
+
+    /**
+     * 处理接收到的订阅通知发送结果推送事件
+     *
+     * @param subscribeMsgPopupEvent 订阅通知发送结果推送事件
+     */
+    @Override
+    protected void processSubscribeMsgSentEvent(InSubscribeMsgSentEvent subscribeMsgPopupEvent) {
         renderDefault();
     }
 

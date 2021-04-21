@@ -26,9 +26,11 @@ public interface IMsgParser {
         if ("miniprogrampage".equals(msgType)) {
             return new WxaMiniProgramPageMsg(msgModel);
         }
-        if ("event".equals(msgType)) {
+        if ("event".equalsIgnoreCase(msgType)) {
             if ("user_enter_tempsession".equalsIgnoreCase(msgModel.getEvent())) {
-                return new WxaUserEnterSessionMsg(msgModel);
+                return new WxaUserEnterSessionEvent(msgModel);
+            } else if ("wxa_media_check".equalsIgnoreCase(msgModel.getEvent())) {
+                return new WxaMediaCheckEvent(msgModel);
             }
         }
         return new WxaUnknownMsg(msgModel);

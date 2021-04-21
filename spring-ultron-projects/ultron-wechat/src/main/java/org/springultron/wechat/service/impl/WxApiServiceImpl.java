@@ -14,9 +14,12 @@ import org.springultron.core.utils.Lists;
 import org.springultron.core.utils.RandomUtils;
 import org.springultron.core.utils.StringUtils;
 import org.springultron.http.HttpRequest;
+import org.springultron.http.HttpResponse;
 import org.springultron.redis.RedisClient;
+import org.springultron.wechat.DownloadUtils;
 import org.springultron.wechat.constant.WxConstants;
 import org.springultron.wechat.dto.*;
+import org.springultron.wechat.enums.OCR_TYPE;
 import org.springultron.wechat.params.WxQrCodeParams;
 import org.springultron.wechat.props.WechatProperties;
 import org.springultron.wechat.props.WxConf;
@@ -26,6 +29,7 @@ import java.io.File;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 公众号常用接口服务
@@ -79,7 +83,8 @@ public class WxApiServiceImpl implements WxApiService, WxConstants {
                 .query("grant_type", "client_credential")
                 .execute()
                 .asJsonNode();
-        if (result.has("access_token")) {
+        log.info("获取公众号access_token结果: {}", result.toString());
+        if (result.hasNonNull("access_token")) {
             access_token = Jackson.getString(result, "access_token");
             int expires_in = Jackson.getIntValue(result, "expires_in", 0) - 3;
             if (expires_in > 0) {
@@ -88,8 +93,9 @@ public class WxApiServiceImpl implements WxApiService, WxConstants {
             return access_token;
         } else {
             log.error("获取公众号access_token异常: {}", result.toString());
+            int errcode = Jackson.getIntValue(result, "errcode", -1);
             String errmsg = Jackson.getString(result, "errmsg");
-            throw new ApiException("获取公众号access_token异常:" + errmsg);
+            throw new ApiException(errcode, errmsg);
         }
     }
 
@@ -105,12 +111,13 @@ public class WxApiServiceImpl implements WxApiService, WxConstants {
                 .query("access_token", access_token)
                 .execute()
                 .asJsonNode();
-        if (result.has("ip_list")) {
+        if (result.hasNonNull("ip_list")) {
             return Jackson.parseList(result.get("ip_list").toString(), String.class);
         } else {
             log.error("获取微信API接口IP地址异常: {}", result.toString());
+            int errcode = Jackson.getIntValue(result, "errcode", -1);
             String errmsg = Jackson.getString(result, "errmsg");
-            throw new ApiException("获取微信API接口IP地址异常:" + errmsg);
+            throw new ApiException(errcode, errmsg);
         }
     }
 
@@ -126,12 +133,13 @@ public class WxApiServiceImpl implements WxApiService, WxConstants {
                 .query("access_token", access_token)
                 .execute()
                 .asJsonNode();
-        if (result.has("ip_list")) {
+        if (result.hasNonNull("ip_list")) {
             return Jackson.parseList(result.get("ip_list").toString(), String.class);
         } else {
             log.error("获取微信callback IP地址异常: {}", result.toString());
+            int errcode = Jackson.getIntValue(result, "errcode", -1);
             String errmsg = Jackson.getString(result, "errmsg");
-            throw new ApiException("获取微信callback IP地址异常:" + errmsg);
+            throw new ApiException(errcode, errmsg);
         }
     }
 
@@ -151,12 +159,13 @@ public class WxApiServiceImpl implements WxApiService, WxConstants {
                 .query("next_openid", nextOpenId)
                 .execute()
                 .asJsonNode();
-        if (result.has("data")) {
+        if (result.hasNonNull("data")) {
             return Jackson.parse(result.toString(), WxUserList.class);
         } else {
             log.error("获取帐号的关注者列表异常: --next_openid: {},  {}", nextOpenId, result.toString());
+            int errcode = Jackson.getIntValue(result, "errcode", -1);
             String errmsg = Jackson.getString(result, "errmsg");
-            throw new ApiException("获取帐号的关注者列表异常:" + errmsg);
+            throw new ApiException(errcode, errmsg);
         }
     }
 
@@ -176,12 +185,13 @@ public class WxApiServiceImpl implements WxApiService, WxConstants {
                 .query("lang", lang)
                 .execute()
                 .asJsonNode();
-        if (result.has("openid")) {
+        if (result.hasNonNull("openid")) {
             return Jackson.parse(result.toString(), WxUserInfo.class);
         } else {
             log.error("获取用户基本信息异常, --openId: {}, --异常信息: {}", openId, result.toString());
+            int errcode = Jackson.getIntValue(result, "errcode", -1);
             String errmsg = Jackson.getString(result, "errmsg");
-            throw new ApiException("获取用户基本信息异常:" + errmsg);
+            throw new ApiException(errcode, errmsg);
         }
     }
 
@@ -210,12 +220,13 @@ public class WxApiServiceImpl implements WxApiService, WxConstants {
                 .bodyValue(userListJson)
                 .execute()
                 .asJsonNode();
-        if (result.has("user_info_list")) {
+        if (result.hasNonNull("user_info_list")) {
             return Jackson.parseList(result.get("user_info_list").toString(), WxUserInfo.class);
         } else {
             log.error("批量获取用户基本信息异常, --user_list: {}, --异常信息: {}", userListJson, result.toString());
+            int errcode = Jackson.getIntValue(result, "errcode", -1);
             String errmsg = Jackson.getString(result, "errmsg");
-            throw new ApiException("批量获取用户基本信息异常:" + errmsg);
+            throw new ApiException(errcode, errmsg);
         }
     }
 
@@ -265,12 +276,13 @@ public class WxApiServiceImpl implements WxApiService, WxConstants {
                 .query("grant_type", "authorization_code")
                 .execute()
                 .asJsonNode();
-        if (result.has("access_token")) {
+        if (result.hasNonNull("access_token")) {
             return Jackson.parse(result.toString(), WxSnsTokenInfo.class);
         } else {
             log.error("通过code换取网页授权access_token异常, --code: {}, --异常信息: {}", code, result.toString());
+            int errcode = Jackson.getIntValue(result, "errcode", -1);
             String errmsg = Jackson.getString(result, "errmsg");
-            throw new ApiException("通过code换取网页授权access_token异常:" + errmsg);
+            throw new ApiException(errcode, errmsg);
         }
     }
 
@@ -289,12 +301,13 @@ public class WxApiServiceImpl implements WxApiService, WxConstants {
                 .query("grant_type", "refresh_token")
                 .execute()
                 .asJsonNode();
-        if (result.has("access_token")) {
+        if (result.hasNonNull("access_token")) {
             return Jackson.parse(result.toString(), WxSnsTokenInfo.class);
         } else {
             log.error("刷新取网页授权access_token异常, --refreshToken: {}, --异常信息: {}", refreshToken, result.toString());
+            int errcode = Jackson.getIntValue(result, "errcode", -1);
             String errmsg = Jackson.getString(result, "errmsg");
-            throw new ApiException("刷新取网页授权access_token异常:" + errmsg);
+            throw new ApiException(errcode, errmsg);
         }
     }
 
@@ -315,12 +328,13 @@ public class WxApiServiceImpl implements WxApiService, WxConstants {
                 .query("lang", lang)
                 .execute()
                 .asJsonNode();
-        if (result.has("openId")) {
+        if (result.hasNonNull("openId")) {
             return Jackson.parse(result.toString(), WxUserInfo.class);
         } else {
             log.error("网页授权拉取用户信息异常, --accessToken: {}, --openId: {}, --异常信息: {}", accessToken, openId, result.toString());
+            int errcode = Jackson.getIntValue(result, "errcode", -1);
             String errmsg = Jackson.getString(result, "errmsg");
-            throw new ApiException("网页授权拉取用户信息异常:" + errmsg);
+            throw new ApiException(errcode, errmsg);
         }
     }
 
@@ -366,8 +380,7 @@ public class WxApiServiceImpl implements WxApiService, WxConstants {
                 .query("type", "jsapi")
                 .execute()
                 .asJsonNode();
-        int errcode = Jackson.getIntValue(result, "errcode", -1);
-        if (errcode == 0) {
+        if (result.hasNonNull("ticket")) {
             ticket = Jackson.getString(result, "ticket");
             int expires_in = Jackson.getIntValue(result, "expires_in", 0) - 3;
             if (expires_in > 0) {
@@ -376,8 +389,9 @@ public class WxApiServiceImpl implements WxApiService, WxConstants {
             return ticket;
         } else {
             log.error("获取jsapi_ticket异常: {}", result.toString());
+            int errcode = Jackson.getIntValue(result, "errcode", -1);
             String errmsg = Jackson.getString(result, "errmsg");
-            throw new ApiException("获取jsapi_ticket异常:" + errmsg);
+            throw new ApiException(errcode, errmsg);
         }
     }
 
@@ -426,8 +440,7 @@ public class WxApiServiceImpl implements WxApiService, WxConstants {
                 .query("type", "wx_card")
                 .execute()
                 .asJsonNode();
-        int errcode = Jackson.getIntValue(result, "errcode", -1);
-        if (errcode == 0) {
+        if (result.hasNonNull("ticket")) {
             ticket = Jackson.getString(result, "ticket");
             int expires_in = Jackson.getIntValue(result, "expires_in", 0) - 3;
             if (expires_in > 0) {
@@ -436,8 +449,9 @@ public class WxApiServiceImpl implements WxApiService, WxConstants {
             return ticket;
         } else {
             log.error("获取微信卡券api_ticket异常: {}", result.toString());
+            int errcode = Jackson.getIntValue(result, "errcode", -1);
             String errmsg = Jackson.getString(result, "errmsg");
-            throw new ApiException("获取微信卡券api_ticket异常:" + errmsg);
+            throw new ApiException(errcode, errmsg);
         }
     }
 
@@ -506,12 +520,13 @@ public class WxApiServiceImpl implements WxApiService, WxConstants {
                 .bodyValue(reqBody.toString())
                 .execute()
                 .asJsonNode();
-        if (result.has("ticket")) {
+        if (result.hasNonNull("ticket")) {
             return Jackson.parse(result.toString(), WxQrCode.class);
         } else {
             log.error("创建公众号二维码异常, --参数: {}, --错误信息: {}", Jackson.toJson(params), result.toString());
+            int errcode = Jackson.getIntValue(result, "errcode", -1);
             String errmsg = Jackson.getString(result, "errmsg");
-            throw new ApiException("创建公众号二维码异常:" + errmsg);
+            throw new ApiException(errcode, errmsg);
         }
     }
 
@@ -596,8 +611,9 @@ public class WxApiServiceImpl implements WxApiService, WxConstants {
             return menuId;
         } else {
             log.error("创建个性化菜单异常: {}", result.toString());
+            int errcode = Jackson.getIntValue(result, "errcode", -1);
             String errmsg = Jackson.getString(result, "errmsg");
-            throw new ApiException("创建个性化菜单异常:" + errmsg);
+            throw new ApiException(errcode, errmsg);
         }
     }
 
@@ -639,29 +655,251 @@ public class WxApiServiceImpl implements WxApiService, WxConstants {
     }
     // <================= 公众号菜单配置 end =================>
 
+    // <================= 素材管理 start =================>
+
+    /**
+     * 上传临时素材
+     *
+     * @param mediaType 素材格式
+     * @param file      文件
+     * @return media_id 媒体文件上传后，获取标识
+     */
+    @Override
+    public String uploadMedia(MediaFile.MediaType mediaType, File file) {
+        JsonNode result = HttpRequest.post(UPLOAD_MEDIA)
+                .query("access_token", getAccessToken())
+                .query("type", mediaType.toString())
+                .multipartFormBuilder()
+                .add("media", file)
+                .build()
+                .execute()
+                .asJsonNode();
+        if (result.hasNonNull("media_id")) {
+            return Jackson.getString(result, "media_id");
+        }
+        log.error("上传临时素材异常: {}", result.toString());
+        int errcode = Jackson.getIntValue(result, "errcode", -1);
+        String errmsg = Jackson.getString(result, "errmsg");
+        throw new ApiException(errcode, errmsg);
+    }
+
+    /**
+     * 获取临时素材
+     *
+     * @param mediaId 媒体文件ID
+     * @return {@link MediaFile}
+     */
+    @Override
+    public MediaFile getMedia(String mediaId) {
+        HttpResponse response = HttpRequest.get(GET_MEDIA)
+                .query("access_token", getAccessToken())
+                .query("media_id", mediaId)
+                .execute()
+                .response();
+        return DownloadUtils.download(response);
+    }
+
+    /**
+     * 获取高清语音素材
+     *
+     * @param mediaId 媒体文件ID，即uploadVoice接口返回的serverID
+     * @return {@link MediaFile}
+     */
+    @Override
+    public MediaFile getJsSdkMedia(String mediaId) {
+        HttpResponse response = HttpRequest.get(GET_JS_SDK_MEDIA)
+                .query("access_token", getAccessToken())
+                .query("media_id", mediaId)
+                .execute()
+                .response();
+        return DownloadUtils.download(response);
+    }
+
+    /**
+     * 新增永久图文素材
+     *
+     * @param articlesJson 图文消息json
+     * @return 图文消息素材的media_id
+     */
+    @Override
+    public String addNews(String articlesJson) {
+        JsonNode result = HttpRequest.post(ADD_NEWS)
+                .query("access_token", getAccessToken())
+                .bodyValue(articlesJson)
+                .execute()
+                .asJsonNode();
+        if (result.hasNonNull("media_id")) {
+            return Jackson.getString(result, "media_id");
+        }
+        log.error("新增永久图文素材异常: {}", result.toString());
+        int errcode = Jackson.getIntValue(result, "errcode", -1);
+        String errmsg = Jackson.getString(result, "errmsg");
+        throw new ApiException(errcode, errmsg);
+    }
+
+    /**
+     * 修改永久图文素材
+     *
+     * @param articlesJson 图文消息json
+     * @return 是否修改成功
+     */
+    @Override
+    public boolean updateNews(String articlesJson) {
+        JsonNode result = HttpRequest.post(UPDATE_NEWS)
+                .query("access_token", getAccessToken())
+                .bodyValue(articlesJson)
+                .execute()
+                .asJsonNode();
+        int errcode = Jackson.getIntValue(result, "errcode", -1);
+        if (errcode == 0) {
+            return true;
+        } else {
+            log.error("修改永久图文素材异常: {}", result.toString());
+            return false;
+        }
+    }
+
+    /**
+     * 新增永久视频素材
+     *
+     * @param title        视频素材的标题
+     * @param introduction 视频素材的描述
+     * @param file         视频文件
+     * @return {"media_id":MEDIA_ID,"url":URL}
+     */
+    @Override
+    public String addVideoMaterial(String title, String introduction, File file) {
+        ObjectNode formData = Jackson.createObjectNode();
+        formData.put("title", title);
+        formData.put("introduction", introduction);
+
+        return HttpRequest.post(ADD_MATERIAL)
+                .query("access_token", getAccessToken())
+                .query("type", "video")
+                .multipartFormBuilder()
+                .add("description", formData.toString())
+                .add("media", file)
+                .build()
+                .execute()
+                .asString();
+    }
+
+    /**
+     * 新增其他类型永久素材
+     *
+     * @param mediaType 文件类型
+     * @param file      素材文件
+     * @return {"media_id":MEDIA_ID,"url":URL}
+     */
+    @Override
+    public String addMaterial(MediaFile.MediaType mediaType, File file) {
+        return HttpRequest.post(ADD_MATERIAL)
+                .query("access_token", getAccessToken())
+                .query("type", mediaType.toString())
+                .multipartFormBuilder()
+                .add("media", file)
+                .build()
+                .execute()
+                .asString();
+    }
+
+    /**
+     * 获取永久素材
+     *
+     * @param mediaId 要获取的素材的media_id
+     * @return 素材内容json
+     */
+    @Override
+    public String getMaterial(String mediaId) {
+        return HttpRequest.post(GET_MATERIAL)
+                .query("access_token", getAccessToken())
+                .bodyValue("{\"media_id\":" + mediaId + "\"}")
+                .execute()
+                .asString();
+    }
+
+    /**
+     * 删除永久素材
+     *
+     * @param mediaId 要删除的素材的media_id
+     * @return 是否删除成功
+     */
+    @Override
+    public boolean deleteMaterial(String mediaId) {
+        JsonNode result = HttpRequest.post(DELETE_MATERIAL)
+                .query("access_token", getAccessToken())
+                .bodyValue("{\"media_id\":" + mediaId + "\"}")
+                .execute()
+                .asJsonNode();
+        int errcode = Jackson.getIntValue(result, "errcode", -1);
+        if (errcode == 0) {
+            return true;
+        } else {
+            log.error("删除永久素材异常: {}", result.toString());
+            return false;
+        }
+    }
+
+    /**
+     * 获取素材总数
+     *
+     * @return {"voice_count":语音总数量,"video_count":视频总数量,"image_count":图片总数量,"news_count":图文总数量}
+     */
+    @Override
+    public String getMaterialCount() {
+        return HttpRequest.get(GET_MATERIAL_COUNT)
+                .query("access_token", getAccessToken())
+                .execute()
+                .asString();
+    }
+
+    /**
+     * 批量获取素材列表
+     *
+     * @param mediaType 素材类型
+     * @param offset    从全部素材的该偏移位置开始返回，0表示从第一个素材 返回
+     * @param count     返回素材的数量，取值在1到20之间
+     * @return 素材json
+     */
+    @Override
+    public String batchGetMaterial(MediaFile.MediaType mediaType, int offset, int count) {
+        ObjectNode reqBody = Jackson.createObjectNode();
+        reqBody.put("type", mediaType.toString());
+        reqBody.put("offset", offset);
+        reqBody.put("count", count);
+
+        return HttpRequest.post(BATCH_GET_MATERIAL)
+                .query("access_token", getAccessToken())
+                .bodyValue(reqBody.toString())
+                .execute()
+                .asString();
+    }
+    // <================= 素材管理 end =================>
+
     // <================= 群发接口和原创接口校验 start =================>
 
     /**
      * 上传图文消息内的图片获取URL【订阅号与服务号认证后均可用】
      *
-     * @param filename 文件名
-     * @param file     图片文件
+     * @param file 图片文件
      * @return 图片URL
      */
     @Override
-    public String uploadImg(String filename, File file) {
+    public String uploadImg(File file) {
         JsonNode result = HttpRequest.post(MEDIA_UPLOAD_IMG)
                 .query("access_token", getAccessToken())
                 .multipartFormBuilder()
-                .add("media", filename, file).build()
+                .add("media", file)
+                .build()
                 .execute()
                 .asJsonNode();
-        if (result.has("url")) {
+        if (result.hasNonNull("url")) {
             return Jackson.getString(result, "url");
         } else {
             log.error("上传图文消息内的图片获取URL异常: {}", result.toString());
+            int errcode = Jackson.getIntValue(result, "errcode", -1);
             String errmsg = Jackson.getString(result, "errmsg");
-            throw new ApiException("上传图文消息内的图片获取URL异常:" + errmsg);
+            throw new ApiException(errcode, errmsg);
         }
     }
 
@@ -678,12 +916,13 @@ public class WxApiServiceImpl implements WxApiService, WxConstants {
                 .bodyValue(newsJson)
                 .execute()
                 .asJsonNode();
-        if (result.has("media_id")) {
+        if (result.hasNonNull("media_id")) {
             return Jackson.getString(result, "media_id");
         } else {
             log.error("上传图文消息素材异常: {}", result.toString());
+            int errcode = Jackson.getIntValue(result, "errcode", -1);
             String errmsg = Jackson.getString(result, "errmsg");
-            throw new ApiException("上传图文消息素材异常:" + errmsg);
+            throw new ApiException(errcode, errmsg);
         }
     }
 
@@ -706,12 +945,13 @@ public class WxApiServiceImpl implements WxApiService, WxConstants {
                 .bodyValue(reqBody.toString())
                 .execute()
                 .asJsonNode();
-        if (result.has("media_id")) {
+        if (result.hasNonNull("media_id")) {
             return Jackson.getString(result, "media_id");
         } else {
             log.error("上传群发消息里的视频消息素材异常: {}", result.toString());
+            int errcode = Jackson.getIntValue(result, "errcode", -1);
             String errmsg = Jackson.getString(result, "errmsg");
-            throw new ApiException("上传群发消息里的视频消息素材异常:" + errmsg);
+            throw new ApiException(errcode, errmsg);
         }
     }
 
@@ -803,8 +1043,9 @@ public class WxApiServiceImpl implements WxApiService, WxConstants {
             return Jackson.getString(result, "msg_id");
         } else {
             log.error("群发消息预览接口异常: {}", result.toString());
+            int errcode = Jackson.getIntValue(result, "errcode", -1);
             String errmsg = Jackson.getString(result, "errmsg");
-            throw new ApiException("群发消息预览接口异常:" + errmsg);
+            throw new ApiException(errcode, errmsg);
         }
     }
 
@@ -825,11 +1066,85 @@ public class WxApiServiceImpl implements WxApiService, WxConstants {
             return Jackson.getString(result, "msg_status");
         } else {
             log.error("查询群发消息发送状态异常: {}", result.toString());
+            int errcode = Jackson.getIntValue(result, "errcode", -1);
             String errmsg = Jackson.getString(result, "errmsg");
-            throw new ApiException("查询群发消息发送状态异常:" + errmsg);
+            throw new ApiException(errcode, errmsg);
         }
     }
     // <================= 群发接口和原创接口校验 end =================>
 
+    /**
+     * 发送订阅通知
+     *
+     * @param msgJson 消息json
+     * @return 是否发送成功
+     */
+    @Override
+    public boolean sendSubscribeMsg(String msgJson) {
+        JsonNode result = HttpRequest.post(SEND_SUBSCRIBE_MSG)
+                .query("access_token", getAccessToken())
+                .bodyValue(msgJson)
+                .execute()
+                .asJsonNode();
+        int errcode = Jackson.getIntValue(result, "errcode", -1);
+        if (errcode == 0) {
+            return true;
+        }
+        log.error("发送订阅通知失败: {}", result.toString());
+        String errmsg = Jackson.getString(result, "errmsg");
+        throw new ApiException(errcode, errmsg);
+    }
 
+    /**
+     * OCR 识别
+     *
+     * @param type   识别类型
+     * @param imgUrl 图片地址
+     * @return 识别结果
+     */
+    @Override
+    public String ocrByUrl(OCR_TYPE type, String imgUrl) {
+        return HttpRequest.post(type.getUrl())
+                .query("access_token", getAccessToken())
+                .queryEncoded("img_url", imgUrl)
+                .execute()
+                .asString();
+    }
+
+    /**
+     * OCR 识别
+     *
+     * @param type 识别类型
+     * @param file 图片文件
+     * @return 识别结果
+     */
+    @Override
+    public String ocrByFile(OCR_TYPE type, File file) {
+        return HttpRequest.post(type.getUrl())
+                .query("access_token", getAccessToken())
+                .multipartFormBuilder()
+                .add("img", file)
+                .build()
+                .execute()
+                .asString();
+    }
+
+    /**
+     * 发送语义理解请求
+     *
+     * @param json 请求参数json（参考微信文档）
+     * @return 语义理解结果
+     */
+    @Override
+    public String semanticSearch(String json) {
+        Map<String, Object> reqBody = Jackson.parseMap(json);
+        if (!reqBody.containsKey("appid")) {
+            reqBody.put("appid", properties.getWxConf().getAppId());
+        }
+        return HttpRequest.post(SEMANTIC_URL)
+                .query("access_token", getAccessToken())
+                .bodyValue(reqBody)
+                .execute()
+                .asString();
+    }
 }

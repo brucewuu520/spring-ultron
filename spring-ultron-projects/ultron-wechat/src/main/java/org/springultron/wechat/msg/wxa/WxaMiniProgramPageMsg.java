@@ -2,6 +2,7 @@ package org.springultron.wechat.msg.wxa;
 
 /**
  * 小程序卡片消息
+ * 用户在客服会话中发送小程序卡片消息时将产生如下数据包
  *
  * @author brucewuu
  * @date 2021/4/16 下午6:24
@@ -20,11 +21,11 @@ public class WxaMiniProgramPageMsg extends WxaMsg {
      */
     private String title;
     /**
-     * 缩略图URL
+     * 封面图片的临时cdn链接
      */
     private String thumbUrl;
     /**
-     * 消息缩略图的媒体id，可以调用多媒体文件下载接口拉取数据
+     * 封面图片的临时素材id
      */
     private String thumbMediaId;
     /**
