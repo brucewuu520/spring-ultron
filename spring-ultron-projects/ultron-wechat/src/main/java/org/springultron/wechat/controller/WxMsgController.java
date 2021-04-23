@@ -267,20 +267,19 @@ public abstract class WxMsgController {
      */
     private static String readData(HttpServletRequest request) {
         try (BufferedReader br = request.getReader()) {
-            StringBuilder result;
             String line = br.readLine();
-            if (line != null) {
-                result = new StringBuilder();
-                result.append(line);
-            } else {
+            if (line == null) {
                 return "";
             }
 
+            StringBuilder data = new StringBuilder(512);
+            data.append(line);
+
             while ((line = br.readLine()) != null) {
-                result.append('\n').append(line);
+                data.append('\n').append(line);
             }
 
-            return result.toString();
+            return data.toString();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
