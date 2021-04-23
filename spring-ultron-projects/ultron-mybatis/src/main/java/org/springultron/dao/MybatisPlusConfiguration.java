@@ -65,7 +65,7 @@ public class MybatisPlusConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean(MetaObjectHandler.class)
-    @ConditionalOnProperty(value = "ultron.mybatis-plus.auto-fill.enable")
+    @ConditionalOnProperty(value = "ultron.mybatis-plus.auto-fill.enable", havingValue = "true", matchIfMissing = true)
     public MetaObjectHandler metaObjectHandler(UltronMybatisPlusProperties properties) {
         return new UltronMetaObjectHandler(properties);
     }
