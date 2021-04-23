@@ -71,7 +71,7 @@ public class RequestLogAspect {
         }
         final long startTime = System.nanoTime();
         // 构建成一条长日志，避免并发下日志错乱
-        StringBuilder reqLog = new StringBuilder(300);
+        StringBuilder reqLog = new StringBuilder(1024);
         reqLog.append(StringPool.LINE_SEPARATOR);
         reqLog.append("================ Start ================");
         reqLog.append(StringPool.LINE_SEPARATOR);
