@@ -20,6 +20,7 @@ import java.security.SecureRandom;
 import java.time.Duration;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 
 /**
@@ -358,7 +359,8 @@ public class HttpRequest {
     }
 
     private Call newCall(final OkHttpClient httpClient) {
-        OkHttpClient.Builder builder = httpClient.newBuilder();
+        OkHttpClient okHttpClient = httpClient;
+        OkHttpClient.Builder builder = okHttpClient.newBuilder();
         if (null != connectTimeout) {
             builder.connectTimeout(connectTimeout);
         }
@@ -422,8 +424,6 @@ public class HttpRequest {
 
     /**
      * 同步请求
-     *
-     * @return 响应体
      */
     public final SyncCall execute() {
         return new SyncCall(newCall(httpClient));
@@ -434,6 +434,16 @@ public class HttpRequest {
      */
     public final AsyncCall async() {
         return new AsyncCall(newCall(httpClient));
+    }
+
+    /**
+     * 异步请求
+     */
+    public CompletableFuture<ResponseSpec> enqueue() {
+        CompletableFuture<ResponseSpec> future = new CompletableFuture<>();
+        Call call = newCall(httpClient);
+        call.enqueue(new CompletableCallback(future));
+        return future;
     }
 
     public static void setHttpClient(OkHttpClient httpClient) {
