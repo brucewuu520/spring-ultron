@@ -35,13 +35,13 @@ public class ReactiveRedisClient {
     }
 
     /**
-     * 生成缓存key，以双英文冒号隔开
+     * 生成缓存key，以英文冒号隔开
      *
      * @param keys kes
      * @return key string
      */
     public static String genKey(String... keys) {
-        return String.join("::", keys).toUpperCase();
+        return String.join(":", keys).toUpperCase();
     }
 
     /**
