@@ -56,7 +56,7 @@ public class RedisLockAspect {
         String lockKey;
         if (StringUtil.isNotBlank(lockParams)) {
             String evalAsText = evalLockParam(point, lockParams);
-            lockKey = lockName + "::" + evalAsText;
+            lockKey = lockName + ":" + evalAsText;
         } else {
             lockKey = lockName;
         }
