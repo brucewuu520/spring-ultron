@@ -9,6 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <name>Spring Ultron Oss</name>
     <artifactId>ultron-oss</artifactId>
     <description>兼容S3 协议的通用文件存储工具类 ，支持 兼容S3 协议的云存储</description>
 

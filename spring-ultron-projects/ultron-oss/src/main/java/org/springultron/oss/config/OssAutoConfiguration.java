@@ -26,14 +26,14 @@ public class OssAutoConfiguration {
 
 	@Bean
 	@ConditionalOnMissingBean(OssService.class)
-	@ConditionalOnProperty(name = "nox.oss.enable", havingValue = "true", matchIfMissing = true)
+	@ConditionalOnProperty(name = "ultron.oss.enable", havingValue = "true", matchIfMissing = true)
 	public OssService ossTemplate() {
 		return new OssService(properties);
 	}
 
 	@Bean
 	@ConditionalOnWebApplication
-	@ConditionalOnProperty(name = "nox.oss.info", havingValue = "true")
+	@ConditionalOnProperty(name = "ultron.oss.info", havingValue = "true")
 	public OssEndpoint ossEndpoint(OssService service) {
 		return new OssEndpoint(service);
 	}
