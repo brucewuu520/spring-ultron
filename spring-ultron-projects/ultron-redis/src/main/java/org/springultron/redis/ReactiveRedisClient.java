@@ -1,7 +1,6 @@
 package org.springultron.redis;
 
 import org.reactivestreams.Publisher;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.data.redis.core.ReactiveStringRedisTemplate;
 import reactor.core.publisher.Flux;
@@ -18,14 +17,14 @@ import java.util.Map;
  * @author brucewuu
  * @date 2019/11/26 18:17
  */
-@SuppressWarnings("SpringJavaAutowiredMembersInspection")
 public class ReactiveRedisClient {
+    private final ReactiveStringRedisTemplate reactiveStringRedisTemplate;
+    private final ReactiveRedisTemplate<String, Object> reactiveRedisTemplate;
 
-    @Autowired
-    private ReactiveStringRedisTemplate reactiveStringRedisTemplate;
-
-    @Autowired
-    private ReactiveRedisTemplate<String, Object> reactiveRedisTemplate;
+    public ReactiveRedisClient(ReactiveStringRedisTemplate reactiveStringRedisTemplate, ReactiveRedisTemplate<String, Object> reactiveRedisTemplate) {
+        this.reactiveStringRedisTemplate = reactiveStringRedisTemplate;
+        this.reactiveRedisTemplate = reactiveRedisTemplate;
+    }
 
     public ReactiveStringRedisTemplate getReactiveStringRedisTemplate() {
         return reactiveStringRedisTemplate;
@@ -36,13 +35,13 @@ public class ReactiveRedisClient {
     }
 
     /**
-     * 生成缓存key，以双英文冒号隔开
+     * 生成缓存key，以英文冒号隔开
      *
      * @param keys kes
      * @return key string
      */
     public static String genKey(String... keys) {
-        return String.join("::", keys).toUpperCase();
+        return String.join(":", keys).toUpperCase();
     }
 
     /**

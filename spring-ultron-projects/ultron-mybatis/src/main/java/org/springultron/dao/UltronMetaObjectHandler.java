@@ -14,42 +14,42 @@ import java.time.LocalDateTime;
  */
 public class UltronMetaObjectHandler implements MetaObjectHandler {
 
-    private final MybatisPlusAutoFillProperties properties;
+    private final UltronMybatisPlusProperties.AutoFill autoFill;
 
-    public UltronMetaObjectHandler(MybatisPlusAutoFillProperties properties) {
-        this.properties = properties;
+    public UltronMetaObjectHandler(UltronMybatisPlusProperties properties) {
+        this.autoFill = properties.getAutoFill();
     }
 
     @Override
     public boolean openInsertFill() {
-        return properties.isEnableInsertFill();
+        return autoFill.isEnableInsertFill();
     }
 
     @Override
     public boolean openUpdateFill() {
-        return properties.isEnableUpdateFill();
+        return autoFill.isEnableUpdateFill();
     }
 
     @Override
     public void insertFill(MetaObject metaObject) {
-        Object createAt = this.getFieldValByName(properties.getCreateAtField(), metaObject);
-        Object updateAt = this.getFieldValByName(properties.getUpdateAtField(), metaObject);
+        Object createAt = this.getFieldValByName(autoFill.getCreateAtField(), metaObject);
+        Object updateAt = this.getFieldValByName(autoFill.getUpdateAtField(), metaObject);
         if (createAt == null || updateAt == null) {
             LocalDateTime now = LocalDateTime.now();
             if (createAt == null) {
-                this.strictInsertFill(metaObject, properties.getCreateAtField(), LocalDateTime.class, now);
+                this.strictInsertFill(metaObject, autoFill.getCreateAtField(), LocalDateTime.class, now);
             }
             if (updateAt == null) {
-                this.strictInsertFill(metaObject, properties.getUpdateAtField(), LocalDateTime.class, now);
+                this.strictInsertFill(metaObject, autoFill.getUpdateAtField(), LocalDateTime.class, now);
             }
         }
     }
 
     @Override
     public void updateFill(MetaObject metaObject) {
-        Object updateAt = this.getFieldValByName(properties.getUpdateAtField(), metaObject);
+        Object updateAt = this.getFieldValByName(autoFill.getUpdateAtField(), metaObject);
         if (updateAt == null) {
-            this.strictUpdateFill(metaObject, properties.getUpdateAtField(), LocalDateTime.class, LocalDateTime.now());
+            this.strictUpdateFill(metaObject, autoFill.getUpdateAtField(), LocalDateTime.class, LocalDateTime.now());
         }
     }
 }

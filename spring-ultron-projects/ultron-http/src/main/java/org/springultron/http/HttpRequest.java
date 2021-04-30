@@ -5,6 +5,7 @@ import okhttp3.*;
 import okhttp3.internal.Util;
 import okhttp3.internal.http.HttpMethod;
 import okhttp3.logging.HttpLoggingInterceptor;
+import org.springframework.lang.Nullable;
 import org.springultron.core.exception.Exceptions;
 import org.springultron.core.jackson.Jackson;
 import org.springultron.http.ssl.DisableValidationTrustManager;
@@ -12,12 +13,15 @@ import org.springultron.http.ssl.TrustAllHostNames;
 
 import javax.net.ssl.*;
 import java.net.*;
+import java.nio.charset.Charset;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.time.Duration;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Predicate;
 
 /**
  * okhttp3 请求封装
@@ -49,6 +53,7 @@ public class HttpRequest {
     private Duration connectTimeout;
     private Duration readTimeout;
     private Duration writeTimeout;
+    private RetryPolicy retryPolicy;
     private static volatile HttpLoggingInterceptor globalLoggingInterceptor;
     private HttpLoggingInterceptor.Level level;
 
@@ -199,6 +204,10 @@ public class HttpRequest {
         return FormBuilder.of(this);
     }
 
+    public FormBuilder formBuilder(@Nullable Charset charset) {
+        return FormBuilder.of(this, charset);
+    }
+
     public HttpRequest multipartForm(final MultipartBody multipartBody) {
         this.requestBody = multipartBody;
         return this;
@@ -213,13 +222,13 @@ public class HttpRequest {
         return this;
     }
 
-    public HttpRequest bodyJson(final String json) {
-        this.requestBody = RequestBody.create(MEDIA_TYPE_JSON, json);
+    public HttpRequest bodyValue(final String jsonValue) {
+        this.requestBody = RequestBody.create(MEDIA_TYPE_JSON, jsonValue);
         return this;
     }
 
-    public HttpRequest bodyJson(final Object jsonObject) {
-        return bodyJson(Jackson.toJson(jsonObject));
+    public HttpRequest bodyValue(final Object bodyValue) {
+        return bodyValue(Jackson.toJson(bodyValue));
     }
 
     public HttpRequest cacheControl(final CacheControl cacheControl) {
@@ -314,6 +323,26 @@ public class HttpRequest {
         return this;
     }
 
+    public HttpRequest retry() {
+        this.retryPolicy = RetryPolicy.INSTANCE;
+        return this;
+    }
+
+    public HttpRequest retryOn(Predicate<ResponseSpec> respPredicate) {
+        this.retryPolicy = new RetryPolicy(respPredicate);
+        return this;
+    }
+
+    public HttpRequest retry(int maxAttempts, long sleepMillis) {
+        this.retryPolicy = new RetryPolicy(maxAttempts, sleepMillis);
+        return this;
+    }
+
+    public HttpRequest retry(int maxAttempts, long sleepMillis, Predicate<ResponseSpec> respPredicate) {
+        this.retryPolicy = new RetryPolicy(maxAttempts, sleepMillis);
+        return this;
+    }
+
     public HttpRequest log() {
         this.level = HttpLoggingInterceptor.Level.BODY;
         return this;
@@ -330,7 +359,8 @@ public class HttpRequest {
     }
 
     private Call newCall(final OkHttpClient httpClient) {
-        OkHttpClient.Builder builder = httpClient.newBuilder();
+        OkHttpClient okHttpClient = httpClient;
+        OkHttpClient.Builder builder = okHttpClient.newBuilder();
         if (null != connectTimeout) {
             builder.connectTimeout(connectTimeout);
         }
@@ -354,6 +384,9 @@ public class HttpRequest {
         }
         if (null != interceptor) {
             builder.addInterceptor(interceptor);
+        }
+        if (null != retryPolicy) {
+            builder.addInterceptor(new RetryInterceptor(retryPolicy));
         }
         if (null != proxy) {
             builder.proxy(proxy);
@@ -391,8 +424,6 @@ public class HttpRequest {
 
     /**
      * 同步请求
-     *
-     * @return 响应体
      */
     public final SyncCall execute() {
         return new SyncCall(newCall(httpClient));
@@ -403,6 +434,16 @@ public class HttpRequest {
      */
     public final AsyncCall async() {
         return new AsyncCall(newCall(httpClient));
+    }
+
+    /**
+     * 异步请求
+     */
+    public CompletableFuture<ResponseSpec> enqueue() {
+        CompletableFuture<ResponseSpec> future = new CompletableFuture<>();
+        Call call = newCall(httpClient);
+        call.enqueue(new CompletableCallback(future));
+        return future;
     }
 
     public static void setHttpClient(OkHttpClient httpClient) {

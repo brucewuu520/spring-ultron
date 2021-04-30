@@ -10,7 +10,7 @@
     <packaging>pom</packaging>
 
     <properties>
-        <revision>2.3.1</revision>
+        <revision>2.4.5</revision>
         <main.basedir>${basedir}</main.basedir>
     </properties>
 
@@ -26,6 +26,48 @@
                 <module>spring-ultron-dependencies</module>
                 <module>spring-ultron-projects</module>
             </modules>
+        </profile>
+        <!-- Release Repository -->
+        <profile>
+            <id>release</id>
+            <activation>
+                <property>
+                    <name>!disable-spring-ultron-default-profile</name>
+                </property>
+            </activation>
+            <modules>
+                <module>spring-ultron-dependencies</module>
+                <module>spring-ultron-projects</module>
+            </modules>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.6</version>
+                        <executions>
+                            <execution>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+            <distributionManagement>
+                <snapshotRepository>
+                    <id>sonatype-nexus-snapshots</id>
+                    <name>Sonatype Nexus Snapshots</name>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+                </snapshotRepository>
+                <repository>
+                    <id>sonatype-nexus-staging</id>
+                    <name>Nexus Release Repository</name>
+                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                </repository>
+            </distributionManagement>
         </profile>
     </profiles>
 

@@ -18,7 +18,7 @@ public class UltronLogProperties {
     /**
      * 日志等级
      */
-    private LogLevel level = LogLevel.BASIC;
+    private LogLevel level = LogLevel.BODY;
 
     public boolean isEnable() {
         return enable;

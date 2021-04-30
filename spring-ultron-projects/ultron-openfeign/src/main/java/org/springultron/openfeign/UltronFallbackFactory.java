@@ -1,8 +1,8 @@
 package org.springultron.openfeign;
 
 import feign.Target;
-import feign.hystrix.FallbackFactory;
 import org.springframework.cglib.proxy.Enhancer;
+import org.springframework.cloud.openfeign.FallbackFactory;
 
 /**
  * 默认 Fallback
@@ -12,9 +12,9 @@ import org.springframework.cglib.proxy.Enhancer;
  */
 public class UltronFallbackFactory<T> implements FallbackFactory<T> {
 
-    private final Target target;
+    private final Target<T> target;
 
-    public UltronFallbackFactory(Target target) {
+    public UltronFallbackFactory(Target<T> target) {
         this.target = target;
     }
 

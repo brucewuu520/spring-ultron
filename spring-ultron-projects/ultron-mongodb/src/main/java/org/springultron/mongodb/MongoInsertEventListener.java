@@ -32,11 +32,11 @@ public class MongoInsertEventListener extends AbstractMongoEventListener<IncIdEn
     @Autowired
     private MongoTemplate mongoTemplate;
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
+    @SuppressWarnings("unchecked")
     @Override
     public void onBeforeConvert(@NonNull BeforeConvertEvent<IncIdEntity<?>> event) {
         super.onBeforeConvert(event);
-        IncIdEntity entity = event.getSource();
+        IncIdEntity<Number> entity = (IncIdEntity<Number>) event.getSource();
         if (entity.getId() == null) {
             // 获得下一个ID
             Number id = nextId(entity);

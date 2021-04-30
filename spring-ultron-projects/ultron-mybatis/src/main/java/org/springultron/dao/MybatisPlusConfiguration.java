@@ -1,25 +1,18 @@
 package org.springultron.dao;
 
+import com.baomidou.mybatisplus.autoconfigure.ConfigurationCustomizer;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
-import com.baomidou.mybatisplus.core.parser.ISqlParser;
-import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
-import com.baomidou.mybatisplus.extension.parsers.BlockAttackSqlParser;
-import com.baomidou.mybatisplus.extension.plugins.OptimisticLockerInterceptor;
-import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
-import com.baomidou.mybatisplus.extension.plugins.SqlExplainInterceptor;
-import com.baomidou.mybatisplus.extension.plugins.pagination.optimize.JsqlParserCountOptimize;
+import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.inner.BlockAttackInnerInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import org.mybatis.spring.annotation.MapperScan;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springultron.core.jackson.Jackson;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * mybatis plus 自动化配置
@@ -30,54 +23,50 @@ import java.util.List;
 @MapperScan("com.*.*.mapper")
 @EnableTransactionManagement
 @Configuration(proxyBeanMethods = false)
-@EnableConfigurationProperties(MybatisPlusAutoFillProperties.class)
-public class MybatisPlusConfiguration implements InitializingBean {
+@EnableConfigurationProperties(UltronMybatisPlusProperties.class)
+public class MybatisPlusConfiguration {
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        JacksonTypeHandler.setObjectMapper(Jackson.getInstance());
+    /**
+     * 新的分页插件
+     * 一缓和二缓遵循mybatis的规则,需要设置 MybatisConfiguration#useDeprecatedExecutor=false 避免缓存出现问题
+     */
+    @Bean
+    @ConditionalOnMissingBean(MybatisPlusInterceptor.class)
+    public MybatisPlusInterceptor mybatisPlusInterceptor(UltronMybatisPlusProperties properties) {
+        MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
+        // 分页插件，默认MYSQL
+        interceptor.addInnerInterceptor(new PaginationInnerInterceptor(properties.getDbType()));
+        // 乐观锁插件
+        interceptor.addInnerInterceptor(new OptimisticLockerInnerInterceptor());
+        // 防止全表更新与删除插件
+        interceptor.addInnerInterceptor(new BlockAttackInnerInterceptor());
+        return interceptor;
     }
 
     /**
-     * 分页插件
+     * 自定义Configuration
      */
     @Bean
-    @ConditionalOnMissingBean({PaginationInterceptor.class})
-    public PaginationInterceptor paginationInterceptor() {
-        // 开启 count 的 join 优化,只针对 left join !!!
-        return new PaginationInterceptor().setCountSqlParser(new JsqlParserCountOptimize(true));
+    public ConfigurationCustomizer configurationCustomizer() {
+        return configuration -> configuration.setUseDeprecatedExecutor(false);
     }
 
     /**
-     * 防止全表更新/删除
+     * 自定义SQL注入
      */
     @Bean
-    @ConditionalOnMissingBean({SqlExplainInterceptor.class})
-    public SqlExplainInterceptor sqlExplainInterceptor() {
-        SqlExplainInterceptor sqlExplainInterceptor = new SqlExplainInterceptor();
-        List<ISqlParser> sqlParserList = new ArrayList<>(1);
-        sqlParserList.add(new BlockAttackSqlParser());
-        sqlExplainInterceptor.setSqlParserList(sqlParserList);
-        return sqlExplainInterceptor;
+    @ConditionalOnMissingBean(MySqlInjector.class)
+    public MySqlInjector sqlInjector() {
+        return new MySqlInjector();
     }
 
     /**
      * 日期字段自动填充
      */
     @Bean
-    @ConditionalOnMissingBean
-    @ConditionalOnProperty(value = "ultron.mybatis-plus.auto-fill.enable", matchIfMissing = true)
-    public MetaObjectHandler metaObjectHandler(MybatisPlusAutoFillProperties properties) {
+    @ConditionalOnMissingBean(MetaObjectHandler.class)
+    @ConditionalOnProperty(value = "ultron.mybatis-plus.auto-fill.enable", havingValue = "true", matchIfMissing = true)
+    public MetaObjectHandler metaObjectHandler(UltronMybatisPlusProperties properties) {
         return new UltronMetaObjectHandler(properties);
     }
-
-    /**
-     * 乐观锁
-     */
-    @Bean
-    @ConditionalOnMissingBean
-    public OptimisticLockerInterceptor optimisticLockerInterceptor() {
-        return new OptimisticLockerInterceptor();
-    }
-
 }

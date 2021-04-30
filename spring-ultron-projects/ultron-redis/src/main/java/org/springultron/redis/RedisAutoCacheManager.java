@@ -7,7 +7,7 @@ import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.cache.RedisCacheWriter;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
-import org.springframework.util.StringUtils;
+import org.springultron.core.utils.StringUtils;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
@@ -29,18 +29,20 @@ public class RedisAutoCacheManager extends RedisCacheManager {
     @NonNull
     @Override
     protected RedisCache createRedisCache(@NonNull String name, @Nullable RedisCacheConfiguration cacheConfig) {
-        if (!StringUtils.isEmpty(name) && name.contains("#")) {
+        String cacheName = name;
+        System.err.println("--createRedisCache: " + cacheName);
+        if (StringUtils.isNotEmpty(name) && name.contains("#")) {
             String[] array = name.split("#");
             if (array.length > 1) {
-                name = array[0];
+                cacheName = array[0].trim();
                 // 转换时间，支持时间单位例如：300ms，默认单位秒
-                Duration ttl = DurationStyle.detectAndParse(array[1], ChronoUnit.SECONDS);
+                Duration ttl = DurationStyle.detectAndParse(array[1].trim(), ChronoUnit.SECONDS);
                 if (cacheConfig != null && cacheConfig.getTtl().compareTo(ttl) != 0) {
                     cacheConfig = cacheConfig.entryTtl(ttl);
                 }
             }
         }
-
-        return super.createRedisCache(name, cacheConfig);
+        System.err.println("--createRedisCache22: " + cacheName);
+        return super.createRedisCache(cacheName, cacheConfig);
     }
 }

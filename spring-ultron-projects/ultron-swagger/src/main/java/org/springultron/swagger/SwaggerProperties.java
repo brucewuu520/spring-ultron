@@ -1,10 +1,9 @@
 package org.springultron.swagger;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 /**
- * Swagger 自定义配置
+ * Swagger文档自定义配置
  *
  * @author brucewuu
  * @date 2019-06-27 19:40
@@ -12,37 +11,36 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 @ConfigurationProperties("swagger")
 public class SwaggerProperties {
     /**
-     * 是否开启 swagger，默认：true
+     * 是否开启文档（默认：开启）
      */
     private boolean enable = true;
     /**
-     * 标题，默认：在线接口文档
+     * 文档标题（默认：Api Documentation）
      */
     private String title;
     /**
-     * 详情，默认：在线接口文档
+     * 文档描述（默认：Api Documentation）
      */
     private String description;
     /**
-     * 版本号，默认：V1.0
+     * 版本号（默认：V1.0）
      */
     private String version = "V1.0";
     /**
-     * 联系人
+     * 服务地址
      */
-    private String contactUser;
+    private String termsOfServiceUrl;
     /**
-     * 联系网址
+     * 分组地址（默认：default）
      */
-    private String contactUrl;
+    private String groupName;
     /**
-     * 联系邮箱
+     * 开发者信息
      */
-    private String contactEmail;
+    private Contact contact;
     /**
      * 全局统一鉴权配置
      **/
-    @NestedConfigurationProperty
     private Authorization authorization = new Authorization();
 
     public boolean isEnable() {
@@ -69,6 +67,22 @@ public class SwaggerProperties {
         this.description = description;
     }
 
+    public String getTermsOfServiceUrl() {
+        return termsOfServiceUrl;
+    }
+
+    public void setTermsOfServiceUrl(String termsOfServiceUrl) {
+        this.termsOfServiceUrl = termsOfServiceUrl;
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
+
     public String getVersion() {
         return version;
     }
@@ -77,28 +91,12 @@ public class SwaggerProperties {
         this.version = version;
     }
 
-    public String getContactUser() {
-        return contactUser;
+    public Contact getContact() {
+        return contact;
     }
 
-    public void setContactUser(String contactUser) {
-        this.contactUser = contactUser;
-    }
-
-    public String getContactUrl() {
-        return contactUrl;
-    }
-
-    public void setContactUrl(String contactUrl) {
-        this.contactUrl = contactUrl;
-    }
-
-    public String getContactEmail() {
-        return contactEmail;
-    }
-
-    public void setContactEmail(String contactEmail) {
-        this.contactEmail = contactEmail;
+    public void setContact(Contact contact) {
+        this.contact = contact;
     }
 
     public Authorization getAuthorization() {
@@ -109,21 +107,64 @@ public class SwaggerProperties {
         this.authorization = authorization;
     }
 
+
+    public static class Contact {
+        /**
+         * 开发者姓名
+         */
+        private String name;
+        /**
+         * 开发者主页
+         */
+        private String url;
+        /**
+         * 开发者邮箱
+         */
+        private String email;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
+    }
+
+    /**
+     * Authorization配置
+     */
     public static class Authorization {
         /**
-         * 开启Authorization，默认：false
+         * 开启Authorization（默认：false）
          */
         private boolean enabled = false;
         /**
-         * 鉴权策略ID，对应 SecurityReferences ID，默认：BearerToken
+         * 鉴权策略ID，对应 SecurityReferences ID（默认：BearerToken）
          */
         private String name = "BearerToken";
         /**
-         * 鉴权传递的Header参数，默认：Authorization
+         * 鉴权传递的Header参数（默认：Authorization）
          */
         private String headerName = "Authorization";
         /**
-         * 需要开启鉴权URL的正则，默认：^.*$
+         * 需要开启鉴权URL的正则（默认：^.*$）
          */
         private String authRegex = "^.*$";
 

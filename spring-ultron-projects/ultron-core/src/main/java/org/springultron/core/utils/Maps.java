@@ -62,10 +62,13 @@ public class Maps {
         Collections.sort(keyList);
         StringBuilder builder = new StringBuilder();
         for (String key : keyList) {
-            if (builder.length() > 0) {
-                builder.append("&").append(key).append("=").append(map.get(key));
-            } else {
-                builder.append(key).append("=").append(map.get(key));
+            Object value = map.get(key);
+            if (value != null) {
+                if (builder.length() > 0) {
+                    builder.append("&").append(key).append("=").append(value);
+                } else {
+                    builder.append(key).append("=").append(value);
+                }
             }
         }
         return builder;

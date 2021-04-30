@@ -7,7 +7,7 @@ import okhttp3.internal.Util;
 import org.springframework.lang.Nullable;
 import org.springultron.core.exception.Exceptions;
 import org.springultron.core.jackson.Jackson;
-import org.springultron.core.utils.IoUtils;
+import org.springultron.core.io.IOUtils;
 
 import java.io.Closeable;
 import java.io.File;
@@ -213,6 +213,6 @@ public class HttpResponse implements ResponseSpec, Closeable {
 
     @Override
     public void close() throws IOException {
-        IoUtils.closeQuietly(responseBody);
+        IOUtils.closeQuietly(responseBody);
     }
 }

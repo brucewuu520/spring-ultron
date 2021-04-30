@@ -4,9 +4,7 @@ import com.alibaba.csp.sentinel.adapter.spring.webmvc.callback.BlockExceptionHan
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.MediaType;
-import org.springframework.web.servlet.function.ServerResponse;
-import org.springultron.core.result.ResultStatus;
+import org.springframework.http.HttpStatus;
 
 /**
  * Sentinel 配置类
@@ -23,9 +21,10 @@ public class SentinelConfiguration {
      */
     @Bean
     public BlockExceptionHandler blockExceptionHandler() {
-        return (request, response, e) -> ServerResponse.status(ResultStatus.FLOW_LIMITING.getCode())
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(ResultStatus.FLOW_LIMITING.getMessage());
+        return (request, response, e) -> {
+            // Return 429 (Too Many Requests) by default.
+            response.setStatus(HttpStatus.TOO_MANY_REQUESTS.value());
+            response.getWriter().write(HttpStatus.TOO_MANY_REQUESTS.getReasonPhrase());
+        };
     }
-
 }

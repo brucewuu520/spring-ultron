@@ -38,7 +38,7 @@ public class UserInfo implements Serializable {
     /**
      * 昵称（非必需）
      */
-    private String nickName;
+    private final String nickName;
     /**
      * 自定义参数（非必需）
      */
@@ -112,6 +112,7 @@ public class UserInfo implements Serializable {
         sb.append("Enable: ").append(this.enabled).append("; ");
         sb.append("UserId: ").append(this.userId).append("; ");
         sb.append("Mobile: ").append(this.mobile).append("; ");
+        sb.append("NickName: ").append(this.nickName).append("; ");
         if (this.extras != null && !this.extras.isEmpty()) {
             for (Map.Entry<String, Object> entry : this.extras.entrySet()) {
                 sb.append(entry.getKey()).append(entry.getValue()).append("; ");

@@ -57,9 +57,10 @@ public abstract class BaseSecurityConfig extends WebSecurityConfigurerAdapter {
                 "/**/*.js",
                 "/favicon.ico",
                 "/swagger-resources/**",
-                "/v2/api-docs/**",
-                "/v2/api-docs-ext/**",
-                "/webjars/**"
+                "/v3/api-docs/**",
+                "/v3/api-docs-ext/**",
+                "/webjars/**",
+                "/actuator/**"
         );
     }
 

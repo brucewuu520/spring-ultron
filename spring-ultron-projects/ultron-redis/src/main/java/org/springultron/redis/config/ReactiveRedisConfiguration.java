@@ -28,15 +28,14 @@ import reactor.core.publisher.Flux;
  */
 @Configuration(proxyBeanMethods = false)
 @AutoConfigureBefore({RedisReactiveAutoConfiguration.class})
-@ConditionalOnBean({ReactiveRedisConnectionFactory.class})
 @ConditionalOnClass({ReactiveRedisTemplate.class, Flux.class})
+@ConditionalOnBean({ReactiveRedisConnectionFactory.class})
 public class ReactiveRedisConfiguration {
 
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Bean
     @ConditionalOnMissingBean(name = {"reactiveRedisTemplate"})
-    @ConditionalOnBean({ReactiveRedisConnectionFactory.class})
-    public ReactiveRedisTemplate<String, Object> reactiveRedisTemplate(ObjectProvider<RedisSerializer<Object>> redisSerializer, ReactiveRedisConnectionFactory reactiveRedisConnectionFactory) {
+    public ReactiveRedisTemplate<String, Object> reactiveRedisTemplate(ReactiveRedisConnectionFactory reactiveRedisConnectionFactory, ObjectProvider<RedisSerializer<Object>> redisSerializer) {
         RedisSerializer<Object> valueSerializer = redisSerializer.getIfAvailable(JdkSerializationRedisSerializer::new);
         RedisSerializationContext.SerializationPair<String> keySerializationPair = RedisSerializationContext.SerializationPair.fromSerializer(RedisSerializer.string());
         RedisSerializationContext.SerializationPair<Object> valueSerializationPair = RedisSerializationContext.SerializationPair.fromSerializer(valueSerializer);

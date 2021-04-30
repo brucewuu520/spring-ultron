@@ -13,7 +13,7 @@
     },
     {
       "name": "swagger.knife4j.basic",
-      "type": "org.springultron.swagger.knife4j.Knife4jHttpBasic",
+      "type": "org.springultron.swagger.knife4j.Knife4jProperties$Knife4jHttpBasic",
       "sourceType": "org.springultron.swagger.knife4j.Knife4jProperties",
       "sourceMethod": "getBasic()"
     }
@@ -114,9 +114,9 @@
       "type": "java.lang.String"
     },
     {
-      "description": "markdown files path.",
-      "name": "swagger.knife4j.markdowns",
-      "type": "java.lang.String"
+      "name": "swagger.knife4j.documents",
+      "type": "java.util.List<com.github.xiaoymin.knife4j.core.model.MarkdownProperty>",
+      "description": "Other Documents."
     }
   ],
   "hints": []

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>spring-ultron-dependencies</artifactId>
     <name>Spring Ultron Dependencies</name>
@@ -38,31 +38,33 @@
 
     <properties>
         <main.basedir>${basedir}/..</main.basedir>
-        <!-- boot dependencies version start-->
-        <spring-boot.version>2.3.3.RELEASE</spring-boot.version>
-        <mybatis-plus.version>3.3.2</mybatis-plus.version>
-        <knife4j.version>2.0.4</knife4j.version>
+        <!-- app dependencies version start-->
+        <spring-boot.version>2.4.5</spring-boot.version>
+        <spring-cloud.version>2020.0.2</spring-cloud.version>
+        <alibaba-cloud.version>2021.1</alibaba-cloud.version>
+        <feign-okhttp.version>11.0</feign-okhttp.version>
+        <mybatis-plus.version>3.4.2</mybatis-plus.version>
         <jwt.version>0.11.2</jwt.version>
-        <bouncycastle.version>1.66</bouncycastle.version>
-        <redisson.version>3.13.2</redisson.version>
-        <zxing.version>3.4.0</zxing.version>
-        <!-- boot dependencies version end-->
-        <!-- cloud dependencies version start-->
-        <spring-cloud.version>Hoxton.SR8</spring-cloud.version>
-        <alibaba-cloud.version>2.2.1.RELEASE</alibaba-cloud.version>
-        <guava.version>28.2-android</guava.version>
-        <fastjson.version>1.2.72</fastjson.version>
-        <!-- cloud dependencies version end-->
+        <redisson.version>3.15.3</redisson.version>
+        <bouncycastle.version>1.68</bouncycastle.version>
+        <zxing.version>3.4.1</zxing.version>
+        <fastjson.version>1.2.76</fastjson.version>
+        <guava.version>30.1.1-jre</guava.version>
+        <knife4j.version>3.0.2</knife4j.version>
+        <swagger-annotations.version>1.5.22</swagger-annotations.version>
+        <xxl-job.version>2.3.0</xxl-job.version>
+        <logstash-logback.version>6.6</logstash-logback.version>
+        <!-- app dependencies version end-->
         <findbugs.version>3.0.2</findbugs.version>
         <!-- maven dependencies version start -->
-        <maven-flatten-plugin.version>1.1.0</maven-flatten-plugin.version>
+        <maven-flatten-plugin.version>1.2.5</maven-flatten-plugin.version>
         <maven-xml-plugin.version>1.0.2</maven-xml-plugin.version>
         <maven-helper-plugin.version>3.1.0</maven-helper-plugin.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <maven-enforcer-plugin.version>3.0.0-M3</maven-enforcer-plugin.version>
         <maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
         <maven-source-plugin.version>3.2.0</maven-source-plugin.version>
-        <maven-javadoc-plugin.version>3.1.1</maven-javadoc-plugin.version>
+        <maven-javadoc-plugin.version>3.2.0</maven-javadoc-plugin.version>
         <!-- maven dependencies version end -->
     </properties>
 
@@ -111,12 +113,7 @@
             </dependency>
             <dependency>
                 <groupId>org.springultron</groupId>
-                <artifactId>ultron-http</artifactId>
-                <version>${revision}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springultron</groupId>
-                <artifactId>ultron-mongodb</artifactId>
+                <artifactId>ultron-logging</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
@@ -126,12 +123,7 @@
             </dependency>
             <dependency>
                 <groupId>org.springultron</groupId>
-                <artifactId>ultron-openfeign</artifactId>
-                <version>${revision}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springultron</groupId>
-                <artifactId>ultron-qrcode</artifactId>
+                <artifactId>ultron-mongodb</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
@@ -146,7 +138,32 @@
             </dependency>
             <dependency>
                 <groupId>org.springultron</groupId>
+                <artifactId>ultron-caffeine</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springultron</groupId>
                 <artifactId>ultron-security</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springultron</groupId>
+                <artifactId>ultron-captcha</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springultron</groupId>
+                <artifactId>ultron-openfeign</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springultron</groupId>
+                <artifactId>ultron-http</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springultron</groupId>
+                <artifactId>ultron-qrcode</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
@@ -155,14 +172,39 @@
                 <version>${revision}</version>
             </dependency>
             <dependency>
-                <groupId>com.google.guava</groupId>
-                <artifactId>guava</artifactId>
-                <version>${guava.version}</version>
+                <groupId>org.springultron</groupId>
+                <artifactId>ultron-wechat</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springultron</groupId>
+                <artifactId>ultron-xxl-job</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcprov-jdk15on</artifactId>
+                <version>${bouncycastle.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>fastjson</artifactId>
                 <version>${fastjson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-annotations</artifactId>
+                <version>${swagger-annotations.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.logstash.logback</groupId>
+                <artifactId>logstash-logback-encoder</artifactId>
+                <version>${logstash-logback.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.google.code.findbugs</groupId>

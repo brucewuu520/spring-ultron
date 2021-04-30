@@ -22,7 +22,7 @@ public class ReactiveRequestContextFilter implements WebFilter, Ordered {
     @NonNull
     @Override
     public Mono<Void> filter(@NonNull ServerWebExchange exchange, WebFilterChain chain) {
-        return chain.filter(exchange).subscriberContext(ctx -> ReactiveRequestContextHolder.put(ctx, exchange));
+        return chain.filter(exchange).contextWrite(ctx -> ReactiveRequestContextHolder.put(ctx, exchange));
     }
 
     @Override

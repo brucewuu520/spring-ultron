@@ -9,16 +9,17 @@ import org.springframework.core.annotation.Order;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springultron.boot.error.UltronErrorEvent;
+import org.springultron.core.exception.ApiException;
 import org.springultron.core.exception.CryptoException;
 import org.springultron.core.exception.Exceptions;
-import org.springultron.core.exception.ServiceException;
 import org.springultron.core.result.ApiResult;
-import org.springultron.core.result.ResultStatus;
+import org.springultron.core.result.ResultCode;
 import org.springultron.core.utils.ObjectUtils;
 import org.springultron.core.utils.StringUtils;
 import org.springultron.core.utils.WebUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDateTime;
 
 /**
@@ -41,41 +42,62 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * 自定义 REST 业务异常处理
+     * 自定义 REST 业务异常捕获
      *
      * @param e 业务异常
      * @return REST 返回异常结果
      */
-    @ExceptionHandler(value = ServiceException.class)
-    public ApiResult<Object> handleApiException(ServiceException e) {
-        log.error("自定义业务异常: {}", e.getMessage());
+    @ExceptionHandler(value = ApiException.class)
+    public ApiResult<Object> handleApiException(ApiException e) {
+        log.error("自定义业务异常", e);
         publishEvent(e);
         return ApiResult.apiException(e);
     }
 
     /**
-     * 加解密异常处理
+     * 加解密异常捕获
      *
      * @param e 加解密异常
      * @return REST 返回异常结果
      */
     @ExceptionHandler(value = CryptoException.class)
     public ApiResult<Object> handleCryptoException(CryptoException e) {
-        log.error("加解密异常: {}", e.getMessage());
+        log.error("加解密异常", e);
         publishEvent(e);
-        return ApiResult.failed(ResultStatus.SIGN_FAILED);
+        return ApiResult.fail(ResultCode.SIGN_FAILED);
     }
 
+    /**
+     * 断言异常捕获
+     *
+     * @param e 断言异常
+     * @return REST 返回异常结果
+     */
     @ExceptionHandler(AssertionError.class)
     public ApiResult<Object> handleAssertionError(AssertionError e) {
-        log.error("断言异常: {}", e.getMessage());
-        publishEvent(e);
+        log.error("断言异常", e);
         // 发送：未知异常异常事件
-        return ApiResult.failed(ResultStatus.ASSERTION_ERROR.getCode(), e.getMessage());
+        publishEvent(e);
+        return ApiResult.fail(ResultCode.ASSERTION_ERROR.getCode(), e.getMessage());
+    }
+
+    /**
+     * 数据库的唯一约束条件异常捕获
+     *
+     * @param e 数据库的唯一约束条件异常
+     * @return REST 返回异常结果
+     */
+    @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
+    public ApiResult<Object> handleSqlConstraintException(SQLIntegrityConstraintViolationException e) {
+        log.error("数据库的唯一约束条件异常", e);
+        // 发送：未知异常异常事件
+        publishEvent(e);
+        return ApiResult.fail(ResultCode.SQL_CONSTRAINT_ERROR);
     }
 
     /**
      * 异常事件推送
+     *
      * @param error 异常
      */
     private void publishEvent(Throwable error) {

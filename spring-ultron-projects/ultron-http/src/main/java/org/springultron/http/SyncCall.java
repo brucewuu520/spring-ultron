@@ -52,6 +52,14 @@ public class SyncCall {
         }
     }
 
+    public HttpResponse response() {
+        try {
+            return HttpResponse.of(call.execute());
+        } catch (IOException e) {
+            throw Exceptions.unchecked(e);
+        }
+    }
+
     public InputStream asStream() {
         return response(ResponseSpec::asStream);
     }

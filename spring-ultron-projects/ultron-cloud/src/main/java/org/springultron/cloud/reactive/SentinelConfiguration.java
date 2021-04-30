@@ -4,10 +4,10 @@ import com.alibaba.csp.sentinel.adapter.spring.webflux.callback.BlockRequestHand
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.server.ServerResponse;
-import org.springultron.core.result.ResultStatus;
 
 /**
  * Sentinel 配置类
@@ -24,10 +24,9 @@ public class SentinelConfiguration {
      */
     @Bean
     public BlockRequestHandler blockRequestHandler() {
-
-        return (exchange, throwable) -> ServerResponse.status(ResultStatus.FLOW_LIMITING.getCode())
+        // Return 429 (Too Many Requests) by default.
+        return (exchange, throwable) -> ServerResponse.status(HttpStatus.TOO_MANY_REQUESTS)
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(BodyInserters.fromValue(ResultStatus.FLOW_LIMITING.getMessage()));
+                .body(BodyInserters.fromValue(HttpStatus.TOO_MANY_REQUESTS.getReasonPhrase()));
     }
-
 }

@@ -15,9 +15,9 @@ import org.springultron.boot.error.UltronErrorEvent;
 import org.springultron.boot.reactive.context.ReactiveRequestContextHolder;
 import org.springultron.core.exception.CryptoException;
 import org.springultron.core.exception.Exceptions;
-import org.springultron.core.exception.ServiceException;
+import org.springultron.core.exception.ApiException;
 import org.springultron.core.result.ApiResult;
-import org.springultron.core.result.ResultStatus;
+import org.springultron.core.result.ResultCode;
 import org.springultron.core.utils.ObjectUtils;
 import reactor.core.publisher.Mono;
 
@@ -48,9 +48,9 @@ public class GlobalExceptionHandler {
      * @param e 业务异常
      * @return REST 返回异常结果
      */
-    @ExceptionHandler(value = ServiceException.class)
-    public Mono<ApiResult<Object>> handleApiException(ServiceException e) {
-        log.error("自定义业务异常: {}", e.getMessage());
+    @ExceptionHandler(value = ApiException.class)
+    public Mono<ApiResult<Object>> handleApiException(ApiException e) {
+        log.error("自定义业务异常", e);
 
         // 发送：未知异常异常事件
         return ReactiveRequestContextHolder.getRequest()
@@ -66,20 +66,20 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(value = CryptoException.class)
     public Mono<ApiResult<Object>> handleCryptoException(CryptoException e) {
-        log.error("加解密异常: {}", e.getMessage());
+        log.error("加解密异常", e);
         // 发送：未知异常异常事件
         return ReactiveRequestContextHolder.getRequest()
                 .doOnSuccess(r -> publishEvent(r, e))
-                .flatMap(r -> Mono.just(ApiResult.failed(ResultStatus.SIGN_FAILED)));
+                .flatMap(r -> Mono.just(ApiResult.fail(ResultCode.SIGN_FAILED)));
     }
 
     @ExceptionHandler(AssertionError.class)
     public Mono<ApiResult<Object>> handleAssertionError(AssertionError e) {
-        log.error("断言异常: {}", e.getMessage());
+        log.error("断言异常", e);
         // 发送：未知异常异常事件
         return ReactiveRequestContextHolder.getRequest()
                 .doOnSuccess(r -> publishEvent(r, e))
-                .flatMap(r -> Mono.just(ApiResult.failed(ResultStatus.ASSERTION_ERROR.getCode(), e.getMessage())));
+                .flatMap(r -> Mono.just(ApiResult.fail(ResultCode.ASSERTION_ERROR.getCode(), e.getMessage())));
     }
 
     private void publishEvent(ServerHttpRequest request, Throwable error) {

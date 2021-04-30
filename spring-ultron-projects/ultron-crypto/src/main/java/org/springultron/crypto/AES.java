@@ -266,9 +266,18 @@ public final class AES {
      * 提供基于PKCS7算法的加解密接口.
      */
     private static class Pkcs7Encoder {
-        private static final int BLOCK_SIZE = 32;
+        /**
+         * 默认为 16，保持跟其他语言的一致性
+         */
+        static int BLOCK_SIZE = 16;
 
-        private static byte[] encode(byte[] src) {
+        /**
+         * PKCS7 编码 padding 补位
+         *
+         * @param src 原数据
+         * @return padding 补位
+         */
+        public static byte[] encode(byte[] src) {
             int count = src.length;
             // 计算需要填充的位数
             int amountToPad = BLOCK_SIZE - (count % BLOCK_SIZE);
@@ -288,7 +297,13 @@ public final class AES {
             return dest;
         }
 
-        private static byte[] decode(byte[] decrypted) {
+        /**
+         * PKCS7 解码
+         *
+         * @param decrypted 编码的数据
+         * @return 解码后的数据
+         */
+        public static byte[] decode(byte[] decrypted) {
             int pad = decrypted[decrypted.length - 1];
             if (pad < 1 || pad > BLOCK_SIZE) {
                 pad = 0;

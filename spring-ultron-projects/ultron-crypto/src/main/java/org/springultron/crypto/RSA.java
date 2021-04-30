@@ -2,7 +2,7 @@ package org.springultron.crypto;
 
 import org.springframework.util.Base64Utils;
 import org.springultron.core.exception.CryptoException;
-import org.springultron.core.utils.IoUtils;
+import org.springultron.core.io.IOUtils;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -908,8 +908,8 @@ public final class RSA {
             bufferedOutputStream.flush();
             return outputStream.toByteArray();
         } finally {
-            IoUtils.closeQuietly(outputStream);
-            IoUtils.closeQuietly(bufferedOutputStream);
+            IOUtils.closeQuietly(outputStream);
+            IOUtils.closeQuietly(bufferedOutputStream);
         }
     }
 }

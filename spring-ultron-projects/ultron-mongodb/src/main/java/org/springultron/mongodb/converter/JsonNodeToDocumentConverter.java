@@ -21,7 +21,7 @@ public enum JsonNodeToDocumentConverter implements Converter<ObjectNode, Documen
 
     @Nullable
     @Override
-    public Document convert(ObjectNode source) {
-        return Document.parse(source.toString());
+    public Document convert(@Nullable ObjectNode source) {
+        return null == source ? null : Document.parse(source.toString());
     }
 }

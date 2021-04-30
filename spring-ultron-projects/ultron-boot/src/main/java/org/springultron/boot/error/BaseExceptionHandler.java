@@ -5,7 +5,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springultron.core.result.ApiResult;
 import org.springultron.core.result.FieldErrorDTO;
-import org.springultron.core.result.ResultStatus;
+import org.springultron.core.result.ResultCode;
 import org.springultron.core.utils.Lists;
 import org.springultron.core.utils.StringUtils;
 
@@ -30,13 +30,13 @@ public abstract class BaseExceptionHandler {
     protected ApiResult<Object> handleError(BindingResult result) {
         FieldError fieldError = result.getFieldError();
         if (fieldError != null) {
-            ApiResult<Object> apiResult = ApiResult.failed(ResultStatus.PARAM_BIND_FAILED.getCode(), fieldError.getDefaultMessage());
+            ApiResult<Object> apiResult = ApiResult.fail(ResultCode.PARAM_BIND_FAILED.getCode(), fieldError.getDefaultMessage());
             ArrayList<FieldErrorDTO> fieldErrorDTOS = Lists.newArrayList(1);
             fieldErrorDTOS.add(FieldErrorDTO.of(fieldError.getField(), fieldError.getDefaultMessage()));
             apiResult.setFieldErrors(fieldErrorDTOS);
             return apiResult;
         } else {
-            return ApiResult.failed(ResultStatus.PARAM_BIND_FAILED);
+            return ApiResult.fail(ResultCode.PARAM_BIND_FAILED);
         }
     }
 
@@ -57,7 +57,7 @@ public abstract class BaseExceptionHandler {
                 message = violation.getMessage();
             }
         }
-        ApiResult<Object> apiResult = ApiResult.failed(ResultStatus.PARAM_VALID_FAILED.getCode(), message);
+        ApiResult<Object> apiResult = ApiResult.fail(ResultCode.PARAM_VALID_FAILED.getCode(), message);
         if (fieldErrorDTOS.size() > 0) {
             apiResult.setFieldErrors(fieldErrorDTOS);
         }

@@ -79,13 +79,10 @@ public class UltronLockAutoConfiguration {
 
         if (redissonProperties.getConfig() != null) {
             try {
-                InputStream is = getConfigStream();
-                config = Config.fromJSON(is);
+                config = Config.fromYAML(redissonProperties.getConfig());
             } catch (IOException e) {
-                // trying next format
                 try {
-                    InputStream is = getConfigStream();
-                    config = Config.fromYAML(is);
+                    config = Config.fromJSON(redissonProperties.getConfig());
                 } catch (IOException e1) {
                     throw new IllegalArgumentException("Can't parse config", e1);
                 }
