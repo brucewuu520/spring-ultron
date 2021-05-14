@@ -108,7 +108,7 @@ public class RequestLogAspect {
         try {
             // 执行请求获取返回值
             Object result = point.proceed();
-            if (LogLevel.BASIC != ultronLogProperties.getLevel() && LogLevel.BASIC == apiLog.level()) {
+            if (LogLevel.BASIC != ultronLogProperties.getLevel() && LogLevel.BASIC != apiLog.level()) {
                 // 打印返回值
                 reqLog.append("ResponseBody   : ").append(Jackson.toJson(result));
             }
