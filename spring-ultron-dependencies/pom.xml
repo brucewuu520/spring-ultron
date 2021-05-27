@@ -39,7 +39,7 @@
     <properties>
         <main.basedir>${basedir}/..</main.basedir>
         <!-- app dependencies version start-->
-        <spring-boot.version>2.3.10.RELEASE</spring-boot.version>
+        <spring-boot.version>2.3.11.RELEASE</spring-boot.version>
         <spring-cloud.version>Hoxton.SR11</spring-cloud.version>
         <alibaba-cloud.version>2.2.5.RELEASE</alibaba-cloud.version>
         <feign-okhttp.version>11.0</feign-okhttp.version>
