@@ -39,8 +39,8 @@
     <properties>
         <main.basedir>${basedir}/..</main.basedir>
         <!-- app dependencies version start-->
-        <spring-boot.version>2.4.5</spring-boot.version>
-        <spring-cloud.version>2020.0.2</spring-cloud.version>
+        <spring-boot.version>2.4.6</spring-boot.version>
+        <spring-cloud.version>2020.0.3</spring-cloud.version>
         <alibaba-cloud.version>2021.1</alibaba-cloud.version>
         <feign-okhttp.version>11.0</feign-okhttp.version>
         <mybatis-plus.version>3.4.2</mybatis-plus.version>

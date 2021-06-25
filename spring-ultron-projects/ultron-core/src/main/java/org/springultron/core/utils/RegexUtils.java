@@ -27,13 +27,13 @@ public class RegexUtils {
     }
 
     /**
-     * 验证用户名(允许6-16字符，允许字母数字下划线)
+     * 验证用户名(字母开头，允许5-16字节，允许字母数字下划线)
      *
      * @param userName 用户名
      * @return {boolean}
      */
     public static boolean matchUserName(String userName) {
-        return isMatch(userName, "^[a-zA-Z0-9]\\w{5,15}$");
+        return isMatch(userName, "^[a-zA-Z][a-zA-Z0-9_]{4,15}$");
     }
 
     /**
@@ -59,6 +59,11 @@ public class RegexUtils {
     /**
      * 验证密码是否合法
      * 长度在6~18之间，只能包含字母、数字和下划线
+     * <p>
+     * 以字母开头，长度在6~18之间，只能包含字母、数字和下划线: ^[a-zA-Z]\w{5,17}$
+     * 必须包含大小写字母和数字的组合，不能使用特殊字符，长度在8-18之间: ^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,18}$
+     * 必须包含大小写字母、数字和特殊字符的组合，长度在8-18之间: ^(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*,\.])[0-9a-zA-Z!@#$%^&*,\\.]{8,18}$
+     * </p>
      *
      * @param password 密码
      * @return {boolean}
