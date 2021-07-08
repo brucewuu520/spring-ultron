@@ -98,7 +98,7 @@ public class ApiResult<T> implements Serializable {
     /**
      * 成功返回结果
      *
-     * @param data 获取的数据
+     * @param data 返回数据
      * @param <T>  泛型标记
      */
     public static <T> ApiResult<T> success(T data) {
@@ -108,7 +108,7 @@ public class ApiResult<T> implements Serializable {
     /**
      * 成功返回结果
      *
-     * @param data    获取的数据
+     * @param data    返回数据
      * @param message 提示信息
      * @param <T>     泛型标记
      */
@@ -165,6 +165,17 @@ public class ApiResult<T> implements Serializable {
      */
     public static <T> ApiResult<T> fail(int code, String message) {
         return new ApiResult<>(code, message);
+    }
+
+    /**
+     * 失败返回信息
+     *
+     * @param code 状态码
+     * @param data 返回数据
+     * @param <T>  泛型标记
+     */
+    public static <T> ApiResult<T> fail(IResultCode code, T data) {
+        return new ApiResult<>(code.getCode(), code.getMessage(), data);
     }
 
     /**
@@ -260,6 +271,15 @@ public class ApiResult<T> implements Serializable {
      */
     public static void throwFail(String message) {
         throw new ApiException(ResultCode.FAIL, message);
+    }
+
+    /**
+     * 直接抛出失败异常
+     *
+     * @param errorResult 异常返回值
+     */
+    public static void throwFail(ApiResult<?> errorResult) {
+        throw new ApiException(errorResult);
     }
 
     /**
