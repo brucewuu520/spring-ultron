@@ -10,7 +10,7 @@
     <packaging>pom</packaging>
 
     <properties>
-        <revision>2.4.8</revision>
+        <revision>2.4.10</revision>
         <main.basedir>${basedir}</main.basedir>
     </properties>
 

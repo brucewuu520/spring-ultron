@@ -8,4 +8,4 @@ ${AnsiColor.BRIGHT_CYAN}
          | |                  __/ |
          |_|                 |___/
 
-${AnsiColor.BRIGHT_CYAN} :: ${spring.application.name}${AnsiColor.BRIGHT_CYAN} :: Running Spring Boot ${spring-boot.version} :: Spring Ultron 2.4.6 🏃🏃🏃 ${AnsiColor.DEFAULT}
+${AnsiColor.BRIGHT_CYAN} :: ${spring.application.name}${AnsiColor.BRIGHT_CYAN} :: Running Spring Boot ${spring-boot.version} :: Spring Ultron 2.4.10 🏃🏃🏃 ${AnsiColor.DEFAULT}

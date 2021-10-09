@@ -81,8 +81,7 @@ public class Maps {
      * @param queryString key=value&key=value&key=value字符串
      * @return Map
      */
-    @SuppressWarnings("ConstantConditions")
-    public static Map<String, Object> queryStringToMap(String queryString) {
+    public static Map<String, String> queryStringToMap(String queryString) {
         if (StringUtils.isEmpty(queryString)) {
             return Collections.emptyMap();
         }
@@ -90,7 +89,7 @@ public class Maps {
         if (ArrayUtils.isEmpty(params)) {
             return Collections.emptyMap();
         }
-        Map<String, Object> hashMap = new HashMap<>();
+        Map<String, String> hashMap = new HashMap<>();
         for (String param : params) {
             String[] kvArray = StringUtils.split(param, "=");
             int length = ArrayUtils.getLength(kvArray);

@@ -8,13 +8,13 @@ import org.springframework.lang.Nullable;
 import org.springultron.core.jackson.Jackson;
 
 /**
- * Mongo DBObject 转 JsonNode
+ * Mongo BSONObject 转 JsonNode
  *
  * @author brucewuu
  * @date 2020/4/8 12:12
  */
 @ReadingConverter
-public enum  DBObjectToJsonNodeConverter implements Converter<BasicBSONObject, JsonNode> {
+public enum BSONObjectToJsonNodeConverter implements Converter<BasicBSONObject, JsonNode> {
     /**
      * 单例模式
      */
