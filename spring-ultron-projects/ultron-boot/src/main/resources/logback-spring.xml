@@ -2,7 +2,7 @@
 <configuration scan="false" debug="false">
     <springProperty scop="context" name="spring.application.name" source="spring.application.name" defaultValue="ultron-server"/>
     <!-- 定义日志等级-->
-    <springProperty scop="context" name="logging.level" source="logging.level" defaultValue="INFO"/>
+    <springProperty scop="context" name="logging.level.root" source="logging.level.root" defaultValue="INFO"/>
     <!-- 定义日志输出格式变量：%d表示时间 花括号内为时间格式 %level表示日志级别 %thread表示线程名 %logger{0}表示输出日志的类名 [%line]表示行号用方括号包裹 %msg表示日志消息 %n换行 -->
     <springProperty scop="context" name="logging.pattern" source="logging.pattern" defaultValue="[%d{'MM-dd HH:mm:ss.SSS'}] %-5level [%thread] %logger{0} - %msg%n"/>
     <!-- 定义日志字符集 -->
@@ -76,7 +76,7 @@
     </appender>
 
     <!-- Level: TRACE DEBUG INFO WARN ERROR FATAL OFF-->
-    <root level="${logging.level}">
+    <root level="${logging.level.root}">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="INFO"/>
         <appender-ref ref="ERROR"/>
