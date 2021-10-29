@@ -142,7 +142,6 @@ public final class RSA {
     public static boolean verify(RsaAlgorithms algorithms, String data, String publicKey, String sign) {
         final PublicKey key = SecureUtils.generatePublicKey(KEY_ALGORITHM, Base64Utils.decodeFromString(publicKey));
         return verify(algorithms, data.getBytes(StandardCharsets.UTF_8), key, Base64Utils.decodeFromString(sign));
-
     }
 
     /**
@@ -514,8 +513,8 @@ public final class RSA {
      * @param data      待解密文本
      * @param publicKey 公钥字符串 base64
      */
-    public static String decryptByByPublicKey(String data, String publicKey) {
-        return decryptByByPublicKey(RsaAlgorithms.RSA_ECB_PKCS1, data, publicKey);
+    public static String decryptByPublicKey(String data, String publicKey) {
+        return decryptByPublicKey(RsaAlgorithms.RSA_ECB_PKCS1, data, publicKey);
     }
 
     /**
@@ -528,8 +527,8 @@ public final class RSA {
      * @param publicKey        公钥字符串 base64
      * @param decryptBlockSize 解密块大小（生成秘钥对时模长度：keySizeInBits/8）
      */
-    public static String decryptByByPublicKey(String data, String publicKey, int decryptBlockSize) {
-        return decryptByByPublicKey(RsaAlgorithms.RSA_ECB_PKCS1, data, publicKey, decryptBlockSize);
+    public static String decryptByPublicKey(String data, String publicKey, int decryptBlockSize) {
+        return decryptByPublicKey(RsaAlgorithms.RSA_ECB_PKCS1, data, publicKey, decryptBlockSize);
     }
 
     /**
@@ -538,8 +537,8 @@ public final class RSA {
      * @param data      待解密数据字节数组
      * @param publicKey 公钥 {@link PublicKey}
      */
-    public static byte[] decryptByByPublicKey(byte[] data, PublicKey publicKey) {
-        return decryptByByPublicKey(RsaAlgorithms.RSA_ECB_PKCS1, data, publicKey);
+    public static byte[] decryptByPublicKey(byte[] data, PublicKey publicKey) {
+        return decryptByPublicKey(RsaAlgorithms.RSA_ECB_PKCS1, data, publicKey);
     }
 
     /**
@@ -552,8 +551,8 @@ public final class RSA {
      * @param publicKey        公钥 {@link PublicKey}
      * @param decryptBlockSize 解密块大小（生成秘钥对时模长度：keySizeInBits/8）
      */
-    public static byte[] decryptByByPublicKey(byte[] data, PublicKey publicKey, int decryptBlockSize) {
-        return decryptByByPublicKey(RsaAlgorithms.RSA_ECB_PKCS1, data, publicKey, decryptBlockSize);
+    public static byte[] decryptByPublicKey(byte[] data, PublicKey publicKey, int decryptBlockSize) {
+        return decryptByPublicKey(RsaAlgorithms.RSA_ECB_PKCS1, data, publicKey, decryptBlockSize);
     }
 
     /**
@@ -563,8 +562,8 @@ public final class RSA {
      * @param data       待解密文本
      * @param publicKey  公钥字符串 base64
      */
-    public static String decryptByByPublicKey(RsaAlgorithms algorithms, String data, String publicKey) {
-        return decryptByByPublicKey(algorithms, data, publicKey, -1);
+    public static String decryptByPublicKey(RsaAlgorithms algorithms, String data, String publicKey) {
+        return decryptByPublicKey(algorithms, data, publicKey, -1);
     }
 
     /**
@@ -578,8 +577,8 @@ public final class RSA {
      * @param publicKey        公钥字符串 base64
      * @param decryptBlockSize 解密块大小（生成秘钥对时模长度：keySizeInBits/8）
      */
-    public static String decryptByByPublicKey(RsaAlgorithms algorithms, String data, String publicKey, int decryptBlockSize) {
-        byte[] decryptBytes = decryptByByPublicKey(algorithms, Base64Utils.decodeFromString(data), publicKey, decryptBlockSize);
+    public static String decryptByPublicKey(RsaAlgorithms algorithms, String data, String publicKey, int decryptBlockSize) {
+        byte[] decryptBytes = decryptByPublicKey(algorithms, Base64Utils.decodeFromString(data), publicKey, decryptBlockSize);
         return new String(decryptBytes, StandardCharsets.UTF_8);
     }
 
@@ -590,8 +589,8 @@ public final class RSA {
      * @param data       待解密文本
      * @param publicKey  公钥 {@link PublicKey}
      */
-    public static String decryptByByPublicKey(RsaAlgorithms algorithms, String data, PublicKey publicKey) {
-        return decryptByByPublicKey(algorithms, data, publicKey, -1);
+    public static String decryptByPublicKey(RsaAlgorithms algorithms, String data, PublicKey publicKey) {
+        return decryptByPublicKey(algorithms, data, publicKey, -1);
     }
 
     /**
@@ -605,8 +604,8 @@ public final class RSA {
      * @param publicKey        公钥 {@link PublicKey}
      * @param decryptBlockSize 解密块大小（生成秘钥对时模长度：keySizeInBits/8）
      */
-    public static String decryptByByPublicKey(RsaAlgorithms algorithms, String data, PublicKey publicKey, int decryptBlockSize) {
-        byte[] decryptBytes = decryptByByPublicKey(algorithms, Base64Utils.decodeFromString(data), publicKey, decryptBlockSize);
+    public static String decryptByPublicKey(RsaAlgorithms algorithms, String data, PublicKey publicKey, int decryptBlockSize) {
+        byte[] decryptBytes = decryptByPublicKey(algorithms, Base64Utils.decodeFromString(data), publicKey, decryptBlockSize);
         return new String(decryptBytes, StandardCharsets.UTF_8);
     }
 
@@ -617,8 +616,8 @@ public final class RSA {
      * @param data       待解密数据字节数组
      * @param publicKey  公钥字符串 base64
      */
-    public static byte[] decryptByByPublicKey(RsaAlgorithms algorithms, byte[] data, String publicKey) {
-        return decryptByByPublicKey(algorithms, data, publicKey, -1);
+    public static byte[] decryptByPublicKey(RsaAlgorithms algorithms, byte[] data, String publicKey) {
+        return decryptByPublicKey(algorithms, data, publicKey, -1);
     }
 
     /**
@@ -632,9 +631,9 @@ public final class RSA {
      * @param publicKey        公钥字符串 base64
      * @param decryptBlockSize 解密块大小（生成秘钥对时模长度：keySizeInBits/8）
      */
-    public static byte[] decryptByByPublicKey(RsaAlgorithms algorithms, byte[] data, String publicKey, int decryptBlockSize) {
+    public static byte[] decryptByPublicKey(RsaAlgorithms algorithms, byte[] data, String publicKey, int decryptBlockSize) {
         final PublicKey key = SecureUtils.generatePublicKey(KEY_ALGORITHM, Base64Utils.decodeFromString(publicKey));
-        return decryptByByPublicKey(algorithms, data, key, decryptBlockSize);
+        return decryptByPublicKey(algorithms, data, key, decryptBlockSize);
     }
 
     /**
@@ -644,8 +643,8 @@ public final class RSA {
      * @param data       待解密数据字节数组
      * @param publicKey  公钥 {@link PublicKey}
      */
-    public static byte[] decryptByByPublicKey(RsaAlgorithms algorithms, byte[] data, PublicKey publicKey) {
-        return decryptByByPublicKey(algorithms, data, publicKey, -1);
+    public static byte[] decryptByPublicKey(RsaAlgorithms algorithms, byte[] data, PublicKey publicKey) {
+        return decryptByPublicKey(algorithms, data, publicKey, -1);
     }
 
     /**
@@ -659,7 +658,7 @@ public final class RSA {
      * @param publicKey        公钥 {@link PublicKey}
      * @param decryptBlockSize 解密块大小（生成秘钥对时模长度：keySizeInBits/8）
      */
-    public static byte[] decryptByByPublicKey(RsaAlgorithms algorithms, byte[] data, PublicKey publicKey, int decryptBlockSize) {
+    public static byte[] decryptByPublicKey(RsaAlgorithms algorithms, byte[] data, PublicKey publicKey, int decryptBlockSize) {
         try {
             final Cipher cipher = createCipher(algorithms.getValue());
             cipher.init(Cipher.DECRYPT_MODE, publicKey);
@@ -687,8 +686,8 @@ public final class RSA {
      * @param data       待解密文本 base64
      * @param privateKey 私钥字符串 base64
      */
-    public static String decryptByByPrivateKey(String data, String privateKey) {
-        return decryptByByPrivateKey(RsaAlgorithms.RSA_ECB_PKCS1, data, privateKey);
+    public static String decryptByPrivateKey(String data, String privateKey) {
+        return decryptByPrivateKey(RsaAlgorithms.RSA_ECB_PKCS1, data, privateKey);
     }
 
     /**
@@ -701,8 +700,8 @@ public final class RSA {
      * @param privateKey       私钥字符串 base64
      * @param decryptBlockSize 解密块大小（生成秘钥对时模长度：keySizeInBits/8）
      */
-    public static String decryptByByPrivateKey(String data, String privateKey, int decryptBlockSize) {
-        return decryptByByPrivateKey(RsaAlgorithms.RSA_ECB_PKCS1, data, privateKey, decryptBlockSize);
+    public static String decryptByPrivateKey(String data, String privateKey, int decryptBlockSize) {
+        return decryptByPrivateKey(RsaAlgorithms.RSA_ECB_PKCS1, data, privateKey, decryptBlockSize);
     }
 
     /**
@@ -711,8 +710,8 @@ public final class RSA {
      * @param data       待解密数据字节数组
      * @param privateKey 私钥 {@link PrivateKey}
      */
-    public static byte[] decryptByByPrivateKey(byte[] data, PrivateKey privateKey) {
-        return decryptByByPrivateKey(RsaAlgorithms.RSA_ECB_PKCS1, data, privateKey);
+    public static byte[] decryptByPrivateKey(byte[] data, PrivateKey privateKey) {
+        return decryptByPrivateKey(RsaAlgorithms.RSA_ECB_PKCS1, data, privateKey);
     }
 
     /**
@@ -725,8 +724,8 @@ public final class RSA {
      * @param privateKey       私钥字符串 base64
      * @param decryptBlockSize 解密块大小（生成秘钥对时模长度：keySizeInBits/8）
      */
-    public static byte[] decryptByByPrivateKey(byte[] data, PrivateKey privateKey, int decryptBlockSize) {
-        return decryptByByPrivateKey(RsaAlgorithms.RSA_ECB_PKCS1, data, privateKey, decryptBlockSize);
+    public static byte[] decryptByPrivateKey(byte[] data, PrivateKey privateKey, int decryptBlockSize) {
+        return decryptByPrivateKey(RsaAlgorithms.RSA_ECB_PKCS1, data, privateKey, decryptBlockSize);
     }
 
     /**
@@ -736,8 +735,8 @@ public final class RSA {
      * @param data       待解密文本 base64
      * @param privateKey 私钥字符串 base64
      */
-    public static String decryptByByPrivateKey(RsaAlgorithms algorithms, String data, String privateKey) {
-        return decryptByByPrivateKey(algorithms, data, privateKey, -1);
+    public static String decryptByPrivateKey(RsaAlgorithms algorithms, String data, String privateKey) {
+        return decryptByPrivateKey(algorithms, data, privateKey, -1);
     }
 
     /**
@@ -751,8 +750,8 @@ public final class RSA {
      * @param privateKey       私钥字符串 base64
      * @param decryptBlockSize 解密块大小（生成秘钥对时模长度：keySizeInBits/8）
      */
-    public static String decryptByByPrivateKey(RsaAlgorithms algorithms, String data, String privateKey, int decryptBlockSize) {
-        byte[] decryptBytes = decryptByByPrivateKey(algorithms, Base64Utils.decodeFromString(data), privateKey, decryptBlockSize);
+    public static String decryptByPrivateKey(RsaAlgorithms algorithms, String data, String privateKey, int decryptBlockSize) {
+        byte[] decryptBytes = decryptByPrivateKey(algorithms, Base64Utils.decodeFromString(data), privateKey, decryptBlockSize);
         return new String(decryptBytes, StandardCharsets.UTF_8);
     }
 
@@ -763,8 +762,8 @@ public final class RSA {
      * @param data       待解密文本 base64
      * @param privateKey 私钥 {@link PrivateKey}
      */
-    public static String decryptByByPrivateKey(RsaAlgorithms algorithms, String data, PrivateKey privateKey) {
-        return decryptByByPrivateKey(algorithms, data, privateKey, -1);
+    public static String decryptByPrivateKey(RsaAlgorithms algorithms, String data, PrivateKey privateKey) {
+        return decryptByPrivateKey(algorithms, data, privateKey, -1);
     }
 
     /**
@@ -778,8 +777,8 @@ public final class RSA {
      * @param privateKey       私钥 {@link PrivateKey}
      * @param decryptBlockSize 解密块大小（生成秘钥对时模长度：keySizeInBits/8）
      */
-    public static String decryptByByPrivateKey(RsaAlgorithms algorithms, String data, PrivateKey privateKey, int decryptBlockSize) {
-        byte[] decryptBytes = decryptByByPrivateKey(algorithms, Base64Utils.decodeFromString(data), privateKey, decryptBlockSize);
+    public static String decryptByPrivateKey(RsaAlgorithms algorithms, String data, PrivateKey privateKey, int decryptBlockSize) {
+        byte[] decryptBytes = decryptByPrivateKey(algorithms, Base64Utils.decodeFromString(data), privateKey, decryptBlockSize);
         return new String(decryptBytes, StandardCharsets.UTF_8);
     }
 
@@ -790,8 +789,8 @@ public final class RSA {
      * @param data       待解密数据字节数组
      * @param privateKey 私钥字符串 base64
      */
-    public static byte[] decryptByByPrivateKey(RsaAlgorithms algorithms, byte[] data, String privateKey) {
-        return decryptByByPrivateKey(algorithms, data, privateKey, -1);
+    public static byte[] decryptByPrivateKey(RsaAlgorithms algorithms, byte[] data, String privateKey) {
+        return decryptByPrivateKey(algorithms, data, privateKey, -1);
     }
 
     /**
@@ -805,9 +804,9 @@ public final class RSA {
      * @param privateKey       私钥字符串 base64
      * @param decryptBlockSize 解密块大小（生成秘钥对时模长度：keySizeInBits/8）
      */
-    public static byte[] decryptByByPrivateKey(RsaAlgorithms algorithms, byte[] data, String privateKey, int decryptBlockSize) {
+    public static byte[] decryptByPrivateKey(RsaAlgorithms algorithms, byte[] data, String privateKey, int decryptBlockSize) {
         final PrivateKey key = SecureUtils.generatePrivateKey(KEY_ALGORITHM, Base64Utils.decodeFromString(privateKey));
-        return decryptByByPrivateKey(algorithms, data, key, decryptBlockSize);
+        return decryptByPrivateKey(algorithms, data, key, decryptBlockSize);
     }
 
     /**
@@ -817,8 +816,8 @@ public final class RSA {
      * @param data       待解密数据字节数组
      * @param privateKey 私钥 {@link PrivateKey}
      */
-    public static byte[] decryptByByPrivateKey(RsaAlgorithms algorithms, byte[] data, PrivateKey privateKey) {
-        return decryptByByPrivateKey(algorithms, data, privateKey, -1);
+    public static byte[] decryptByPrivateKey(RsaAlgorithms algorithms, byte[] data, PrivateKey privateKey) {
+        return decryptByPrivateKey(algorithms, data, privateKey, -1);
     }
 
     /**
@@ -832,7 +831,7 @@ public final class RSA {
      * @param privateKey       私钥 {@link PrivateKey}
      * @param decryptBlockSize 解密块大小（生成秘钥对时模长度：keySizeInBits/8）
      */
-    public static byte[] decryptByByPrivateKey(RsaAlgorithms algorithms, byte[] data, PrivateKey privateKey, int decryptBlockSize) {
+    public static byte[] decryptByPrivateKey(RsaAlgorithms algorithms, byte[] data, PrivateKey privateKey, int decryptBlockSize) {
         try {
             final Cipher cipher = createCipher(algorithms.getValue());
             cipher.init(Cipher.DECRYPT_MODE, privateKey);

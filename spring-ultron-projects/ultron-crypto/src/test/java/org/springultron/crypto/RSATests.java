@@ -47,7 +47,7 @@ public class RSATests {
         RsaAlgorithms algorithms = RsaAlgorithms.RSA_NONE;
         String encryptData = RSA.encryptByPrivateKey(algorithms, data, privateKey);
         System.err.println("加密后：" + encryptData);
-        System.err.println("解密后：" + RSA.decryptByByPublicKey(algorithms, encryptData, publicKey));
+        System.err.println("解密后：" + RSA.decryptByPublicKey(algorithms, encryptData, publicKey));
     }
 
     @Test
@@ -60,7 +60,7 @@ public class RSATests {
 
         String encryptData = RSA.encryptByPublicKey(RsaAlgorithms.RSA_NONE_PKCS1, mobile, publicKey);
         System.err.println("加密后：" + encryptData);
-        System.err.println("解密后：" + RSA.decryptByByPrivateKey(RsaAlgorithms.RSA_ECB_PKCS1, encryptData, privateKey));
+        System.err.println("解密后：" + RSA.decryptByPrivateKey(RsaAlgorithms.RSA_ECB_PKCS1, encryptData, privateKey));
     }
 
     @Test
