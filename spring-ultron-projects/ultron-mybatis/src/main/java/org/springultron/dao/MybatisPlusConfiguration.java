@@ -50,14 +50,14 @@ public class MybatisPlusConfiguration {
 //        return configuration -> configuration.setUseDeprecatedExecutor(false);
 //    }
 
-    /**
-     * 自定义SQL注入
-     */
-    @Bean
-    @ConditionalOnMissingBean(MySqlInjector.class)
-    public MySqlInjector sqlInjector() {
-        return new MySqlInjector();
-    }
+//    /**
+//     * 自定义SQL注入
+//     */
+//    @Bean
+//    @ConditionalOnMissingBean(MySqlInjector.class)
+//    public MySqlInjector sqlInjector() {
+//        return new MySqlInjector();
+//    }
 
     /**
      * 日期字段自动填充
