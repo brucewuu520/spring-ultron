@@ -44,9 +44,9 @@
         <alibaba-cloud.version>2.2.6.RELEASE</alibaba-cloud.version>
         <feign-okhttp.version>11.0</feign-okhttp.version>
         <okhttp3.version>4.9.0</okhttp3.version>
-        <mybatis-plus.version>3.4.2</mybatis-plus.version>
+        <mybatis-plus.version>3.4.3.4</mybatis-plus.version>
         <jwt.version>0.11.2</jwt.version>
-        <redisson.version>3.14.0</redisson.version>
+        <redisson.version>3.16.4</redisson.version>
         <bouncycastle.version>1.67</bouncycastle.version>
         <zxing.version>3.4.1</zxing.version>
         <fastjson.version>1.2.78</fastjson.version>
