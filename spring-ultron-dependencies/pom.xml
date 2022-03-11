@@ -39,21 +39,21 @@
     <properties>
         <main.basedir>${basedir}/..</main.basedir>
         <!-- app dependencies version start-->
-        <spring-boot.version>2.4.12</spring-boot.version>
+        <spring-boot.version>2.4.13</spring-boot.version>
         <spring-cloud.version>2020.0.4</spring-cloud.version>
         <alibaba-cloud.version>2021.1</alibaba-cloud.version>
         <feign-okhttp.version>11.7</feign-okhttp.version>
-        <mybatis-plus.version>3.4.3.4</mybatis-plus.version>
+        <mybatis-plus.version>3.5.1</mybatis-plus.version>
         <jwt.version>0.11.2</jwt.version>
-        <redisson.version>3.16.4</redisson.version>
-        <bouncycastle.version>1.69</bouncycastle.version>
+        <redisson.version>3.16.8</redisson.version>
+        <bouncycastle.version>1.70</bouncycastle.version>
         <zxing.version>3.4.1</zxing.version>
-        <fastjson.version>1.2.78</fastjson.version>
-        <guava.version>30.1.1-jre</guava.version>
+        <fastjson.version>1.2.79</fastjson.version>
+        <guava.version>31.0.1-jre</guava.version>
         <knife4j.version>3.0.3</knife4j.version>
         <swagger-annotations.version>1.5.22</swagger-annotations.version>
         <xxl-job.version>2.3.0</xxl-job.version>
-        <logstash-logback.version>6.6</logstash-logback.version>
+        <logstash-logback.version>7.0.1</logstash-logback.version>
         <!-- app dependencies version end-->
         <findbugs.version>3.0.2</findbugs.version>
         <!-- maven dependencies version start -->

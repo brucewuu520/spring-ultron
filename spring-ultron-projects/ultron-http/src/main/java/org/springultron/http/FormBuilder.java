@@ -17,8 +17,8 @@
 package org.springultron.http;
 
 import okhttp3.FormBody;
+import org.springframework.lang.Nullable;
 
-import javax.annotation.Nullable;
 import java.nio.charset.Charset;
 import java.util.Map;
 
