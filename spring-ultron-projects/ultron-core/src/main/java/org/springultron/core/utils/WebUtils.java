@@ -4,6 +4,8 @@ import org.springframework.http.MediaType;
 import org.springframework.lang.Nullable;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springultron.core.io.FastStringWriter;
+import org.springultron.core.io.IOUtils;
 import org.springultron.core.jackson.Jackson;
 
 import javax.servlet.http.HttpServletRequest;
@@ -51,6 +53,16 @@ public class WebUtils extends org.springframework.web.util.WebUtils {
                 .map(a -> (ServletRequestAttributes) a)
                 .map(ServletRequestAttributes::getResponse)
                 .orElse(null);
+    }
+
+    /**
+     * 读取request data
+     */
+    public static String readData(HttpServletRequest request) throws IOException {
+        try (final FastStringWriter sw = new FastStringWriter()) {
+            IOUtils.copy(request.getReader(), sw);
+            return sw.toString();
+        }
     }
 
     /**

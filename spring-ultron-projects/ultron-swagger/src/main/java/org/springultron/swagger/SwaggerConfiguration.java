@@ -38,8 +38,8 @@ import java.util.Optional;
  * @date 2019-06-27 19:52
  */
 @Configuration(proxyBeanMethods = false)
-@ConditionalOnProperty(name = "swagger.enable", havingValue = "true", matchIfMissing = true)
 @EnableConfigurationProperties(SwaggerProperties.class)
+@ConditionalOnProperty(name = "swagger.enable", havingValue = "true", matchIfMissing = true)
 @EnableKnife4j
 @Import({
         OpenApiDocumentationConfiguration.class,

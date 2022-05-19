@@ -39,7 +39,7 @@ public class RedisClient {
      * @return key string
      */
     public static String genKey(String... keys) {
-        return String.join(":", keys).toUpperCase();
+        return String.join(":", keys);
     }
 
     /**

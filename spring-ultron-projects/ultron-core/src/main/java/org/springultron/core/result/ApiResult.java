@@ -6,7 +6,6 @@ import org.springultron.core.exception.ApiException;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * 通用请求返回体
@@ -294,24 +293,15 @@ public class ApiResult<T> implements Serializable {
 
     /**
      * 判断返回是否为成功
-     *
-     * @param result 返回结果
-     * @return 是否成功
      */
-    public static boolean isSuccessful(ApiResult<?> result) {
-        return Optional.ofNullable(result)
-                .map(r -> r.code)
-                .map(code -> code == ResultCode.SUCCESS.getCode())
-                .orElse(Boolean.FALSE);
+    public boolean successful() {
+        return this.code == ResultCode.SUCCESS.getCode();
     }
 
     /**
      * 判断返回是否为失败
-     *
-     * @param result 返回结果
-     * @return 是否失败
      */
-    public static boolean isFailed(ApiResult<?> result) {
-        return !isSuccessful(result);
+    public boolean failed() {
+        return !successful();
     }
 }

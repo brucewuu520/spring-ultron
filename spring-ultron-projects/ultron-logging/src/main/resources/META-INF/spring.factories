@@ -1,2 +1,2 @@
-org.springframework.context.ApplicationContextInitializer=org.springultron.logging.LoggingInitializer
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=org.springultron.logging.LoggingAutoConfiguration
+org.springframework.boot.env.EnvironmentPostProcessor=org.springultron.logging.LoggingInitializer

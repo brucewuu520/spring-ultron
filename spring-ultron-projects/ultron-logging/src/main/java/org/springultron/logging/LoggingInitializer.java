@@ -1,10 +1,16 @@
 package org.springultron.logging;
 
-import org.springframework.context.ApplicationContextInitializer;
-import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.env.EnvironmentPostProcessor;
+import org.springframework.boot.logging.LogFile;
 import org.springframework.core.Ordered;
 import org.springframework.core.env.ConfigurableEnvironment;
-import org.springframework.lang.NonNull;
+import org.springframework.core.env.MapPropertySource;
+import org.springultron.logging.utils.LoggingUtils;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * APP初始化配置
@@ -13,19 +19,29 @@ import org.springframework.lang.NonNull;
  * @author brucewuu
  * @date 2020/6/24 14:39
  */
-public class LoggingInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext>, Ordered {
+public class LoggingInitializer implements EnvironmentPostProcessor, Ordered {
+    public static final String LOGGING_PROPERTY_SOURCE_NAME = "ultron-logging-property-source";
 
     @Override
-    public void initialize(@NonNull ConfigurableApplicationContext applicationContext) {
-        ConfigurableEnvironment environment = applicationContext.getEnvironment();
-        String appName = environment.getProperty("spring.application.name", "ultron-server");
-        String logFilePath = environment.getProperty("logging.file.path", "logs/" + appName);
-        // spring boot admin 直接加载日志
-        System.setProperty("logging.file.name", logFilePath + "/info.log");
+    public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
+        if (!environment.containsProperty(LogFile.FILE_NAME_PROPERTY)) {
+            // 读取配置文件日志目录
+            String logDir = environment.getProperty(LogFile.FILE_PATH_PROPERTY);
+            if (null == logDir || "".equals(logDir)) {
+                logDir = LoggingUtils.DEFAULT_LOG_DIR + File.separator + LoggingUtils.DEFAULT_APP_NAME;
+            }
+            String logFileName = logDir + File.separator + LoggingUtils.FILE_INFO_LOG;
+            System.out.println(logFileName);
+            Map<String, Object> hashMap = new HashMap<>(1);
+            hashMap.put(LogFile.FILE_NAME_PROPERTY, logFileName);
+            MapPropertySource propertySource = new MapPropertySource(LOGGING_PROPERTY_SOURCE_NAME, hashMap);
+            environment.getPropertySources().addLast(propertySource);
+        }
     }
 
     @Override
     public int getOrder() {
         return Ordered.LOWEST_PRECEDENCE;
     }
+
 }

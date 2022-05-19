@@ -60,18 +60,4 @@ public class UltronTaskAutoConfiguration {
         return builder;
     }
 
-//    @ConditionalOnBean(name = {"org.springframework.context.annotation.internalScheduledAnnotationProcessor"})
-//    @ConditionalOnMissingBean({SchedulingConfigurer.class, TaskScheduler.class, ScheduledExecutorService.class})
-//    @Bean
-//    public SchedulingConfigurer schedulingConfigurer() {
-//        System.err.println("---schedulingConfigurer---");
-//        return scheduledTaskRegistrar -> {
-//            ThreadPoolTaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
-//            taskScheduler.setPoolSize(properties.getCorePoolSize());
-//            taskScheduler.setThreadNamePrefix(properties.getThreadNamePrefix() + "-scheduling-");
-//            taskScheduler.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
-//            taskScheduler.initialize();
-//            scheduledTaskRegistrar.setTaskScheduler(taskScheduler);
-//        };
-//    }
 }

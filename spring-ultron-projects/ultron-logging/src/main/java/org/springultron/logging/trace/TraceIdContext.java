@@ -4,6 +4,7 @@ import org.slf4j.MDC;
 import org.springframework.util.StringUtils;
 
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * 链路追踪context
@@ -20,7 +21,8 @@ public class TraceIdContext {
      * @return 追踪ID
      */
     public static String generateTraceId() {
-        return UUID.randomUUID().toString().replace("-", "");
+        ThreadLocalRandom random = ThreadLocalRandom.current();
+        return new UUID(random.nextLong(), random.nextLong()).toString().replace("-", "");
     }
 
     /**

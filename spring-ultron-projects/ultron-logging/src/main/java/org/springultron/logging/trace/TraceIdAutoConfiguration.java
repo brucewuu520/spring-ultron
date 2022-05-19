@@ -1,5 +1,6 @@
 package org.springultron.logging.trace;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,10 +13,11 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
-class TraceIdAutoConfiguration {
+@ConditionalOnProperty(name = "ultron.logging.enable-trace-id", havingValue = "true")
+public class TraceIdAutoConfiguration {
 
     @Bean
-    TraceIdRequestLoggingFilter traceIdRequestLoggingFilter() {
+    public TraceIdRequestLoggingFilter traceIdRequestLoggingFilter() {
         return new TraceIdRequestLoggingFilter();
     }
 

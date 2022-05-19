@@ -375,8 +375,7 @@ public class HttpRequest {
     }
 
     private Call newCall(final OkHttpClient httpClient) {
-        OkHttpClient okHttpClient = httpClient;
-        OkHttpClient.Builder builder = okHttpClient.newBuilder();
+        OkHttpClient.Builder builder = httpClient.newBuilder();
         if (null != connectTimeout) {
             builder.connectTimeout(connectTimeout);
         }

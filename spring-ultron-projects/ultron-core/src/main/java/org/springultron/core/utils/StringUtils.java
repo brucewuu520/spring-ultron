@@ -24,7 +24,7 @@ public class StringUtils extends org.springframework.util.StringUtils {
         return null == str || "".contentEquals(str);
     }
 
-    public static boolean isNotEmpty(String str) {
+    public static boolean isNotEmpty(CharSequence str) {
         return !StringUtils.isEmpty(str);
     }
 
@@ -283,19 +283,19 @@ public class StringUtils extends org.springframework.util.StringUtils {
         return str.substring(0, start) + overlay + str.substring(end);
     }
 
-    public static byte[] getBytes(final String string) {
-        return getBytes(string, StandardCharsets.UTF_8);
+    public static byte[] bytes(final String string) {
+        return bytes(string, StandardCharsets.UTF_8);
     }
 
-    public static byte[] getBytes(final String string, final Charset charset) {
+    public static byte[] bytes(final String string, final Charset charset) {
         return string == null ? null : string.getBytes(charset);
     }
 
-    public static ByteBuffer getByteBuffer(final String string) {
-        return getByteBuffer(string, StandardCharsets.UTF_8);
+    public static ByteBuffer byteBuffer(final String string) {
+        return byteBuffer(string, StandardCharsets.UTF_8);
     }
 
-    public static ByteBuffer getByteBuffer(final String string, final Charset charset) {
+    public static ByteBuffer byteBuffer(final String string, final Charset charset) {
         return string == null ? null : ByteBuffer.wrap(string.getBytes(charset));
     }
 

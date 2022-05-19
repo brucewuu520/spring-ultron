@@ -18,11 +18,13 @@ package org.springultron.logging.appender;
 
 import ch.qos.logback.classic.LoggerContext;
 import net.logstash.logback.appender.LogstashTcpSocketAppender;
+import net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder;
 import net.logstash.logback.encoder.LogstashEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 import org.springultron.logging.UltronLoggingProperties;
+import org.springultron.logging.utils.LoggingUtils;
 import org.springultron.logging.utils.LogstashUtils;
 
 /**
@@ -43,10 +45,9 @@ public class LoggingLogstashAppender implements ILoggingAppender {
 
     public LoggingLogstashAppender(UltronLoggingProperties properties, Environment environment) {
         this.properties = properties;
-        String appName = environment.getProperty("spring.application.name", "ultron-server");
+        String appName = environment.getProperty("spring.application.name", LoggingUtils.DEFAULT_APP_NAME);
         String profile = environment.getProperty("spring.profiles.active", "default");
         this.customFieldsJson = String.format("{\"appName\":\"%s\",\"profile\":\"%s\"}", appName, profile);
-//        log.info(customFieldsJson);
         final LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
         this.start(context);
     }
@@ -72,16 +73,25 @@ public class LoggingLogstashAppender implements ILoggingAppender {
 
     private static void addLogstashTcpSocketAppender(LoggerContext context, UltronLoggingProperties.Logstash logstash, String customFieldsJson) {
         LogstashTcpSocketAppender logstashTcpSocketAppender = new LogstashTcpSocketAppender();
-        logstashTcpSocketAppender.setName(LOGSTASH_APPENDER_NAME);
         logstashTcpSocketAppender.setContext(context);
-        logstashTcpSocketAppender.addDestination(logstash.getDestinations());
-        logstashTcpSocketAppender.setQueueSize(logstash.getQueueSize());
-        logstashTcpSocketAppender.setWriteBufferSize(logstash.getWriteBufferSize());
+        logstashTcpSocketAppender.setName(LOGSTASH_APPENDER_NAME);
         logstashTcpSocketAppender.setEncoder(logstashEncoder(customFieldsJson));
+        logstashTcpSocketAppender.addDestination(logstash.getDestinations());
+        logstashTcpSocketAppender.setRingBufferSize(logstash.getRingBufferSize());
+        logstashTcpSocketAppender.setWriteBufferSize(logstash.getWriteBufferSize());
+        logstashTcpSocketAppender.setKeepAliveDuration(logstash.getKeepAliveDuration());
         logstashTcpSocketAppender.start();
         // 先删除，再添加
         context.getLogger(Logger.ROOT_LOGGER_NAME).detachAppender(LOGSTASH_APPENDER_NAME);
         context.getLogger(Logger.ROOT_LOGGER_NAME).addAppender(logstashTcpSocketAppender);
+    }
+
+    private static LoggingEventCompositeJsonEncoder compositeJsonEncoder(LoggerContext context, String customFields) {
+        LoggingEventCompositeJsonEncoder compositeJsonEncoder = new LoggingEventCompositeJsonEncoder();
+        compositeJsonEncoder.setContext(context);
+        compositeJsonEncoder.setProviders(LogstashUtils.jsonProviders(context, customFields));
+        compositeJsonEncoder.start();
+        return compositeJsonEncoder;
     }
 
     private static LogstashEncoder logstashEncoder(String customFields) {
@@ -90,4 +100,5 @@ public class LoggingLogstashAppender implements ILoggingAppender {
         logstashEncoder.setCustomFields(customFields);
         return logstashEncoder;
     }
+
 }

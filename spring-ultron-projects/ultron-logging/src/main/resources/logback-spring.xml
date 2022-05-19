@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration scan="true" debug="false">
+<configuration scan="true" scanPeriod="60 seconds" debug="false">
     <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
     <springProperty scop="context" name="spring.application.name" source="spring.application.name" defaultValue="ultron-server"/>
     <!-- 定义日志等级-->
     <springProperty scop="context" name="logging.level" source="logging.level" defaultValue="INFO"/>
     <springProperty scop="context" name="logging.file.path" source="logging.file.path" defaultValue="logs/${spring.application.name}"/>
     <springProperty scop="context" name="logging.file.maxSize" source="logging.logback.rollingpolicy.max-file-size" defaultValue="10MB"/>
-    <springProperty scop="context" name="logging.file.maxHistory" source="logging.logback.rollingpolicy.max-history" defaultValue="100"/>
-    <springProperty scop="context" name="logging.file.totalSizeCap" source="logging.logback.rollingpolicy.total-size-cap" defaultValue="50GB"/>
+    <springProperty scop="context" name="logging.file.maxHistory" source="logging.logback.rollingpolicy.max-history" defaultValue="360"/>
+    <springProperty scop="context" name="logging.file.totalSizeCap" source="logging.logback.rollingpolicy.total-size-cap" defaultValue="0MB"/>
     <springProperty scop="context" name="logging.file.cleanHistoryOnStart" source="logging.logback.rollingpolicy.clean-history-on-start" defaultValue="false"/>
 
     <!-- Console log output -->
