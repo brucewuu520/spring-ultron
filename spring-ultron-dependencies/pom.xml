@@ -44,13 +44,13 @@
         <alibaba-cloud.version>2.2.6.RELEASE</alibaba-cloud.version>
         <feign-okhttp.version>11.0</feign-okhttp.version>
         <okhttp3.version>4.9.0</okhttp3.version>
-        <mybatis-plus.version>3.4.3.4</mybatis-plus.version>
+        <mybatis-plus.version>3.5.1</mybatis-plus.version>
         <jwt.version>0.11.2</jwt.version>
-        <redisson.version>3.16.4</redisson.version>
+        <redisson.version>3.17.1</redisson.version>
         <bouncycastle.version>1.67</bouncycastle.version>
         <zxing.version>3.4.1</zxing.version>
-        <fastjson.version>1.2.78</fastjson.version>
-        <guava.version>30.0-jre</guava.version>
+        <fastjson.version>1.2.80</fastjson.version>
+        <guava.version>31.1-jre</guava.version>
         <knife4j.version>3.0.2</knife4j.version>
         <swagger-annotations.version>1.5.22</swagger-annotations.version>
         <!-- app dependencies version end-->
