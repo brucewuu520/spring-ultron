@@ -29,6 +29,9 @@ public class JacksonConfiguration {
     @Value("${spring.jackson.date-format:yyyy-MM-dd HH:mm:ss}")
     private String dateFormat;
 
+    @Value("${spring.jackson.default-property-inclusion:NON_NULL}")
+    private JsonInclude.Include defaultPropertyInclusion;
+
     @Primary
     @Bean
     public Jackson2ObjectMapperBuilderCustomizer customizer() {
@@ -37,7 +40,7 @@ public class JacksonConfiguration {
             builder.timeZone(TimeZone.getTimeZone(ZoneId.systemDefault()));
             builder.simpleDateFormat(dateFormat);
             // 序列化时过滤为null的字段
-            builder.serializationInclusion(JsonInclude.Include.NON_NULL);
+            builder.serializationInclusion(defaultPropertyInclusion);
             builder.modules(new UltronJavaTimeModule());
         };
     }
