@@ -27,8 +27,8 @@ public class PageQuery {
     @ApiModelProperty(value = "是否查询总数", position = 4)
     private boolean searchCount = true;
 
-    @ApiModelProperty(value = "当前最后一行的ID", position = 5)
-    private Long currentId;
+    @ApiModelProperty(value = "最后一行数据ID", position = 5)
+    private Long lastId;
 
     @ApiModelProperty(value = "搜索关键字", position = 6)
     private String keyword;
@@ -85,12 +85,12 @@ public class PageQuery {
         this.searchCount = searchCount;
     }
 
-    public Long getCurrentId() {
-        return currentId;
+    public Long getLastId() {
+        return lastId;
     }
 
-    public void setCurrentId(Long currentId) {
-        this.currentId = currentId;
+    public void setLastId(Long lastId) {
+        this.lastId = lastId;
     }
 
     public String getKeyword() {

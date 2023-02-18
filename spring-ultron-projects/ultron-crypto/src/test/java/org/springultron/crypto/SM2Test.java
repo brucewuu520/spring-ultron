@@ -14,6 +14,7 @@ public class SM2Test {
 
     @Test
     public void generateKeyPairTest() {
+        System.out.println(RandomUtils.random(16));
         KeyPair keyPair = SM2.generateKeyPair(2048);
         Assert.assertNotNull(keyPair);
         String publicKey = SM2.getPublicKey(keyPair);

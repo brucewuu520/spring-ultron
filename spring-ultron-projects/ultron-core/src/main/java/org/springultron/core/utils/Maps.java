@@ -13,6 +13,7 @@ import java.util.*;
 public class Maps {
 
     private Maps() {
+        throw new UnsupportedOperationException("u can't instantiate me...");
     }
 
     public static <K, V> HashMap<K, V> newHashMap() {

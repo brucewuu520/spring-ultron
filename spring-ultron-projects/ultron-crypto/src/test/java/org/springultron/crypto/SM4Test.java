@@ -1,8 +1,6 @@
 package org.springultron.crypto;
 
 import org.junit.Test;
-import org.springframework.util.Base64Utils;
-import org.springultron.core.utils.Hex;
 
 /**
  * @author brucewuu
@@ -12,9 +10,10 @@ public class SM4Test {
 
     @Test
     public void generateKeyTest() {
-        byte[] keyBytes = SM4.generateKey();
-        System.out.println("base64秘钥：" + Base64Utils.encodeToString(keyBytes));
-        System.out.println("Hex秘钥：" + Hex.encodeHexString(keyBytes));
+//        byte[] keyBytes = SM4.generateKey();
+//        System.out.println("base64秘钥：" + Base64Utils.encodeToString(keyBytes));
+//        System.out.println("Hex秘钥：" + Hex.encodeHexString(keyBytes));
+        System.out.println("Hex秘钥：" + SM4.generateKeyHex());
     }
 
     @Test

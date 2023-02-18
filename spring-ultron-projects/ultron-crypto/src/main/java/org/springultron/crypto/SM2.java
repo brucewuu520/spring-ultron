@@ -10,9 +10,9 @@ import org.bouncycastle.crypto.params.ParametersWithRandom;
 import org.bouncycastle.crypto.signers.SM2Signer;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Base64Utils;
-import org.springframework.util.StringUtils;
 import org.springultron.core.exception.CryptoException;
 import org.springultron.core.utils.Hex;
+import org.springultron.core.utils.StringUtils;
 
 import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
@@ -321,7 +321,7 @@ public class SM2 {
         final PrivateKey key = SecureUtils.generatePrivateKey(ALGORITHM_NAME, Base64Utils.decodeFromString(privateKey));
         byte[] dataBytes = data.getBytes(StandardCharsets.UTF_8);
         byte[] idBytes = null;
-        if (org.springultron.core.utils.StringUtils.isNotEmpty(id)) {
+        if (StringUtils.isNotEmpty(id)) {
             idBytes = Hex.isHex(id) ? Hex.decodeHex(id) : id.getBytes(StandardCharsets.UTF_8);
         }
         byte[] signBytes = sign(dataBytes, key, idBytes);
@@ -389,7 +389,7 @@ public class SM2 {
         byte[] dataBytes = data.getBytes(StandardCharsets.UTF_8);
         byte[] signBytes = SecureUtils.decode(sign);
         byte[] idBytes = null;
-        if (org.springultron.core.utils.StringUtils.isNotEmpty(id)) {
+        if (StringUtils.isNotEmpty(id)) {
             idBytes = Hex.isHex(id) ? Hex.decodeHex(id) : id.getBytes(StandardCharsets.UTF_8);
         }
         return verify(dataBytes, key, signBytes, idBytes);

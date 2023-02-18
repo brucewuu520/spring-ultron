@@ -308,4 +308,40 @@ public class DateUtils {
         }
         return formatDateTime(dateTime, "yyyy-MM-dd HH:mm");
     }
+
+    public static String getWeek(LocalDate date) {
+        return getWeek(date, null);
+    }
+
+    public static String getWeek(LocalDate date, String prefix) {
+        final int week = date.getDayOfWeek().getValue();
+        String weekStr = "";
+        switch (week) {
+            case 1:
+                weekStr = "一";
+                break;
+            case 2:
+                weekStr = "二";
+                break;
+            case 3:
+                weekStr = "三";
+                break;
+            case 4:
+                weekStr = "四";
+                break;
+            case 5:
+                weekStr = "五";
+                break;
+            case 6:
+                weekStr = "六";
+                break;
+            case 7:
+                weekStr = "日";
+                break;
+            default:
+                break;
+        }
+        return (StringUtils.isEmpty(prefix) ? "星期" : prefix) + weekStr;
+    }
+
 }
