@@ -16,7 +16,6 @@
 
 package org.springultron.captcha.cache;
 
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springultron.captcha.config.CaptchaProperties;
@@ -29,14 +28,13 @@ import java.util.Objects;
  * @author L.cm brucewuu
  * @date 2021/4/13 下午1:23
  */
-public class SpringCacheCaptchaCache implements CaptchaCache, InitializingBean {
-    private final CaptchaProperties properties;
-    private final CacheManager cacheManager;
-    private Cache captchaCache;
+public class SpringCacheCaptchaCache implements CaptchaCache {
+    private final Cache captchaCache;
 
     public SpringCacheCaptchaCache(CaptchaProperties properties, CacheManager cacheManager) {
-        this.properties = properties;
-        this.cacheManager = cacheManager;
+        String cacheName = properties.getCacheName();
+        Cache cache = cacheManager.getCache(cacheName);
+        this.captchaCache = Objects.requireNonNull(cache, "captcha spring cache name " + cacheName + " is null.");
     }
 
     @Override
@@ -53,10 +51,4 @@ public class SpringCacheCaptchaCache implements CaptchaCache, InitializingBean {
         return value;
     }
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        final String cacheName = properties.getCacheName();
-        Cache cache = cacheManager.getCache(cacheName);
-        this.captchaCache = Objects.requireNonNull(cache, "captcha spring cache name " + cacheName + " is null.");
-    }
 }

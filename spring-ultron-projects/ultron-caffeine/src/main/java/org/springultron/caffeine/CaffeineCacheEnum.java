@@ -10,17 +10,21 @@ public enum CaffeineCacheEnum {
     /**
      * 缓存过期时间5分钟
      */
-    FIVE_SECOND("FIVE_SECOND", 5 * 60),
+    FIVE_MINUTES("FIVE_MINUTES", 5 * 60),
+    /**
+     * 缓存过期时间15分钟
+     */
+    FIFTEEN_MINUTES("FIFTEEN_MINUTES", 15 * 60),
 
     /**
      * 缓存过期时间30分钟
      */
-    THIRTY_SECOND("THIRTY_SECOND", 30 * 60),
+    THIRTY_MINUTES("THIRTY_MINUTES", 30 * 60),
 
     /**
      * 缓存过期时间2小时
      */
-    TWO_HOUR("TWO_HOUR", 2 * 60 * 60),
+    TWO_HOURS("TWO_HOURS", 2 * 60 * 60),
 
     /**
      * 缓存过期时间7天

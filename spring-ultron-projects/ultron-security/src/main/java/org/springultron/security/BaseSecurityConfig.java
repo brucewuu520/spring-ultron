@@ -33,10 +33,12 @@ import org.springultron.security.handler.SimpleLogoutSuccessHandler;
  */
 public abstract class BaseSecurityConfig extends WebSecurityConfigurerAdapter {
     /**
-     * 是否使用JWT无状态登录
-     * 使用JWT必须实现UserDetailsProcessor接口，并注入到Bean容器
+     * 是否使用JWT无状态登录（默认不使用）
+     * 使用JWT必须重写该方法返回true，并实现UserDetailsProcessor接口，并注入到Bean容器
      */
-    protected abstract boolean useJwt();
+    protected boolean useJwt() {
+        return false;
+    }
 
     /**
      * formLogin登录地址
