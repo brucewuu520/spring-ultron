@@ -5,10 +5,10 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.lang.Nullable;
+import org.springultron.core.utils.Base64Utils;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
-import javax.xml.bind.DatatypeConverter;
 import java.security.Key;
 import java.time.Duration;
 import java.util.Date;
@@ -43,7 +43,7 @@ public final class JwtUtils {
      */
     public static String generateSecret(SignatureAlgorithm algorithm) {
         SecretKey secretKey = Keys.secretKeyFor(algorithm);
-        return DatatypeConverter.printBase64Binary(secretKey.getEncoded());
+        return Base64Utils.encodeToString(secretKey.getEncoded());
     }
 
     /**
@@ -92,7 +92,7 @@ public final class JwtUtils {
      * @param algorithm  算法
      */
     public static String generateToken(String username, String secret, Duration expiration, SignatureAlgorithm algorithm) {
-        byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(secret);
+        byte[] apiKeySecretBytes = Base64Utils.decodeFromString(secret);
         Key signKey = new SecretKeySpec(apiKeySecretBytes, algorithm.getJcaName());
         return Jwts.builder().setAudience(username).setIssuedAt(new Date()).setExpiration(generateExpirationDate(expiration)).signWith(signKey, algorithm).compact();
     }
@@ -107,7 +107,7 @@ public final class JwtUtils {
      * @param algorithm 签名算法
      */
     public static String generateToken(String username, String secret, SignatureAlgorithm algorithm) {
-        byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(secret);
+        byte[] apiKeySecretBytes = Base64Utils.decodeFromString(secret);
         Key signKey = new SecretKeySpec(apiKeySecretBytes, algorithm.getJcaName());
         return Jwts.builder().setAudience(username).setIssuedAt(new Date()).signWith(signKey, algorithm).compact();
     }
@@ -132,7 +132,7 @@ public final class JwtUtils {
      * @param algorithm 签名算法,支持 SHA-256 SHA-384 SHA-512算法
      */
     public static String generateToken(Claims claims, String secret, SignatureAlgorithm algorithm) {
-        byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(secret);
+        byte[] apiKeySecretBytes = Base64Utils.decodeFromString(secret);
         Key signKey = new SecretKeySpec(apiKeySecretBytes, algorithm.getJcaName());
         return Jwts.builder().setClaims(claims).signWith(signKey, algorithm).compact();
     }
@@ -142,7 +142,7 @@ public final class JwtUtils {
      */
     @Nullable
     public static Claims obtainClaims(String token, String secret) {
-        return Jwts.parserBuilder().setSigningKey(DatatypeConverter.parseBase64Binary(secret)).build().parseClaimsJws(token).getBody();
+        return Jwts.parserBuilder().setSigningKey(Base64Utils.decodeFromString(secret)).build().parseClaimsJws(token).getBody();
     }
 
     /**
@@ -152,4 +152,5 @@ public final class JwtUtils {
     public static String obtainUsername(String token, String secret) {
         return Optional.ofNullable(obtainClaims(token, secret)).map(Claims::getAudience).orElse(null);
     }
+
 }

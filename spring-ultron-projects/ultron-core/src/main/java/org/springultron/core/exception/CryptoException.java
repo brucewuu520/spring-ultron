@@ -1,5 +1,7 @@
 package org.springultron.core.exception;
 
+import java.io.Serial;
+
 /**
  * 自定义加解密异常
  *
@@ -7,6 +9,7 @@ package org.springultron.core.exception;
  * @date 2020/3/18 21:40
  */
 public class CryptoException extends RuntimeException {
+    @Serial
     private static final long serialVersionUID = 303660391539326286L;
 
     public CryptoException(String message) {

@@ -1,0 +1,3 @@
+org.springultron.cloud.servlet.SentinelConfiguration
+org.springultron.cloud.reactive.SentinelConfiguration
+org.springultron.cloud.LbWebClientConfiguration

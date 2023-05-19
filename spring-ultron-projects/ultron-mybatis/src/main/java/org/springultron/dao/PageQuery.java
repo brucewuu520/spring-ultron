@@ -1,7 +1,6 @@
 package org.springultron.dao;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * 分页查询条件
@@ -9,40 +8,40 @@ import io.swagger.annotations.ApiModelProperty;
  * @author brucewuu
  * @date 2019-06-07 22:09
  */
-@ApiModel(description = "分页查询条件")
+@Schema(description = "分页查询条件")
 public class PageQuery {
 
-    @ApiModelProperty(value = "第几页", notes = "默认值:1", example = "1")
+    @Schema(description = "第几页(默认:1)", defaultValue = "1")
     private Integer current;
 
-    @ApiModelProperty(value = "数量(默认:10)", notes = "默认值:10", example = "10", position = 1)
+    @Schema(description = "数量(默认:10)", example = "10", defaultValue = "10")
     private Integer size;
 
-    @ApiModelProperty(value = "升序字段", position = 2)
+    @Schema(description = "升序字段")
     private String[] ascs;
 
-    @ApiModelProperty(value = "降序字段", position = 3)
+    @Schema(description = "降序字段")
     private String[] descs;
 
-    @ApiModelProperty(value = "是否查询总数", position = 4)
+    @Schema(description = "是否查询总数")
     private boolean searchCount = true;
 
-    @ApiModelProperty(value = "最后一行数据ID", position = 5)
+    @Schema(description = "最后一行数据ID")
     private Long lastId;
 
-    @ApiModelProperty(value = "搜索关键字", position = 6)
+    @Schema(description = "搜索关键字")
     private String keyword;
 
-    @ApiModelProperty(value = "筛选状态", position = 7)
+    @Schema(description = "筛选状态")
     private Integer status;
 
-    @ApiModelProperty(value = "筛选状态2", position = 8)
+    @Schema(description = "筛选状态2")
     private Integer state;
 
-    @ApiModelProperty(value = "筛选类型/类别ID", position = 9)
+    @Schema(description = "筛选类型/类别ID")
     private Integer typeId;
 
-    @ApiModelProperty(value = "筛选类型/类别名称", position = 1)
+    @Schema(description = "筛选类型/类别名称")
     private String typeName;
 
     public Integer getCurrent() {

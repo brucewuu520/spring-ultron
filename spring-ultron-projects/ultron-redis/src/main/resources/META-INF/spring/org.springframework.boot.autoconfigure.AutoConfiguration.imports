@@ -1,0 +1,4 @@
+org.springultron.redis.config.RedisConfiguration
+org.springultron.redis.config.ReactiveRedisConfiguration
+org.springultron.redis.config.RedisCacheAutoConfiguration
+org.springultron.redis.config.RedisClientAutoConfiguration

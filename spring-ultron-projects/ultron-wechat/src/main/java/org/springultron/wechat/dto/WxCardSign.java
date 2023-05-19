@@ -1,7 +1,6 @@
 package org.springultron.wechat.dto;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * 微信卡券签名
@@ -9,28 +8,28 @@ import io.swagger.annotations.ApiModelProperty;
  * @author brucewuu
  * @date 2021/4/12 下午5:27
  */
-@ApiModel(description = "微信卡券签名")
+@Schema(description = "微信卡券签名")
 public class WxCardSign {
 
-    @ApiModelProperty(value = "门店ID。shopID用于筛选出拉起带有指定location_list(shopID)的卡券列表，非必填", position = 1)
+    @Schema(description = "门店ID。shopID用于筛选出拉起带有指定location_list(shopID)的卡券列表，非必填")
     private String shopId;
 
-    @ApiModelProperty(value = "卡券ID，用于拉起指定cardId的卡券列表，当cardId为空时，默认拉起所有卡券的列表，非必填", position = 2)
+    @Schema(description = "卡券ID，用于拉起指定cardId的卡券列表，当cardId为空时，默认拉起所有卡券的列表，非必填")
     private String cardId;
 
-    @ApiModelProperty(value = "卡券类型，用于拉起指定卡券类型的卡券列表。当cardType为空时，默认拉起所有卡券的列表，非必填", position = 3)
+    @Schema(description = "卡券类型，用于拉起指定卡券类型的卡券列表。当cardType为空时，默认拉起所有卡券的列表，非必填")
     private String cardType;
 
-    @ApiModelProperty(value = "生成签名的随机串", required = true, position = 4)
+    @Schema(description = "生成签名的随机串", requiredMode = Schema.RequiredMode.REQUIRED)
     private String nonceStr;
 
-    @ApiModelProperty(value = "时间戳", required = true, position = 5)
+    @Schema(description = "时间戳", requiredMode = Schema.RequiredMode.REQUIRED)
     private String timestamp;
 
-    @ApiModelProperty(value = "签名方式，目前仅支持SHA1", required = true, position = 6)
+    @Schema(description = "签名方式，目前仅支持SHA1", requiredMode = Schema.RequiredMode.REQUIRED)
     private String signType = "SHA1";
 
-    @ApiModelProperty(value = "签名", required = true, position = 7)
+    @Schema(description = "签名", requiredMode = Schema.RequiredMode.REQUIRED)
     private String cardSign;
 
     public String getShopId() {

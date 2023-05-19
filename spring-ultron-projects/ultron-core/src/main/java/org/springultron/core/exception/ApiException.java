@@ -3,6 +3,8 @@ package org.springultron.core.exception;
 import org.springultron.core.result.ApiResult;
 import org.springultron.core.result.IResultCode;
 
+import java.io.Serial;
+
 /**
  * 自定义异常
  *
@@ -10,6 +12,7 @@ import org.springultron.core.result.IResultCode;
  * @date 2019-06-03 09:46
  */
 public class ApiException extends RuntimeException {
+    @Serial
     private static final long serialVersionUID = 250919198459751841L;
 
     private final ApiResult<?> result;

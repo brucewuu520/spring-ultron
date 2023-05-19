@@ -1,6 +1,8 @@
 package org.springultron.security.filter;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -9,12 +11,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springultron.core.jackson.Jackson;
+import org.springultron.core.utils.StringUtils;
 import org.springultron.security.handler.SimpleAuthenticationFailureHandler;
 import org.springultron.security.handler.SimpleAuthenticationSuccessHandler;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
@@ -26,10 +28,13 @@ import java.io.IOException;
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     public LoginFilter(String loginProcessingUrl, AuthenticationManager authenticationManager) {
-        setFilterProcessesUrl(loginProcessingUrl);
-        setAuthenticationManager(authenticationManager);
+        super(authenticationManager);
+        if (StringUtils.isNotEmpty(loginProcessingUrl) && !"/login".equals(loginProcessingUrl)) {
+            setFilterProcessesUrl(loginProcessingUrl);
+        }
         setAuthenticationSuccessHandler(new SimpleAuthenticationSuccessHandler());
         setAuthenticationFailureHandler(new SimpleAuthenticationFailureHandler());
+        setSecurityContextRepository(new HttpSessionSecurityContextRepository());
     }
 
     @Override
@@ -47,17 +52,10 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             if (jsonNode == null || jsonNode.isEmpty()) {
                 throw new UsernameNotFoundException("username and password is empty");
             }
-
             String username = Jackson.getString(jsonNode, getUsernameParameter());
             String password = Jackson.getString(jsonNode, getPasswordParameter());
-            if (username == null) {
-                username = "";
-            }
-            if (password == null) {
-                password = "";
-            }
-
-            username = username.trim();
+            username = username != null ? username.trim() : "";
+            password = password != null ? password : "";
             UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(username, password);
             this.setDetails(request, authRequest);
             return this.getAuthenticationManager().authenticate(authRequest);

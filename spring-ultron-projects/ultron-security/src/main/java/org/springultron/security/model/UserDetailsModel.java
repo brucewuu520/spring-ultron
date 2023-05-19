@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.Assert;
 import org.springultron.core.utils.Lists;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
  * @date 2020/3/18 10:45
  */
 public class UserDetailsModel implements UserDetails, CredentialsContainer {
+    @Serial
     private static final long serialVersionUID = 520L;
 
     private final UserInfo userInfo;
@@ -31,16 +33,19 @@ public class UserDetailsModel implements UserDetails, CredentialsContainer {
         this.userInfo = userInfo;
         this.permissionList = permissionList;
         if (Lists.isNotEmpty(permissionList)) {
-            this.authorities = Collections.unmodifiableSet(sortAuthorities(permissionList.stream()
-                    .filter(permission -> permission.getValue() != null)
-                    .map(permission -> {
-                        if (null == permission.getType() || permission.getType() == 0) { // 角色
-                            return new SimpleGrantedAuthority("ROLE_" + permission.getValue());
-                        } else { // 权限
-                            return new SimpleGrantedAuthority(permission.getValue());
-                        }
-                    })
-                    .collect(Collectors.toList())));
+            assert permissionList != null;
+            this.authorities = Collections.unmodifiableSet(sortAuthorities(
+                    permissionList.stream()
+                                  .filter(permission -> permission.getValue() != null)
+                                  .map(permission -> {
+                                      if (null == permission.getType() || permission.getType() == 0) { // 角色
+                                          return new SimpleGrantedAuthority("ROLE_" + permission.getValue());
+                                      } else { // 权限
+                                          return new SimpleGrantedAuthority(permission.getValue());
+                                      }
+                                  })
+                                  .collect(Collectors.toList())
+            ));
         }
     }
 
@@ -121,6 +126,7 @@ public class UserDetailsModel implements UserDetails, CredentialsContainer {
     }
 
     private static class AuthorityComparator implements Comparator<GrantedAuthority>, Serializable {
+        @Serial
         private static final long serialVersionUID = 521L;
 
         private AuthorityComparator() {

@@ -1,7 +1,6 @@
 package org.springultron.core.result;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * 字段校验错误信息
@@ -9,13 +8,13 @@ import io.swagger.annotations.ApiModelProperty;
  * @author brucewuu
  * @date 2020/8/6 22:00
  */
-@ApiModel(description = "字段校验错误信息")
+@Schema(description = "字段校验错误信息")
 public class FieldErrorDTO {
 
-    @ApiModelProperty(value = "字段", position = 1)
+    @Schema(description = "字段")
     private String field;
 
-    @ApiModelProperty(value = "错误信息", position = 2)
+    @Schema(description = "错误信息")
     private String error;
 
     public FieldErrorDTO() {}

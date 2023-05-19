@@ -1,5 +1,7 @@
 package org.springultron.boot.reactive.error;
 
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
@@ -18,8 +20,6 @@ import org.springultron.core.result.ApiResult;
 import org.springultron.core.result.ResultCode;
 import reactor.core.publisher.Mono;
 
-import javax.validation.ConstraintViolationException;
-import javax.validation.ValidationException;
 import java.util.Optional;
 
 /**

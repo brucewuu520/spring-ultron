@@ -16,30 +16,27 @@
 
     <properties>
         <main.basedir>${basedir}/..</main.basedir>
-        <java.version>1.8</java.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
 
     <modules>
+        <module>ultron-core</module>
         <module>ultron-boot</module>
         <module>ultron-cloud</module>
-        <module>ultron-core</module>
-        <module>ultron-crypto</module>
         <module>ultron-logging</module>
-        <module>ultron-mongodb</module>
+        <module>ultron-security</module>
+        <module>ultron-crypto</module>
         <module>ultron-mybatis</module>
         <module>ultron-redis</module>
         <module>ultron-redis-lock</module>
         <module>ultron-caffeine</module>
-        <module>ultron-security</module>
         <module>ultron-captcha</module>
         <module>ultron-qrcode</module>
-        <module>ultron-swagger</module>
+        <module>ultron-doc</module>
         <module>ultron-http</module>
         <module>ultron-openfeign</module>
         <module>ultron-xxl-job</module>
         <module>ultron-wechat</module>
+        <module>ultron-mongodb</module>
     </modules>
 
     <dependencies>
@@ -100,16 +97,6 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven-compiler-plugin.version}</version>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                    <parameters>true</parameters>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
                 <version>${maven-enforcer-plugin.version}</version>
                 <executions>
@@ -122,19 +109,23 @@
                             <rules>
                                 <bannedDependencies>
                                     <excludes>
-                                        <exclude>javax.*:*:*</exclude>
+                                        <exclude>jakarta.*:*:*</exclude>
                                     </excludes>
                                     <includes>
-                                        <include>javax.servlet:*:*</include>
-                                        <include>javax.cache:*:*</include>
+                                        <include>jakarta.cache:*:*</include>
+                                        <include>jakarta.servlet:*:*</include>
+                                        <include>jakarta.annotation:*:*</include>
+                                        <include>jakarta.validation:*:*</include>
+                                        <include>jakarta.activation:*:*</include>
+                                        <include>jakarta.xml.bind:*:*</include>
                                     </includes>
                                     <searchTransitive>true</searchTransitive>
                                 </bannedDependencies>
                                 <requireJavaVersion>
-                                    <version>[1.8,)</version>
+                                    <version>[17,)</version>
                                 </requireJavaVersion>
                                 <requireMavenVersion>
-                                    <version>[3.5.0,)</version>
+                                    <version>[3.6.0,)</version>
                                 </requireMavenVersion>
                                 <requireProperty>
                                     <property>main.basedir</property>
@@ -198,25 +189,6 @@
                     <encoding>UTF-8</encoding>
                     <docencoding>UTF-8</docencoding>
                 </configuration>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                        <inherited>true</inherited>
-                        <configuration>
-                            <additionalJOption>-Xdoclint:none</additionalJOption>
-                        </configuration>
-                    </execution>
-                </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.apache.commons</groupId>
-                        <artifactId>commons-lang3</artifactId>
-                        <version>3.11</version>
-                    </dependency>
-                </dependencies>
             </plugin>
         </plugins>
     </build>

@@ -1,9 +1,9 @@
 package org.springultron.core.result;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.springultron.core.exception.ApiException;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -13,20 +13,21 @@ import java.util.List;
  * @author brucewuu
  * @date 2019-05-22 15:16
  */
-@ApiModel(description = "返回体", value = "ApiResult")
+@Schema(description = "返回体")
 public class ApiResult<T> implements Serializable {
+    @Serial
     private static final long serialVersionUID = -2832435143001472900L;
 
-    @ApiModelProperty(value = "状态码", notes = "200代表请求操作成功", dataType = "int", required = true, example = "200")
+    @Schema(description = "状态码(200:成功)")
     private int code;
 
-    @ApiModelProperty(value = "消息", required = true, example = "success", position = 1)
+    @Schema(description = "消息")
     private String message;
 
-    @ApiModelProperty(value = "字段校验异常信息", position = 2)
+    @Schema(description = "字段校验异常信息")
     private List<FieldErrorDTO> fieldErrors;
 
-    @ApiModelProperty(value = "返回数据", position = 3)
+    @Schema(description = "返回数据")
     private T data;
 
     public ApiResult() {

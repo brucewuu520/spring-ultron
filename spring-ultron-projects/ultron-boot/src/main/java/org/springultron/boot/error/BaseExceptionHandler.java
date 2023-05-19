@@ -1,5 +1,6 @@
 package org.springultron.boot.error;
 
+import jakarta.validation.ConstraintViolation;
 import org.hibernate.validator.internal.engine.path.PathImpl;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -9,7 +10,6 @@ import org.springultron.core.result.ResultCode;
 import org.springultron.core.utils.Lists;
 import org.springultron.core.utils.StringUtils;
 
-import javax.validation.ConstraintViolation;
 import java.util.ArrayList;
 import java.util.Set;
 

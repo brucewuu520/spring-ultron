@@ -1,10 +1,9 @@
 package org.springultron.boot.props;
 
+import jakarta.validation.constraints.NotNull;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 import org.springultron.core.io.FileUtils;
-
-import javax.validation.constraints.NotNull;
 
 /**
  * 文件上传配置

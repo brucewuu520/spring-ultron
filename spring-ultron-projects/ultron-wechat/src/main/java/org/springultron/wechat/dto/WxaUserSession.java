@@ -1,9 +1,9 @@
 package org.springultron.wechat.dto;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -12,27 +12,28 @@ import java.io.Serializable;
  * @author brucewuu
  * @date 2021/4/13 上午10:02
  */
-@ApiModel(description = "微信小程序用户授权登录session")
+@Schema(description = "微信小程序用户授权登录session")
 public class WxaUserSession implements Serializable {
+    @Serial
     private static final long serialVersionUID = 7842513978217539511L;
 
-    @ApiModelProperty(value = "用户的标识，对当前小程序唯一", required = true, position = 1)
+    @Schema(description = "用户的标识，对当前小程序唯一", requiredMode = Schema.RequiredMode.REQUIRED)
     @JsonAlias(value = "openid")
     private String openId;
 
-    @ApiModelProperty(value = "会话密钥", position = 2)
+    @Schema(description = "会话密钥")
     @JsonAlias(value = "session_key")
     private String sessionKey;
 
-    @ApiModelProperty(value = "用户在开放平台的唯一标识符（绑定了开发者帐号的小程序，才会出现该字段）", position = 3)
+    @Schema(description = "用户在开放平台的唯一标识符（绑定了开发者帐号的小程序，才会出现该字段）")
     @JsonAlias(value = "unionid")
     private String unionId;
 
-    @ApiModelProperty(value = "错误码(-1: 系统繁忙，此时请开发者稍候再试 0:请求成功 40029:code 无效 频率限制，45011:每个用户每分钟100次)", hidden = true, position = 4)
+    @Schema(description = "错误码(-1: 系统繁忙，此时请开发者稍候再试 0:请求成功 40029:code 无效 频率限制，45011:每个用户每分钟100次)", hidden = true)
     @JsonAlias(value = "errcode")
     private int errCode;
 
-    @ApiModelProperty(value = "错误信息", hidden = true, position = 5)
+    @Schema(description = "错误信息", hidden = true)
     @JsonAlias(value = "errmsg")
     private String errMsg;
 

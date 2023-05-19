@@ -1,8 +1,8 @@
 package org.springultron.crypto;
 
-import org.springframework.util.Base64Utils;
 import org.springultron.core.exception.CryptoException;
 import org.springultron.core.io.IOUtils;
+import org.springultron.core.utils.Base64Utils;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -61,21 +61,12 @@ public final class RSA {
      * @param algorithms 算法 {@link RsaAlgorithms}
      */
     public static KeyPair generateKeyPair(RsaAlgorithms algorithms) {
-        int keySizeInBits;
-        switch (algorithms) {
-            case RSA_SHA256:
-                keySizeInBits = 2048;
-                break;
-            case RSA_SHA384:
-                keySizeInBits = 3072;
-                break;
-            case RSA_SHA512:
-                keySizeInBits = 4096;
-                break;
-            default:
-                keySizeInBits = 1024;
-                break;
-        }
+        int keySizeInBits = switch (algorithms) {
+            case RSA_SHA256 -> 2048;
+            case RSA_SHA384 -> 3072;
+            case RSA_SHA512 -> 4096;
+            default -> 1024;
+        };
         return generateKeyPair(keySizeInBits);
     }
 

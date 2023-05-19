@@ -86,7 +86,7 @@ public enum ResultCode implements IResultCode {
     /**
      * 数据库的唯一约束条件异常
      */
-    SQL_CONSTRAINT_ERROR(10600, "插入重复数据");
+    SQL_CONSTRAINT_ERROR(10600, "数据重复或已存在");
 
     private final int code;
     private final String message;

@@ -10,6 +10,7 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
 import org.springultron.core.utils.DateUtils;
 
+import java.io.Serial;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -21,6 +22,7 @@ import java.time.LocalTime;
  * @date 2019-06-13 17:25
  */
 public final class UltronJavaTimeModule extends SimpleModule {
+    @Serial
     private static final long serialVersionUID = 1L;
 
     public UltronJavaTimeModule() {

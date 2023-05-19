@@ -1,5 +1,7 @@
 package org.springultron.wechat.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +17,6 @@ import org.springultron.wechat.msg.wx.out.OutMsg;
 import org.springultron.wechat.msg.wx.out.OutTextMsg;
 import org.springultron.wechat.props.WechatProperties;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -197,14 +197,12 @@ public abstract class WxMsgController {
                 processSubscribeMsgPopupEvent((InSubscribeMsgPopupEvent) msg);
             } else if (msg instanceof InSubscribeMsgSentEvent) {
                 processSubscribeMsgSentEvent((InSubscribeMsgSentEvent) msg);
-            } else if (msg instanceof InUnknownEvent) {
-                InUnknownEvent unknownEvent = (InUnknownEvent) msg;
+            } else if (msg instanceof InUnknownEvent unknownEvent) {
                 processUnknownEvent(unknownEvent);
                 if (properties.isDevMode()) {
                     log.warn("无法识别的事件类型:\n{}", unknownEvent.getXmlStr());
                 }
-            } else if (msg instanceof InUnknownMsg) {
-                InUnknownMsg unknownMsg = (InUnknownMsg) msg;
+            } else if (msg instanceof InUnknownMsg unknownMsg) {
                 processUnknownMsg(unknownMsg);
                 if (properties.isDevMode()) {
                     log.warn("无法识别的消息类型:\n{}", unknownMsg.getXmlStr());

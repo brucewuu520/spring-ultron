@@ -1,5 +1,7 @@
 package org.springultron.wechat.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +14,6 @@ import org.springultron.wechat.msg.wxa.*;
 import org.springultron.wechat.props.WechatProperties;
 import org.springultron.wechat.props.WxaConf;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -110,8 +110,7 @@ public abstract class WxaMsgController {
                 processUserEnterSessionMsg((WxaUserEnterSessionEvent) wxaMsg);
             } else if (wxaMsg instanceof WxaMediaCheckEvent) {
                 processMediaCheckEvent((WxaMediaCheckEvent) wxaMsg);
-            } else if (wxaMsg instanceof WxaUnknownMsg) {
-                WxaUnknownMsg unknownMsg = (WxaUnknownMsg) wxaMsg;
+            } else if (wxaMsg instanceof WxaUnknownMsg unknownMsg) {
                 unknownMsg.setMsgStr(msgStr);
                 processUnknownMsg(unknownMsg);
             }

@@ -1,5 +1,6 @@
 package org.springultron.security.model;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -9,6 +10,7 @@ import java.io.Serializable;
  * @date 2019/10/23 18:35
  */
 public class UserPermission implements Serializable {
+    @Serial
     private static final long serialVersionUID = 521;
     /**
      * 父级ID

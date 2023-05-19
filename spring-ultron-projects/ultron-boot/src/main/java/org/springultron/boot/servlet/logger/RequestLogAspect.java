@@ -1,5 +1,7 @@
 package org.springultron.boot.servlet.logger;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -26,8 +28,6 @@ import org.springultron.core.jackson.Jackson;
 import org.springultron.core.pool.StringPool;
 import org.springultron.core.utils.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.util.Enumeration;
@@ -164,8 +164,7 @@ public class RequestLogAspect {
                 continue;
             } else if (value instanceof HttpServletResponse) {
                 continue;
-            } else if (value instanceof MultipartFile) {
-                MultipartFile multipartFile = (MultipartFile) value;
+            } else if (value instanceof MultipartFile multipartFile) {
                 String name = multipartFile.getName();
                 String fileName = multipartFile.getOriginalFilename();
                 paramsMap.put(name, fileName);

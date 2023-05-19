@@ -1,5 +1,7 @@
 package org.springultron.boot.servlet.error;
 
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
@@ -22,9 +24,6 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springultron.boot.error.BaseExceptionHandler;
 import org.springultron.core.result.ApiResult;
 import org.springultron.core.result.ResultCode;
-
-import javax.validation.ConstraintViolationException;
-import javax.validation.ValidationException;
 
 /**
  * RESTFUL API 异常信息处理

@@ -1,103 +1,58 @@
 package org.springultron.security;
 
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpMethod;
+import org.springframework.context.annotation.Primary;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.stereotype.Repository;
+import org.springframework.util.Assert;
+import org.springultron.captcha.service.CaptchaService;
+import org.springultron.core.utils.StringUtils;
 import org.springultron.security.filter.JwtAuthenticationFilter;
 import org.springultron.security.filter.LoginFilter;
 import org.springultron.security.handler.SimpleAccessDeniedHandler;
 import org.springultron.security.handler.SimpleAuthenticationEntryPoint;
 import org.springultron.security.handler.SimpleLogoutHandler;
 import org.springultron.security.handler.SimpleLogoutSuccessHandler;
+import org.springultron.security.provider.CaptchaAuthenticationProvider;
 
 /**
- * Spring Security 配置基类
- * <p>
- * 默认支持前后端分离
- * 前后端分离返回json
- * 支持有状态的session认证和无状态的JWT认证
- * </p>
+ * Spring Security 统一基础配置
  *
  * @author brucewuu
- * @date 2020/1/6 19:26
+ * @date 2023/5/12 14:12
  */
-public abstract class BaseSecurityConfig extends WebSecurityConfigurerAdapter {
-    /**
-     * 是否使用JWT无状态登录（默认不使用）
-     * 使用JWT必须重写该方法返回true，并实现UserDetailsProcessor接口，并注入到Bean容器
-     */
-    protected boolean useJwt() {
-        return false;
-    }
+@Repository
+public abstract class BaseSecurityConfig {
 
-    /**
-     * formLogin登录地址
-     */
-    protected String loginProcessingUrl() {
-        return "/login";
+    private UserDetailsProcessor userDetailsProcessor;
+    private CaptchaService captchaService;
+    private ApplicationContext context;
+
+    @Primary
+    @Autowired(required = false)
+    public void setUserDetailsProcessor(UserDetailsProcessor userDetailsProcessor) {
+        this.userDetailsProcessor = userDetailsProcessor;
     }
 
     @Autowired(required = false)
-    private UserDetailsProcessor userDetailsProcessor;
-
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers(HttpMethod.GET, // 允许对于静态资源的无授权访问
-                "/*.html",
-                "/**/*.html",
-                "/**/*.css",
-                "/**/*.js",
-                "/favicon.ico",
-                "/swagger-resources/**",
-                "/v3/api-docs/**",
-                "/v3/api-docs-ext/**",
-                "/webjars/**",
-                "/actuator/**"
-        );
+    public void setCaptchaService(CaptchaService captchaService) {
+        this.captchaService = captchaService;
     }
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable()
-                .exceptionHandling()
-                .authenticationEntryPoint(new SimpleAuthenticationEntryPoint())
-                .accessDeniedHandler(new SimpleAccessDeniedHandler())
-                .and()
-                .logout()
-                .addLogoutHandler(new SimpleLogoutHandler(userDetailsProcessor))
-                .logoutSuccessHandler(new SimpleLogoutSuccessHandler());
-        if (useJwt()) {
-            // jwt 必须配置于 UsernamePasswordAuthenticationFilter 之前
-            http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // session 生成策略用无状态策略,不创建会话
-                    .and()
-                    .addFilterBefore(new JwtAuthenticationFilter(userDetailsProcessor), UsernamePasswordAuthenticationFilter.class);
-        } else {
-            http.formLogin()
-                    .loginProcessingUrl(loginProcessingUrl())
-                    .and()
-                    .addFilterBefore(new LoginFilter(loginProcessingUrl(), authenticationManagerBean()), UsernamePasswordAuthenticationFilter.class)
-                    .rememberMe()
-                    .alwaysRemember(true);
-        }
-    }
-
-    /**
-     * 全局获取用户详情配置
-     */
-    @Bean
-    @ConditionalOnBean(UserDetailsProcessor.class)
-    public UserDetailsService userDetailService() {
-        return username -> userDetailsProcessor.loadUserByUsername(username);
+    @Autowired
+    public void setApplicationContext(ApplicationContext context) {
+        this.context = context;
     }
 
     @Bean
@@ -105,4 +60,80 @@ public abstract class BaseSecurityConfig extends WebSecurityConfigurerAdapter {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+    @Bean
+    @ConditionalOnClass(CaptchaService.class)
+    public CaptchaAuthenticationProvider captchaAuthenticationProvider() {
+        System.err.println("--- captchaAuthenticationProvider --- init >>>");
+        CaptchaAuthenticationProvider captchaAuthenticationProvider = new CaptchaAuthenticationProvider(captchaService);
+        captchaAuthenticationProvider.setPasswordEncoder(passwordEncoder());
+        captchaAuthenticationProvider.setUserDetailsService(userDetailsProcessor);
+        return captchaAuthenticationProvider;
+    }
+
+    public void build(HttpSecurity http) throws Exception {
+        buildHttpSecurity(http, false, null, userDetailsProcessor);
+    }
+
+    public void build(HttpSecurity http, String loginProcessingUrl) throws Exception {
+        buildHttpSecurity(http, false, loginProcessingUrl, userDetailsProcessor);
+    }
+
+    public void build(HttpSecurity http, UserDetailsProcessor userDetailsProcessor) throws Exception {
+       buildHttpSecurity(http, false, null, userDetailsProcessor);
+    }
+
+    public void build(HttpSecurity http, String loginProcessingUrl, UserDetailsProcessor userDetailsProcessor) throws Exception {
+       buildHttpSecurity(http, false, loginProcessingUrl, userDetailsProcessor);
+    }
+
+    public void buildWithJwt(HttpSecurity http) throws Exception {
+        buildHttpSecurity(http, true, null, userDetailsProcessor);
+    }
+
+    public void buildWithJwt(HttpSecurity http, UserDetailsProcessor userDetailsProcessor) throws Exception {
+        buildHttpSecurity(http, true, null, userDetailsProcessor);
+    }
+
+    private void buildHttpSecurity(HttpSecurity http, boolean useJwt, String loginProcessingUrl, UserDetailsProcessor userDetailsProcessor) throws Exception {
+        AuthenticationManager authenticationManager = null;
+        if (!useJwt) {
+            ObjectProvider<AuthenticationManager> objectProvider = context.getBeanProvider(AuthenticationManager.class);
+            authenticationManager = objectProvider.getIfAvailable(() -> {
+                AuthenticationConfiguration authenticationConfiguration = context.getBean(AuthenticationConfiguration.class);
+                Assert.notNull(authenticationConfiguration, "authenticationConfiguration can not be null.");
+                try {
+                    return authenticationConfiguration.getAuthenticationManager();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            });
+        }
+        buildHttpSecurity(http, useJwt, loginProcessingUrl, userDetailsProcessor, authenticationManager);
+    }
+
+    private void buildHttpSecurity(HttpSecurity http, boolean useJwt, String loginProcessingUrl, UserDetailsProcessor userDetailsProcessor, AuthenticationManager authenticationManager) throws Exception {
+        http.csrf().disable()
+            .exceptionHandling()
+            .authenticationEntryPoint(new SimpleAuthenticationEntryPoint())
+            .accessDeniedHandler(new SimpleAccessDeniedHandler())
+            .and()
+            .logout()
+            .addLogoutHandler(new SimpleLogoutHandler(userDetailsProcessor))
+            .logoutSuccessHandler(new SimpleLogoutSuccessHandler());
+        if (useJwt) {
+            // jwt 必须配置于 UsernamePasswordAuthenticationFilter 之前
+            http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // session 生成策略用无状态策略,不创建会话
+                .and()
+                .addFilterBefore(new JwtAuthenticationFilter(userDetailsProcessor), UsernamePasswordAuthenticationFilter.class);
+        } else {
+            http.formLogin()
+                .loginProcessingUrl(StringUtils.isEmpty(loginProcessingUrl) ? "/login" : loginProcessingUrl)
+                .and()
+                .addFilterBefore(new LoginFilter(loginProcessingUrl, authenticationManager), UsernamePasswordAuthenticationFilter.class)
+                .rememberMe()
+                .alwaysRemember(true);
+        }
+    }
+
 }

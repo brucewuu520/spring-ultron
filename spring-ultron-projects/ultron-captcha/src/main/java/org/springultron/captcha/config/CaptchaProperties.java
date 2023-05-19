@@ -17,12 +17,13 @@
 package org.springultron.captcha.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springultron.captcha.CaptchaType;
+import org.springultron.captcha.core.CaptchaType;
 
 /**
  * 图形验证码配置项
  *
- * @author L.cm brucewuu
+ * @author L.cm
+ * @author brucewuu
  * @date 2021/4/13 下午2:15
  */
 @ConfigurationProperties(prefix = "captcha")

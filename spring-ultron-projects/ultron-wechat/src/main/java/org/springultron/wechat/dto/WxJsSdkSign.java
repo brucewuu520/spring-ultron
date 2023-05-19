@@ -1,7 +1,6 @@
 package org.springultron.wechat.dto;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * JS-SDK签名
@@ -9,19 +8,19 @@ import io.swagger.annotations.ApiModelProperty;
  * @author brucewuu
  * @date 2021/4/12 下午4:43
  */
-@ApiModel(description = "JS-SDK签名")
+@Schema(description = "JS-SDK签名")
 public class WxJsSdkSign {
 
-    @ApiModelProperty(value = "公众号的唯一标识", required = true, position = 1)
+    @Schema(description = "公众号的唯一标识", requiredMode = Schema.RequiredMode.REQUIRED)
     private String appId;
 
-    @ApiModelProperty(value = "生成签名的随机串", required = true, position = 2)
+    @Schema(description = "生成签名的随机串", requiredMode = Schema.RequiredMode.REQUIRED)
     private String nonceStr;
 
-    @ApiModelProperty(value = "时间戳", required = true, position = 3)
+    @Schema(description = "时间戳", requiredMode = Schema.RequiredMode.REQUIRED)
     private String timestamp;
 
-    @ApiModelProperty(value = "签名", required = true, position = 4)
+    @Schema(description = "签名", requiredMode = Schema.RequiredMode.REQUIRED)
     private String signature;
 
     public String getAppId() {

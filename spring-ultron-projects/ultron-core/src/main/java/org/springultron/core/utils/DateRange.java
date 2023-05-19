@@ -20,11 +20,11 @@ public class DateRange implements Iterable<LocalDate> {
     /**
      * 开始日期
      */
-    private LocalDate startDate;
+    private final LocalDate startDate;
     /**
      * 截止日期
      */
-    private LocalDate endDate;
+    private final LocalDate endDate;
 
     public static DateRange of(LocalDate startDate, LocalDate endDate) {
         return new DateRange(startDate, endDate);

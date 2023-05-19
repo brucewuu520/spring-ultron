@@ -2,6 +2,7 @@ package org.springultron.security.model;
 
 import org.springframework.util.Assert;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,6 +15,7 @@ import java.util.function.Function;
  * @date 2020/3/18 10:49
  */
 public class UserInfo implements Serializable {
+    @Serial
     private static final long serialVersionUID = 1314L;
     /**
      * 用户名（必需）

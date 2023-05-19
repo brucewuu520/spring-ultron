@@ -1,4 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  org.springultron.swagger.SwaggerConfiguration,\
-  org.springultron.swagger.gateway.SwaggerResourceConfig,\
-  org.springultron.swagger.gateway.SwaggerRouter

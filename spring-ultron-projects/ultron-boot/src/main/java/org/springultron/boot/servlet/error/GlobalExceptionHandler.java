@@ -18,7 +18,7 @@ import org.springultron.core.utils.ObjectUtils;
 import org.springultron.core.utils.StringUtils;
 import org.springultron.core.utils.WebUtils;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDateTime;
 
@@ -114,7 +114,6 @@ public class GlobalExceptionHandler {
             }
             event.setRequestUrl(requestUrl);
         }
-
         // 堆栈信息
         event.setStackTrace(Exceptions.getStackTraceString(error));
         event.setExceptionName(error.getClass().getName());

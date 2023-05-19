@@ -1,0 +1,2 @@
+org.springultron.mongodb.MongoDbConfiguration
+org.springultron.mongodb.MongoInsertEventListener

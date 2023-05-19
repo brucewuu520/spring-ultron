@@ -66,8 +66,7 @@ public class UltronSentinelInvocationHandler implements InvocationHandler {
         Object result;
         InvocationHandlerFactory.MethodHandler methodHandler = this.dispatch.get(method);
         // only handle by HardCodedTarget
-        if (target instanceof Target.HardCodedTarget) {
-            Target.HardCodedTarget<?> hardCodedTarget = (Target.HardCodedTarget<?>) target;
+        if (target instanceof Target.HardCodedTarget<?> hardCodedTarget) {
             MethodMetadata methodMetadata = SentinelContractHolder.METADATA_MAP.get(hardCodedTarget.type().getName() + Feign.configKey(hardCodedTarget.type(), method));
             // resource default is HttpMethod:protocol://url
             if (methodMetadata == null) {
@@ -121,8 +120,7 @@ public class UltronSentinelInvocationHandler implements InvocationHandler {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof UltronSentinelInvocationHandler) {
-            UltronSentinelInvocationHandler other = (UltronSentinelInvocationHandler) obj;
+        if (obj instanceof UltronSentinelInvocationHandler other) {
             return target.equals(other.target);
         }
         return false;

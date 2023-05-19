@@ -1,9 +1,9 @@
 package org.springultron.core.constraints;
 
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 import org.springultron.core.utils.RegexUtils;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
 import java.util.Optional;
 
 /**

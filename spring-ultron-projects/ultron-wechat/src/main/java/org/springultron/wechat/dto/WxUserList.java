@@ -1,8 +1,7 @@
 package org.springultron.wechat.dto;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.List;
 
@@ -12,19 +11,19 @@ import java.util.List;
  * @author brucewuu
  * @date 2021/4/12 下午2:21
  */
-@ApiModel(description = "公众号用户列表")
+@Schema(description = "公众号用户列表")
 public class WxUserList {
 
-    @ApiModelProperty(value = "关注该公众账号的总用户数", position = 1)
+    @Schema(description = "关注该公众账号的总用户数")
     private int total;
 
-    @ApiModelProperty(value = "拉取的OPENID个数，最大值为10000", position = 2)
+    @Schema(description = "拉取的OPENID个数，最大值为10000")
     private int count;
 
-    @ApiModelProperty(value = "列表数据，OPENID的列表", position = 4)
+    @Schema(description = "列表数据，OPENID的列表")
     private Data data;
 
-    @ApiModelProperty(value = "拉取列表的最后一个用户的OPENID", position = 3)
+    @Schema(description = "拉取列表的最后一个用户的OPENID")
     @JsonAlias(value = "next_openid")
     private String nextOpenId;
 
@@ -61,10 +60,10 @@ public class WxUserList {
     }
 
 
-    @ApiModel(description = "列表数据，OPENID的列表")
+    @Schema(description = "列表数据，OPENID的列表")
     public static class Data {
 
-        @ApiModelProperty(value = "用户openId列表")
+        @Schema(description = "用户openId列表")
         @JsonAlias(value = "openid")
         private List<String> openIds;
 

@@ -30,7 +30,6 @@ public class LbWebClientConfiguration {
      *
      * @return lbWebClient
      */
-    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Bean("lbWebClient")
     @ConditionalOnMissingBean(name = {"lbWebClient"})
     public WebClient lbWebClient(WebClient.Builder webClientBuilder, ReactorLoadBalancerExchangeFilterFunction lbFunction) {

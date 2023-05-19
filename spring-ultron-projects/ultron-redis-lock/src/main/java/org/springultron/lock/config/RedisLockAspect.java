@@ -24,11 +24,11 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.expression.AnnotatedElementKey;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.util.Assert;
 import org.springultron.core.spel.UltronExpressionEvaluator;
-import org.springultron.core.utils.SpringUtils;
 import org.springultron.lock.annotation.LockType;
 import org.springultron.lock.annotation.RedisLock;
 import org.springultron.lock.client.RedisLockClient;
@@ -52,10 +52,12 @@ public class RedisLockAspect {
     private static final UltronExpressionEvaluator EVALUATOR = new UltronExpressionEvaluator();
 
     private final RedisLockClient redisLockClient;
+    private final ApplicationContext context;
 
     @Autowired
-    public RedisLockAspect(RedisLockClient redisLockClient) {
+    public RedisLockAspect(RedisLockClient redisLockClient, ApplicationContext context) {
         this.redisLockClient = redisLockClient;
+        this.context = context;
     }
 
     /**
@@ -99,8 +101,8 @@ public class RedisLockAspect {
         Object[] args = point.getArgs();
         Object target = point.getTarget();
         Class<?> targetClass = target.getClass();
-        EvaluationContext context = EVALUATOR.createContext(method, args, target, targetClass, SpringUtils.getContext());
+        EvaluationContext evaluationContext = EVALUATOR.createContext(method, args, target, targetClass, this.context);
         AnnotatedElementKey elementKey = new AnnotatedElementKey(method, targetClass);
-        return EVALUATOR.evalAsText(lockParam, elementKey, context);
+        return EVALUATOR.evalAsText(lockParam, elementKey, evaluationContext);
     }
 }
