@@ -6,6 +6,5 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   org.springultron.boot.servlet.error.RestExceptionHandler,\
   org.springultron.boot.reactive.config.UltronWebClientAutoConfiguration,\
   org.springultron.boot.reactive.config.UltronUploadConfigurer,\
-  org.springultron.boot.reactive.context.ReactiveRequestContextFilter,\
   org.springultron.boot.reactive.error.GlobalExceptionHandler,\
   org.springultron.boot.reactive.error.RestExceptionHandler
