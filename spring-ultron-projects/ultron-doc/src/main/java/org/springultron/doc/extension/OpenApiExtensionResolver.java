@@ -88,15 +88,13 @@ public class OpenApiExtensionResolver {
                     List<OpenApiExtendMarkdownChildren> allChildrenLists = new ArrayList<>();
                     // 多个location以分号(;)进行分隔
                     String[] locations = markdownProperty.getLocations().split(";");
-                    if (!CollectionUtils.isEmpty(locations)) {
-                        for (String location : locations) {
-                            if (StrUtil.isNotBlank(location)) {
-                                List<OpenApiExtendMarkdownChildren> childrenList = readLocations(location);
-                                if (CollectionUtils.isNotEmpty(childrenList)) {
-                                    allChildrenLists.addAll(childrenList);
-                                }
-
+                    for (String location : locations) {
+                        if (StrUtil.isNotBlank(location)) {
+                            List<OpenApiExtendMarkdownChildren> childrenList = readLocations(location);
+                            if (CollectionUtils.isNotEmpty(childrenList)) {
+                                allChildrenLists.addAll(childrenList);
                             }
+
                         }
                     }
                     if (CollectionUtils.isNotEmpty(allChildrenLists)) {

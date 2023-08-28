@@ -10,7 +10,7 @@
     <packaging>pom</packaging>
 
     <properties>
-        <revision>3.0.6</revision>
+        <revision>3.1.1</revision>
         <main.basedir>${basedir}</main.basedir>
         <java.version>17</java.version>
         <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
@@ -63,7 +63,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>3.0.1</version>
+                        <version>3.1.0</version>
                         <executions>
                             <execution>
                                 <phase>verify</phase>

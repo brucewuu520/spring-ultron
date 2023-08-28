@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -63,10 +64,10 @@ public abstract class BaseSecurityConfig {
 
     @Bean
     @ConditionalOnClass(CaptchaService.class)
-    public CaptchaAuthenticationProvider captchaAuthenticationProvider() {
+    public CaptchaAuthenticationProvider captchaAuthenticationProvider(PasswordEncoder passwordEncoder) {
         System.err.println("--- captchaAuthenticationProvider --- init >>>");
         CaptchaAuthenticationProvider captchaAuthenticationProvider = new CaptchaAuthenticationProvider(captchaService);
-        captchaAuthenticationProvider.setPasswordEncoder(passwordEncoder());
+        captchaAuthenticationProvider.setPasswordEncoder(passwordEncoder);
         captchaAuthenticationProvider.setUserDetailsService(userDetailsProcessor);
         return captchaAuthenticationProvider;
     }
@@ -80,11 +81,11 @@ public abstract class BaseSecurityConfig {
     }
 
     public void build(HttpSecurity http, UserDetailsProcessor userDetailsProcessor) throws Exception {
-       buildHttpSecurity(http, false, null, userDetailsProcessor);
+        buildHttpSecurity(http, false, null, userDetailsProcessor);
     }
 
     public void build(HttpSecurity http, String loginProcessingUrl, UserDetailsProcessor userDetailsProcessor) throws Exception {
-       buildHttpSecurity(http, false, loginProcessingUrl, userDetailsProcessor);
+        buildHttpSecurity(http, false, loginProcessingUrl, userDetailsProcessor);
     }
 
     public void buildWithJwt(HttpSecurity http) throws Exception {
@@ -113,26 +114,27 @@ public abstract class BaseSecurityConfig {
     }
 
     private void buildHttpSecurity(HttpSecurity http, boolean useJwt, String loginProcessingUrl, UserDetailsProcessor userDetailsProcessor, AuthenticationManager authenticationManager) throws Exception {
-        http.csrf().disable()
-            .exceptionHandling()
-            .authenticationEntryPoint(new SimpleAuthenticationEntryPoint())
-            .accessDeniedHandler(new SimpleAccessDeniedHandler())
-            .and()
-            .logout()
-            .addLogoutHandler(new SimpleLogoutHandler(userDetailsProcessor))
-            .logoutSuccessHandler(new SimpleLogoutSuccessHandler());
+        http.csrf(AbstractHttpConfigurer::disable)
+            .exceptionHandling(configurer -> {
+                configurer.authenticationEntryPoint(new SimpleAuthenticationEntryPoint())
+                          .accessDeniedHandler(new SimpleAccessDeniedHandler());
+            })
+            .logout(configurer -> {
+                configurer.addLogoutHandler(new SimpleLogoutHandler(userDetailsProcessor))
+                          .logoutSuccessHandler(new SimpleLogoutSuccessHandler());
+            });
         if (useJwt) {
             // jwt 必须配置于 UsernamePasswordAuthenticationFilter 之前
-            http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // session 生成策略用无状态策略,不创建会话
-                .and()
+            http.sessionManagement(configurer -> {
+                    configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS); // session 生成策略用无状态策略,不创建会话
+                })
                 .addFilterBefore(new JwtAuthenticationFilter(userDetailsProcessor), UsernamePasswordAuthenticationFilter.class);
         } else {
-            http.formLogin()
-                .loginProcessingUrl(StringUtils.isEmpty(loginProcessingUrl) ? "/login" : loginProcessingUrl)
-                .and()
+            http.formLogin(configurer -> {
+                    configurer.loginProcessingUrl(StringUtils.isEmpty(loginProcessingUrl) ? "/login" : loginProcessingUrl);
+                })
                 .addFilterBefore(new LoginFilter(loginProcessingUrl, authenticationManager), UsernamePasswordAuthenticationFilter.class)
-                .rememberMe()
-                .alwaysRemember(true);
+                .rememberMe(configurer -> configurer.alwaysRemember(true));
         }
     }
 

@@ -1,7 +1,7 @@
 package org.springultron.crypto;
 
 import org.junit.Test;
-import org.springframework.util.Base64Utils;
+import org.springultron.core.utils.Base64Utils;
 
 /**
  * @author brucewuu

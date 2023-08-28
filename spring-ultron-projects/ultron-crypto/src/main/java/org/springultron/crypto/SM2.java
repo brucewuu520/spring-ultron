@@ -9,8 +9,8 @@ import org.bouncycastle.crypto.params.ParametersWithID;
 import org.bouncycastle.crypto.params.ParametersWithRandom;
 import org.bouncycastle.crypto.signers.SM2Signer;
 import org.springframework.lang.Nullable;
-import org.springframework.util.Base64Utils;
 import org.springultron.core.exception.CryptoException;
+import org.springultron.core.utils.Base64Utils;
 import org.springultron.core.utils.Hex;
 import org.springultron.core.utils.StringUtils;
 
