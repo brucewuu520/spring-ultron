@@ -39,8 +39,8 @@
     <properties>
         <main.basedir>${basedir}/..</main.basedir>
         <!-- app dependencies version start-->
-        <spring-boot.version>2.6.14</spring-boot.version>
-        <spring-cloud.version>2021.0.7</spring-cloud.version>
+        <spring-boot.version>2.6.15</spring-boot.version>
+        <spring-cloud.version>2021.0.8</spring-cloud.version>
         <alibaba-cloud.version>2021.1</alibaba-cloud.version>
         <feign-okhttp.version>11.8</feign-okhttp.version>
         <mybatis-plus.version>3.5.3.1</mybatis-plus.version>
@@ -48,7 +48,7 @@
         <redisson.version>3.17.7</redisson.version>
         <bouncycastle.version>1.70</bouncycastle.version>
         <zxing.version>3.4.1</zxing.version>
-        <fastjson.version>2.0.32</fastjson.version>
+        <fastjson.version>2.0.43</fastjson.version>
         <guava.version>31.1-jre</guava.version>
         <knife4j.version>3.0.3</knife4j.version>
         <swagger-annotations.version>1.5.22</swagger-annotations.version>
