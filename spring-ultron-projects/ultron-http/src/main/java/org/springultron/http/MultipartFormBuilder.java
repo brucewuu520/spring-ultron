@@ -17,6 +17,7 @@
 package org.springultron.http;
 
 import okhttp3.Headers;
+import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import org.springframework.lang.Nullable;
@@ -61,7 +62,7 @@ public class MultipartFormBuilder {
     }
 
     public MultipartFormBuilder add(final String name, @Nullable final String filename, final File file) {
-        final RequestBody fileBody = RequestBody.create(null, file);
+        final RequestBody fileBody = RequestBody.create(file, MediaType.parse("application/octet-stream"));
         this.formBuilder.addFormDataPart(name, filename, fileBody);
         return this;
     }
