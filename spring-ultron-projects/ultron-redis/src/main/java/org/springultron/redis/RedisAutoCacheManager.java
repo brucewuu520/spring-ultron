@@ -39,27 +39,25 @@ import java.util.Map;
  */
 public class RedisAutoCacheManager extends RedisCacheManager {
 
-    public RedisAutoCacheManager(RedisCacheWriter cacheWriter, RedisCacheConfiguration defaultCacheConfiguration, Map<String, RedisCacheConfiguration> initialCacheConfigurations, boolean allowInFlightCacheCreation) {
-        super(cacheWriter, defaultCacheConfiguration, initialCacheConfigurations, allowInFlightCacheCreation);
+    public RedisAutoCacheManager(RedisCacheWriter cacheWriter, RedisCacheConfiguration defaultCacheConfiguration, boolean allowRuntimeCacheCreation, Map<String, RedisCacheConfiguration> initialCacheConfigurations) {
+        super(cacheWriter, defaultCacheConfiguration, allowRuntimeCacheCreation, initialCacheConfigurations);
     }
 
     @NonNull
     @Override
     protected RedisCache createRedisCache(@NonNull String name, @Nullable RedisCacheConfiguration cacheConfig) {
         String cacheName = name;
-//        System.err.println("--createRedisCache: " + cacheName);
         if (StringUtils.isNotEmpty(name) && name.contains("#")) {
             String[] array = name.split("#");
             if (array.length > 1) {
                 cacheName = array[0].trim();
                 // 转换时间，支持时间单位例如：300ms，默认单位秒
                 Duration ttl = DurationStyle.detectAndParse(array[1].trim(), ChronoUnit.SECONDS);
-                if (cacheConfig != null && cacheConfig.getTtl().compareTo(ttl) != 0) {
+                if (cacheConfig != null && ttl.compareTo(cacheConfig.getTtlFunction().getTimeToLive(Object.class, null)) != 0) {
                     cacheConfig = cacheConfig.entryTtl(ttl);
                 }
             }
         }
-//        System.err.println("--createRedisCache22: " + cacheName);
         return super.createRedisCache(cacheName, cacheConfig);
     }
 }

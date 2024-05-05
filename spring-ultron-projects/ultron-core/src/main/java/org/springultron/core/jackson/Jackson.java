@@ -21,6 +21,7 @@ import org.springultron.core.utils.DateUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serial;
 import java.text.SimpleDateFormat;
 import java.time.ZoneId;
 import java.util.*;
@@ -455,6 +456,7 @@ public class Jackson {
     }
 
     public static class JacksonObjectMapper extends ObjectMapper {
+        @Serial
         private static final long serialVersionUID = 3L;
 
         JacksonObjectMapper() {

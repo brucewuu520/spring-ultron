@@ -553,7 +553,7 @@ public class RedisClient {
                 result = true;
             }
         }
-        return null == result ? false : result;
+        return null != result && result;
     }
 
     /**

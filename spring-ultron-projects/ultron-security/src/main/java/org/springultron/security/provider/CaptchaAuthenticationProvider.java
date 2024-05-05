@@ -6,6 +6,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.Assert;
 import org.springultron.captcha.service.CaptchaService;
 import org.springultron.core.utils.WebUtils;
@@ -21,6 +22,12 @@ public class CaptchaAuthenticationProvider extends DaoAuthenticationProvider {
     private final CaptchaService captchaService;
 
     public CaptchaAuthenticationProvider(CaptchaService captchaService) {
+        Assert.notNull(captchaService, "captchaService can not be null.");
+        this.captchaService = captchaService;
+    }
+
+    public CaptchaAuthenticationProvider(CaptchaService captchaService, PasswordEncoder passwordEncoder) {
+        super(passwordEncoder);
         Assert.notNull(captchaService, "captchaService can not be null.");
         this.captchaService = captchaService;
     }

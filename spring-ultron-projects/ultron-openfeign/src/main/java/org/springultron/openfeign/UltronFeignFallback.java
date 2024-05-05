@@ -53,13 +53,12 @@ public class UltronFeignFallback<T> implements MethodInterceptor {
             return null;
         }
         // 非 FeignException，直接返回【428】请求被拒绝
-        if (!(cause instanceof FeignException)) {
+        if (!(cause instanceof FeignException exception)) {
             return ApiResult.fail(ResultCode.REQUEST_REJECT.getCode(), errorMessage);
         }
-        FeignException exception = (FeignException) cause;
         Optional<ByteBuffer> byteBuffer = exception.responseBody();
         // 如果返回的数据为空
-        if (!byteBuffer.isPresent()) {
+        if (byteBuffer.isEmpty()) {
             return ApiResult.fail(ResultCode.REQUEST_REJECT.getCode(), errorMessage);
         }
         // 转换成 jsonNode 读取，因为直接转换，可能 对方放回的并 不是 ApiResult 的格式。

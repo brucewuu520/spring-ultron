@@ -2,6 +2,7 @@ package org.springultron.boot.error;
 
 import org.springframework.lang.Nullable;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
  * @date 2020/7/26 20:08
  */
 public class UltronErrorEvent implements Serializable {
+    @Serial
     private static final long serialVersionUID = 1333817733286975140L;
 
     /**

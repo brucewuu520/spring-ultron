@@ -66,8 +66,7 @@ public abstract class BaseSecurityConfig {
     @ConditionalOnClass(CaptchaService.class)
     public CaptchaAuthenticationProvider captchaAuthenticationProvider(PasswordEncoder passwordEncoder) {
         System.err.println("--- captchaAuthenticationProvider --- init >>>");
-        CaptchaAuthenticationProvider captchaAuthenticationProvider = new CaptchaAuthenticationProvider(captchaService);
-        captchaAuthenticationProvider.setPasswordEncoder(passwordEncoder);
+        CaptchaAuthenticationProvider captchaAuthenticationProvider = new CaptchaAuthenticationProvider(captchaService, passwordEncoder);
         captchaAuthenticationProvider.setUserDetailsService(userDetailsProcessor);
         return captchaAuthenticationProvider;
     }

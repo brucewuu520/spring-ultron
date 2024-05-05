@@ -55,7 +55,7 @@ public final class UltronSentinelFeign {
         }
 
         @Override
-        public Feign build() {
+        public Feign internalBuild() {
             super.invocationHandlerFactory(new InvocationHandlerFactory() {
                 @Override
                 public InvocationHandler create(Target target, Map<Method, MethodHandler> dispatch) {

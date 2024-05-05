@@ -39,32 +39,32 @@
     <properties>
         <main.basedir>${basedir}/..</main.basedir>
         <!-- app dependencies version start-->
-        <spring-boot.version>3.1.1</spring-boot.version>
-        <spring-cloud.version>2022.0.3</spring-cloud.version>
-        <alibaba-cloud.version>2022.0.0.0-RC2</alibaba-cloud.version>
+        <spring-boot.version>3.2.4</spring-boot.version>
+        <spring-cloud.version>2023.0.0</spring-cloud.version>
+        <alibaba-cloud.version>2023.0.0.0-RC1</alibaba-cloud.version>
         <feign-okhttp.version>11.8</feign-okhttp.version>
-        <mybatis-plus.version>3.5.3.1</mybatis-plus.version>
-        <jwt.version>0.11.5</jwt.version>
-        <redisson.version>3.22.1</redisson.version>
-        <bouncycastle.version>1.70</bouncycastle.version>
-        <zxing.version>3.5.1</zxing.version>
-        <fastjson2.version>2.0.34</fastjson2.version>
-        <springdoc.version>2.1.0</springdoc.version>
-        <knife4j.version>4.1.0</knife4j.version>
-        <swagger-v3.version>2.2.14</swagger-v3.version>
+        <mybatis-plus.version>3.5.6</mybatis-plus.version>
+        <jwt.version>0.12.5</jwt.version>
+        <redisson.version>3.27.2</redisson.version>
+        <bouncycastle.version>1.77</bouncycastle.version>
+        <zxing.version>3.5.3</zxing.version>
+        <fastjson2.version>2.0.47</fastjson2.version>
+        <springdoc.version>2.4.0</springdoc.version>
+        <knife4j.version>4.5.0</knife4j.version>
+        <swagger-v3.version>2.2.21</swagger-v3.version>
         <xxl-job.version>2.4.0</xxl-job.version>
         <logstash-logback.version>7.4</logstash-logback.version>
         <!-- app dependencies version end-->
         <findbugs.version>3.0.2</findbugs.version>
         <!-- maven dependencies version start -->
-        <maven-flatten-plugin.version>1.4.1</maven-flatten-plugin.version>
-        <maven-xml-plugin.version>1.0.2</maven-xml-plugin.version>
-        <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
-        <maven-helper-plugin.version>3.3.0</maven-helper-plugin.version>
-        <maven-enforcer-plugin.version>3.3.0</maven-enforcer-plugin.version>
+        <maven-flatten-plugin.version>1.6.0</maven-flatten-plugin.version>
+        <maven-xml-plugin.version>1.1.0</maven-xml-plugin.version>
+        <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
+        <maven-helper-plugin.version>3.5.0</maven-helper-plugin.version>
+        <maven-enforcer-plugin.version>3.4.1</maven-enforcer-plugin.version>
         <maven-jar-plugin.version>3.3.0</maven-jar-plugin.version>
-        <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
-        <maven-javadoc-plugin.version>3.5.0</maven-javadoc-plugin.version>
+        <maven-source-plugin.version>3.3.0</maven-source-plugin.version>
+        <maven-javadoc-plugin.version>3.6.3</maven-javadoc-plugin.version>
         <!-- maven dependencies version end -->
     </properties>
 
@@ -198,7 +198,7 @@
             </dependency>
             <dependency>
                 <groupId>org.bouncycastle</groupId>
-                <artifactId>bcprov-jdk15on</artifactId>
+                <artifactId>bcprov-jdk18on</artifactId>
                 <version>${bouncycastle.version}</version>
             </dependency>
             <dependency>
