@@ -3,9 +3,11 @@ package org.springultron.redis.config;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration;
+import org.springframework.boot.autoconfigure.cache.CacheManagerCustomizer;
 import org.springframework.boot.autoconfigure.cache.CacheManagerCustomizers;
 import org.springframework.boot.autoconfigure.cache.CacheProperties;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cache.interceptor.CacheAspectSupport;
@@ -46,11 +48,11 @@ import java.util.Map;
 @EnableConfigurationProperties({CacheProperties.class})
 class RedisCacheAutoConfiguration {
 
-    // @Bean
-    // @ConditionalOnMissingBean
-    // CacheManagerCustomizers cacheManagerCustomizers(ObjectProvider<CacheManagerCustomizer<?>> customizers) {
-    //     return new CacheManagerCustomizers(customizers.orderedStream().collect(Collectors.toList()));
-    // }
+    @Bean
+    @ConditionalOnMissingBean
+    public CacheManagerCustomizers cacheManagerCustomizers(ObjectProvider<CacheManagerCustomizer<?>> customizers) {
+        return new CacheManagerCustomizers(customizers.orderedStream().toList());
+    }
 
     /**
      * 配置缓存管理器，替换系统默认的cacheManager

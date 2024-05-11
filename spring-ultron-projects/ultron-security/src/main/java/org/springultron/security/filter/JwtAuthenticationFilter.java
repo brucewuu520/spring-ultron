@@ -16,6 +16,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.util.Assert;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springultron.core.utils.StringUtils;
 import org.springultron.security.UserDetailsProcessor;
@@ -39,6 +40,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final UserDetailsProcessor userDetailsProcessor;
 
     public JwtAuthenticationFilter(UserDetailsProcessor userDetailsProcessor) {
+        Assert.notNull(userDetailsProcessor, "UserDetailsProcessor.class bean can not be null");
         this.authenticationEntryPoint = new SimpleAuthenticationEntryPoint();
         this.userDetailsProcessor = userDetailsProcessor;
     }

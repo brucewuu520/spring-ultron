@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -29,6 +30,9 @@ import org.springultron.security.provider.CaptchaAuthenticationProvider;
 
 /**
  * Spring Security 统一基础配置
+ * <p>
+ * 使用时继承BaseSecurityConfig，并注入{@link UserDetailsProcessor} bean 或者 {@link UserDetailsService} bean
+ * </p>
  *
  * @author brucewuu
  * @date 2023/5/12 14:12
@@ -37,18 +41,12 @@ import org.springultron.security.provider.CaptchaAuthenticationProvider;
 public abstract class BaseSecurityConfig {
 
     private UserDetailsProcessor userDetailsProcessor;
-    private CaptchaService captchaService;
     private ApplicationContext context;
 
     @Primary
     @Autowired(required = false)
     public void setUserDetailsProcessor(UserDetailsProcessor userDetailsProcessor) {
         this.userDetailsProcessor = userDetailsProcessor;
-    }
-
-    @Autowired(required = false)
-    public void setCaptchaService(CaptchaService captchaService) {
-        this.captchaService = captchaService;
     }
 
     @Autowired
@@ -63,11 +61,12 @@ public abstract class BaseSecurityConfig {
     }
 
     @Bean
+    @ConditionalOnMissingBean
     @ConditionalOnClass(CaptchaService.class)
-    public CaptchaAuthenticationProvider captchaAuthenticationProvider(PasswordEncoder passwordEncoder) {
-        System.err.println("--- captchaAuthenticationProvider --- init >>>");
-        CaptchaAuthenticationProvider captchaAuthenticationProvider = new CaptchaAuthenticationProvider(captchaService, passwordEncoder);
-        captchaAuthenticationProvider.setUserDetailsService(userDetailsProcessor);
+    public CaptchaAuthenticationProvider fallbackCaptchaAuthenticationProvider(ObjectProvider<CaptchaService> captchaService, PasswordEncoder passwordEncoder, ObjectProvider<UserDetailsService> userDetailsServices) {
+        System.err.println("--- fallbackCaptchaAuthenticationProvider --- init >>>");
+        CaptchaAuthenticationProvider captchaAuthenticationProvider = new CaptchaAuthenticationProvider(captchaService.getIfAvailable(), passwordEncoder);
+        captchaAuthenticationProvider.setUserDetailsService(userDetailsServices.getIfAvailable(() -> username -> userDetailsProcessor.loadUserByUsername(username)));
         return captchaAuthenticationProvider;
     }
 
@@ -133,7 +132,7 @@ public abstract class BaseSecurityConfig {
                     configurer.loginProcessingUrl(StringUtils.isEmpty(loginProcessingUrl) ? "/login" : loginProcessingUrl);
                 })
                 .addFilterBefore(new LoginFilter(loginProcessingUrl, authenticationManager), UsernamePasswordAuthenticationFilter.class)
-                .rememberMe(configurer -> configurer.alwaysRemember(true));
+                .rememberMe(configurer -> configurer.alwaysRemember(true).userDetailsService(context.getBeanProvider(UserDetailsService.class).getIfAvailable(() -> userDetailsProcessor::loadUserByUsername)));
         }
     }
 
