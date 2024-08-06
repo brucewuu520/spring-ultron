@@ -2,10 +2,9 @@ package org.springultron.security.provider;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.authentication.AuthenticationServiceException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.Assert;
 import org.springultron.captcha.service.CaptchaService;
@@ -33,7 +32,7 @@ public class CaptchaAuthenticationProvider extends DaoAuthenticationProvider {
     }
 
     @Override
-    protected void additionalAuthenticationChecks(UserDetails userDetails, UsernamePasswordAuthenticationToken authentication) throws AuthenticationException {
+    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         HttpServletRequest request = WebUtils.getRequest();
         assert request != null;
         String codeKey = request.getParameter("codeKey");
@@ -48,7 +47,7 @@ public class CaptchaAuthenticationProvider extends DaoAuthenticationProvider {
         if (!checkCodeResult) {
             throw new AuthenticationServiceException("验证码错误");
         }
-        super.additionalAuthenticationChecks(userDetails, authentication);
+        return super.authenticate(authentication);
     }
 
 }

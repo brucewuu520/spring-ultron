@@ -20,6 +20,6 @@ public class SimpleAuthenticationFailureHandler implements AuthenticationFailure
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException e) throws IOException, ServletException {
-        WebUtils.renderJson(response, ApiResult.fail(1004, e.getMessage()));
+        WebUtils.renderJson(response, ApiResult.fail(1004, "username or password is error"));
     }
 }

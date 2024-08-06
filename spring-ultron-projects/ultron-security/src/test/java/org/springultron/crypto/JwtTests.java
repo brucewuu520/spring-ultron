@@ -5,6 +5,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springultron.security.jwt.JwtUtils;
 
 import java.time.Duration;
+import java.util.regex.Pattern;
 
 /**
  * @author brucewuu
@@ -30,6 +31,13 @@ public class JwtTests {
     public void encodePwd() {
         String pwd = "81dc9bdb52d04dc20036dbd8313ed055";
         System.err.println(new BCryptPasswordEncoder().encode(pwd));
+    }
+
+    @Test
+    public void test1() {
+        // System.err.println("15502162569".substring(5));
+        Pattern pattern = Pattern.compile("^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&*_,\\\\.\\-]).{8,18}$");
+        System.err.println(pattern.matcher("12345678a").matches());
     }
 
 }

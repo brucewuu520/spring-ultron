@@ -8,14 +8,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.lang.NonNull;
-import org.springframework.security.authentication.AuthenticationDetailsSource;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.util.Assert;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springultron.core.utils.StringUtils;
@@ -33,8 +31,6 @@ import java.io.IOException;
  */
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private static final String AUTHENTICATION_PREFIX = "Bearer ";
-
-    private final AuthenticationDetailsSource<HttpServletRequest, ?> authenticationDetailsSource = new WebAuthenticationDetailsSource();
 
     private final SimpleAuthenticationEntryPoint authenticationEntryPoint;
     private final UserDetailsProcessor userDetailsProcessor;
@@ -58,12 +54,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             try {
                 final String username = userDetailsProcessor.obtainUsername(jwt);
                 UserDetails userDetails = userDetailsProcessor.loadUserByUsername(username);
+                // 检查用户信息
                 SecurityUtils.checkUserDetails(userDetails);
-                // 构建用户认证token
-                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                authenticationToken.setDetails(authenticationDetailsSource.buildDetails(request));
-                // 放入安全上下文中
-                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                // 构建用户认证token，放入安全上下文中
+                SecurityContextHolder.getContext().setAuthentication(UsernamePasswordAuthenticationToken.authenticated(userDetails, null, userDetails.getAuthorities()));
                 // 执行过滤器链
                 chain.doFilter(request, response);
             } catch (ExpiredJwtException e) {
@@ -72,6 +66,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 authenticationEntryPoint.commence(request, response, new BadCredentialsException("token is invalid"));
             } catch (AuthenticationException e) {
                 authenticationEntryPoint.commence(request, response, e);
+            } finally {
+                SecurityContextHolder.clearContext();
             }
         } else {
             // 执行过滤器链

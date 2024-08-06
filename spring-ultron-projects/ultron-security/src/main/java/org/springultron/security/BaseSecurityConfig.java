@@ -16,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.context.SecurityContextHolderFilter;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
 import org.springultron.captcha.service.CaptchaService;
@@ -126,7 +127,7 @@ public abstract class BaseSecurityConfig {
             http.sessionManagement(configurer -> {
                     configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS); // session 生成策略用无状态策略,不创建会话
                 })
-                .addFilterBefore(new JwtAuthenticationFilter(userDetailsProcessor), UsernamePasswordAuthenticationFilter.class);
+                .addFilterAfter(new JwtAuthenticationFilter(userDetailsProcessor), SecurityContextHolderFilter.class);
         } else {
             http.formLogin(configurer -> {
                     configurer.loginProcessingUrl(StringUtils.isEmpty(loginProcessingUrl) ? "/login" : loginProcessingUrl);
