@@ -1,6 +1,6 @@
 package org.springultron.cloud.servlet;
 
-import com.alibaba.csp.sentinel.adapter.spring.webmvc.callback.BlockExceptionHandler;
+import com.alibaba.csp.sentinel.adapter.spring.webmvc_v6x.callback.BlockExceptionHandler;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,7 +21,7 @@ public class SentinelConfiguration {
      */
     @Bean
     public BlockExceptionHandler blockExceptionHandler() {
-        return (request, response, e) -> {
+        return (request, response, msg, e) -> {
             // Return 429 (Too Many Requests) by default.
             response.setStatus(HttpStatus.TOO_MANY_REQUESTS.value());
             response.getWriter().write(HttpStatus.TOO_MANY_REQUESTS.getReasonPhrase());

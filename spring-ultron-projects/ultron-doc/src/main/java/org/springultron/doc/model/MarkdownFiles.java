@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+
 package org.springultron.doc.model;
 
 import com.github.xiaoymin.knife4j.core.extend.OpenApiExtendMarkdownChildren;
@@ -26,44 +27,64 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /***
+ * <p>
+ * {@code @since } 1.9.3
  * @author <a href="mailto:xiaoymin@foxmail.com">xiaoymin@foxmail.com</a>
- * @date 2019/04/17 19:54
+ * 2019/04/17 19:54
  */
 public class MarkdownFiles {
+    
     private static final ResourcePatternResolver resourceResolver = new PathMatchingResourcePatternResolver();
-
-    private final Logger logger = LoggerFactory.getLogger(MarkdownFiles.class);
-
+    
+    Logger logger = LoggerFactory.getLogger(MarkdownFiles.class);
+    
     /***
      * markdown files dir
      */
     private String basePath;
-
+    
     private List<OpenApiExtendMarkdownChildren> markdownFiles = new ArrayList<>();
-
+    
+    public List<OpenApiExtendMarkdownChildren> getMarkdownFiles() {
+        return markdownFiles;
+    }
+    
+    public void setMarkdownFiles(List<OpenApiExtendMarkdownChildren> markdownFiles) {
+        this.markdownFiles = markdownFiles;
+    }
+    
+    public String getBasePath() {
+        return basePath;
+    }
+    
+    public void setBasePath(String basePath) {
+        this.basePath = basePath;
+    }
+    
     public MarkdownFiles() {
     }
-
+    
     public MarkdownFiles(String basePath) {
         this.basePath = basePath;
     }
-
+    
     public void init() {
         // 初始化
-        if (basePath != null && !"".equals(basePath)) {
+        if (basePath != null && basePath != "" && !"".equals(basePath)) {
             try {
                 Resource[] resources = resourceResolver.getResources(basePath);
-                for (Resource resource : resources) {
-                    OpenApiExtendMarkdownChildren markdownFile = createMarkdownFile(resource);
-                    if (markdownFile != null) {
-                        getMarkdownFiles().add(markdownFile);
+                if (resources != null && resources.length > 0) {
+                    for (Resource resource : resources) {
+                        OpenApiExtendMarkdownChildren markdownFile = createMarkdownFile(resource);
+                        if (markdownFile != null) {
+                            getMarkdownFiles().add(markdownFile);
+                        }
                     }
                 }
             } catch (Exception e) {
@@ -71,22 +92,21 @@ public class MarkdownFiles {
             }
         }
     }
-
+    
     private OpenApiExtendMarkdownChildren createMarkdownFile(Resource resource) {
         OpenApiExtendMarkdownChildren markdownFile = new OpenApiExtendMarkdownChildren();
         if (resource != null) {
-            String filename = resource.getFilename();
-            logger.info("createMarkdownFile: {}", filename);
+            logger.info(resource.getFilename());
             // 只读取md
-            if (filename != null && filename.toLowerCase().endsWith(".md")) {
+            if (resource.getFilename().toLowerCase().endsWith(".md")) {
                 BufferedReader reader = null;
                 try {
-                    reader = new BufferedReader(new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8));
-                    String le;
+                    reader = new BufferedReader(new InputStreamReader(resource.getInputStream(), "UTF-8"));
+                    String le = null;
                     String title = resource.getFilename();
                     String reg = "#{1,3}\\s{1}(.*)";
                     Pattern pattern = Pattern.compile(reg, Pattern.CASE_INSENSITIVE);
-                    Matcher matcher;
+                    Matcher matcher = null;
                     while ((le = reader.readLine()) != null) {
                         // 判断line是否是包含标题
                         matcher = pattern.matcher(le);
@@ -96,7 +116,7 @@ public class MarkdownFiles {
                         break;
                     }
                     CommonUtils.close(reader);
-
+                    
                     markdownFile.setTitle(title);
                     markdownFile.setContent(new String(CommonUtils.readBytes(resource.getInputStream()), "UTF-8"));
                     return markdownFile;
@@ -109,21 +129,4 @@ public class MarkdownFiles {
         }
         return null;
     }
-
-    public String getBasePath() {
-        return basePath;
-    }
-
-    public void setBasePath(String basePath) {
-        this.basePath = basePath;
-    }
-
-    public List<OpenApiExtendMarkdownChildren> getMarkdownFiles() {
-        return markdownFiles;
-    }
-
-    public void setMarkdownFiles(List<OpenApiExtendMarkdownChildren> markdownFiles) {
-        this.markdownFiles = markdownFiles;
-    }
-
 }

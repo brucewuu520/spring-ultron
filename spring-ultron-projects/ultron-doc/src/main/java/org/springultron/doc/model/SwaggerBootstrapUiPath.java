@@ -18,8 +18,10 @@
 package org.springultron.doc.model;
 
 /***
+ * <p>
+ * {@code @since } 1.0
  * @author <a href="mailto:xiaoymin@foxmail.com">xiaoymin@foxmail.com</a>
- * @date 2018/10/12 20:11
+ * 2018/10/12 20:11
  */
 public class SwaggerBootstrapUiPath {
     
@@ -28,16 +30,7 @@ public class SwaggerBootstrapUiPath {
     private String method;
     
     private Integer order;
-
-    public SwaggerBootstrapUiPath() {
-    }
-
-    public SwaggerBootstrapUiPath(String path, String method, Integer order) {
-        this.path = path;
-        this.method = method;
-        this.order = order;
-    }
-
+    
     public String getPath() {
         return path;
     }
@@ -61,5 +54,13 @@ public class SwaggerBootstrapUiPath {
     public void setOrder(Integer order) {
         this.order = order;
     }
-
+    
+    public SwaggerBootstrapUiPath(String path, String method, Integer order) {
+        this.path = path;
+        this.method = method;
+        this.order = order;
+    }
+    
+    public SwaggerBootstrapUiPath() {
+    }
 }

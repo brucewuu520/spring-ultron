@@ -17,11 +17,11 @@
 package org.springultron.captcha.service;
 
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.util.Base64Utils;
 import org.springframework.util.FastByteArrayOutputStream;
 import org.springultron.captcha.dto.CaptchaCode;
 
 import java.io.OutputStream;
+import java.util.Base64;
 
 /**
  * 验证码服务
@@ -69,7 +69,7 @@ public interface CaptchaService {
     default String generateBase64(String cacheKey) {
         FastByteArrayOutputStream outputStream = new FastByteArrayOutputStream();
         this.generate(cacheKey, outputStream);
-        return "data:image/jpeg;base64," + Base64Utils.encodeToString(outputStream.toByteArray());
+        return "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(outputStream.toByteArray());
     }
 
     /**

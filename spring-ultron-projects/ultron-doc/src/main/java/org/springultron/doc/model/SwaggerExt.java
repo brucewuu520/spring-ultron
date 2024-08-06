@@ -18,19 +18,21 @@
 package org.springultron.doc.model;
 
 /***
+ * <p>
+ * {@code @since } 1.8.5
  * @author <a href="mailto:xiaoymin@foxmail.com">xiaoymin@foxmail.com</a>
- * @date 2018/10/11 16:30
+ * 2018/10/11 16:30
  */
 public class SwaggerExt {
-
+    
     protected SwaggerBootstrapUi swaggerBootstrapUi;
-
-    public void setSwaggerBootstrapUi(SwaggerBootstrapUi swaggerBootstrapUi) {
-        this.swaggerBootstrapUi = swaggerBootstrapUi;
-    }
-
+    
     public SwaggerBootstrapUi getSwaggerBootstrapUi() {
         return swaggerBootstrapUi;
     }
-
+    
+    public void setSwaggerBootstrapUi(SwaggerBootstrapUi swaggerBootstrapUi) {
+        this.swaggerBootstrapUi = swaggerBootstrapUi;
+    }
+    
 }
