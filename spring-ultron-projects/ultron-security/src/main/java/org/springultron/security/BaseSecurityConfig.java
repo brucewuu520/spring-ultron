@@ -65,7 +65,7 @@ public abstract class BaseSecurityConfig {
     @ConditionalOnMissingBean
     @ConditionalOnClass(CaptchaService.class)
     public CaptchaAuthenticationProvider fallbackCaptchaAuthenticationProvider(ObjectProvider<CaptchaService> captchaService, PasswordEncoder passwordEncoder, ObjectProvider<UserDetailsService> userDetailsServices) {
-        System.err.println("--- fallbackCaptchaAuthenticationProvider --- init >>>");
+        // System.err.println("--- fallbackCaptchaAuthenticationProvider --- init >>>");
         CaptchaAuthenticationProvider captchaAuthenticationProvider = new CaptchaAuthenticationProvider(captchaService.getIfAvailable(), passwordEncoder);
         captchaAuthenticationProvider.setUserDetailsService(userDetailsServices.getIfAvailable(() -> username -> userDetailsProcessor.loadUserByUsername(username)));
         return captchaAuthenticationProvider;

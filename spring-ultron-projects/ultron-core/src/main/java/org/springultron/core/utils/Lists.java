@@ -10,7 +10,8 @@ import java.util.*;
  */
 public final class Lists extends org.springframework.util.CollectionUtils {
 
-    private Lists() {}
+    private Lists() {
+    }
 
     public static <E> ArrayList<E> newArrayList() {
         return new ArrayList<>();
@@ -61,11 +62,11 @@ public final class Lists extends org.springframework.util.CollectionUtils {
     }
 
     private static int computeArrayListCapacity(int length) {
-        long value = 5L + (long)length + (long)(length / 10);
+        long value = 5L + (long) length + (long) (length / 10);
         if (value > 2147483647L) {
             return 2147483647;
         } else {
-            return value < -2147483648L ? -2147483648 : (int)value;
+            return value < -2147483648L ? -2147483648 : (int) value;
         }
     }
 
@@ -85,4 +86,19 @@ public final class Lists extends org.springframework.util.CollectionUtils {
         }
         return wasModified;
     }
+
+    public static <T> String toString(List<T> list) {
+        if (isEmpty(list)) {
+            return "";
+        }
+        StringBuilder sb = new StringBuilder();
+        for (T item : list) {
+            if (sb.length() > 0) {
+                sb.append(",");
+            }
+            sb.append(item);
+        }
+        return sb.toString();
+    }
+
 }

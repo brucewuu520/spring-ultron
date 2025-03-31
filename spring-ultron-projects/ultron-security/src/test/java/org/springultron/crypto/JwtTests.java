@@ -29,7 +29,7 @@ public class JwtTests {
 
     @Test
     public void encodePwd() {
-        String pwd = "81dc9bdb52d04dc20036dbd8313ed055";
+        String pwd = "c8837b23ff8aaa8a2dde915473ce0991"; // 123321
         System.err.println(new BCryptPasswordEncoder().encode(pwd));
     }
 

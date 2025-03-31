@@ -217,4 +217,18 @@ public class ArrayUtils {
         return subarray;
     }
 
+    public static <T> String toString(T[] array) {
+        if (array == null || array.length == 0) {
+            return "";
+        }
+        StringBuilder sb = new StringBuilder();
+        for (T item : array) {
+            if (sb.length() > 0) {
+                sb.append(",");
+            }
+            sb.append(item);
+        }
+        return sb.toString();
+    }
+
 }
