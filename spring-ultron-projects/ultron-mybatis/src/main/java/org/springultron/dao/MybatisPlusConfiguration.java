@@ -6,11 +6,11 @@ import com.baomidou.mybatisplus.extension.plugins.inner.BlockAttackInnerIntercep
 import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
@@ -19,9 +19,9 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  * @author brucewuu
  * @date 2019-05-28 10:58
  */
+@AutoConfiguration
 @MapperScan("com.*.*.mapper")
 @EnableTransactionManagement
-@Configuration(proxyBeanMethods = false)
 @EnableConfigurationProperties(UltronMybatisPlusProperties.class)
 public class MybatisPlusConfiguration {
 

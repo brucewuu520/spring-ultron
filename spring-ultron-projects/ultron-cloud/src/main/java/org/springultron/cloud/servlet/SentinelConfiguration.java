@@ -1,9 +1,9 @@
 package org.springultron.cloud.servlet;
 
 import com.alibaba.csp.sentinel.adapter.spring.webmvc_v6x.callback.BlockExceptionHandler;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 
 /**
@@ -12,7 +12,7 @@ import org.springframework.http.HttpStatus;
  * @author brucewuu
  * @date 2019-08-11 11:22
  */
-@Configuration(proxyBeanMethods = false)
+@AutoConfiguration
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 public class SentinelConfiguration {
 

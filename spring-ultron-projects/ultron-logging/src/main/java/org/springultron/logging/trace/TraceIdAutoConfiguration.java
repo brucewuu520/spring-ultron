@@ -1,9 +1,9 @@
 package org.springultron.logging.trace;
 
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 /**
  * 链路追踪自动化配置
@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
  * @author brucewuu
  * @date 2021/4/18 下午6:37
  */
-@Configuration(proxyBeanMethods = false)
+@AutoConfiguration
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 @ConditionalOnProperty(name = "ultron.logging.enable-trace-id", havingValue = "true")
 public class TraceIdAutoConfiguration {

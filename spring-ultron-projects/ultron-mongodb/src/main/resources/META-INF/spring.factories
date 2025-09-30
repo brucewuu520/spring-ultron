@@ -1,3 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-org.springultron.mongodb.MongoDbConfiguration,\
-org.springultron.mongodb.MongoInsertEventListener

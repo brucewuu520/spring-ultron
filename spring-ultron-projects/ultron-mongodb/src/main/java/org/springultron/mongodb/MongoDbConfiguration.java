@@ -1,9 +1,9 @@
 package org.springultron.mongodb;
 
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.mongodb.core.convert.MongoCustomConversions;
 import org.springultron.mongodb.converter.BSONObjectToJsonNodeConverter;
@@ -18,7 +18,7 @@ import java.util.List;
  * @author brucewuu
  * @date 2020/4/5 13:42
  */
-@Configuration(proxyBeanMethods = false)
+@AutoConfiguration
 @AutoConfigureBefore(MongoDataAutoConfiguration.class)
 public class MongoDbConfiguration {
 

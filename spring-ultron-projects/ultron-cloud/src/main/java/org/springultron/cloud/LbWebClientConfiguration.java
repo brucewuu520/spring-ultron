@@ -1,10 +1,10 @@
 package org.springultron.cloud;
 
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.cloud.client.loadbalancer.reactive.ReactorLoadBalancerExchangeFilterFunction;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -21,7 +21,7 @@ import org.springframework.web.reactive.function.client.WebClient;
  * @date 2019-08-23 14:36
  */
 @Lazy
-@Configuration(proxyBeanMethods = false)
+@AutoConfiguration
 @ConditionalOnBean({WebClient.Builder.class, ReactorLoadBalancerExchangeFilterFunction.class})
 public class LbWebClientConfiguration {
 

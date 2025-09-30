@@ -1,5 +1,6 @@
 package org.springultron.wechat;
 
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionOutcome;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.SpringBootCondition;
@@ -7,7 +8,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ConditionContext;
 import org.springframework.context.annotation.Conditional;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.core.type.AnnotatedTypeMetadata;
 import org.springultron.core.utils.StringUtils;
@@ -28,7 +28,7 @@ import java.util.Objects;
  * @author brucewuu
  * @date 2021/3/30 上午10:00
  */
-@Configuration(proxyBeanMethods = false)
+@AutoConfiguration
 @ConditionalOnBean(RedisClient.class)
 @EnableConfigurationProperties(WechatProperties.class)
 public class WechatAutoConfiguration {

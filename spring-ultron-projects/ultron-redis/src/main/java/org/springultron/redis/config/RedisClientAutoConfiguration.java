@@ -1,8 +1,8 @@
 package org.springultron.redis.config;
 
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.data.redis.core.ReactiveStringRedisTemplate;
@@ -18,7 +18,7 @@ import org.springultron.redis.RedisClient;
  * @date 2019/11/26 18:14
  */
 @Lazy
-@Configuration(proxyBeanMethods = false)
+@AutoConfiguration
 public class RedisClientAutoConfiguration {
 
     /**
