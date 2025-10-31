@@ -147,10 +147,7 @@ public class WebUtils extends org.springframework.web.util.WebUtils {
         if (null == request) {
             return null;
         }
-        String ip = request.getHeader("X-Requested-For");
-        if (IS_BLANK_IP.test(ip)) {
-            ip = request.getHeader("X-Forwarded-For");
-        }
+        String ip = request.getHeader("X-Forwarded-For");
         if (IS_BLANK_IP.test(ip)) {
             ip = request.getHeader("Proxy-Client-IP");
         }
