@@ -1,11 +1,11 @@
 package org.springultron.job;
 
 import com.xxl.job.core.executor.impl.XxlJobSpringExecutor;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.util.StringUtils;
 
@@ -15,7 +15,7 @@ import org.springframework.util.StringUtils;
  * @author brucewuu
  * @date 2021/4/7 下午6:33
  */
-@Configuration(proxyBeanMethods = false)
+@AutoConfiguration
 @ConditionalOnProperty(prefix = "xxl.job", value = "enabled", havingValue = "true", matchIfMissing = true)
 @EnableConfigurationProperties(XxlJobProperties.class)
 public class XxlJobAutoConfiguration {

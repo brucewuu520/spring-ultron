@@ -3,11 +3,10 @@ package org.springultron.openfeign;
 import com.alibaba.cloud.sentinel.feign.SentinelFeignAutoConfiguration;
 import feign.Feign;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.boot.autoconfigure.AutoConfigureBefore;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 
 /**
@@ -16,8 +15,7 @@ import org.springframework.context.annotation.Scope;
  * @author brucewuu
  * @date 2020/10/3 下午6:00
  */
-@Configuration(proxyBeanMethods = false)
-@AutoConfigureBefore(SentinelFeignAutoConfiguration.class)
+@AutoConfiguration(before = {SentinelFeignAutoConfiguration.class})
 public class UltronSentinelFeignAutoConfiguration {
 
     @Bean

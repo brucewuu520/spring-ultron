@@ -1,9 +1,9 @@
 package org.springultron.logging;
 
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -22,7 +22,7 @@ import java.util.List;
  * @date 2021/4/9 上午9:53
  */
 @Order(Ordered.HIGHEST_PRECEDENCE)
-@Configuration(proxyBeanMethods = false)
+@AutoConfiguration
 @EnableConfigurationProperties(UltronLoggingProperties.class)
 @Import({TraceIdAutoConfiguration.class, LoggingLogstashConfiguration.class})
 class LoggingAutoConfiguration {

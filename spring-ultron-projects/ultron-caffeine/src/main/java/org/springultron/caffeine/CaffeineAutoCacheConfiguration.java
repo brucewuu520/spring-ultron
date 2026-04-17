@@ -4,7 +4,7 @@ import com.github.benmanes.caffeine.cache.CacheLoader;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.CaffeineSpec;
 import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.boot.autoconfigure.AutoConfigureBefore;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration;
 import org.springframework.boot.autoconfigure.cache.CacheManagerCustomizer;
 import org.springframework.boot.autoconfigure.cache.CacheManagerCustomizers;
@@ -16,7 +16,6 @@ import org.springframework.cache.CacheManager;
 import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.cache.interceptor.CacheAspectSupport;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -30,10 +29,9 @@ import java.util.stream.Collectors;
  * @author brucewuu
  * @date 2021/4/7 下午2:25
  */
-@Configuration(proxyBeanMethods = false)
 @ConditionalOnBean({CacheAspectSupport.class})
-@AutoConfigureBefore({CacheAutoConfiguration.class})
 @ConditionalOnMissingBean({CacheManager.class})
+@AutoConfiguration(before = {CacheAutoConfiguration.class})
 @EnableConfigurationProperties({CacheProperties.class})
 public class CaffeineAutoCacheConfiguration {
 

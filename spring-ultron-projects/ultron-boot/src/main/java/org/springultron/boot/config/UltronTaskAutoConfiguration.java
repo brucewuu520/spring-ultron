@@ -1,12 +1,11 @@
 package org.springultron.boot.config;
 
-import org.springframework.boot.autoconfigure.AutoConfigureBefore;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.task.TaskExecutionAutoConfiguration;
 import org.springframework.boot.autoconfigure.task.TaskSchedulingAutoConfiguration;
 import org.springframework.boot.task.ThreadPoolTaskExecutorCustomizer;
 import org.springframework.boot.task.ThreadPoolTaskSchedulerCustomizer;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -19,8 +18,7 @@ import java.util.concurrent.ThreadPoolExecutor;
  * @author brucewuu
  * @date 2024/05/03 17:39
  */
-@Configuration(proxyBeanMethods = false)
-@AutoConfigureBefore({TaskExecutionAutoConfiguration.class, TaskSchedulingAutoConfiguration.class})
+@AutoConfiguration(before = {TaskExecutionAutoConfiguration.class, TaskSchedulingAutoConfiguration.class})
 public class UltronTaskAutoConfiguration {
 
     @Bean
