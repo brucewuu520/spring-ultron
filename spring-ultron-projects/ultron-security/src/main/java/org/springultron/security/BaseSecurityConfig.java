@@ -113,8 +113,7 @@ public abstract class BaseSecurityConfig {
     }
 
     private void buildHttpSecurity(HttpSecurity http, boolean useJwt, String loginProcessingUrl, UserDetailsProcessor userDetailsProcessor, AuthenticationManager authenticationManager) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable)
-            .exceptionHandling(configurer -> {
+        http.exceptionHandling(configurer -> {
                 configurer.authenticationEntryPoint(new SimpleAuthenticationEntryPoint())
                           .accessDeniedHandler(new SimpleAccessDeniedHandler());
             })
@@ -124,11 +123,14 @@ public abstract class BaseSecurityConfig {
             });
         if (useJwt) {
             // jwt 必须配置于 UsernamePasswordAuthenticationFilter 之前
-            http.sessionManagement(configurer -> {
+            http.csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(configurer -> {
                     configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS); // session 生成策略用无状态策略,不创建会话
                 })
                 .addFilterAfter(new JwtAuthenticationFilter(userDetailsProcessor), SecurityContextHolderFilter.class);
         } else {
+            // 前后端分离配置csrf,后端会将csrfToken放在cookie中，参数=XSRF-TOKEN，前端发送请求时需要将csrfToken放入参数中，_csrf=cookie.XSRF-TOKEN
+            // http.csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()));
             http.formLogin(configurer -> {
                     configurer.loginProcessingUrl(StringUtils.isEmpty(loginProcessingUrl) ? "/login" : loginProcessingUrl);
                 })

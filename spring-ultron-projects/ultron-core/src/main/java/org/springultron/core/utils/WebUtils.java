@@ -114,6 +114,7 @@ public class WebUtils extends org.springframework.web.util.WebUtils {
                 writer.write("null");
             } else {
                 writer.write(text);
+                writer.flush();
             }
         } catch (IOException e) {
             e.printStackTrace();

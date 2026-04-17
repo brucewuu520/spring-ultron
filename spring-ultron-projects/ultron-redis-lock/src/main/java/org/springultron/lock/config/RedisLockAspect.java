@@ -105,4 +105,5 @@ public class RedisLockAspect {
         AnnotatedElementKey elementKey = new AnnotatedElementKey(method, targetClass);
         return EVALUATOR.evalAsText(lockParam, elementKey, evaluationContext);
     }
+    
 }
