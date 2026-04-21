@@ -2,6 +2,7 @@ package org.springultron.crypto;
 
 import org.junit.Test;
 import org.springframework.util.Base64Utils;
+import org.springultron.core.utils.Hex;
 
 /**
  * @author brucewuu
@@ -11,11 +12,9 @@ public class AESTests {
 
     @Test
     public void generateKeyTest() {
-//        byte[] keyBytes = AES.generateKey(128);
-//        System.out.println("秘钥base64：" + Base64Utils.encodeToString(keyBytes));
-//        System.out.println("秘钥Hex：" + Hex.encodeHexString(keyBytes));
-        String time = "2022-04-27 14:33:30.686980";
-        System.out.println(time.substring(0, 23));
+       byte[] keyBytes = AES.generateKey(128);
+       System.out.println("秘钥base64：" + Base64Utils.encodeToString(keyBytes));
+       System.out.println("秘钥Hex：" + Hex.encodeHexString(keyBytes));
     }
 
     @Test

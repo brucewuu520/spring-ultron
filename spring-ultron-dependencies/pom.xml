@@ -39,21 +39,22 @@
     <properties>
         <main.basedir>${basedir}/..</main.basedir>
         <!-- app dependencies version start-->
-        <spring-boot.version>2.6.15</spring-boot.version>
-        <spring-cloud.version>2021.0.8</spring-cloud.version>
+        <spring-framework.version>5.3.39</spring-framework.version>
+        <spring-boot.version>2.7.18</spring-boot.version>
+        <spring-cloud.version>2021.0.9</spring-cloud.version>
         <alibaba-cloud.version>2021.1</alibaba-cloud.version>
         <feign-okhttp.version>11.8</feign-okhttp.version>
-        <mybatis-plus.version>3.5.3.1</mybatis-plus.version>
-        <jwt.version>0.11.5</jwt.version>
+        <mybatis-plus.version>3.5.15</mybatis-plus.version>
+        <jwt.version>0.13.0</jwt.version>
         <redisson.version>3.17.7</redisson.version>
-        <bouncycastle.version>1.70</bouncycastle.version>
-        <zxing.version>3.4.1</zxing.version>
-        <fastjson.version>2.0.43</fastjson.version>
-        <guava.version>31.1-jre</guava.version>
+        <bouncycastle.version>1.84</bouncycastle.version>
+        <zxing.version>3.5.4</zxing.version>
+        <fastjson.version>2.0.61</fastjson.version>
+        <guava.version>33.5.0-jre</guava.version>
         <knife4j.version>3.0.3</knife4j.version>
         <swagger-annotations.version>1.5.22</swagger-annotations.version>
-        <xxl-job.version>2.3.1</xxl-job.version>
-        <logstash-logback.version>7.1.1</logstash-logback.version>
+        <xxl-job.version>2.5.0</xxl-job.version>
+        <logstash-logback.version>7.4</logstash-logback.version>
         <!-- app dependencies version end-->
         <findbugs.version>3.0.2</findbugs.version>
         <!-- maven dependencies version start -->
@@ -69,6 +70,13 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-framework-bom</artifactId>
+                <version>${spring-framework.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
