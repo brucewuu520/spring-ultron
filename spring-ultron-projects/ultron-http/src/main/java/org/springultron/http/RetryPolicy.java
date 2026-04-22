@@ -31,8 +31,19 @@ public class RetryPolicy {
 
     public static final RetryPolicy INSTANCE = new RetryPolicy();
 
+    /**
+     * 最大重试次数
+     */
     private final int maxAttempts;
+    /**
+     * 重试间隔
+     */
     private final long sleepMillis;
+
+    /**
+     * 重试条件断言
+     * 若为空，不重试；若不为空且断言为真才会重试
+     */
     @Nullable
     private final Predicate<ResponseSpec> respPredicate;
 
