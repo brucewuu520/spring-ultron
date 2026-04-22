@@ -12,6 +12,7 @@ import feign.InvocationHandlerFactory;
 import feign.MethodMetadata;
 import feign.Target;
 import org.springframework.cloud.openfeign.FallbackFactory;
+import org.springframework.lang.Nullable;
 import org.springultron.core.result.ApiResult;
 import org.springultron.core.result.ResultCode;
 
@@ -20,6 +21,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import static feign.Util.checkNotNull;
@@ -31,12 +33,15 @@ import static feign.Util.checkNotNull;
  * @date 2020/10/3 上午10:38
  */
 public class UltronSentinelInvocationHandler implements InvocationHandler {
+
     private final Target<?> target;
     private final Map<Method, InvocationHandlerFactory.MethodHandler> dispatch;
-    private FallbackFactory<?> fallbackFactory;
-    private Map<Method, Method> fallbackMethodMap;
 
-    UltronSentinelInvocationHandler(Target<?> target, Map<Method, InvocationHandlerFactory.MethodHandler> dispatch, FallbackFactory<?> fallbackFactory) {
+    private @Nullable FallbackFactory<?> fallbackFactory;
+
+    private @Nullable Map<Method, Method> fallbackMethodMap;
+
+    UltronSentinelInvocationHandler(Target<?> target, Map<Method, InvocationHandlerFactory.MethodHandler> dispatch, @Nullable FallbackFactory<?> fallbackFactory) {
         this.target = checkNotNull(target, "target");
         this.dispatch = checkNotNull(dispatch, "dispatch");
         this.fallbackFactory = fallbackFactory;
@@ -72,7 +77,7 @@ public class UltronSentinelInvocationHandler implements InvocationHandler {
             if (methodMetadata == null) {
                 result = methodHandler.invoke(args);
             } else {
-                String resourceName = methodMetadata.template().method().toUpperCase() + ":" + hardCodedTarget.url() + methodMetadata.template().path();
+                String resourceName = methodMetadata.template().method().toUpperCase(Locale.ROOT) + ":" + hardCodedTarget.url() + methodMetadata.template().path();
                 Entry entry = null;
                 try {
                     ContextUtil.enter(resourceName);
@@ -81,17 +86,21 @@ public class UltronSentinelInvocationHandler implements InvocationHandler {
                 } catch (Throwable ex) {
                     // fallback handle
                     if (!BlockException.isBlockException(ex)) {
-                        Tracer.trace(ex);
+                        Tracer.traceEntry(ex, entry);
                     }
-                    if (fallbackFactory != null) {
+                    if (fallbackFactory != null && fallbackMethodMap != null) {
                         try {
-                            return fallbackMethodMap.get(method).invoke(fallbackFactory.create(ex), args);
+                            Method fallbackMethod = fallbackMethodMap.get(method);
+                            if (fallbackMethod == null) {
+                                throw new IllegalStateException("Fallback method not found for method: " + method);
+                            }
+                            return fallbackMethod.invoke(fallbackFactory.create(ex), args);
                         } catch (IllegalAccessException e) {
                             // shouldn't happen as method is public due to being an
                             // interface
                             throw new AssertionError(e);
                         } catch (InvocationTargetException e) {
-                            throw new AssertionError(e.getCause());
+                            throw e.getCause();
                         }
                     } else {
                         // 若是R类型 执行自动降级返回R

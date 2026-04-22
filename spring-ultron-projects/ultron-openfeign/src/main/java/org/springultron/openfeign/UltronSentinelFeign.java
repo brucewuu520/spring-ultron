@@ -15,6 +15,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -31,6 +32,8 @@ import java.util.Map;
  */
 public final class UltronSentinelFeign {
 
+    private static final String FEIGN_LAZY_ATTR_RESOLUTION = "spring.cloud.openfeign.lazy-attributes-resolution";
+
     private UltronSentinelFeign() {
     }
 
@@ -39,9 +42,12 @@ public final class UltronSentinelFeign {
     }
 
     public static final class Builder extends Feign.Builder implements ApplicationContextAware {
+
         private Contract contract = new Contract.Default();
-        private ApplicationContext applicationContext;
-        private FeignClientFactory feignClientFactory;
+
+        private @Nullable ApplicationContext applicationContext;
+
+        private @Nullable FeignClientFactory feignClientFactory;
 
         @Override
         public Feign.Builder invocationHandlerFactory(InvocationHandlerFactory invocationHandlerFactory) {
@@ -59,22 +65,36 @@ public final class UltronSentinelFeign {
             super.invocationHandlerFactory(new InvocationHandlerFactory() {
                 @Override
                 public InvocationHandler create(Target target, Map<Method, MethodHandler> dispatch) {
-                    GenericApplicationContext gctx = (GenericApplicationContext) UltronSentinelFeign.Builder.this.applicationContext;
-                    BeanDefinition def = gctx.getBeanDefinition(target.type().getName());
-                    Boolean isLazyInit = UltronSentinelFeign.Builder.this.applicationContext.getEnvironment().getProperty("spring.cloud.openfeign.lazy-attributes-resolution", Boolean.class, false);
-                    FeignClientFactoryBean feignClientFactoryBean;
-                    if (isLazyInit) {
-                        feignClientFactoryBean = (FeignClientFactoryBean)def.getAttribute("feignClientsRegistrarFactoryBean");
-                    } else {
-                        feignClientFactoryBean = (FeignClientFactoryBean) UltronSentinelFeign.Builder.this.applicationContext.getBean("&" + target.type().getName());
+                    ApplicationContext ctx = Builder.this.applicationContext;
+                    FeignClientFactory factory = Builder.this.feignClientFactory;
+                    if (ctx == null || factory == null) {
+                        throw new IllegalStateException("ApplicationContext or FeignClientFactory not initialized");
                     }
+                    GenericApplicationContext gctx = (GenericApplicationContext) ctx;
+                    BeanDefinition def = gctx.getBeanDefinition(target.type().getName());
+                    FeignClientFactoryBean feignClientFactoryBean;
 
-                    assert feignClientFactoryBean != null;
+                    // If you need the attributes to be resolved lazily, set the property value to true.
+                    Boolean isLazyInit = ctx.getEnvironment().getProperty(FEIGN_LAZY_ATTR_RESOLUTION, Boolean.class, false);
+                    if (isLazyInit) {
+                        /*
+                         * Due to the change of the initialization sequence,
+                         * BeanFactory.getBean will cause a circular dependency. So
+                         * FeignClientFactoryBean can only be obtained from BeanDefinition
+                         */
+                        feignClientFactoryBean = (FeignClientFactoryBean) def.getAttribute("feignClientsRegistrarFactoryBean");
+                    } else {
+                        feignClientFactoryBean = (FeignClientFactoryBean) ctx.getBean("&" + target.type().getName());
+                    }
+                    if (feignClientFactoryBean == null) {
+                        throw new IllegalStateException("FeignClientFactoryBean not found for " + target.type().getName());
+                    }
                     Class<?> fallback = feignClientFactoryBean.getFallback();
                     Class<?> fallbackFactory = feignClientFactoryBean.getFallbackFactory();
                     String beanName = feignClientFactoryBean.getContextId();
                     if (!StringUtils.hasText(beanName)) {
-                        beanName = (String) UltronSentinelFeign.Builder.this.getFieldValue(feignClientFactoryBean, "name");
+                        Object nameValue = getFieldValue(feignClientFactoryBean, "name");
+                        beanName = nameValue != null ? (String) nameValue : "unknown";
                     }
 
                     Object fallbackInstance;
@@ -92,31 +112,38 @@ public final class UltronSentinelFeign {
                 }
 
                 private Object getFromContext(String name, String type, Class<?> fallbackType, Class<?> targetType) {
-                    Object fallbackInstance = UltronSentinelFeign.Builder.this.feignClientFactory.getInstance(name, fallbackType);
+                    FeignClientFactory factory = Builder.this.feignClientFactory;
+                    if (factory == null) {
+                        throw new IllegalStateException("FeignClientFactory not initialized");
+                    }
+                    Object fallbackInstance = factory.getInstance(name, fallbackType);
                     if (fallbackInstance == null) {
                         throw new IllegalStateException(String.format("No %s instance of type %s found for feign client %s", type, fallbackType, name));
-                    } else {
-                        if (fallbackInstance instanceof FactoryBean<?> factoryBean) {
-                            try {
-                                fallbackInstance = factoryBean.getObject();
-                            } catch (Exception var8) {
-                                throw new IllegalStateException(type + " create fail", var8);
-                            }
-                            assert fallbackInstance != null;
-                            fallbackType = fallbackInstance.getClass();
+                    }
+                    // when fallback is a FactoryBean, should determine the type of instance
+                    if (fallbackInstance instanceof FactoryBean<?> factoryBean) {
+                        try {
+                            fallbackInstance = factoryBean.getObject();
                         }
+                        catch (Exception e) {
+                            throw new IllegalStateException(type + " create fail", e);
+                        }
+                        if (fallbackInstance == null) {
+                            throw new IllegalStateException(type + " FactoryBean returned null");
+                        }
+                        fallbackType = fallbackInstance.getClass();
+                    }
 
-                        if (!targetType.isAssignableFrom(fallbackType)) {
-                            throw new IllegalStateException(String.format("Incompatible %s instance. Fallback/fallbackFactory of type %s is not assignable to %s for feign client %s", type, fallbackType, targetType, name));
-                        } else {
-                            return fallbackInstance;
-                        }
+                    if (!targetType.isAssignableFrom(fallbackType)) {
+                        throw new IllegalStateException(String.format("Incompatible %s instance. Fallback/fallbackFactory of type %s is not assignable to %s for feign client %s", type, fallbackType, targetType, name));
+                    } else {
+                        return fallbackInstance;
                     }
                 }
             });
 
             super.contract(new SentinelContractHolder(contract));
-            return super.build();
+            return super.internalBuild();
         }
 
         private Object getFieldValue(Object instance, String fieldName) {
@@ -125,18 +152,18 @@ public final class UltronSentinelFeign {
                 return null;
             }
             field.setAccessible(true);
-
             try {
                 return field.get(instance);
-            } catch (IllegalAccessException var5) {
-                return null;
+            } catch (IllegalAccessException e) {
+                // ignore
             }
+            return null;
         }
 
         @Override
         public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
             this.applicationContext = applicationContext;
-            this.feignClientFactory = this.applicationContext.getBean(FeignClientFactory.class);
+            this.feignClientFactory = applicationContext.getBean(FeignClientFactory.class);
         }
     }
 }
