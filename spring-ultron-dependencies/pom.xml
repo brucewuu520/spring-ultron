@@ -39,33 +39,33 @@
     <properties>
         <main.basedir>${basedir}/..</main.basedir>
         <!-- app dependencies version start-->
-        <spring-boot.version>3.5.6</spring-boot.version>
-        <spring-cloud.version>2025.0.0</spring-cloud.version>
-        <alibaba-cloud.version>2025.0.0.0-preview</alibaba-cloud.version>
-        <okhttp.version>5.1.0</okhttp.version>
-        <feign-okhttp.version>13.6</feign-okhttp.version>
-        <mybatis-plus.version>3.5.14</mybatis-plus.version>
+        <spring-boot.version>3.5.13</spring-boot.version>
+        <spring-cloud.version>2025.0.2</spring-cloud.version>
+        <alibaba-cloud.version>2025.0.0.0</alibaba-cloud.version>
+        <okhttp.version>5.3.2</okhttp.version>
+        <feign-okhttp.version>13.12</feign-okhttp.version>
+        <mybatis-plus.version>3.5.16</mybatis-plus.version>
         <jwt.version>0.13.0</jwt.version>
-        <redisson.version>3.52.0</redisson.version>
+        <redisson.version>4.3.1</redisson.version>
         <bouncycastle.version>1.84</bouncycastle.version>
-        <zxing.version>3.5.3</zxing.version>
-        <fastjson2.version>2.0.59</fastjson2.version>
-        <springdoc.version>2.8.13</springdoc.version>
+        <zxing.version>3.5.4</zxing.version>
+        <fastjson2.version>2.0.61</fastjson2.version>
+        <springdoc.version>3.0.3</springdoc.version>
         <knife4j.version>4.5.0</knife4j.version>
-        <swagger-v3.version>2.2.36</swagger-v3.version>
-        <xxl-job.version>3.2.0</xxl-job.version>
-        <logstash-logback.version>8.1</logstash-logback.version>
+        <swagger-v3.version>2.2.48</swagger-v3.version>
+        <xxl-job.version>3.4.0</xxl-job.version>
+        <logstash-logback.version>9.0</logstash-logback.version>
         <!-- app dependencies version end-->
         <findbugs.version>3.0.2</findbugs.version>
         <!-- maven dependencies version start -->
-        <maven-flatten-plugin.version>1.6.0</maven-flatten-plugin.version>
-        <maven-xml-plugin.version>1.1.0</maven-xml-plugin.version>
-        <maven-compiler-plugin.version>3.14.0</maven-compiler-plugin.version>
-        <maven-helper-plugin.version>3.5.0</maven-helper-plugin.version>
-        <maven-enforcer-plugin.version>3.4.1</maven-enforcer-plugin.version>
-        <maven-jar-plugin.version>3.4.2</maven-jar-plugin.version>
-        <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
-        <maven-javadoc-plugin.version>3.11.3</maven-javadoc-plugin.version>
+        <maven-flatten-plugin.version>1.7.3</maven-flatten-plugin.version>
+        <maven-xml-plugin.version>1.2.1</maven-xml-plugin.version>
+        <maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version>
+        <maven-helper-plugin.version>3.6.1</maven-helper-plugin.version>
+        <maven-enforcer-plugin.version>3.6.1</maven-enforcer-plugin.version>
+        <maven-jar-plugin.version>3.5.0</maven-jar-plugin.version>
+        <maven-source-plugin.version>3.4.0</maven-source-plugin.version>
+        <maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
         <!-- maven dependencies version end -->
     </properties>
 
