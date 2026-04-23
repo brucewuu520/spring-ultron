@@ -16,9 +16,8 @@
 
 package org.springultron.http;
 
-import okhttp3.Authenticator;
 import okhttp3.*;
-import okhttp3.internal.Util;
+import okhttp3.Authenticator;
 import okhttp3.internal.http.HttpMethod;
 import okhttp3.logging.HttpLoggingInterceptor;
 import org.springframework.lang.Nullable;
@@ -34,6 +33,7 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.time.Duration;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
@@ -54,9 +54,12 @@ public class HttpRequest {
     private final HttpUrl.Builder urlBuilder;
     private final String method;
     private RequestBody requestBody;
+    @Nullable
+    private List<Protocol> protocols;
     private Boolean followRedirects;
     private Boolean followSslRedirects;
     private CookieJar cookieJar;
+    private EventListener eventListener;
     private Authenticator authenticator;
     private Interceptor interceptor;
     private Proxy proxy;
@@ -238,13 +241,30 @@ public class HttpRequest {
         return this;
     }
 
-    public HttpRequest bodyValue(final String jsonValue) {
-        this.requestBody = RequestBody.create(MEDIA_TYPE_JSON, jsonValue);
+    public HttpRequest body(byte[] body) {
+        return body(RequestBody.create(body));
+    }
+
+    public HttpRequest body(byte[] body, MediaType contentType) {
+        return body(RequestBody.create(body, contentType));
+    }
+
+    public HttpRequest body(String body, MediaType contentType) {
+        return body(RequestBody.create(body, contentType));
+    }
+
+    public HttpRequest bodyJson(final String jsonValue) {
+        this.requestBody = RequestBody.create(jsonValue, MEDIA_TYPE_JSON);
         return this;
     }
 
-    public HttpRequest bodyValue(final Object bodyValue) {
-        return bodyValue(Jackson.toJson(bodyValue));
+    public HttpRequest bodyJson(final Object body) {
+        return bodyJson(Jackson.toJson(body));
+    }
+
+    public HttpRequest protocols(List<Protocol> protocols) {
+        this.protocols = protocols;
+        return this;
     }
 
     public HttpRequest cacheControl(final CacheControl cacheControl) {
@@ -274,6 +294,11 @@ public class HttpRequest {
 
     public HttpRequest authenticator(Authenticator authenticator) {
         this.authenticator = authenticator;
+        return this;
+    }
+
+    public HttpRequest eventListener(EventListener eventListener) {
+        this.eventListener = eventListener;
         return this;
     }
 
@@ -385,6 +410,12 @@ public class HttpRequest {
         if (null != writeTimeout) {
             builder.writeTimeout(writeTimeout);
         }
+        if (protocols != null && !protocols.isEmpty()) {
+            builder.protocols(protocols);
+        }
+        if (proxy != null) {
+            builder.proxy(proxy);
+        }
         if (null != followRedirects) {
             builder.followRedirects(followRedirects);
         }
@@ -396,6 +427,9 @@ public class HttpRequest {
         }
         if (null != authenticator) {
             builder.authenticator(authenticator);
+        }
+        if (eventListener != null) {
+            builder.eventListener(eventListener);
         }
         if (null != interceptor) {
             builder.addInterceptor(interceptor);
@@ -412,11 +446,14 @@ public class HttpRequest {
         if (null != proxyAuthenticator) {
             builder.proxyAuthenticator(proxyAuthenticator);
         }
-        if (null != hostnameVerifier) {
-            builder.hostnameVerifier(hostnameVerifier);
-        }
         if (null != sslSocketFactory && null != trustManager) {
             builder.sslSocketFactory(sslSocketFactory, trustManager);
+            if (hostnameVerifier == null) {
+                hostnameVerifier = TrustAllHostNames.INSTANCE;
+            }
+        }
+        if (null != hostnameVerifier) {
+            builder.hostnameVerifier(hostnameVerifier);
         }
         if (Boolean.TRUE.equals(disableSslValidation)) {
             disableSslValidation(builder);
