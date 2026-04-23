@@ -18,7 +18,6 @@ package org.springultron.http;
 
 import okhttp3.*;
 import okhttp3.Authenticator;
-import okhttp3.internal.Util;
 import okhttp3.internal.http.HttpMethod;
 import okhttp3.logging.HttpLoggingInterceptor;
 import org.springframework.lang.Nullable;
@@ -467,8 +466,8 @@ public class HttpRequest {
             builder.addInterceptor(globalLoggingInterceptor);
         }
         requestBuilder.url(urlBuilder.build());
-        if (HttpMethod.requiresRequestBody(method) && requestBody == null) {
-            requestBuilder.method(method, Util.EMPTY_REQUEST);
+        if (requestBody == null && HttpMethod.requiresRequestBody(method)) {
+            requestBuilder.method(method, RequestBody.EMPTY);
         } else {
             requestBuilder.method(method, requestBody);
         }
