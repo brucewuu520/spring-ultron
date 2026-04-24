@@ -31,6 +31,7 @@ import static feign.Util.checkNotNull;
  * @date 2020/10/3 上午10:38
  */
 public class UltronSentinelInvocationHandler implements InvocationHandler {
+
     private final Target<?> target;
     private final Map<Method, InvocationHandlerFactory.MethodHandler> dispatch;
     private FallbackFactory<?> fallbackFactory;
@@ -82,7 +83,7 @@ public class UltronSentinelInvocationHandler implements InvocationHandler {
                 } catch (Throwable ex) {
                     // fallback handle
                     if (!BlockException.isBlockException(ex)) {
-                        Tracer.trace(ex);
+                        Tracer.traceEntry(ex, entry);
                     }
                     if (fallbackFactory != null) {
                         try {

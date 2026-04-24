@@ -6,6 +6,7 @@ import feign.Feign;
 import feign.InvocationHandlerFactory;
 import feign.Target;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.cloud.openfeign.FallbackFactory;
 import org.springframework.cloud.openfeign.FeignClientFactoryBean;
@@ -14,8 +15,10 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.lang.NonNull;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -69,7 +72,7 @@ public final class UltronSentinelFeign {
                     String beanName = feignClientFactoryBean.getContextId();
 
                     if (!StringUtils.hasText(beanName)) {
-                        beanName = feignClientFactoryBean.getName();
+                        beanName = (String) getFieldValue(feignClientFactoryBean, "name");
                     }
 
                     Object fallbackInstance;
@@ -91,11 +94,37 @@ public final class UltronSentinelFeign {
                     if (fallbackInstance == null) {
                         throw new IllegalStateException(String.format("No %s instance of type %s found for feign client %s", type, fallbackType, name));
                     }
+                    // when fallback is a FactoryBean, should determine the type of instance
+                    if (fallbackInstance instanceof FactoryBean<?>) {
+                        try {
+                            fallbackInstance = ((FactoryBean<?>) fallbackInstance).getObject();
+                            if (fallbackInstance == null) {
+                                throw new IllegalArgumentException("fallbackInstance is null");
+                            }
+                        } catch (Exception e) {
+                            throw new IllegalStateException(type + " create fail", e);
+                        }
+                        fallbackType = fallbackInstance.getClass();
+                    }
 
                     if (!targetType.isAssignableFrom(fallbackType)) {
                         throw new IllegalStateException(String.format("Incompatible %s instance. Fallback/fallbackFactory of type %s is not assignable to %s for feign client %s", type, fallbackType, targetType, name));
                     }
                     return fallbackInstance;
+                }
+
+                private Object getFieldValue(Object instance, String fieldName) {
+                    Field field = ReflectionUtils.findField(instance.getClass(), fieldName);
+                    if (field == null) {
+                        return null;
+                    }
+                    try {
+                        field.setAccessible(true);
+                        return field.get(instance);
+                    } catch (IllegalAccessException e) {
+                        // ignore
+                    }
+                    return null;
                 }
             });
 

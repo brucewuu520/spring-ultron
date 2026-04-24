@@ -466,8 +466,8 @@ public class HttpRequest {
             builder.addInterceptor(globalLoggingInterceptor);
         }
         requestBuilder.url(urlBuilder.build());
-        if (HttpMethod.requiresRequestBody(method) && requestBody == null) {
-            requestBuilder.method(method, Util.EMPTY_REQUEST);
+        if (requestBody == null && HttpMethod.requiresRequestBody(method)) {
+            requestBuilder.method(method, RequestBody.EMPTY);
         } else {
             requestBuilder.method(method, requestBody);
         }
