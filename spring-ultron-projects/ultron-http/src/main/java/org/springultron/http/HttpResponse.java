@@ -19,7 +19,6 @@ package org.springultron.http;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import okhttp3.*;
-import okhttp3.internal.Util;
 import org.springframework.lang.Nullable;
 import org.springultron.core.exception.Exceptions;
 import org.springultron.core.jackson.Jackson;
@@ -51,8 +50,7 @@ public class HttpResponse implements ResponseSpec, Closeable {
 
     private HttpResponse(final Response response) {
         this.response = response;
-        ResponseBody body = response.body();
-        this.responseBody = (body == null) ? Util.EMPTY_RESPONSE : body;
+        this.responseBody = response.body();
     }
 
     @Override

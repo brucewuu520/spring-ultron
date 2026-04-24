@@ -184,7 +184,7 @@ public class RequestLogAspect {
                 paramsMap.put(parameterName, "InputStream");
             } else if (value instanceof InputStreamSource) {
                 paramsMap.put(parameterName, "InputStreamSource");
-            } else if (Jackson.canSerialize(value)) {
+            } else if (Jackson.getInstance().canSerialize(value.getClass())) {
                 // 判断模型能被 json 序列化，则添加
                 paramsMap.put(parameterName, Jackson.toJson(value));
             } else {
