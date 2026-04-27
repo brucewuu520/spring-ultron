@@ -77,9 +77,9 @@ public class RequestLogAspect {
         reqLog.append(StringPool.LINE_SEPARATOR);
         // 打印调用 controller 的全路径以及执行方法
         reqLog.append("Class Method   : ")
-                .append(point.getSignature().getDeclaringTypeName())
-                .append(".")
-                .append(point.getSignature().getName());
+              .append(point.getSignature().getDeclaringTypeName())
+              .append(".")
+              .append(point.getSignature().getName());
         reqLog.append(StringPool.LINE_SEPARATOR);
         // 打印描述信息
         reqLog.append("Description    : ").append(apiLog.description());
@@ -184,11 +184,12 @@ public class RequestLogAspect {
                 paramsMap.put(parameterName, "InputStream");
             } else if (value instanceof InputStreamSource) {
                 paramsMap.put(parameterName, "InputStreamSource");
-            } else if (Jackson.getInstance().canSerialize(value.getClass())) {
-                // 判断模型能被 json 序列化，则添加
-                paramsMap.put(parameterName, Jackson.toJson(value));
             } else {
-                paramsMap.put(parameterName, "【注意】不能序列化为json");
+                try {
+                    paramsMap.put(parameterName, Jackson.toJson(value));
+                } catch (Exception e) {
+                    paramsMap.put(parameterName, "【注意】不能序列化为json");
+                }
             }
         }
 

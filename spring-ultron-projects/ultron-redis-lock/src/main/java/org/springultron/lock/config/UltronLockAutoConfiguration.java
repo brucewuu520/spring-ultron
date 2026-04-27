@@ -82,7 +82,6 @@ public class UltronLockAutoConfiguration {
             RedisConnectionDetails b = provider.getIfAvailable();
             if (b != null) {
                 password = b.getPassword();
-                username = b.getUsername();
 
                 if (b.getSentinel() != null) {
                     isSentinel = true;
@@ -220,12 +219,13 @@ public class UltronLockAutoConfiguration {
     }
 
     private boolean hasConnectionDetails() {
-        try {
-            Class.forName("org.springframework.boot.autoconfigure.data.redis.RedisConnectionDetails");
-            return true;
-        } catch (ClassNotFoundException e) {
-            return false;
-        }
+        // try {
+        //     Class.forName("org.springframework.boot.autoconfigure.data.redis.RedisConnectionDetails");
+        //     return true;
+        // } catch (ClassNotFoundException e) {
+        //     return false;
+        // }
+        return true;
     }
 
     private void initSSL(Config config) {
