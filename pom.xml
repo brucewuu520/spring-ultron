@@ -10,7 +10,7 @@
     <packaging>pom</packaging>
 
     <properties>
-        <revision>2.6.15</revision>
+        <revision>2.7.18</revision>
         <main.basedir>${basedir}</main.basedir>
         <java.version>1.8</java.version>
         <maven-compiler-plugin.version>3.10.0</maven-compiler-plugin.version>
@@ -72,6 +72,9 @@
                                 </goals>
                             </execution>
                         </executions>
+                        <configuration>
+                            <skip>true</skip>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>

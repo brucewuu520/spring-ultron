@@ -1,15 +1,14 @@
 package org.springultron.security.jwt;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.MacAlgorithm;
 import org.springframework.lang.Nullable;
+import org.springultron.core.utils.Base64Utils;
 
 import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
-import javax.xml.bind.DatatypeConverter;
-import java.security.Key;
 import java.time.Duration;
 import java.util.Date;
 import java.util.Optional;
@@ -27,23 +26,22 @@ public final class JwtUtils {
     }
 
     /**
-     * 生成JWT加密秘钥
-     * 支持 SHA-256 SHA-384 SHA-512算法
-     * 默认使用SHA-512算法
+     * 生成JWT签名秘钥
+     * 默认使用SHA-512算法签名
      */
     public static String generateSecret() {
-        return generateSecret(SignatureAlgorithm.HS512);
+        return generateSecret(Jwts.SIG.HS512);
     }
 
     /**
-     * 生成JWT加密秘钥
+     * 生成JWT签名秘钥
      * 支持 SHA-256 SHA-384 SHA-512算法
      *
      * @param algorithm 算法
      */
-    public static String generateSecret(SignatureAlgorithm algorithm) {
-        SecretKey secretKey = Keys.secretKeyFor(algorithm);
-        return DatatypeConverter.printBase64Binary(secretKey.getEncoded());
+    public static String generateSecret(MacAlgorithm algorithm) {
+        SecretKey secretKey = algorithm.key().build();
+        return Base64Utils.encodeToString(secretKey.getEncoded());
     }
 
     /**
@@ -57,7 +55,7 @@ public final class JwtUtils {
     }
 
     /**
-     * 根据username生成JWT（默认不过期）
+     * 根据username生成JWT
      * 支持 SHA-256 SHA-384 SHA-512算法
      * 默认使用HS512算法
      *
@@ -65,7 +63,20 @@ public final class JwtUtils {
      * @param secret   签名秘钥
      */
     public static String generateToken(String username, String secret) {
-        return generateToken(username, secret, SignatureAlgorithm.HS512);
+        return generateToken(username, secret, Jwts.SIG.HS512);
+    }
+
+    /**
+     * 根据username生成JWT
+     * 支持 SHA-256 SHA-384 SHA-512算法
+     * 默认使用HS512算法
+     *
+     * @param username  用户名
+     * @param secret    签名秘钥
+     * @param algorithm 算法
+     */
+    public static String generateToken(String username, String secret, MacAlgorithm algorithm) {
+        return generateToken(username, secret, null, algorithm);
     }
 
     /**
@@ -78,7 +89,7 @@ public final class JwtUtils {
      * @param expiration 有效期时长(单位:秒)
      */
     public static String generateToken(String username, String secret, Duration expiration) {
-        return generateToken(username, secret, expiration, SignatureAlgorithm.HS512);
+        return generateToken(username, secret, expiration, Jwts.SIG.HS512);
     }
 
     /**
@@ -91,25 +102,14 @@ public final class JwtUtils {
      * @param expiration 有效期时长(单位:秒)
      * @param algorithm  算法
      */
-    public static String generateToken(String username, String secret, Duration expiration, SignatureAlgorithm algorithm) {
-        byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(secret);
-        Key signKey = new SecretKeySpec(apiKeySecretBytes, algorithm.getJcaName());
-        return Jwts.builder().setAudience(username).setIssuedAt(new Date()).setExpiration(generateExpirationDate(expiration)).signWith(signKey, algorithm).compact();
-    }
-
-    /**
-     * 根据username生成JWT（默认不过期）
-     * 支持 SHA-256 SHA-384 SHA-512算法
-     * 默认使用HS512算法
-     *
-     * @param username  用户名
-     * @param secret    签名秘钥
-     * @param algorithm 签名算法
-     */
-    public static String generateToken(String username, String secret, SignatureAlgorithm algorithm) {
-        byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(secret);
-        Key signKey = new SecretKeySpec(apiKeySecretBytes, algorithm.getJcaName());
-        return Jwts.builder().setAudience(username).setIssuedAt(new Date()).signWith(signKey, algorithm).compact();
+    public static String generateToken(String username, String secret, Duration expiration, MacAlgorithm algorithm) {
+        byte[] bytes = Base64Utils.decodeFromString(secret);
+        SecretKey secretKey = Keys.hmacShaKeyFor(bytes);
+        JwtBuilder builder = Jwts.builder().issuer(username).issuedAt(new Date());
+        if (expiration != null) {
+            builder.expiration(generateExpirationDate(expiration));
+        }
+        return builder.signWith(secretKey, algorithm).compact();
     }
 
     /**
@@ -121,7 +121,7 @@ public final class JwtUtils {
      * @param secret 签名秘钥
      */
     public static String generateToken(Claims claims, String secret) {
-        return generateToken(claims, secret, SignatureAlgorithm.HS512);
+        return generateToken(claims, secret, Jwts.SIG.HS512);
     }
 
     /**
@@ -131,25 +131,35 @@ public final class JwtUtils {
      * @param secret    签名秘钥 base64
      * @param algorithm 签名算法,支持 SHA-256 SHA-384 SHA-512算法
      */
-    public static String generateToken(Claims claims, String secret, SignatureAlgorithm algorithm) {
-        byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(secret);
-        Key signKey = new SecretKeySpec(apiKeySecretBytes, algorithm.getJcaName());
-        return Jwts.builder().setClaims(claims).signWith(signKey, algorithm).compact();
+    public static String generateToken(Claims claims, String secret, MacAlgorithm algorithm) {
+        byte[] bytes = Base64Utils.decodeFromString(secret);
+        SecretKey secretKey = Keys.hmacShaKeyFor(bytes);
+        return Jwts.builder().claims(claims).signWith(secretKey, algorithm).compact();
     }
 
     /**
      * 获取JWT载体
      */
-    @Nullable
     public static Claims obtainClaims(String token, String secret) {
-        return Jwts.parserBuilder().setSigningKey(DatatypeConverter.parseBase64Binary(secret)).build().parseClaimsJws(token).getBody();
+        byte[] bytes = Base64Utils.decodeFromString(secret);
+        SecretKey secretKey = Keys.hmacShaKeyFor(bytes);
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload();
+    }
+
+    /**
+     * 获取JWT内容
+     */
+    public static String obtainContent(String token, String secret) {
+        byte[] bytes = Base64Utils.decodeFromString(secret);
+        SecretKey secretKey = Keys.hmacShaKeyFor(bytes);
+        return new String(Jwts.parser().verifyWith(secretKey).build().parseSignedContent(token).getPayload());
     }
 
     /**
      * 从JWT中获取userName
      */
-    @Nullable
     public static String obtainUsername(String token, String secret) {
-        return Optional.ofNullable(obtainClaims(token, secret)).map(Claims::getAudience).orElse(null);
+        return obtainClaims(token, secret).getIssuer();
     }
+
 }
