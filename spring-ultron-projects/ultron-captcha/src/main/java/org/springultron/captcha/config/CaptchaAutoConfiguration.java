@@ -48,5 +48,4 @@ public class CaptchaAutoConfiguration {
     public CaptchaService captchaService(CaptchaProperties properties, CaptchaCache captchaCache) {
         return new CaptchaServiceImpl(properties, captchaCache);
     }
-
 }

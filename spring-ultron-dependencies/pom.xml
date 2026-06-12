@@ -137,6 +137,11 @@
             </dependency>
             <dependency>
                 <groupId>org.springultron</groupId>
+                <artifactId>ultron-mybatis-flex</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springultron</groupId>
                 <artifactId>ultron-mongodb</artifactId>
                 <version>${revision}</version>
             </dependency>
