@@ -1,7 +1,7 @@
 package org.springultron.wechat.service;
 
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.springultron.core.jackson.Jackson;
 import org.springultron.wechat.dto.*;
 import org.springultron.wechat.enums.OCR_TYPE;

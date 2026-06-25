@@ -1,7 +1,7 @@
 package org.springultron.boot.error;
 
 import jakarta.validation.ConstraintViolation;
-import org.hibernate.validator.internal.engine.path.PathImpl;
+import jakarta.validation.Path;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springultron.core.result.ApiResult;
@@ -51,16 +51,30 @@ public abstract class BaseExceptionHandler {
         String message = null;
         while (violations.iterator().hasNext()) {
             ConstraintViolation<?> violation = violations.iterator().next();
-            String path = ((PathImpl) violation.getPropertyPath()).getLeafNode().getName();
+            String path = getLeafNodeName(violation.getPropertyPath());
             fieldErrorDTOS.add(FieldErrorDTO.of(path, violation.getMessage()));
             if (StringUtils.isEmpty(message)) {
                 message = violation.getMessage();
             }
         }
         ApiResult<Object> apiResult = ApiResult.fail(ResultCode.PARAM_VALID_FAILED.getCode(), message);
-        if (fieldErrorDTOS.size() > 0) {
+        if (!fieldErrorDTOS.isEmpty()) {
             apiResult.setFieldErrors(fieldErrorDTOS);
         }
         return apiResult;
+    }
+
+    /**
+     * 获取属性路径叶子节点名称
+     *
+     * @param propertyPath 属性路径
+     * @return 叶子节点名称
+     */
+    private String getLeafNodeName(Path propertyPath) {
+        String leafNodeName = null;
+        for (Path.Node node : propertyPath) {
+            leafNodeName = node.getName();
+        }
+        return leafNodeName;
     }
 }

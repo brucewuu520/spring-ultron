@@ -8,7 +8,7 @@ import org.bouncycastle.crypto.params.ECPublicKeyParameters;
 import org.bouncycastle.crypto.params.ParametersWithID;
 import org.bouncycastle.crypto.params.ParametersWithRandom;
 import org.bouncycastle.crypto.signers.SM2Signer;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.springultron.core.exception.CryptoException;
 import org.springultron.core.utils.Base64Utils;
 import org.springultron.core.utils.Hex;
@@ -336,7 +336,7 @@ public class SM2 {
      * @param id         可以为null，若为null，则默认withId为字节数组: "1234567812345678".getBytes()
      * @return 签名 bytes
      */
-    public static byte[] sign(byte[] data, PrivateKey privateKey, @Nullable byte[] id) {
+    public static byte[] sign(byte[] data, PrivateKey privateKey, byte @Nullable [] id) {
         ECPrivateKeyParameters privateKeyParameters = BCUtils.toParams(privateKey);
         CipherParameters cipherParameters = new ParametersWithRandom(privateKeyParameters);
         return sign(data, cipherParameters, id);
@@ -349,7 +349,7 @@ public class SM2 {
      * @param id   可以为null，若为null，则默认withId为字节数组: "1234567812345678".getBytes()
      * @return 签名 bytes
      */
-    public static byte[] sign(byte[] data, CipherParameters privateKeyParameters, @Nullable byte[] id) {
+    public static byte[] sign(byte[] data, CipherParameters privateKeyParameters, byte @Nullable [] id) {
         SM2Signer signer = new SM2Signer();
         try {
             if (id != null) {
@@ -404,7 +404,7 @@ public class SM2 {
      * @param id        可以为null，若为null，则默认withId为字节数组: "1234567812345678".getBytes()
      * @return 是否验证通过
      */
-    public static boolean verify(byte[] data, PublicKey publicKey, byte[] sign, @Nullable byte[] id) {
+    public static boolean verify(byte[] data, PublicKey publicKey, byte[] sign, byte @Nullable [] id) {
         ECPublicKeyParameters publicKeyParameters = BCUtils.toParams(publicKey);
         return verify(data, publicKeyParameters, sign, id);
     }
@@ -417,7 +417,7 @@ public class SM2 {
      * @param id   可以为null，若为null，则默认withId为字节数组:"1234567812345678".getBytes()
      * @return 是否验证通过
      */
-    public static boolean verify(byte[] data, CipherParameters publicKeyParameters, byte[] sign, @Nullable byte[] id) {
+    public static boolean verify(byte[] data, CipherParameters publicKeyParameters, byte[] sign, byte @Nullable [] id) {
         final SM2Signer signer = new SM2Signer();
         if (id != null) {
             publicKeyParameters = new ParametersWithID(publicKeyParameters, id);

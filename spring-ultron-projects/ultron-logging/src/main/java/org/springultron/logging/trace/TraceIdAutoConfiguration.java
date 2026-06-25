@@ -20,5 +20,4 @@ public class TraceIdAutoConfiguration {
     public TraceIdRequestLoggingFilter traceIdRequestLoggingFilter() {
         return new TraceIdRequestLoggingFilter();
     }
-
 }

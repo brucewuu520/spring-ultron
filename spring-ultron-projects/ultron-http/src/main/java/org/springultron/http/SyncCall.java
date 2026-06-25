@@ -16,11 +16,11 @@
 
 package org.springultron.http;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
 import okhttp3.Call;
 import okhttp3.Request;
 import org.springultron.core.exception.Exceptions;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.JsonNode;
 
 import java.io.File;
 import java.io.IOException;

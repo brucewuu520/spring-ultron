@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.data.redis.RedisReactiveAutoConfiguration;
+import org.springframework.boot.data.redis.autoconfigure.DataRedisReactiveAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.connection.ReactiveRedisConnectionFactory;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
@@ -25,7 +25,7 @@ import reactor.core.publisher.Flux;
  * @author brucewuu
  * @date 2019/11/26 18:26
  */
-@AutoConfiguration(before = {RedisReactiveAutoConfiguration.class})
+@AutoConfiguration(before = {DataRedisReactiveAutoConfiguration.class})
 @ConditionalOnClass({ReactiveRedisTemplate.class, Flux.class})
 @ConditionalOnBean({ReactiveRedisConnectionFactory.class})
 public class ReactiveRedisConfiguration {

@@ -1,10 +1,10 @@
 package org.springultron.core.utils;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.SimpleTypeConverter;
 import org.springframework.beans.TypeConverter;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.convert.TypeDescriptor;
-import org.springframework.lang.Nullable;
 
 import java.lang.reflect.Field;
 

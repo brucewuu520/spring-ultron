@@ -42,23 +42,6 @@ public class MybatisPlusConfiguration {
         return interceptor;
     }
 
-//    /**
-//     * 自定义Configuration
-//     */
-//    @Bean
-//    public ConfigurationCustomizer configurationCustomizer() {
-//        return configuration -> configuration.setUseDeprecatedExecutor(false);
-//    }
-
-//    /**
-//     * 自定义SQL注入
-//     */
-//    @Bean
-//    @ConditionalOnMissingBean(MySqlInjector.class)
-//    public MySqlInjector sqlInjector() {
-//        return new MySqlInjector();
-//    }
-
     /**
      * 日期字段自动填充
      */

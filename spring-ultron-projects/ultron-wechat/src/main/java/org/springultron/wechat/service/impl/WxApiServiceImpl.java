@@ -1,11 +1,9 @@
 package org.springultron.wechat.service.impl;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
 import org.springultron.core.exception.ApiException;
 import org.springultron.core.jackson.Jackson;
 import org.springultron.core.result.ApiResult;
@@ -24,6 +22,8 @@ import org.springultron.wechat.params.WxQrCodeParams;
 import org.springultron.wechat.props.WechatProperties;
 import org.springultron.wechat.props.WxConf;
 import org.springultron.wechat.service.WxApiService;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.node.ObjectNode;
 
 import java.io.File;
 import java.time.Duration;
@@ -78,11 +78,11 @@ public class WxApiServiceImpl implements WxApiService, WxConstants {
             return access_token;
         }
         JsonNode result = HttpRequest.get(ACCESS_TOKEN)
-                .query("appid", wxConf.getAppId())
-                .query("secret", wxConf.getAppSecret())
-                .query("grant_type", "client_credential")
-                .execute()
-                .asJsonNode();
+                                     .query("appid", wxConf.getAppId())
+                                     .query("secret", wxConf.getAppSecret())
+                                     .query("grant_type", "client_credential")
+                                     .execute()
+                                     .asJsonNode();
         log.info("获取公众号access_token结果: {}", result.toString());
         if (result.hasNonNull("access_token")) {
             access_token = Jackson.getString(result, "access_token");
@@ -217,7 +217,7 @@ public class WxApiServiceImpl implements WxApiService, WxConstants {
         String access_token = getAccessToken();
         JsonNode result = HttpRequest.post(BATCH_USER_INFO)
                 .query("access_token", access_token)
-                .bodyValue(userListJson)
+                .bodyJson(userListJson)
                 .execute()
                 .asJsonNode();
         if (result.hasNonNull("user_info_list")) {
@@ -245,7 +245,7 @@ public class WxApiServiceImpl implements WxApiService, WxConstants {
         reqBody.put("remark", remark);
         JsonNode result = HttpRequest.post(UPDATE_USER_REMARK)
                 .query("access_token", access_token)
-                .bodyValue(reqBody.toString())
+                .bodyJson(reqBody.toString())
                 .execute()
                 .asJsonNode();
         int errcode = Jackson.getIntValue(reqBody, "errcode", -1);
@@ -517,7 +517,7 @@ public class WxApiServiceImpl implements WxApiService, WxConstants {
 
         JsonNode result = HttpRequest.post(CREATE_QRCODE)
                 .query("access_token", access_token)
-                .bodyValue(reqBody.toString())
+                .bodyJson(reqBody.toString())
                 .execute()
                 .asJsonNode();
         if (result.hasNonNull("ticket")) {
@@ -564,7 +564,7 @@ public class WxApiServiceImpl implements WxApiService, WxConstants {
     public boolean createMenu(String menuJson) {
         JsonNode result = HttpRequest.post(CREATE_MENU)
                 .query("access_token", getAccessToken())
-                .bodyValue(menuJson)
+                .bodyJson(menuJson)
                 .execute()
                 .asJsonNode();
         int errcode = Jackson.getIntValue(result, "errcode", -1);
@@ -603,7 +603,7 @@ public class WxApiServiceImpl implements WxApiService, WxConstants {
     public String createConditionalMenu(String menuJson) {
         JsonNode result = HttpRequest.post(CREATE_CONDITIONAL_MENU)
                 .query("access_token", getAccessToken())
-                .bodyValue(menuJson)
+                .bodyJson(menuJson)
                 .execute()
                 .asJsonNode();
         String menuId = Jackson.getString(result, "menuid");
@@ -627,7 +627,7 @@ public class WxApiServiceImpl implements WxApiService, WxConstants {
     public boolean deleteConditionalMenu(String menuId) {
         JsonNode result = HttpRequest.post(DELETE_CONDITIONAL_MENU)
                 .query("access_token", getAccessToken())
-                .bodyValue("{\"menuid\":" + menuId + "\"}")
+                .bodyJson("{\"menuid\":" + menuId + "\"}")
                 .execute()
                 .asJsonNode();
         int errcode = Jackson.getIntValue(result, "errcode", -1);
@@ -649,7 +649,7 @@ public class WxApiServiceImpl implements WxApiService, WxConstants {
     public String tryMatchConditionalMenu(String userId) {
         return HttpRequest.post(TRY_MATCH_CONDITIONAL_MENU)
                 .query("access_token", getAccessToken())
-                .bodyValue("{\"user_id\":" + userId + "\"}")
+                .bodyJson("{\"user_id\":" + userId + "\"}")
                 .execute()
                 .asString();
     }
@@ -725,7 +725,7 @@ public class WxApiServiceImpl implements WxApiService, WxConstants {
     public String addNews(String articlesJson) {
         JsonNode result = HttpRequest.post(ADD_NEWS)
                 .query("access_token", getAccessToken())
-                .bodyValue(articlesJson)
+                .bodyJson(articlesJson)
                 .execute()
                 .asJsonNode();
         if (result.hasNonNull("media_id")) {
@@ -747,7 +747,7 @@ public class WxApiServiceImpl implements WxApiService, WxConstants {
     public boolean updateNews(String articlesJson) {
         JsonNode result = HttpRequest.post(UPDATE_NEWS)
                 .query("access_token", getAccessToken())
-                .bodyValue(articlesJson)
+                .bodyJson(articlesJson)
                 .execute()
                 .asJsonNode();
         int errcode = Jackson.getIntValue(result, "errcode", -1);
@@ -813,7 +813,7 @@ public class WxApiServiceImpl implements WxApiService, WxConstants {
     public String getMaterial(String mediaId) {
         return HttpRequest.post(GET_MATERIAL)
                 .query("access_token", getAccessToken())
-                .bodyValue("{\"media_id\":" + mediaId + "\"}")
+                .bodyJson("{\"media_id\":" + mediaId + "\"}")
                 .execute()
                 .asString();
     }
@@ -828,7 +828,7 @@ public class WxApiServiceImpl implements WxApiService, WxConstants {
     public boolean deleteMaterial(String mediaId) {
         JsonNode result = HttpRequest.post(DELETE_MATERIAL)
                 .query("access_token", getAccessToken())
-                .bodyValue("{\"media_id\":" + mediaId + "\"}")
+                .bodyJson("{\"media_id\":" + mediaId + "\"}")
                 .execute()
                 .asJsonNode();
         int errcode = Jackson.getIntValue(result, "errcode", -1);
@@ -870,7 +870,7 @@ public class WxApiServiceImpl implements WxApiService, WxConstants {
 
         return HttpRequest.post(BATCH_GET_MATERIAL)
                 .query("access_token", getAccessToken())
-                .bodyValue(reqBody.toString())
+                .bodyJson(reqBody.toString())
                 .execute()
                 .asString();
     }
@@ -913,7 +913,7 @@ public class WxApiServiceImpl implements WxApiService, WxConstants {
     public String uploadNews(String newsJson) {
         JsonNode result = HttpRequest.post(MEDIA_UPLOAD_NEWS)
                 .query("access_token", getAccessToken())
-                .bodyValue(newsJson)
+                .bodyJson(newsJson)
                 .execute()
                 .asJsonNode();
         if (result.hasNonNull("media_id")) {
@@ -942,7 +942,7 @@ public class WxApiServiceImpl implements WxApiService, WxConstants {
         reqBody.put("description", description);
         JsonNode result = HttpRequest.post(MEDIA_UPLOAD_VIDEO)
                 .query("access_token", getAccessToken())
-                .bodyValue(reqBody.toString())
+                .bodyJson(reqBody.toString())
                 .execute()
                 .asJsonNode();
         if (result.hasNonNull("media_id")) {
@@ -970,7 +970,7 @@ public class WxApiServiceImpl implements WxApiService, WxConstants {
     public String massSendAll(String mgsJson) {
         return HttpRequest.post(MASS_MSG_SEND_ALL)
                 .query("access_token", getAccessToken())
-                .bodyValue(mgsJson)
+                .bodyJson(mgsJson)
                 .execute()
                 .asString();
     }
@@ -990,7 +990,7 @@ public class WxApiServiceImpl implements WxApiService, WxConstants {
     public String massSend(String msgJson) {
         return HttpRequest.post(MASS_MSG_SEND)
                 .query("access_token", getAccessToken())
-                .bodyValue(msgJson)
+                .bodyJson(msgJson)
                 .execute()
                 .asString();
     }
@@ -1009,7 +1009,7 @@ public class WxApiServiceImpl implements WxApiService, WxConstants {
         reqBody.put("articleIdx", articleIdx);
         JsonNode result = HttpRequest.post(MASS_MSG_DELETE)
                 .query("access_token", getAccessToken())
-                .bodyValue(reqBody.toString())
+                .bodyJson(reqBody.toString())
                 .execute()
                 .asJsonNode();
         int errcode = Jackson.getIntValue(result, "errcode", -1);
@@ -1036,7 +1036,7 @@ public class WxApiServiceImpl implements WxApiService, WxConstants {
     public String massPreview(String msgJson) {
         JsonNode result = HttpRequest.post(MASS_PREVIEW)
                 .query("access_token", getAccessToken())
-                .bodyValue(msgJson)
+                .bodyJson(msgJson)
                 .execute()
                 .asJsonNode();
         if (result.hasNonNull("msg_id")) {
@@ -1059,7 +1059,7 @@ public class WxApiServiceImpl implements WxApiService, WxConstants {
     public String massGetStatus(String msgId) {
         JsonNode result = HttpRequest.post(MASS_GET_STATUS)
                 .query("access_token", getAccessToken())
-                .bodyValue("{\"msg_id\":" + msgId + "\"}")
+                .bodyJson("{\"msg_id\":" + msgId + "\"}")
                 .execute()
                 .asJsonNode();
         if (result.hasNonNull("msg_status")) {
@@ -1083,7 +1083,7 @@ public class WxApiServiceImpl implements WxApiService, WxConstants {
     public boolean sendSubscribeMsg(String msgJson) {
         JsonNode result = HttpRequest.post(SEND_SUBSCRIBE_MSG)
                 .query("access_token", getAccessToken())
-                .bodyValue(msgJson)
+                .bodyJson(msgJson)
                 .execute()
                 .asJsonNode();
         int errcode = Jackson.getIntValue(result, "errcode", -1);
@@ -1143,7 +1143,7 @@ public class WxApiServiceImpl implements WxApiService, WxConstants {
         }
         return HttpRequest.post(SEMANTIC_URL)
                 .query("access_token", getAccessToken())
-                .bodyValue(reqBody)
+                .bodyJson(reqBody)
                 .execute()
                 .asString();
     }

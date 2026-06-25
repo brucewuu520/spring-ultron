@@ -1,7 +1,8 @@
 package org.springultron.logging;
 
+import org.jspecify.annotations.NonNull;
+import org.springframework.boot.EnvironmentPostProcessor;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.env.EnvironmentPostProcessor;
 import org.springframework.boot.logging.LogFile;
 import org.springframework.core.Ordered;
 import org.springframework.core.env.ConfigurableEnvironment;
@@ -20,14 +21,15 @@ import java.util.Map;
  * @date 2020/6/24 14:39
  */
 public class LoggingInitializer implements EnvironmentPostProcessor, Ordered {
+
     public static final String LOGGING_PROPERTY_SOURCE_NAME = "ultron-logging-property-source";
 
     @Override
-    public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
+    public void postProcessEnvironment(ConfigurableEnvironment environment, @NonNull SpringApplication application) {
         if (!environment.containsProperty(LogFile.FILE_NAME_PROPERTY)) {
             // 读取配置文件日志目录
             String logDir = environment.getProperty(LogFile.FILE_PATH_PROPERTY);
-            if (null == logDir || "".equals(logDir)) {
+            if (null == logDir || logDir.isEmpty()) {
                 logDir = LoggingUtils.DEFAULT_LOG_DIR + File.separator + LoggingUtils.DEFAULT_APP_NAME;
             }
             String logFileName = logDir + File.separator + LoggingUtils.FILE_INFO_LOG;
@@ -43,5 +45,4 @@ public class LoggingInitializer implements EnvironmentPostProcessor, Ordered {
     public int getOrder() {
         return Ordered.LOWEST_PRECEDENCE;
     }
-
 }

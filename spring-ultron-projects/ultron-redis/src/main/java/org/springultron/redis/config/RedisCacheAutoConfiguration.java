@@ -1,15 +1,16 @@
 package org.springultron.redis.config;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
-import org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration;
-import org.springframework.boot.autoconfigure.cache.CacheManagerCustomizer;
-import org.springframework.boot.autoconfigure.cache.CacheManagerCustomizers;
-import org.springframework.boot.autoconfigure.cache.CacheProperties;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
+import org.springframework.boot.cache.autoconfigure.CacheAutoConfiguration;
+import org.springframework.boot.cache.autoconfigure.CacheManagerCustomizer;
+import org.springframework.boot.cache.autoconfigure.CacheManagerCustomizers;
+import org.springframework.boot.cache.autoconfigure.CacheProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.data.redis.autoconfigure.DataRedisAutoConfiguration;
 import org.springframework.cache.interceptor.CacheAspectSupport;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
@@ -20,7 +21,7 @@ import org.springframework.data.redis.cache.RedisCacheWriter;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.RedisSerializer;
-import org.springframework.lang.Nullable;
+import org.springultron.core.pool.StringPool;
 import org.springultron.redis.RedisAutoCacheManager;
 
 import java.util.LinkedHashMap;
@@ -43,7 +44,7 @@ import java.util.Map;
  * @author brucewuu
  * @date 2019/11/10 17:34
  */
-@AutoConfiguration(before = {CacheAutoConfiguration.class}, after = {RedisAutoConfiguration.class})
+@AutoConfiguration(before = {CacheAutoConfiguration.class}, after = {DataRedisAutoConfiguration.class})
 @ConditionalOnBean({CacheAspectSupport.class})
 @EnableConfigurationProperties({CacheProperties.class})
 class RedisCacheAutoConfiguration {
@@ -56,7 +57,7 @@ class RedisCacheAutoConfiguration {
 
     /**
      * 配置缓存管理器，替换系统默认的cacheManager
-     * {@link org.springframework.boot.autoconfigure.cache.RedisCacheConfiguration}
+     * {@link org.springframework.boot.cache.autoconfigure.RedisCacheConfiguration}
      */
     @Primary
     @Bean
@@ -89,6 +90,9 @@ class RedisCacheAutoConfiguration {
     private RedisCacheConfiguration createConfiguration(CacheProperties cacheProperties, @Nullable RedisSerializer<Object> redisSerializer) {
         CacheProperties.Redis redisProperties = cacheProperties.getRedis();
         RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig();
+
+        // 设置默认缓存key分割符号为 “:”，如果已经带 “:” 则不设置。
+        config = config.computePrefixWith(name -> name.endsWith(StringPool.COLON) ? name : name + StringPool.COLON);
 
         if (redisSerializer != null) {
             config = config.serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(redisSerializer));

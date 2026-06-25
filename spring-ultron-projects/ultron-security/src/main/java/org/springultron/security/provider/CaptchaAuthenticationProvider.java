@@ -1,11 +1,12 @@
 package org.springultron.security.provider;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.jspecify.annotations.NonNull;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.util.Assert;
 import org.springultron.captcha.service.CaptchaService;
 import org.springultron.core.utils.WebUtils;
@@ -20,19 +21,15 @@ public class CaptchaAuthenticationProvider extends DaoAuthenticationProvider {
 
     private final CaptchaService captchaService;
 
-    public CaptchaAuthenticationProvider(CaptchaService captchaService) {
+    public CaptchaAuthenticationProvider(UserDetailsService userDetailsService, CaptchaService captchaService) {
+        super(userDetailsService);
         Assert.notNull(captchaService, "captchaService can not be null.");
         this.captchaService = captchaService;
     }
 
-    public CaptchaAuthenticationProvider(CaptchaService captchaService, PasswordEncoder passwordEncoder) {
-        super(passwordEncoder);
-        Assert.notNull(captchaService, "captchaService can not be null.");
-        this.captchaService = captchaService;
-    }
-
+    @NonNull
     @Override
-    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+    public Authentication authenticate(@NonNull Authentication authentication) throws AuthenticationException {
         HttpServletRequest request = WebUtils.getRequest();
         assert request != null;
         String codeKey = request.getParameter("codeKey");

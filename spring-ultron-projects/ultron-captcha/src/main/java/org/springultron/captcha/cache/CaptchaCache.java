@@ -16,8 +16,8 @@
 
 package org.springultron.captcha.cache;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.boot.convert.DurationStyle;
-import org.springframework.lang.Nullable;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;

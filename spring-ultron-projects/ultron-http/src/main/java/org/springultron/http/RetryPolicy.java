@@ -16,7 +16,7 @@
 
 package org.springultron.http;
 
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.springframework.retry.policy.SimpleRetryPolicy;
 
 import java.util.function.Predicate;

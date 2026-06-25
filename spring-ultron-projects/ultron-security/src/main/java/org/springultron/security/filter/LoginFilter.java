@@ -1,8 +1,8 @@
 package org.springultron.security.filter;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.jspecify.annotations.NonNull;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -16,6 +16,7 @@ import org.springultron.core.jackson.Jackson;
 import org.springultron.core.utils.StringUtils;
 import org.springultron.security.handler.SimpleAuthenticationFailureHandler;
 import org.springultron.security.handler.SimpleAuthenticationSuccessHandler;
+import tools.jackson.databind.JsonNode;
 
 import java.io.IOException;
 
@@ -37,8 +38,9 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         setSecurityContextRepository(new HttpSessionSecurityContextRepository());
     }
 
+    @NonNull
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+    public Authentication attemptAuthentication(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response) throws AuthenticationException {
         if (!"POST".equals(request.getMethod())) {
             throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
         }

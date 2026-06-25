@@ -2,12 +2,10 @@ package org.springultron.redis;
 
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.core.TimeoutUtils;
 import org.springframework.util.CollectionUtils;
 
 import java.time.Duration;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Redis操作客户端
@@ -413,8 +411,7 @@ public class RedisClient {
      * @param collection 值集合
      * @return 列表长度
      */
-    public Long leftPushAll(String key, Collection collection) {
-        //noinspection unchecked
+    public Long leftPushAll(String key, Collection<?> collection) {
         return redisTemplate.opsForList().leftPushAll(key, collection);
     }
 
@@ -460,8 +457,7 @@ public class RedisClient {
      * @param collection 值集合
      * @return 列表长度
      */
-    public Long rightPushAll(String key, Collection collection) {
-        //noinspection unchecked
+    public Long rightPushAll(String key, Collection<?> collection) {
         return redisTemplate.opsForList().rightPushAll(key, collection);
     }
 
@@ -496,11 +492,7 @@ public class RedisClient {
      * @return 是否设置成功
      */
     public boolean expire(String key, Duration timeout) {
-        if (TimeoutUtils.hasMillis(timeout)) {
-            return Optional.ofNullable(redisTemplate.expire(key, timeout.toMillis(), TimeUnit.MILLISECONDS)).orElse(Boolean.FALSE);
-        } else {
-            return Optional.ofNullable(redisTemplate.expire(key, timeout.getSeconds(), TimeUnit.SECONDS)).orElse(Boolean.FALSE);
-        }
+        return Optional.ofNullable(redisTemplate.expire(key, timeout)).orElse(Boolean.FALSE);
     }
 
     /**

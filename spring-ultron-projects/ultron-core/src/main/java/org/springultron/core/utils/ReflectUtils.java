@@ -1,11 +1,11 @@
 package org.springultron.core.utils;
 
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.BeansException;
 import org.springframework.cglib.core.CodeGenerationException;
 import org.springframework.core.convert.Property;
 import org.springframework.core.convert.TypeDescriptor;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
 import org.springframework.util.ReflectionUtils;
 
 import java.beans.PropertyDescriptor;
@@ -216,7 +216,7 @@ public class ReflectUtils extends ReflectionUtils {
      * @return value
      */
     @Nullable
-    public static Object invokeMethod(Method method, @Nullable Object target, @Nullable Object... args) {
+    public static Object invokeMethod(Method method, @Nullable Object target, Object @NonNull ... args) {
         makeAccessible(method);
         return ReflectionUtils.invokeMethod(method, target, args);
     }

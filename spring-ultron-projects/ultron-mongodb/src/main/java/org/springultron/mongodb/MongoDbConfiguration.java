@@ -2,7 +2,7 @@ package org.springultron.mongodb;
 
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
-import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration;
+import org.springframework.boot.mongodb.autoconfigure.MongoAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.mongodb.core.convert.MongoCustomConversions;
@@ -19,7 +19,7 @@ import java.util.List;
  * @date 2020/4/5 13:42
  */
 @AutoConfiguration
-@AutoConfigureBefore(MongoDataAutoConfiguration.class)
+@AutoConfigureBefore(MongoAutoConfiguration.class)
 public class MongoDbConfiguration {
 
     @Bean

@@ -1,8 +1,9 @@
 package org.springultron.core.convert;
 
+import org.jspecify.annotations.NonNull;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.lang.NonNull;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Objects;
@@ -74,6 +75,7 @@ public abstract class Converter<A, B> implements Function<A, B> {
     }
 
     private static final class ReverseConverter<A, B> extends Converter<B, A> implements Serializable {
+        @Serial
         private static final long serialVersionUID = 0L;
         final Converter<A, B> original;
 

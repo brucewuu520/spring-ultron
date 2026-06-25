@@ -17,9 +17,9 @@
 package org.springultron.http;
 
 import okhttp3.logging.HttpLoggingInterceptor;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.lang.NonNull;
 
 /**
  * Slf4j 打印日志

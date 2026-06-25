@@ -16,13 +16,13 @@
 
 package org.springultron.redis;
 
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.springframework.boot.convert.DurationStyle;
 import org.springframework.data.redis.cache.RedisCache;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.cache.RedisCacheWriter;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
 import org.springultron.core.utils.StringUtils;
 
 import java.time.Duration;
@@ -43,9 +43,9 @@ public class RedisAutoCacheManager extends RedisCacheManager {
         super(cacheWriter, defaultCacheConfiguration, allowRuntimeCacheCreation, initialCacheConfigurations);
     }
 
-    @NonNull
+    @Nonnull
     @Override
-    protected RedisCache createRedisCache(@NonNull String name, @Nullable RedisCacheConfiguration cacheConfig) {
+    protected RedisCache createRedisCache(@Nonnull String name, @Nullable RedisCacheConfiguration cacheConfig) {
         String cacheName = name;
         if (StringUtils.isNotEmpty(name) && name.contains("#")) {
             String[] array = name.split("#");

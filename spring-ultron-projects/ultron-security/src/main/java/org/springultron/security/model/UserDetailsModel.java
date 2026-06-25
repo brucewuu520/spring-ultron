@@ -1,7 +1,7 @@
 package org.springultron.security.model;
 
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.CredentialsContainer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -33,7 +33,6 @@ public class UserDetailsModel implements UserDetails, CredentialsContainer {
         this.userInfo = userInfo;
         this.permissionList = permissionList;
         if (Lists.isNotEmpty(permissionList)) {
-            assert permissionList != null;
             this.authorities = Collections.unmodifiableSet(sortAuthorities(
                     permissionList.stream()
                                   .filter(permission -> permission.getValue() != null)
@@ -57,9 +56,10 @@ public class UserDetailsModel implements UserDetails, CredentialsContainer {
         return new UserDetailsModel(userInfo, permissionList);
     }
 
+    @NonNull
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
+        return authorities != null ? authorities : Collections.emptySet();
     }
 
     @Override
@@ -67,24 +67,10 @@ public class UserDetailsModel implements UserDetails, CredentialsContainer {
         return userInfo.getPassword();
     }
 
+    @NonNull
     @Override
     public String getUsername() {
         return userInfo.getUsername();
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
     }
 
     @Override

@@ -25,7 +25,8 @@
         <module>ultron-logging</module>
         <module>ultron-security</module>
         <module>ultron-crypto</module>
-        <module>ultron-mybatis</module>
+        <module>ultron-mybatis-plus</module>
+        <module>ultron-mybatis-flex</module>
         <module>ultron-redis</module>
         <module>ultron-redis-lock</module>
         <module>ultron-caffeine</module>

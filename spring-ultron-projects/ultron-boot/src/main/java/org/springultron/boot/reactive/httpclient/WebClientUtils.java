@@ -1,6 +1,5 @@
 package org.springultron.boot.reactive.httpclient;
 
-import org.springframework.boot.autoconfigure.web.reactive.function.client.WebClientAutoConfiguration;
 import org.springframework.http.MediaType;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
@@ -189,7 +188,7 @@ public final class WebClientUtils {
         return getInstance()
                 .get()
                 .uri(targetUrl)
-                .headers(headers -> headers.addAll(headerMap))
+                .headers(headers -> headers.putAll(headerMap))
                 .retrieve()
                 .bodyToMono(returnType);
     }

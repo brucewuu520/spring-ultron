@@ -11,8 +11,8 @@ import feign.Feign;
 import feign.InvocationHandlerFactory;
 import feign.MethodMetadata;
 import feign.Target;
+import org.jspecify.annotations.Nullable;
 import org.springframework.cloud.openfeign.FallbackFactory;
-import org.springframework.lang.Nullable;
 import org.springultron.core.result.ApiResult;
 import org.springultron.core.result.ResultCode;
 

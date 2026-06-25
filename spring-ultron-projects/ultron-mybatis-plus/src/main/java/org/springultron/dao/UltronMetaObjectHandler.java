@@ -1,6 +1,7 @@
 package org.springultron.dao;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
+import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.reflection.MetaObject;
 
 import java.time.LocalDateTime;
@@ -21,12 +22,12 @@ public class UltronMetaObjectHandler implements MetaObjectHandler {
     }
 
     @Override
-    public boolean openInsertFill() {
+    public boolean openInsertFill(MappedStatement mappedStatement) {
         return autoFill.isEnableInsertFill();
     }
 
     @Override
-    public boolean openUpdateFill() {
+    public boolean openUpdateFill(MappedStatement mappedStatement) {
         return autoFill.isEnableUpdateFill();
     }
 

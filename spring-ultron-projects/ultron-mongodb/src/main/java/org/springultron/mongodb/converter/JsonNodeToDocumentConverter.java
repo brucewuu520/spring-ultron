@@ -1,10 +1,10 @@
 package org.springultron.mongodb.converter;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.bson.Document;
+import org.jspecify.annotations.Nullable;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.convert.WritingConverter;
-import org.springframework.lang.Nullable;
+import tools.jackson.databind.node.ObjectNode;
 
 /**
  * JsonNode 转 Mongo Document

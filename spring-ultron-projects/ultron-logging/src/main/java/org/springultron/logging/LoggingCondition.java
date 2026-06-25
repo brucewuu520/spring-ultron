@@ -1,5 +1,6 @@
 package org.springultron.logging;
 
+import org.jspecify.annotations.NonNull;
 import org.springframework.boot.autoconfigure.condition.ConditionOutcome;
 import org.springframework.boot.autoconfigure.condition.SpringBootCondition;
 import org.springframework.context.annotation.ConditionContext;
@@ -15,8 +16,9 @@ import org.springframework.util.ClassUtils;
  */
 class LoggingCondition extends SpringBootCondition {
 
+    @NonNull
     @Override
-    public ConditionOutcome getMatchOutcome(ConditionContext context, AnnotatedTypeMetadata metadata) {
+    public ConditionOutcome getMatchOutcome(ConditionContext context, @NonNull AnnotatedTypeMetadata metadata) {
         Environment environment = context.getEnvironment();
         Boolean logstashEnabled = environment.getProperty(UltronLoggingProperties.Logstash.PREFIX + ".enabled", Boolean.class, Boolean.FALSE);
         if (!logstashEnabled) {

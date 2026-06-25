@@ -20,7 +20,7 @@ import okhttp3.*;
 import okhttp3.Authenticator;
 import okhttp3.internal.http.HttpMethod;
 import okhttp3.logging.HttpLoggingInterceptor;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.springultron.core.exception.Exceptions;
 import org.springultron.core.jackson.Jackson;
 import org.springultron.http.ssl.DisableValidationTrustManager;

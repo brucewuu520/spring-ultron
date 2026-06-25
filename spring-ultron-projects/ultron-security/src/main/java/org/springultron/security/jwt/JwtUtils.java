@@ -5,7 +5,7 @@ import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.MacAlgorithm;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.springultron.core.utils.Base64Utils;
 
 import javax.crypto.SecretKey;

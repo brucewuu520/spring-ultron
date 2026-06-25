@@ -425,8 +425,7 @@ public class ReactiveRedisClient {
      * @param collection 值集合
      * @return 列表长度
      */
-    public Mono<Long> leftPushAll(String key, Collection collection) {
-        //noinspection unchecked
+    public Mono<Long> leftPushAll(String key, Collection<?> collection) {
         return reactiveRedisTemplate.opsForList().leftPushAll(key, collection);
     }
 
@@ -472,8 +471,7 @@ public class ReactiveRedisClient {
      * @param collection 值集合
      * @return 列表长度
      */
-    public Mono<Long> rightPushAll(String key, Collection collection) {
-        //noinspection unchecked
+    public Mono<Long> rightPushAll(String key, Collection<?> collection) {
         return reactiveRedisTemplate.opsForList().rightPushAll(key, collection);
     }
 

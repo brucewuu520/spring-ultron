@@ -1,7 +1,5 @@
 package org.springultron.wechat.service.impl;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springultron.core.exception.ApiException;
@@ -23,6 +21,8 @@ import org.springultron.wechat.enums.OCR_TYPE;
 import org.springultron.wechat.props.WechatProperties;
 import org.springultron.wechat.props.WxaConf;
 import org.springultron.wechat.service.WxaApiService;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.node.ObjectNode;
 
 import java.io.File;
 import java.io.InputStream;
@@ -76,11 +76,11 @@ public class WxaApiServiceImpl implements WxaApiService, WxaConstants {
             return access_token;
         }
         JsonNode result = HttpRequest.get(ACCESS_TOKEN)
-                .query("appid", wxaConf.getAppId())
-                .query("secret", wxaConf.getAppSecret())
-                .query("grant_type", "client_credential")
-                .execute()
-                .asJsonNode();
+                                     .query("appid", wxaConf.getAppId())
+                                     .query("secret", wxaConf.getAppSecret())
+                                     .query("grant_type", "client_credential")
+                                     .execute()
+                                     .asJsonNode();
         if (result.hasNonNull("access_token")) {
             access_token = Jackson.getString(result, "access_token");
             int expires_in = Jackson.getIntValue(result, "expires_in", 0) - 3;
@@ -187,7 +187,7 @@ public class WxaApiServiceImpl implements WxaApiService, WxaConstants {
 
         JsonNode result = HttpRequest.post(VERIFY_SIGNATURE)
                 .query("access_token", getAccessToken())
-                .bodyValue(reqBody.toString())
+                .bodyJson(reqBody.toString())
                 .execute()
                 .asJsonNode();
         int errcode = Jackson.getIntValue(result, "errcode", 0);
@@ -228,7 +228,7 @@ public class WxaApiServiceImpl implements WxaApiService, WxaConstants {
 
         return HttpRequest.post(GET_WXA_CODE)
                 .query("access_token", getAccessToken())
-                .bodyValue(reqBody.toString())
+                .bodyJson(reqBody.toString())
                 .execute()
                 .asStream();
     }
@@ -263,7 +263,7 @@ public class WxaApiServiceImpl implements WxaApiService, WxaConstants {
 
         return HttpRequest.post(GET_WXA_CODE_UNLIMITED)
                 .query("access_token", getAccessToken())
-                .bodyValue(reqBody.toString())
+                .bodyJson(reqBody.toString())
                 .execute()
                 .asStream();
     }
@@ -283,7 +283,7 @@ public class WxaApiServiceImpl implements WxaApiService, WxaConstants {
 
         return HttpRequest.post(CREATE_QR_CODE)
                 .query("access_token", getAccessToken())
-                .bodyValue(reqBody.toString())
+                .bodyJson(reqBody.toString())
                 .execute()
                 .asStream();
     }
@@ -314,7 +314,7 @@ public class WxaApiServiceImpl implements WxaApiService, WxaConstants {
 
         JsonNode result = HttpRequest.post(GENERATE_SCHEME)
                 .query("access_token", getAccessToken())
-                .bodyValue(reqBody.toString())
+                .bodyJson(reqBody.toString())
                 .execute()
                 .asJsonNode();
         int errcode = Jackson.getIntValue(result, "errcode", 0);
@@ -337,7 +337,7 @@ public class WxaApiServiceImpl implements WxaApiService, WxaConstants {
     public boolean sendSubscribeMsg(String msgJson) {
         JsonNode result = HttpRequest.post(SEND_SUBSCRIBE_MSG)
                 .query("access_token", getAccessToken())
-                .bodyValue(msgJson)
+                .bodyJson(msgJson)
                 .execute()
                 .asJsonNode();
         int errcode = Jackson.getIntValue(result, "errcode", -1);
@@ -359,7 +359,7 @@ public class WxaApiServiceImpl implements WxaApiService, WxaConstants {
     public boolean sendUniformMsg(String msgJson) {
         JsonNode result = HttpRequest.post(SEND_UNIFORM_MSG)
                 .query("access_token", getAccessToken())
-                .bodyValue(msgJson)
+                .bodyJson(msgJson)
                 .execute()
                 .asJsonNode();
         int errcode = Jackson.getIntValue(result, "errcode", -1);
@@ -383,7 +383,7 @@ public class WxaApiServiceImpl implements WxaApiService, WxaConstants {
     public boolean sendCustomerMsg(String msgJson) {
         JsonNode result = HttpRequest.post(SEND_CUSTOMER_MSG)
                 .query("access_token", getAccessToken())
-                .bodyValue(msgJson)
+                .bodyJson(msgJson)
                 .execute()
                 .asJsonNode();
         int errcode = Jackson.getIntValue(result, "errcode", -1);
@@ -410,7 +410,7 @@ public class WxaApiServiceImpl implements WxaApiService, WxaConstants {
 
         JsonNode result = HttpRequest.post(SET_CUSTOMER_TYPE)
                 .query("access_token", getAccessToken())
-                .bodyValue(reqBody.toString())
+                .bodyJson(reqBody.toString())
                 .execute()
                 .asJsonNode();
         int errcode = Jackson.getIntValue(result, "errcode", -1);
@@ -495,7 +495,7 @@ public class WxaApiServiceImpl implements WxaApiService, WxaConstants {
     public boolean setUpdatableMsg(String json) {
         JsonNode result = HttpRequest.post(SET_UPDATABLE_MSG)
                 .query("access_token", getAccessToken())
-                .bodyValue(json)
+                .bodyJson(json)
                 .execute()
                 .asJsonNode();
         int errcode = Jackson.getIntValue(result, "errcode", -1);
@@ -551,7 +551,7 @@ public class WxaApiServiceImpl implements WxaApiService, WxaConstants {
     public int getUserRiskRank(String json) {
         JsonNode result = HttpRequest.post(GET_USER_RISK_RANK)
                 .query("access_token", getAccessToken())
-                .bodyValue(json)
+                .bodyJson(json)
                 .execute()
                 .asJsonNode();
         int errcode = Jackson.getIntValue(result, "errcode", 0);
@@ -590,7 +590,7 @@ public class WxaApiServiceImpl implements WxaApiService, WxaConstants {
     public String textSecCheck(String text) {
         return HttpRequest.post(TEXT_SEC_CHECK)
                 .query("access_token", getAccessToken())
-                .bodyValue("{\"content\":" + text + "\"}")
+                .bodyJson("{\"content\":" + text + "\"}")
                 .execute()
                 .asString();
     }
@@ -610,7 +610,7 @@ public class WxaApiServiceImpl implements WxaApiService, WxaConstants {
 
         JsonNode result = HttpRequest.post(MEDIA_CHECK_ASYNC)
                 .query("access_token", getAccessToken())
-                .bodyValue(reqBody.toString())
+                .bodyJson(reqBody.toString())
                 .execute()
                 .asJsonNode();
         int errcode = Jackson.getIntValue(result, "errcode", 0);

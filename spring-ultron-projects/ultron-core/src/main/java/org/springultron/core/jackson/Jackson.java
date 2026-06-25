@@ -1,26 +1,21 @@
 package org.springultron.core.jackson;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.type.CollectionLikeType;
-import com.fasterxml.jackson.databind.type.MapType;
-import org.springultron.core.exception.Exceptions;
 import org.springultron.core.utils.BeanUtils;
 import org.springultron.core.utils.DateUtils;
+import tools.jackson.core.JsonParser;
+import tools.jackson.core.json.JsonReadFeature;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.SerializationFeature;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.node.ArrayNode;
+import tools.jackson.databind.node.ObjectNode;
+import tools.jackson.databind.type.CollectionLikeType;
+import tools.jackson.databind.type.MapType;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.Serial;
 import java.text.SimpleDateFormat;
 import java.time.ZoneId;
 import java.util.*;
@@ -43,11 +38,7 @@ public class Jackson {
      * @return json字符串
      */
     public static String toJson(Object value) {
-        try {
-            return getInstance().writeValueAsString(value);
-        } catch (JsonProcessingException e) {
-            throw Exceptions.unchecked(e);
-        }
+        return getInstance().writeValueAsString(value);
     }
 
     /**
@@ -57,11 +48,7 @@ public class Jackson {
      * @return json字符串
      */
     public static byte[] toBytes(Object value) {
-        try {
-            return getInstance().writeValueAsBytes(value);
-        } catch (JsonProcessingException e) {
-            throw Exceptions.unchecked(e);
-        }
+        return getInstance().writeValueAsBytes(value);
     }
 
     /**
@@ -73,11 +60,7 @@ public class Jackson {
      * @return Bean
      */
     public static <T> T parse(String json, Class<T> valueType) {
-        try {
-            return getInstance().readValue(json, valueType);
-        } catch (IOException e) {
-            throw Exceptions.unchecked(e);
-        }
+        return getInstance().readValue(json, valueType);
     }
 
     /**
@@ -89,11 +72,7 @@ public class Jackson {
      * @return Bean
      */
     public static <T> T parse(byte[] bytes, Class<T> valueType) {
-        try {
-            return getInstance().readValue(bytes, valueType);
-        } catch (IOException e) {
-            throw Exceptions.unchecked(e);
-        }
+        return getInstance().readValue(bytes, valueType);
     }
 
     /**
@@ -105,11 +84,7 @@ public class Jackson {
      * @return Bean
      */
     public static <T> T parse(InputStream is, Class<T> valueType) {
-        try {
-            return getInstance().readValue(is, valueType);
-        } catch (IOException e) {
-            throw Exceptions.unchecked(e);
-        }
+        return getInstance().readValue(is, valueType);
     }
 
     /**
@@ -121,11 +96,7 @@ public class Jackson {
      * @return Bean
      */
     public static <T> T parse(String json, TypeReference<T> valueTypeRef) {
-        try {
-            return getInstance().readValue(json, valueTypeRef);
-        } catch (IOException e) {
-            throw Exceptions.unchecked(e);
-        }
+        return getInstance().readValue(json, valueTypeRef);
     }
 
     /**
@@ -137,11 +108,7 @@ public class Jackson {
      * @return Bean
      */
     public static <T> T parse(byte[] bytes, TypeReference<T> valueTypeRef) {
-        try {
-            return getInstance().readValue(bytes, valueTypeRef);
-        } catch (IOException e) {
-            throw Exceptions.unchecked(e);
-        }
+        return getInstance().readValue(bytes, valueTypeRef);
     }
 
     /**
@@ -153,11 +120,7 @@ public class Jackson {
      * @return Bean
      */
     public static <T> T parse(InputStream is, TypeReference<T> valueTypeRef) {
-        try {
-            return getInstance().readValue(is, valueTypeRef);
-        } catch (IOException e) {
-            throw Exceptions.unchecked(e);
-        }
+        return getInstance().readValue(is, valueTypeRef);
     }
 
     /**
@@ -201,11 +164,7 @@ public class Jackson {
      * @return Map 集合
      */
     public static <K, V> Map<K, V> parseMap(String json, Class<K> keyClass, Class<V> valueClass) {
-        try {
-            return getInstance().readValue(json, getMapType(keyClass, valueClass));
-        } catch (JsonProcessingException e) {
-            throw Exceptions.unchecked(e);
-        }
+        return getInstance().readValue(json, getMapType(keyClass, valueClass));
     }
 
     /**
@@ -219,11 +178,7 @@ public class Jackson {
      * @return Map 集合
      */
     public static <K, V> Map<K, V> parseMap(byte[] bytes, Class<K> keyClass, Class<V> valueClass) {
-        try {
-            return getInstance().readValue(bytes, getMapType(keyClass, valueClass));
-        } catch (IOException e) {
-            throw Exceptions.unchecked(e);
-        }
+        return getInstance().readValue(bytes, getMapType(keyClass, valueClass));
     }
 
     /**
@@ -237,11 +192,7 @@ public class Jackson {
      * @return Map 集合
      */
     public static <K, V> Map<K, V> parseMap(InputStream is, Class<K> keyClass, Class<V> valueClass) {
-        try {
-            return getInstance().readValue(is, getMapType(keyClass, valueClass));
-        } catch (IOException e) {
-            throw Exceptions.unchecked(e);
-        }
+        return getInstance().readValue(is, getMapType(keyClass, valueClass));
     }
 
     /**
@@ -253,11 +204,7 @@ public class Jackson {
      * @return List
      */
     public static <T> List<T> parseList(String json, Class<T> valueType) {
-        try {
-            return getInstance().readValue(json, getListType(valueType));
-        } catch (IOException e) {
-            throw Exceptions.unchecked(e);
-        }
+        return getInstance().readValue(json, getListType(valueType));
     }
 
     /**
@@ -269,11 +216,7 @@ public class Jackson {
      * @return List
      */
     public static <T> List<T> parseList(byte[] bytes, Class<T> valueType) {
-        try {
-            return getInstance().readValue(bytes, getListType(valueType));
-        } catch (IOException e) {
-            throw Exceptions.unchecked(e);
-        }
+        return getInstance().readValue(bytes, getListType(valueType));
     }
 
     /**
@@ -285,11 +228,7 @@ public class Jackson {
      * @return List
      */
     public static <T> List<T> parseList(InputStream is, Class<T> valueType) {
-        try {
-            return getInstance().readValue(is, getListType(valueType));
-        } catch (IOException e) {
-            throw Exceptions.unchecked(e);
-        }
+        return getInstance().readValue(is, getListType(valueType));
     }
 
     /**
@@ -301,11 +240,7 @@ public class Jackson {
      * @return List
      */
     public static <T> List<T> parseList(String json, TypeReference<? extends List<T>> valueTypeRef) {
-        try {
-            return getInstance().readValue(json, valueTypeRef);
-        } catch (IOException e) {
-            throw Exceptions.unchecked(e);
-        }
+        return getInstance().readValue(json, valueTypeRef);
     }
 
     /**
@@ -317,11 +252,7 @@ public class Jackson {
      * @return List
      */
     public static <T> List<T> parseList(byte[] bytes, TypeReference<? extends List<T>> valueTypeRef) {
-        try {
-            return getInstance().readValue(bytes, valueTypeRef);
-        } catch (IOException e) {
-            throw Exceptions.unchecked(e);
-        }
+        return getInstance().readValue(bytes, valueTypeRef);
     }
 
     /**
@@ -333,11 +264,7 @@ public class Jackson {
      * @return List
      */
     public static <T> List<T> parseList(InputStream is, TypeReference<? extends List<T>> valueTypeRef) {
-        try {
-            return getInstance().readValue(is, valueTypeRef);
-        } catch (IOException e) {
-            throw Exceptions.unchecked(e);
-        }
+        return getInstance().readValue(is, valueTypeRef);
     }
 
     /**
@@ -363,11 +290,8 @@ public class Jackson {
      * @return {JsonNode}
      */
     public static JsonNode readTree(String json) {
-        try {
-            return getInstance().readTree(json);
-        } catch (IOException e) {
-            throw Exceptions.unchecked(e);
-        }
+        return getInstance().readTree(json);
+
     }
 
     /**
@@ -377,11 +301,7 @@ public class Jackson {
      * @return {JsonNode}
      */
     public static JsonNode readTree(InputStream in) {
-        try {
-            return getInstance().readTree(in);
-        } catch (IOException e) {
-            throw Exceptions.unchecked(e);
-        }
+        return getInstance().readTree(in);
     }
 
     /**
@@ -391,11 +311,7 @@ public class Jackson {
      * @return {JsonNode}
      */
     public static JsonNode readTree(byte[] bytes) {
-        try {
-            return getInstance().readTree(bytes);
-        } catch (IOException e) {
-            throw Exceptions.unchecked(e);
-        }
+        return getInstance().readTree(bytes);
     }
 
     /**
@@ -405,11 +321,7 @@ public class Jackson {
      * @return {JsonNode}
      */
     public static JsonNode readTree(JsonParser jsonParser) {
-        try {
-            return getInstance().readTree(jsonParser);
-        } catch (IOException e) {
-            throw Exceptions.unchecked(e);
-        }
+        return getInstance().readTree(jsonParser);
     }
 
     /**
@@ -431,47 +343,6 @@ public class Jackson {
      */
     private static CollectionLikeType getListType(Class<?> elementClass) {
         return getInstance().getTypeFactory().constructCollectionLikeType(ArrayList.class, elementClass);
-    }
-
-    public static ObjectMapper getInstance() {
-        return SingletonHolder.INSTANCE;
-    }
-
-    private static class SingletonHolder {
-        private static final ObjectMapper INSTANCE = new JacksonObjectMapper();
-    }
-
-    public static class JacksonObjectMapper extends ObjectMapper {
-        @Serial
-        private static final long serialVersionUID = 3L;
-
-        JacksonObjectMapper() {
-            super();
-            // 设置地点系统默认
-            super.setLocale(Locale.getDefault());
-            // 设置为系统默认时区
-            super.setTimeZone(TimeZone.getTimeZone(ZoneId.systemDefault()));
-            // 序列化时，Date日期的统一格式
-            super.setDateFormat(new SimpleDateFormat(DateUtils.PATTERN_DATE_TIME, Locale.getDefault()));
-            super.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
-            // 允许序列化空的POJO类
-            super.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
-            super.setDefaultPropertyInclusion(JsonInclude.Include.NON_NULL);
-            // 允许单引号（非标准）
-            super.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
-            // 忽略无法转换的对象
-            super.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-            // 忽略JSON字符串中不识别的属性
-            super.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-            // java8日期格式化
-            super.findAndRegisterModules();
-            super.registerModule(new UltronJavaTimeModule());
-        }
-
-        @Override
-        public ObjectMapper copy() {
-            return super.copy();
-        }
     }
 
     /**
@@ -497,7 +368,7 @@ public class Jackson {
         if (n == null || n.isNull()) {
             return null;
         }
-        return n.asText();
+        return n.asString();
     }
 
     public static String getString(JsonNode node, String fieldName, String defaultValue) {
@@ -505,7 +376,7 @@ public class Jackson {
         if (n == null || n.isNull()) {
             return defaultValue;
         }
-        return n.asText(defaultValue);
+        return n.asString(defaultValue);
     }
 
     public static Integer getInteger(JsonNode node, String fieldName) {
@@ -586,5 +457,33 @@ public class Jackson {
             return defaultValue;
         }
         return n.asDouble(defaultValue);
+    }
+
+    public static JsonMapper getInstance() {
+        return SingletonHolder.INSTANCE;
+    }
+
+    private static class SingletonHolder {
+        private static final JsonMapper INSTANCE = JsonMapper.builder()
+                                                             .defaultLocale(Locale.getDefault())
+                                                             .defaultTimeZone(TimeZone.getTimeZone(ZoneId.systemDefault()))
+                                                             .defaultDateFormat(new SimpleDateFormat(DateUtils.PATTERN_DATE_TIME, Locale.getDefault()))
+                                                             .changeDefaultPropertyInclusion(
+                                                                     (handler) -> handler.withValueInclusion(JsonInclude.Include.NON_NULL)
+                                                                                         .withContentInclusion(JsonInclude.Include.NON_NULL)
+                                                             )
+                                                             // 可解析反斜杠引用的所有字符
+                                                             .configure(JsonReadFeature.ALLOW_BACKSLASH_ESCAPING_ANY_CHARACTER, true)
+                                                             // 允许JSON字符串包含非引号控制字符（值小于32的ASCII字符，包含制表符和换行符）
+                                                             .configure(JsonReadFeature.ALLOW_UNESCAPED_CONTROL_CHARS, true)
+                                                             // 单引号
+                                                             .configure(JsonReadFeature.ALLOW_SINGLE_QUOTES, true)
+                                                             // 忽略json字符串中不识别的属性
+                                                             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+                                                             // 忽略json字符串中不识别的属性
+                                                             .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false)
+                                                             .findAndAddModules()
+                                                             .addModule(new UltronJavaTimeModule())
+                                                             .build();
     }
 }

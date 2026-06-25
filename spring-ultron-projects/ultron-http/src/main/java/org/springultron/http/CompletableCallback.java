@@ -19,7 +19,7 @@ package org.springultron.http;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;

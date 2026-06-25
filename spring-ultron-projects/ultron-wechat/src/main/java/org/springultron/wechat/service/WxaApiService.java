@@ -1,6 +1,5 @@
 package org.springultron.wechat.service;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springultron.core.jackson.Jackson;
 import org.springultron.wechat.dto.MediaFile;
 import org.springultron.wechat.dto.WxaUserInfo;
@@ -8,6 +7,7 @@ import org.springultron.wechat.dto.WxaUserSession;
 import org.springultron.wechat.enums.OCR_TYPE;
 import org.springultron.wechat.params.WxaTemplate;
 import org.springultron.wechat.params.WxaUniformMsg;
+import tools.jackson.databind.node.ObjectNode;
 
 import java.io.File;
 import java.io.InputStream;

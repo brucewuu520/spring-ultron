@@ -1,6 +1,6 @@
 package org.springultron.core.utils;
 
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.springultron.core.pool.StringPool;
 
 import java.nio.ByteBuffer;

@@ -1,6 +1,6 @@
 package org.springultron.core.io;
 
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.springultron.core.utils.Charsets;
 
 import java.io.*;

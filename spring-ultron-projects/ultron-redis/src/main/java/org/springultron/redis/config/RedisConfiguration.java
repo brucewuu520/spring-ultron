@@ -1,21 +1,21 @@
 package org.springultron.redis.config;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
+import org.springframework.boot.data.redis.autoconfigure.DataRedisAutoConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.KotlinDetector;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.GenericJacksonJsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializer;
-import org.springultron.core.jackson.UltronJavaTimeModule;
+import org.springultron.core.jackson.Jackson;
+import tools.jackson.databind.DefaultTyping;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.jsontype.PolymorphicTypeValidator;
 
 /**
  * Redis配置
@@ -28,7 +28,7 @@ import org.springultron.core.jackson.UltronJavaTimeModule;
  * @author brucewuu
  * @date 2019-05-31 14:26
  */
-@AutoConfiguration(before = {RedisAutoConfiguration.class})
+@AutoConfiguration(before = {DataRedisAutoConfiguration.class})
 public class RedisConfiguration {
 
     /**
@@ -37,20 +37,19 @@ public class RedisConfiguration {
      * @return RedisSerializer<Object>
      */
     @Bean
-    @ConditionalOnClass({ObjectMapper.class})
+    @ConditionalOnClass({JsonMapper.class})
     @ConditionalOnMissingBean(name = {"redisSerializer"})
     public RedisSerializer<Object> redisSerializer() {
-        ObjectMapper objectMapper = new ObjectMapper();
-        // 指定要序列化的域，field,get和set,以及修饰符范围，ANY是都有包括private和public
-        objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
         // 必须设置，否则无法将JSON转化为对象，会转化成Map类型
-        objectMapper.activateDefaultTyping(objectMapper.getPolymorphicTypeValidator(), ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
-        // 不反序列化为null的字段
-        objectMapper.setDefaultPropertyInclusion(JsonInclude.Include.NON_NULL);
-        objectMapper.findAndRegisterModules();
-        // 配置java8日期序列化
-        objectMapper.registerModule(new UltronJavaTimeModule());
-        return new GenericJackson2JsonRedisSerializer(objectMapper);
+        JsonMapper.Builder jsonMapperBuilder = Jackson.getInstance().rebuild();
+        // 配置宽松的类型验证器
+        PolymorphicTypeValidator polymorphicTypeValidator = RedisJacksonPolymorphicTypeValidator.INSTANCE;
+        if (KotlinDetector.isKotlinPresent()) {
+            jsonMapperBuilder.activateDefaultTyping(polymorphicTypeValidator, DefaultTyping.NON_FINAL_AND_ENUMS, JsonTypeInfo.As.PROPERTY);
+        } else {
+            jsonMapperBuilder.activateDefaultTyping(polymorphicTypeValidator, DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
+        }
+        return new GenericJacksonJsonRedisSerializer(jsonMapperBuilder.build());
     }
 
     /**

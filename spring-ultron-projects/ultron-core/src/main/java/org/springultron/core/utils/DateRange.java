@@ -1,6 +1,6 @@
 package org.springultron.core.utils;
 
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;

@@ -23,5 +23,4 @@ class LoggingLogstashConfiguration {
     LoggingLogstashAppender loggingLogstashAppender(UltronLoggingProperties properties, Environment environment) {
         return new LoggingLogstashAppender(properties, environment);
     }
-
 }

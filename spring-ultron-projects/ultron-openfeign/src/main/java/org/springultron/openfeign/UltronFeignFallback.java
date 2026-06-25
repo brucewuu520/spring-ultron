@@ -1,6 +1,5 @@
 package org.springultron.openfeign;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import feign.FeignException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +8,7 @@ import org.springframework.cglib.proxy.MethodProxy;
 import org.springultron.core.jackson.Jackson;
 import org.springultron.core.result.ApiResult;
 import org.springultron.core.result.ResultCode;
+import tools.jackson.databind.JsonNode;
 
 import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
