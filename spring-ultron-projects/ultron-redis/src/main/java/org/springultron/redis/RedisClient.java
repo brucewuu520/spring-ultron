@@ -413,8 +413,7 @@ public class RedisClient {
      * @param collection 值集合
      * @return 列表长度
      */
-    public Long leftPushAll(String key, Collection collection) {
-        //noinspection unchecked
+    public Long leftPushAll(String key, Collection<?> collection) {
         return redisTemplate.opsForList().leftPushAll(key, collection);
     }
 
@@ -460,8 +459,7 @@ public class RedisClient {
      * @param collection 值集合
      * @return 列表长度
      */
-    public Long rightPushAll(String key, Collection collection) {
-        //noinspection unchecked
+    public Long rightPushAll(String key, Collection<?> collection) {
         return redisTemplate.opsForList().rightPushAll(key, collection);
     }
 
