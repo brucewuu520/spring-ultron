@@ -11,11 +11,12 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.KotlinDetector;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializer;
-import org.springultron.core.jackson.UltronJavaTimeModule;
+import org.springultron.core.jackson.Jackson;
 
 /**
  * Redis配置
@@ -40,16 +41,20 @@ public class RedisConfiguration {
     @ConditionalOnClass({ObjectMapper.class})
     @ConditionalOnMissingBean(name = {"redisSerializer"})
     public RedisSerializer<Object> redisSerializer() {
-        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectMapper objectMapper = Jackson.getInstance().copy();
         // 指定要序列化的域，field,get和set,以及修饰符范围，ANY是都有包括private和public
         objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
-        // 必须设置，否则无法将JSON转化为对象，会转化成Map类型
-        objectMapper.activateDefaultTyping(objectMapper.getPolymorphicTypeValidator(), ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
         // 不反序列化为null的字段
         objectMapper.setDefaultPropertyInclusion(JsonInclude.Include.NON_NULL);
+        // findAndRegisterModules
         objectMapper.findAndRegisterModules();
-        // 配置java8日期序列化
-        objectMapper.registerModule(new UltronJavaTimeModule());
+        // class type info to json
+        GenericJackson2JsonRedisSerializer.registerNullValueSerializer(objectMapper, null);
+        if (KotlinDetector.isKotlinPresent()) {
+            objectMapper.activateDefaultTyping(objectMapper.getPolymorphicTypeValidator(), ObjectMapper.DefaultTyping.NON_FINAL_AND_ENUMS, JsonTypeInfo.As.PROPERTY);
+        } else {
+            objectMapper.activateDefaultTyping(objectMapper.getPolymorphicTypeValidator(), ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
+        }
         return new GenericJackson2JsonRedisSerializer(objectMapper);
     }
 

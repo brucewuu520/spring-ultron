@@ -39,8 +39,8 @@
     <properties>
         <main.basedir>${basedir}/..</main.basedir>
         <!-- app dependencies version start-->
-        <spring-boot.version>3.5.14</spring-boot.version>
-        <spring-cloud.version>2025.0.2</spring-cloud.version>
+        <spring-boot.version>3.5.16</spring-boot.version>
+        <spring-cloud.version>2025.0.3</spring-cloud.version>
         <alibaba-cloud.version>2025.0.0.0</alibaba-cloud.version>
         <okhttp.version>5.3.2</okhttp.version>
         <feign-okhttp.version>13.12</feign-okhttp.version>
@@ -49,11 +49,11 @@
         <redisson.version>4.3.1</redisson.version>
         <bouncycastle.version>1.84</bouncycastle.version>
         <zxing.version>3.5.4</zxing.version>
-        <fastjson2.version>2.0.61</fastjson2.version>
+        <fastjson2.version>2.0.65</fastjson2.version>
         <springdoc.version>3.0.3</springdoc.version>
         <knife4j.version>4.5.0</knife4j.version>
         <swagger-v3.version>2.2.48</swagger-v3.version>
-        <xxl-job.version>3.4.0</xxl-job.version>
+        <xxl-job.version>3.4.2</xxl-job.version>
         <logstash-logback.version>9.0</logstash-logback.version>
         <!-- app dependencies version end-->
         <findbugs.version>3.0.2</findbugs.version>
