@@ -5,6 +5,7 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnSingleCandidate;
 import org.springframework.boot.data.redis.autoconfigure.DataRedisAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.KotlinDetector;
@@ -38,7 +39,7 @@ public class RedisConfiguration {
      */
     @Bean
     @ConditionalOnClass({JsonMapper.class})
-    @ConditionalOnMissingBean(name = {"redisSerializer"})
+    @ConditionalOnMissingBean(RedisSerializer.class)
     public RedisSerializer<Object> redisSerializer() {
         // 必须设置，否则无法将JSON转化为对象，会转化成Map类型
         JsonMapper.Builder jsonMapperBuilder = Jackson.getInstance().rebuild();
@@ -61,6 +62,7 @@ public class RedisConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean(name = {"redisTemplate"})
+    @ConditionalOnSingleCandidate(RedisConnectionFactory.class)
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory, ObjectProvider<RedisSerializer<Object>> redisSerializer) {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         // 设置连接工厂
