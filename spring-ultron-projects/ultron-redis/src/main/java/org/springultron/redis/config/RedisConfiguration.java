@@ -9,6 +9,7 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnSingleCandidate;
 import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.KotlinDetector;
@@ -39,7 +40,7 @@ public class RedisConfiguration {
      */
     @Bean
     @ConditionalOnClass({ObjectMapper.class})
-    @ConditionalOnMissingBean(name = {"redisSerializer"})
+    @ConditionalOnMissingBean(RedisSerializer.class)
     public RedisSerializer<Object> redisSerializer() {
         ObjectMapper objectMapper = Jackson.getInstance().copy();
         // 指定要序列化的域，field,get和set,以及修饰符范围，ANY是都有包括private和public
@@ -67,6 +68,7 @@ public class RedisConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean(name = {"redisTemplate"})
+    @ConditionalOnSingleCandidate(RedisConnectionFactory.class)
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory, ObjectProvider<RedisSerializer<Object>> redisSerializer) {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         // 设置连接工厂
