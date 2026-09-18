@@ -48,7 +48,7 @@
         <mybatis-flex.version>1.11.7</mybatis-flex.version>
         <jwt.version>0.13.0</jwt.version>
         <redisson.version>4.6.0</redisson.version>
-        <bouncycastle.version>1.84</bouncycastle.version>
+        <bouncycastle.version>1.85</bouncycastle.version>
         <zxing.version>3.5.4</zxing.version>
         <fastjson2.version>2.0.62</fastjson2.version>
         <springdoc.version>3.0.3</springdoc.version>
