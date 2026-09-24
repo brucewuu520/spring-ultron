@@ -58,7 +58,7 @@ public abstract class BaseExceptionHandler {
             }
         }
         ApiResult<Object> apiResult = ApiResult.fail(ResultCode.PARAM_VALID_FAILED.getCode(), message);
-        if (fieldErrorDTOS.size() > 0) {
+        if (!fieldErrorDTOS.isEmpty()) {
             apiResult.setFieldErrors(fieldErrorDTOS);
         }
         return apiResult;
