@@ -97,15 +97,13 @@ public final class UltronSentinelFeign {
                         beanName = nameValue != null ? (String) nameValue : "unknown";
                     }
 
-                    Object fallbackInstance;
-                    FallbackFactory<?> fallbackFactoryInstance;
                     // check fallback and fallbackFactory properties
                     if (void.class != fallback) {
-                        fallbackInstance = getFromContext(beanName, "fallback", fallback, target.type());
+                        Object fallbackInstance = getFromContext(beanName, "fallback", fallback, target.type());
                         return new UltronSentinelInvocationHandler(target, dispatch, new FallbackFactory.Default<>(fallbackInstance));
                     }
                     if (void.class != fallbackFactory) {
-                        fallbackFactoryInstance = (FallbackFactory<?>) getFromContext(beanName, "fallbackFactory", fallbackFactory, FallbackFactory.class);
+                        FallbackFactory<?> fallbackFactoryInstance = (FallbackFactory<?>) getFromContext(beanName, "fallbackFactory", fallbackFactory, FallbackFactory.class);
                         return new UltronSentinelInvocationHandler(target, dispatch, fallbackFactoryInstance);
                     }
                     return new UltronSentinelInvocationHandler(target, dispatch);
