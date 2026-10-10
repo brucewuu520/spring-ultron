@@ -236,32 +236,41 @@
         @Autowire
         private WebClient lbWebClient;           
 
-8、Swagger 接口文档
+8、在线接口文档
 
     <dependency>
        <groupId>org.springultron</groupId>
-       <artifactId>ultron-swagger</artifactId>
+       <artifactId>ultron-doc</artifactId>
     </dependency> 
     
     文档配置(配置文件中添加):
-    
-        swagger:
-          enable: true  # 默认
-          title: xxx服务
-          description: xxx服务接口文档
-          contact-user: brucewuu
-          contact-email: xxx@xxx.com
-          contact-url: xxx
-          authorization:
-            enabled: true
-            name: BearerToken
-            header-name: Authorization
-          knife4j:
-            production: false
-            basic:
-              enable: true
-              username: admin
-              password: 123456
+
+    springdoc:
+        swagger-ui:
+            path: /swagger-ui.html
+            tags-sorter: alpha
+            operations-sorter: alpha
+        api-docs:
+            path: /v3/api-docs
+        group-configs:
+            - group: 'default'
+            paths-to-match: '/**'
+            packages-to-scan: xxx.xxx.xxx
+        title: "xxx接口文档"
+        contact:
+            name: Brucewuu
+            email: 402432291@qq.com
+            url: https://github.com/brucewuu520
+
+    knife4j:
+        enable: true
+        basic:
+            enable: true
+            username: doc
+            password: 123456
+        setting:
+            language: zh_cn
+            swagger-model-name: 实体类列表
           
 9、Spring Security通用配置，支持jwt登录鉴权，RBAC权限控制
 
@@ -325,7 +334,12 @@
 				enabled: true -开启logstash
 				destinations: localhost:4560,localhost:4561
 开启链路追踪：
-启动类上配置 @EnableTraceId 注解，配置文件添加如下配置：
+
+    ultron:
+        logging:
+            enable-trace-id: true
+
+配置文件添加如下配置：
 
 	logging.pattern.console="%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr([%X{traceId}]){yellow} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n"
 	

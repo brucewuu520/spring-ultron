@@ -21,9 +21,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.servlet.NoHandlerFoundException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 import org.springultron.boot.error.BaseExceptionHandler;
+import org.springultron.core.exception.CryptoException;
 import org.springultron.core.result.ApiResult;
 import org.springultron.core.result.ResultCode;
+
+import java.sql.SQLIntegrityConstraintViolationException;
 
 /**
  * RESTFUL API 异常信息处理
@@ -35,6 +39,7 @@ import org.springultron.core.result.ResultCode;
 @RestControllerAdvice
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 public class RestExceptionHandler extends BaseExceptionHandler {
+
     private static final Logger log = LoggerFactory.getLogger(RestExceptionHandler.class);
 
     /**
@@ -45,7 +50,7 @@ public class RestExceptionHandler extends BaseExceptionHandler {
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ApiResult<Object> handleError(MethodArgumentNotValidException e) {
-        log.error("方法参数校验异常", e);
+        log.error("方法参数校验异常: {}", e.getMessage());
         return handleError(e.getBindingResult());
     }
 
@@ -57,7 +62,7 @@ public class RestExceptionHandler extends BaseExceptionHandler {
      */
     @ExceptionHandler(BindException.class)
     public ApiResult<Object> handleError(BindException e) {
-        log.error("参数绑定异常", e);
+        log.error("参数绑定异常: {}", e.getMessage());
         return handleError(e.getBindingResult());
     }
 
@@ -69,7 +74,7 @@ public class RestExceptionHandler extends BaseExceptionHandler {
      */
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ApiResult<Object> handleError(MissingServletRequestParameterException e) {
-        log.error("缺少必要的请求参数", e);
+        log.error("缺少必要的请求参数: {}", e.getMessage());
         return ApiResult.fail(ResultCode.PARAM_MISS.getCode(), String.format("缺少必要的请求参数: %s", e.getParameterName()));
     }
 
@@ -81,7 +86,7 @@ public class RestExceptionHandler extends BaseExceptionHandler {
      */
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ApiResult<Object> handleError(MethodArgumentTypeMismatchException e) {
-        log.error("请求参数格式错误", e);
+        log.error("请求参数格式错误: {}", e.getMessage());
         return ApiResult.fail(ResultCode.PARAM_TYPE_ERROR.getCode(), String.format("请求参数格式错误: %s", e.getName()));
     }
 
@@ -93,7 +98,7 @@ public class RestExceptionHandler extends BaseExceptionHandler {
      */
     @ExceptionHandler(ValidationException.class)
     public ApiResult<Object> handleError(ValidationException e) {
-        log.error("参数校验异常", e);
+        log.error("参数校验异常: {}", e.getMessage());
         Throwable cause = e.getCause();
         return ApiResult.fail(ResultCode.PARAM_VALID_FAILED.getCode(), cause == null ? e.getMessage() : cause.getMessage());
     }
@@ -106,7 +111,7 @@ public class RestExceptionHandler extends BaseExceptionHandler {
      */
     @ExceptionHandler(ConstraintViolationException.class)
     public ApiResult<Object> handleError(ConstraintViolationException e) {
-        log.error("参数验证失败", e);
+        log.error("参数验证失败: {}", e.getMessage());
         return handleError(e.getConstraintViolations());
     }
 
@@ -117,9 +122,23 @@ public class RestExceptionHandler extends BaseExceptionHandler {
      * @return ApiResult
      */
     @ExceptionHandler(NoHandlerFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public ApiResult<Object> handleError(NoHandlerFoundException e) {
-        log.error("404没找到请求", e);
-        return ApiResult.fail(ResultCode.NOT_FOUND);
+        log.error("404没找到请求: {}", e.getMessage());
+        return ApiResult.fail(ResultCode.NOT_FOUND, e.getMessage());
+    }
+
+    /**
+     * 404没找到资源
+     *
+     * @param e 异常
+     * @return ApiResult
+     */
+    @ExceptionHandler(NoResourceFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ApiResult<Object> handleError(NoResourceFoundException e) {
+        log.error("404没找到资源: {}", e.getMessage());
+        return ApiResult.fail(ResultCode.NOT_FOUND, e.getMessage());
     }
 
     /**
@@ -130,8 +149,8 @@ public class RestExceptionHandler extends BaseExceptionHandler {
      */
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ApiResult<Object> handleError(HttpRequestMethodNotSupportedException e) {
-        log.error("不支持当前请求方法", e);
-        return ApiResult.fail(ResultCode.METHOD_NO_ALLOWED);
+        log.error("不支持当前请求方法: {}", e.getMessage());
+        return ApiResult.fail(ResultCode.METHOD_NO_ALLOWED, e.getMessage());
     }
 
     /**
@@ -142,8 +161,8 @@ public class RestExceptionHandler extends BaseExceptionHandler {
      */
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
     public ApiResult<Object> handleError(HttpMediaTypeNotSupportedException e) {
-        log.error("不支持当前媒体类型", e);
-        return ApiResult.fail(ResultCode.BAD_REQUEST.getCode(), "不支持当前媒体类型");
+        log.error("不支持当前媒体类型: {}", e.getMessage());
+        return ApiResult.fail(ResultCode.BAD_REQUEST.getCode(), e.getMessage());
     }
 
     /**
@@ -154,14 +173,14 @@ public class RestExceptionHandler extends BaseExceptionHandler {
      */
     @ExceptionHandler(HttpMediaTypeNotAcceptableException.class)
     public ApiResult<Object> handleError(HttpMediaTypeNotAcceptableException e) {
-        log.error("不接受的媒体类型", e);
-        return ApiResult.fail(ResultCode.BAD_REQUEST.getCode(), "不接受的媒体类型");
+        log.error("不接受的媒体类型: {}", e.getMessage());
+        return ApiResult.fail(ResultCode.BAD_REQUEST.getCode(), e.getMessage());
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiResult<Object> handleError(HttpMessageNotReadableException e) {
-        log.error("消息不能读取", e);
+        log.error("消息不能读取: {}", e.getMessage());
         return ApiResult.fail(ResultCode.MSG_NOT_READABLE.getCode(), e.getMessage());
     }
 
@@ -173,7 +192,44 @@ public class RestExceptionHandler extends BaseExceptionHandler {
      */
     @ExceptionHandler(MultipartException.class)
     public ApiResult<Object> handleError(MultipartException e) {
-        log.error("文件太大", e);
-        return ApiResult.fail(ResultCode.PAYLOAD_TOO_LARGE);
+        log.error("文件上传异常: {}", e.getMessage());
+        return ApiResult.fail(ResultCode.PAYLOAD_TOO_LARGE, e.getMessage());
     }
+
+    /**
+     * 加解密异常捕获
+     *
+     * @param e 加解密异常
+     * @return REST 返回异常结果
+     */
+    @ExceptionHandler(value = CryptoException.class)
+    public ApiResult<Object> handleCryptoException(CryptoException e) {
+        log.error("加解密异常: {}", e.getMessage());
+        return ApiResult.fail(ResultCode.SIGN_FAILED, e.getMessage());
+    }
+
+    /**
+     * 断言异常捕获
+     *
+     * @param e 断言异常
+     * @return REST 返回异常结果
+     */
+    @ExceptionHandler(AssertionError.class)
+    public ApiResult<Object> handleAssertionError(AssertionError e) {
+        log.error("断言异常: {}", e.getMessage());
+        return ApiResult.fail(ResultCode.ASSERTION_ERROR.getCode(), e.getMessage());
+    }
+
+    /**
+     * 数据库的唯一约束条件异常捕获
+     *
+     * @param e 数据库的唯一约束条件异常
+     * @return REST 返回异常结果
+     */
+    @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
+    public ApiResult<Object> handleSqlConstraintException(SQLIntegrityConstraintViolationException e) {
+        log.error("数据库的唯一约束条件异常: {}", e.getMessage());
+        return ApiResult.fail(ResultCode.SQL_CONSTRAINT_ERROR, e.getMessage());
+    }
+
 }

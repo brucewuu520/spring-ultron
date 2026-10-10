@@ -7,12 +7,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.bind.support.WebExchangeBindException;
 import org.springframework.web.multipart.MultipartException;
+import org.springframework.web.reactive.resource.NoResourceFoundException;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.server.ServerWebInputException;
 import org.springultron.boot.error.BaseExceptionHandler;
@@ -32,29 +35,30 @@ import java.util.Optional;
 @RestControllerAdvice
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.REACTIVE)
 public class RestExceptionHandler extends BaseExceptionHandler {
+
     private static final Logger log = LoggerFactory.getLogger(RestExceptionHandler.class);
 
     /**
-     * 参数校验失败
+     * 方法参数校验异常
      *
      * @param e 异常
      * @return ApiResult
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public Mono<ApiResult<Object>> handleError(MethodArgumentNotValidException e) {
-        log.error("参数校验失败", e);
+        log.error("方法参数校验异常: {}", e.getMessage());
         return Mono.just(handleError(e.getBindingResult()));
     }
 
     /**
-     * 参数绑定失败
+     * 参数绑定异常
      *
      * @param e 异常
      * @return ApiResult
      */
     @ExceptionHandler(BindException.class)
     public Mono<ApiResult<Object>> handleError(BindException e) {
-        log.error("参数绑定失败", e);
+        log.error("参数绑定异常: {}", e.getMessage());
         return Mono.just(handleError(e.getBindingResult()));
     }
 
@@ -66,7 +70,7 @@ public class RestExceptionHandler extends BaseExceptionHandler {
      */
     @ExceptionHandler(WebExchangeBindException.class)
     public Mono<ApiResult<Object>> handleError(WebExchangeBindException e) {
-        log.error("参数绑定失败", e);
+        log.error("参数绑定失败: {}", e.getMessage());
         return Mono.just(handleError(e.getBindingResult()));
     }
 
@@ -78,10 +82,10 @@ public class RestExceptionHandler extends BaseExceptionHandler {
      */
     @ExceptionHandler(ServerWebInputException.class)
     public Mono<ApiResult<Object>> handleError(ServerWebInputException e) {
-        log.error("缺少必要的请求参数", e);
+        log.error("缺少必要的请求参数: {}", e.getMessage());
         return Mono.just(Optional.ofNullable(e.getMethodParameter())
-                .map(parameter -> ApiResult.fail(ResultCode.PARAM_MISS.getCode(), String.format("缺少必要的请求参数: %s", parameter.getParameterName())))
-                .orElseGet(() -> ApiResult.fail(ResultCode.PARAM_MISS.getCode(), "缺少必要的请求参数")));
+                                 .map(parameter -> ApiResult.fail(ResultCode.PARAM_MISS.getCode(), String.format("缺少必要的请求参数: %s", parameter.getParameterName())))
+                                 .orElseGet(() -> ApiResult.fail(ResultCode.PARAM_MISS.getCode(), "缺少必要的请求参数")));
     }
 
     /**
@@ -92,7 +96,7 @@ public class RestExceptionHandler extends BaseExceptionHandler {
      */
     @ExceptionHandler(ValidationException.class)
     public Mono<ApiResult<Object>> handleError(ValidationException e) {
-        log.error("参数校验异常", e);
+        log.error("参数校验异常: {}", e.getMessage());
         Throwable cause = e.getCause();
         return Mono.just(ApiResult.fail(ResultCode.PARAM_VALID_FAILED.getCode(), cause == null ? e.getMessage() : cause.getMessage()));
     }
@@ -105,8 +109,21 @@ public class RestExceptionHandler extends BaseExceptionHandler {
      */
     @ExceptionHandler(ConstraintViolationException.class)
     public Mono<ApiResult<Object>> handleError(ConstraintViolationException e) {
-        log.error("参数验证失败", e);
+        log.error("参数验证失败: {}", e.getMessage());
         return Mono.just(handleError(e.getConstraintViolations()));
+    }
+
+    /**
+     * 404没找到资源
+     *
+     * @param e 异常
+     * @return ApiResult
+     */
+    @ExceptionHandler(NoResourceFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ApiResult<Object> handleError(NoResourceFoundException e) {
+        log.error("404没找到资源: {}", e.getMessage());
+        return ApiResult.fail(ResultCode.NOT_FOUND, e.getMessage());
     }
 
     /**
@@ -117,7 +134,7 @@ public class RestExceptionHandler extends BaseExceptionHandler {
      */
     @ExceptionHandler(ResponseStatusException.class)
     public Mono<ApiResult<Object>> handleError(ResponseStatusException e) {
-        log.error("响应状态异常", e);
+        log.error("响应状态异常: {}", e.getMessage());
         return Mono.just(ApiResult.fail(ResultCode.BAD_REQUEST.getCode(), String.format("响应状态异常:%s", e.getReason())));
     }
 
@@ -129,7 +146,8 @@ public class RestExceptionHandler extends BaseExceptionHandler {
      */
     @ExceptionHandler(MultipartException.class)
     public Mono<ApiResult<Object>> handleError(MultipartException e) {
-        log.error("文件太大", e);
+        log.error("文件上传异常: {}", e.getMessage());
         return Mono.just(ApiResult.fail(ResultCode.PAYLOAD_TOO_LARGE));
     }
+
 }

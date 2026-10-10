@@ -1,16 +1,18 @@
 package org.springultron.boot.servlet.error;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springultron.boot.error.UltronErrorEvent;
 import org.springultron.core.exception.ApiException;
-import org.springultron.core.exception.CryptoException;
 import org.springultron.core.exception.Exceptions;
 import org.springultron.core.result.ApiResult;
 import org.springultron.core.result.ResultCode;
@@ -18,8 +20,6 @@ import org.springultron.core.utils.ObjectUtils;
 import org.springultron.core.utils.StringUtils;
 import org.springultron.core.utils.WebUtils;
 
-import jakarta.servlet.http.HttpServletRequest;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDateTime;
 
 /**
@@ -32,6 +32,7 @@ import java.time.LocalDateTime;
 @RestControllerAdvice
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 public class GlobalExceptionHandler {
+
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     private final ApplicationEventPublisher publisher;
@@ -48,51 +49,24 @@ public class GlobalExceptionHandler {
      * @return REST 返回异常结果
      */
     @ExceptionHandler(value = ApiException.class)
-    public ApiResult<Object> handleApiException(ApiException e) {
-        log.error("自定义业务异常", e);
-        publishEvent(e);
-        return ApiResult.apiException(e);
+    public ApiResult<Object> handleError(ApiException e) {
+        log.error("自定义业务异常: {}", e.getMessage());
+        ApiResult<Object> result = e.getResult();
+        if (result == null) {
+            // 发送：未知业务异常事件
+            result = ApiResult.fail(e.getMessage());
+            publishEvent(e);
+        }
+        return result;
     }
 
-    /**
-     * 加解密异常捕获
-     *
-     * @param e 加解密异常
-     * @return REST 返回异常结果
-     */
-    @ExceptionHandler(value = CryptoException.class)
-    public ApiResult<Object> handleCryptoException(CryptoException e) {
-        log.error("加解密异常", e);
-        publishEvent(e);
-        return ApiResult.fail(ResultCode.SIGN_FAILED);
-    }
-
-    /**
-     * 断言异常捕获
-     *
-     * @param e 断言异常
-     * @return REST 返回异常结果
-     */
-    @ExceptionHandler(AssertionError.class)
-    public ApiResult<Object> handleAssertionError(AssertionError e) {
-        log.error("断言异常", e);
+    @ExceptionHandler(Throwable.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ApiResult<Object> handleError(Throwable e) {
+        log.error("未知异常", e);
         // 发送：未知异常异常事件
         publishEvent(e);
-        return ApiResult.fail(ResultCode.ASSERTION_ERROR.getCode(), e.getMessage());
-    }
-
-    /**
-     * 数据库的唯一约束条件异常捕获
-     *
-     * @param e 数据库的唯一约束条件异常
-     * @return REST 返回异常结果
-     */
-    @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
-    public ApiResult<Object> handleSqlConstraintException(SQLIntegrityConstraintViolationException e) {
-        log.error("数据库的唯一约束条件异常", e);
-        // 发送：未知异常异常事件
-        publishEvent(e);
-        return ApiResult.fail(ResultCode.SQL_CONSTRAINT_ERROR);
+        return ApiResult.fail(ResultCode.FAIL);
     }
 
     /**
@@ -131,4 +105,5 @@ public class GlobalExceptionHandler {
         // 发布事件
         publisher.publishEvent(event);
     }
+
 }

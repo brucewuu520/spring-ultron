@@ -21,6 +21,7 @@ import java.util.*;
  * @date 2020/7/26 19:40
  */
 public class UltronFeignFallback<T> implements MethodInterceptor {
+
     private static final Logger log = LoggerFactory.getLogger(UltronFeignFallback.class);
 
     private final Class<T> targetType;
@@ -87,4 +88,5 @@ public class UltronFeignFallback<T> implements MethodInterceptor {
         UltronFeignFallback<?> that = (UltronFeignFallback<?>) obj;
         return this.targetType.equals(that.targetType);
     }
+
 }

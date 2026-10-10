@@ -2,16 +2,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>spring-ultron-dependencies</artifactId>
-    <name>Spring Ultron Dependencies</name>
-    <description>Spring Ultron Dependencies</description>
-    <packaging>pom</packaging>
-
     <parent>
         <groupId>org.springultron</groupId>
         <artifactId>spring-ultron-build</artifactId>
         <version>${revision}</version>
     </parent>
+    <artifactId>spring-ultron-dependencies</artifactId>
+    <name>Spring Ultron Dependencies</name>
+    <description>Spring Ultron Dependencies</description>
+    <packaging>pom</packaging>
 
     <licenses>
         <license>
@@ -39,32 +38,32 @@
     <properties>
         <main.basedir>${basedir}/..</main.basedir>
         <!-- app dependencies version start-->
-        <spring-boot.version>4.1.0</spring-boot.version>
-        <spring-cloud.version>2025.1.2</spring-cloud.version>
+        <spring-boot.version>4.1.1</spring-boot.version>
+        <spring-cloud.version>2025.1.3</spring-cloud.version>
         <alibaba-cloud.version>2025.1.0.0</alibaba-cloud.version>
-        <okhttp.version>5.4.0</okhttp.version>
-        <feign-okhttp.version>13.13</feign-okhttp.version>
-        <mybatis-plus.version>3.5.16</mybatis-plus.version>
-        <mybatis-flex.version>1.11.7</mybatis-flex.version>
+        <okhttp.version>5.5.0</okhttp.version>
+        <feign-okhttp.version>13.16</feign-okhttp.version>
+        <mybatis-plus.version>3.5.17</mybatis-plus.version>
+        <mybatis-flex.version>1.11.8</mybatis-flex.version>
         <jwt.version>0.13.0</jwt.version>
-        <redisson.version>4.6.0</redisson.version>
-        <bouncycastle.version>1.84</bouncycastle.version>
+        <redisson.version>4.8.0</redisson.version>
+        <bouncycastle.version>1.86</bouncycastle.version>
         <zxing.version>3.5.4</zxing.version>
-        <fastjson2.version>2.0.62</fastjson2.version>
-        <springdoc.version>3.0.3</springdoc.version>
+        <fastjson2.version>2.0.65</fastjson2.version>
+        <springdoc.version>3.1.1</springdoc.version>
         <knife4j.version>4.5.0</knife4j.version>
-        <swagger-v3.version>2.2.49</swagger-v3.version>
-        <xxl-job.version>3.4.1</xxl-job.version>
+        <swagger-v3.version>2.2.54</swagger-v3.version>
+        <xxl-job.version>3.4.2</xxl-job.version>
         <logstash-logback.version>9.0</logstash-logback.version>
         <!-- app dependencies version end-->
         <findbugs.version>3.0.2</findbugs.version>
         <!-- maven dependencies version start -->
-        <maven-flatten-plugin.version>1.7.3</maven-flatten-plugin.version>
-        <maven-xml-plugin.version>1.2.1</maven-xml-plugin.version>
-        <maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version>
-        <maven-helper-plugin.version>3.6.1</maven-helper-plugin.version>
+        <maven-flatten-plugin.version>1.8.0</maven-flatten-plugin.version>
+        <maven-xml-plugin.version>1.2.2</maven-xml-plugin.version>
+        <maven-compiler-plugin.version>3.16.0</maven-compiler-plugin.version>
+        <maven-helper-plugin.version>3.6.2</maven-helper-plugin.version>
         <maven-enforcer-plugin.version>3.6.3</maven-enforcer-plugin.version>
-        <maven-jar-plugin.version>3.5.0</maven-jar-plugin.version>
+        <maven-jar-plugin.version>3.5.1</maven-jar-plugin.version>
         <maven-source-plugin.version>3.4.0</maven-source-plugin.version>
         <maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
         <!-- maven dependencies version end -->

@@ -2,16 +2,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>ultron-security</artifactId>
-    <name>Spring Ultron Security</name>
-    <description>permission RBAC abstract config for Spring Security</description>
-    <packaging>jar</packaging>
-
     <parent>
         <groupId>org.springultron</groupId>
         <artifactId>spring-ultron-projects</artifactId>
         <version>${revision}</version>
     </parent>
+    <artifactId>ultron-security</artifactId>
+    <name>Spring Ultron Security</name>
+    <description>permission RBAC abstract config for Spring Security</description>
+    <packaging>jar</packaging>
 
     <properties>
         <main.basedir>${basedir}/../..</main.basedir>
