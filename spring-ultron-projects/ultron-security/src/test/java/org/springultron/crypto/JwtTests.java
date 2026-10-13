@@ -2,7 +2,9 @@ package org.springultron.crypto;
 
 import org.junit.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springultron.core.jackson.Jackson;
 import org.springultron.security.jwt.JwtUtils;
+import org.springultron.security.model.UserInfo;
 
 import java.time.Duration;
 import java.util.regex.Pattern;
@@ -38,6 +40,9 @@ public class JwtTests {
         // System.err.println("15502162569".substring(5));
         Pattern pattern = Pattern.compile("^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&*_,\\\\.\\-]).{8,18}$");
         System.err.println(pattern.matcher("12345678a").matches());
+
+        UserInfo userInfo = UserInfo.builder().userId(110L).enable(true).username("007").nickName("").build();
+        System.out.println(Jackson.toJson(userInfo));
     }
 
 }

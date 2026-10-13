@@ -217,7 +217,7 @@
             queue-capacity: 30000     # 线程池队列容量，默认：30000
             keep-alive-seconds: 300   # 空闲线程存活时间，默认：300秒
     
-7、Spring cloud脚手架(基于Spring cloud Hoxton、Spring cloud alibaba 2.2.0)
+7、Spring cloud脚手架(基于Spring cloud、Spring cloud alibaba)
 
     <dependency>
        <groupId>org.springultron</groupId>
@@ -234,7 +234,14 @@
         </dependency>
     
         @Autowire
-        private WebClient lbWebClient;           
+        private WebClient lbWebClient;
+
+8、ultron-openfeign openfeign封装，集成了sentinel限流，熔断降级，默认使用httpclient5
+    
+    <dependency>
+       <groupId>org.springultron</groupId>
+       <artifactId>ultron-openfeign</artifactId>
+    </dependency>
 
 8、在线接口文档
 

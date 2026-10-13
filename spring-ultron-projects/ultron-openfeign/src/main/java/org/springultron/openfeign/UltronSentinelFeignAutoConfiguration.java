@@ -6,7 +6,6 @@ import feign.Retryer;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
 
@@ -22,7 +21,6 @@ public class UltronSentinelFeignAutoConfiguration {
     @Bean
     @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     @ConditionalOnMissingBean
-    @ConditionalOnProperty(name = {"feign.sentinel.enabled"})
     public Feign.Builder feignSentinelBuilder(Retryer retryer) {
         return UltronSentinelFeign.builder().retryer(retryer);
     }

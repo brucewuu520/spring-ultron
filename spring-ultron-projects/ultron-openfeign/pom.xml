@@ -35,17 +35,18 @@
             <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.apache.httpcomponents.client5</groupId>
+            <artifactId>httpclient5</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-hc5</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.springultron</groupId>
             <artifactId>ultron-core</artifactId>
             <scope>compile</scope>
             <version>${revision}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.github.openfeign</groupId>
-            <artifactId>feign-okhttp</artifactId>
-            <version>${feign-okhttp.version}</version>
-            <scope>compile</scope>
-            <optional>true</optional>
         </dependency>
     </dependencies>
 
