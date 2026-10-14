@@ -21,7 +21,8 @@
         ├── ultron-core                 核心库(请求统一返回体、常用错误代码、自定义业务异常、Jackson序列化/反序列化配置、常用工具类等)
         ├── ultron-logging              logback 的日志扩展；支持输出到ELK；链路追踪
         ├── ultron-crypto               对称及非对称加密解密工具，实现了:AES、DES、RSA、国密SM2、SM4等；以及各种秘钥生成工具
-        ├── ultron-mybatis              mybatis plus自动化配置、分页工具等
+        ├── ultron-mybatis-plus         mybatis plus自动化配置、分页工具等
+        ├── ultron-mybatis-flex         mybatis flex集成
         ├── ultron-qrcode               二维码生成、美化、识别
         ├── ultron-redis                Redis自动化配置、操作客户端；基于Redis的Spring Cache配置
         ├── ultron-redis-lock           基于Redis的分布式锁
@@ -33,6 +34,7 @@
         ├── ultron-swagger              Swagger文档自动化配置(可在配置文件中开启/关闭，支持http basic认证)
         ├── ultron-xxl-job              xxl-job集成
         ├── ultron-wechat               微信开发工具包
+        ├── ultron-doc                  在线文档
 ```    
 
 ## 使用步骤
@@ -50,8 +52,8 @@
 1、在项目parent pom.xml中添加：
 
     <properties>
-        <spring-ultron.version>2.0.0</spring-ultron.version>
-        <java.version>1.8</java.version>
+        <spring-ultron.version>4.1.1/spring-ultron.version>
+        <java.version>17</java.version>
     </properties>
 
     <dependencyManagement>
@@ -114,7 +116,7 @@
 
     <dependency>
        <groupId>org.springultron</groupId>
-       <artifactId>ultron-mybatis</artifactId>
+       <artifactId>ultron-mybatis-plus</artifactId>
     </dependency> 
     
     分页工具使用示例：
@@ -207,15 +209,6 @@
         params.put("name", "张三");
         params.put("age", 23);
         Mono<JSONObject> mono = WebClientUtil.postJSON("https://xxx", params, JSONObject.class)
-        
-    异步任务线程池配置：
-        
-        ultron:
-          async:
-            core-pool-size: 3         # 核心线程数，默认：3
-            max-pool-size: 300        # 线程池最大数量，默认：300  
-            queue-capacity: 30000     # 线程池队列容量，默认：30000
-            keep-alive-seconds: 300   # 空闲线程存活时间，默认：300秒
     
 7、Spring cloud脚手架(基于Spring cloud、Spring cloud alibaba)
 
@@ -243,7 +236,7 @@
        <artifactId>ultron-openfeign</artifactId>
     </dependency>
 
-8、在线接口文档
+9、在线接口文档
 
     <dependency>
        <groupId>org.springultron</groupId>
@@ -268,7 +261,6 @@
             name: Brucewuu
             email: 402432291@qq.com
             url: https://github.com/brucewuu520
-
     knife4j:
         enable: true
         basic:
@@ -279,14 +271,14 @@
             language: zh_cn
             swagger-model-name: 实体类列表
           
-9、Spring Security通用配置，支持jwt登录鉴权，RBAC权限控制
+10、Spring Security通用配置，支持jwt登录鉴权，RBAC权限控制
 
     <dependency>
         <groupId>org.springultron</groupId>
         <artifactId>ultron-security</artifactId>
     </dependency> 
                 
-10、ultron-http 使用示例
+11、ultron-http 使用示例
     
     <dependency>
         <groupId>org.springultron</groupId>
@@ -325,8 +317,8 @@
              }))
              .execute()
 
-11、ultron-logging 使用示例
-若开启logstash必须添加下面依赖:
+12、ultron-logging 使用示例
+若开启logstash必须添加依赖:
 
 	<dependency>
             <groupId>net.logstash.logback</groupId>
@@ -351,9 +343,8 @@
 	logging.pattern.console="%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr([%X{traceId}]){yellow} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n"
 	
 	logging.pattern.file="%d{yyyy-MM-dd HH:mm:ss.SSS} ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } --- [%t] [%X{traceId}] %-40.40logger{39} : %m%n"
-	
 
-12、图形验证码使用
+13、图形验证码使用
 
 	<dependency>
 		<groupId>org.springultron</groupId>
@@ -371,7 +362,7 @@
 		继承CaptchaCache实现自己的缓存实现，注入CaptchaCache bean覆盖默认的bean
 		
 	
-13、ultron-caffeine 缓存使用
+14、ultron-caffeine 缓存使用
 
 	<dependency>
 		<groupId>org.springultron</groupId>
@@ -407,7 +398,7 @@
 			return "selectById:" + id;
 		}
 		
-14、微信开发工具包
+15、微信开发工具包
 
 	<dependency>
 		<groupId>org.springultron</groupId>
@@ -493,8 +484,11 @@
 	
     
 ## 更新日志
-* 2.0版本基于Spring boot 2.2.x
-* 1.0版基于Spring boot 2.1.x 请切换分支1.x
+* 4.x版本基于Spring boot 4.x.x
+* 3.x版本基于Spring boot 3.x.x
+* 2.x版本基于Spring boot 2.2.x
+* 1.x版基于Spring boot 2.1.x 请切换分支1.x
+都是基于Spring boot、Spring Cloud、Spring Cloud Alibaba的最新版本
 
 ## 鸣谢
 感谢 [Mica](https://github.com/lets-mica/mica)，有些工具类和配置参考了mica            
